@@ -1,0 +1,9 @@
+10/10/2022 
+  First meeting 
+  Each member read through the requirements  
+  Documentation on each requirement being done on google docs. 
+17/10/2022
+  Second meeting
+  Reviewing questions to be sent out to the forums
+  Sending out first batch of questions to ask
+  Creating shared github repo for remote file sharing and work
