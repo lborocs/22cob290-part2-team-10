@@ -1,0 +1,18 @@
+Deliverables:
+1 Prototype - upload URL + username and password required as text on LEARN
+  Deadline - 4pm Monday 7th November (week 6)
+
+2 Demonstration - Tuesday/Wednesday/Thursday (week 6) group demonstration (up to 25 minutes)
+  Explaining proposed solution and showing clients the prototype website
+  Can book slot week before
+
+3 Reports
+	R1 - Listing of client's Requirements. Team's Understanding requirements. 
+		Cover page detailing teh contribution of each team member
+	Deadline - 4pm Monday 7th November (week 6)
+	
+	R2 - Individual report. Web-PA used for this part. Assessment of the way the group 
+		carried out the task and what contribution each member of the group made to each 
+		aspect of the work. Used to enable individual marks to be awarded
+	Deadline - 4pm Friday 11th November (week 6)
+	 
