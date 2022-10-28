@@ -34,11 +34,19 @@
   <div>
     <img src="assets/make_it_all.png" alt="Make It All Logo" class="mb-4">
 
-    <form id="login-form" class="mt-6">
+    <form id="login-form" action="login.php" method="POST" class="mt-6">
       <div class="form-group row my-3">
         <label for="email" class="col-sm-3 col-form-label">Email</label>
         <div class="col-sm-9">
-          <input value="alice@make-it-all.co.uk" type="email" class="form-control" id="email" name="email" placeholder="Enter email">
+          <input value="alice@make-it-all.co.uk"
+                 type="email"
+                 autocomplete="email"
+                 class="form-control"
+                 id="email"
+                 name="email"
+                 placeholder="Enter email"
+                 pattern=".+@make-it-all\.co\.uk"
+          >
         </div>
       </div>
 
@@ -54,24 +62,27 @@
           </span>
         </div>
 
-        <!-- <label for="password" class="col-sm-2 col-form-label">Password</label> -->
         <div class="col-sm-9">
-          <!-- https://stackoverflow.com/q/1559751 pattern not working -->
+          <!--
+            https://stackoverflow.com/q/1559751
+            pw pattern not working
+            (?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)
+          -->
           <input value="TestPassword123!"
                  type="password"
+                 autocomplete="current-password"
                  class="form-control"
                  id="password"
                  name="password"
                  placeholder="Password"
                  minlength="12"
-                 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)"
           >
         </div>
       </div>
 
       <div class="form-group row">
         <div class="d-flex justify-content-center">
-          <button type="submit" class="btn btn-secondary">Login</button>
+          <button id="login-btn" type="submit" class="btn btn-secondary">Login</button>
         </div>
       </div>
     </form>
