@@ -1,0 +1,8 @@
+KONTROL 
+
+focus time 
+a forum for sharing ideas 
+a list to cancel off any completed tasks 
+a board for scrum process?
+	-> take project from ____, working on, _____,completed 
+
