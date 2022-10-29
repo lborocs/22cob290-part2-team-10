@@ -1,7 +1,12 @@
 type LoginFailedResponse = {
   success: false
-  errorMessage: string
+  errorMessage: LoginFailedReason
 };
+
+enum LoginFailedReason {
+  WRONG_PASSWORD = 'WRONG_PASSWORD',
+  DOESNT_EXIST = 'DOESNT_EXIST',
+}
 
 type LoginResponse = LoginFailedResponse | {
   success: true
@@ -34,6 +39,23 @@ $(() => {
     $eye.addClass(showing ? 'bi-eye-fill' : 'bi-eye-slash-fill');
   });
 
+
+  // TODO: fix onchange not firing except when submitting form
+  $('#login-form').on('change', '#email #password', function (e) {
+    console.log(this);
+  })
+
+  // TODO: on type remove invalid (not sure if this is correct)
+  // $('#email #password').on('change', function (e) {
+  //   console.log('change');
+  //   console.log(this);
+  //   $(this).removeClass('is-invalid');
+  // });
+
+  // $('#password').on('change', function (e) {
+  //   $('#pwError').text('');
+  // });
+
   $('#login-form').on('submit', function (e) {
     e.preventDefault();
     const $this = $(this);
@@ -49,8 +71,6 @@ $(() => {
     if (pwError) {
       $('#pwError').text(pwError);
       return;
-    } else {
-      $('#pwError').text('');
     }
 
     login($this);
@@ -106,11 +126,29 @@ function login($form: JQuery<HTMLElement>) {
         // localStorage.setItem('email', credentials.email);
 
         //redirect('todo');
+
+        console.log('LOGGED IN');
       } else {
         console.log(data);
 
         // TODO: notify that incorrect password/email/whatever (not an alert, some sort of like tooltip/overlay)
-        alert(`ERROR: ${data.errorMessage}`);
+
+        switch (data.errorMessage) {
+          case LoginFailedReason.DOESNT_EXIST:
+            console.log('bad email');
+            $('#email').addClass('is-invalid');
+            break;
+
+          case LoginFailedReason.WRONG_PASSWORD:
+            console.log('bad password');
+            $('#password').addClass('is-invalid');
+            break;
+
+          default:
+            $('#email #password').addClass('is-invalid');
+            $('pwError').text(data.errorMessage);
+        }
+
       }
     })
     .fail((xhr, errorTextStatus, errorMessage) => {

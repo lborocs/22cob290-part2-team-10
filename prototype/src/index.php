@@ -36,7 +36,11 @@
                  name="email"
                  placeholder="Enter email"
                  pattern=".+@make-it-all\.co\.uk"
+                 required
                  >
+          <div class="invalid-feedback">
+            You do not have an account!
+          </div>
         </div>
       </div>
 
@@ -51,7 +55,6 @@
             <i class="bi bi-info-circle-fill"></i>
           </span>
         </div>
-
         <!-- pw pattern: https://stackoverflow.com/q/1559751
           pw pattern not working here but works in js
           (?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)
@@ -59,7 +62,7 @@
           add .* and it works here
         -->
         <div class="col-sm-9">
-          <div class="input-group flex-nowrap">
+          <div class="input-group has-validation">
             <input value="TestPassword123!"
                    type="password"
                    autocomplete="current-password"
@@ -68,10 +71,14 @@
                    name="password"
                    placeholder="Password"
                    minlength="12"
+                   required
                    >
             <button id="show-password" class="btn btn-outline-secondary" type="button">
               <i id="eye" class="bi bi-eye-fill"></i>
             </button>
+            <div class="invalid-feedback">
+              Incorrect password!
+            </div>
           </div>
           <span id="pwError" class="text-danger"></span>
         </div>
