@@ -9,7 +9,7 @@
  *  - errorMessage [enum, if success == false] WRONG_PASSWORD | DOESNT_EXIST .... LEFT_COMPANY?
  */
 
-require "credentials.php";
+require "../credentials.php";
 
 header('Content-Type: application/json');
 

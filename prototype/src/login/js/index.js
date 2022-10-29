@@ -17,6 +17,7 @@ $(function () {
                 // TODO: go to main page
                 console.log(data);
                 alert(JSON.stringify(data));
+                window.location.href = "/main";
             }
             else {
                 // TODO: alert that incorrect password/email/whatever
