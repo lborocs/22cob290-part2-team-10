@@ -1,35 +1,58 @@
-$(function () {
+"use strict";
+$(() => {
     $('#login-form').on('submit', function (e) {
         e.preventDefault();
-        var $this = $(this);
-        console.log("LOGIN:");
+        const $this = $(this);
+        const credentials = Object.fromEntries(new FormData(this));
+        console.log(credentials);
+        const { email, password } = credentials;
         console.log($this.serialize());
-        // TODO: validate email & pw
+        if (!isValidWorkEmail(email)) {
+            alert('Invalid email!');
+            return;
+        }
+        if (!isValidPassword(password)) {
+            alert('Invalid password!');
+            return;
+        }
         $('#login-btn').prop('disabled', true);
         $.ajax({
             url: $this.attr('action'),
             type: $this.attr('method'),
             data: $this.serialize(),
-            dataType: 'json'
+            dataType: 'json',
         })
-            .done(function (data) {
+            .done((data) => {
             if (data.success) {
-                // TODO: go to main page
+                // TODO: store email in localStorage? so other pages can access it
+                // localStorage.setItem('email', credentials.email);
                 console.log(data);
                 alert(JSON.stringify(data));
-                window.location.href = "/main";
+                redirect('todo');
             }
             else {
-                // TODO: alert that incorrect password/email/whatever
-                alert("ERROR: ".concat(data.errorMessage));
+                // TODO: notify that incorrect password/email/whatever (not an alert, some sort of like tooltip)
+                alert(`ERROR: ${data.errorMessage}`);
             }
         })
-            .fail(function () {
-            alert("ERROR: request failed");
+            .fail((xhr, errorTextStatus, errorMessage) => {
+            alert(`${errorTextStatus}: ${errorMessage}`);
         })
-            .always(function () {
+            .always(() => {
             $('#login-btn').prop('disabled', false);
         });
     });
     $('.multiline-tooltip').tooltip({ html: true });
 });
+function redirect(url) {
+    window.location.href = url;
+}
+function isValidWorkEmail(email) {
+    return email.endsWith('@make-it-all.co.uk') && email !== '@make-it-all.co.uk';
+}
+const PASSWORD_REGEX = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/;
+function isValidPassword(password) {
+    if (password.length < 12)
+        return false;
+    return PASSWORD_REGEX.test(password);
+}
