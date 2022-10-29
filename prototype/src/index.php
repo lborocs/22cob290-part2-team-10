@@ -59,22 +59,10 @@
           pw pattern not working here but works in js
           (?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)
 
-<<<<<<< HEAD:prototype/src/index.php
           add .* and it works here
         -->
         <div class="col-sm-9">
           <div class="input-group has-validation">
-=======
-        <!-- pw pattern: https://stackoverflow.com/q/1559751
-          pw pattern not working here but works in js
-          (?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)
-
-          add .* and it works here
-        -->
-        <div class="col-sm-9">
-          <div class="input-group">
-            <!-- TODO: functionality to show password -->
->>>>>>> b0f4aa8 (Implement better password policy validation (not finished)):prototype/src/index.html
             <input value="TestPassword123!"
                    type="password"
                    autocomplete="current-password"
@@ -83,8 +71,6 @@
                    name="password"
                    placeholder="Password"
                    minlength="12"
-<<<<<<< HEAD:prototype/src/index.php
-                   required
                    >
             <button id="toggle-password" class="btn btn-outline-secondary" type="button">
               <i id="eye" class="bi bi-eye-fill"></i>
@@ -92,11 +78,6 @@
             <div id="password-feedback" class="invalid-feedback">
             </div>
           </div>
-=======
-                   >
-          </div>
-          <span id="pwError" class="text-danger"></span>
->>>>>>> b0f4aa8 (Implement better password policy validation (not finished)):prototype/src/index.html
         </div>
       </div>
 

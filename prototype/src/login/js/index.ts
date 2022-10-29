@@ -49,29 +49,17 @@ $(() => {
     e.preventDefault();
     const $this = $(this);
 
-<<<<<<< HEAD
     const credentials = Object.fromEntries(new FormData(this as HTMLFormElement)) as Credentials;
-=======
-    const { email, password } = Object.fromEntries(new FormData(this as HTMLFormElement)) as Credentials;
->>>>>>> 7b11394 (Remove excessive console logging or smthn idk, fixed conflict)
 
     if (!isValidWorkEmail(credentials.email)) {
       alert('Invalid email!');
       return;
     }
 
-<<<<<<< HEAD
     const pwError = validatePassword(credentials.password);
     if (pwError) {
       passwordError(pwError);
-=======
-    const pwError = validatePassword(password);
-    if (pwError) {
-      $('#pwError').text(pwError);
->>>>>>> b0f4aa8 (Implement better password policy validation (not finished))
       return;
-    } else {
-      $('#pwError').text('');
     }
 
     login($this, credentials);
@@ -114,7 +102,6 @@ function validatePassword(password: string): PasswordError | null {
   return null;
 }
 
-<<<<<<< HEAD
 // redirect with data: https://stackoverflow.com/a/10022098
 function redirect(url: string, data: Record<string, string>) {
   const $form = $(`
@@ -128,13 +115,6 @@ function redirect(url: string, data: Record<string, string>) {
 }
 
 function login($form: JQuery<HTMLElement>, { email, password }: Credentials) {
-=======
-function redirect(url: string) {
-  window.location.href = url;
-}
-
-function login($form: JQuery<HTMLElement>) {
->>>>>>> b0f4aa8 (Implement better password policy validation (not finished))
   $('#login-btn').prop('disabled', true);
 
   $.ajax({
@@ -143,18 +123,9 @@ function login($form: JQuery<HTMLElement>) {
     data: $form.serialize(),
     dataType: 'json',
   })
-<<<<<<< HEAD
     .done((res: LoginResponse) => {
       if (res.success) {
         redirect('todo/', { email });
-=======
-    .done((data: LoginResponse) => {
-      if (data.success) {
-        // TODO: store email in localStorage? so other pages can access it
-        // localStorage.setItem('email', credentials.email);
-
-        //redirect('todo');
->>>>>>> b0f4aa8 (Implement better password policy validation (not finished))
       } else {
         console.log(res);
 
@@ -171,7 +142,6 @@ function login($form: JQuery<HTMLElement>) {
             $('#email').addClass('is-invalid');
             passwordError(res.errorMessage);
         }
-
       }
     })
     .fail((xhr, errorTextStatus, errorMessage) => {
