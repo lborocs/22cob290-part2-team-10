@@ -59,8 +59,7 @@
           add .* and it works here
         -->
         <div class="col-sm-9">
-          <div class="input-group">
-            <!-- TODO: functionality to show password -->
+          <div class="input-group flex-nowrap">
             <input value="TestPassword123!"
                    type="password"
                    autocomplete="current-password"
@@ -70,6 +69,9 @@
                    placeholder="Password"
                    minlength="12"
                    >
+            <button id="show-password" class="btn btn-outline-secondary" type="button">
+              <i id="eye" class="bi bi-eye-fill"></i>
+            </button>
           </div>
           <span id="pwError" class="text-danger"></span>
         </div>

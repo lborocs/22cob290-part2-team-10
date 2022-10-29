@@ -22,6 +22,18 @@ enum PasswordError {
 }
 
 $(() => {
+  $('#show-password').on('click', function (e) {
+    const $password = $('#password');
+
+    const showing = $password.prop('type') === 'text';
+
+    $password.prop('type', showing ? 'password' : 'text');
+
+    const $eye = $('#eye');
+    $eye.removeClass(showing ? 'bi-eye-slash-fill' : 'bi-eye-fill');
+    $eye.addClass(showing ? 'bi-eye-fill' : 'bi-eye-slash-fill');
+  });
+
   $('#login-form').on('submit', function (e) {
     e.preventDefault();
     const $this = $(this);
