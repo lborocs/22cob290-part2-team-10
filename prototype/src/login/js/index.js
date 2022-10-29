@@ -37,6 +37,9 @@ $(() => {
             passwordError(pwError);
             return;
         }
+        else {
+            $('#pwError').text('');
+        }
         login($this, credentials);
     });
     $('.multiline-tooltip').tooltip({ html: true });
@@ -66,7 +69,6 @@ function validatePassword(password) {
         return PasswordError.NO_SPECIAL_SYMBOL;
     return null;
 }
-// redirect with data: https://stackoverflow.com/a/10022098
 function redirect(url, data) {
     const $form = $(`
   <form action="${url}" method="POST">
