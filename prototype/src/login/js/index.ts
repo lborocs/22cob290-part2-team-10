@@ -49,7 +49,11 @@ $(() => {
     e.preventDefault();
     const $this = $(this);
 
+<<<<<<< HEAD
     const credentials = Object.fromEntries(new FormData(this as HTMLFormElement)) as Credentials;
+=======
+    const { email, password } = Object.fromEntries(new FormData(this as HTMLFormElement)) as Credentials;
+>>>>>>> 7b11394 (Remove excessive console logging or smthn idk, fixed conflict)
 
     if (!isValidWorkEmail(credentials.email)) {
       alert('Invalid email!');
