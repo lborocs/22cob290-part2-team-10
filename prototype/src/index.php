@@ -25,7 +25,7 @@
     <img src="login/assets/make_it_all.png" alt="Make It All Logo" class="mb-4">
 
     <form id="login-form" action="login/login.php" method="POST" class="mt-6">
-      <div class="form-group row mb-3">
+      <div class="form-group row login-form-row">
         <label for="email" class="col-sm-3 col-form-label">Email</label>
         <div class="col-sm-9">
           <input value="alice@make-it-all.co.uk"
@@ -44,7 +44,7 @@
         </div>
       </div>
 
-      <div class="form-group row mb-3">
+      <div class="form-group row login-form-row">
         <div class="col-sm-3 d-flex flex-row align-items-center">
           <label for="password" class="col-form-label">Password</label>
           <span class="mx-2 d-inline-block multiline-tooltip"
