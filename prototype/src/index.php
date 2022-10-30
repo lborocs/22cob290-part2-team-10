@@ -22,7 +22,7 @@
 <body>
 <main class="vh-100 d-flex align-items-center justify-content-center">
   <div>
-    <img src="login/assets/make_it_all.png" alt="Make It All Logo" class="mb-4">
+    <img src="assets/make_it_all.png" alt="Make It All Logo" class="mb-4">
 
     <form id="login-form" action="login/login.php" method="POST" class="mt-6">
       <div class="form-group row login-form-row">
@@ -95,6 +95,6 @@
 <!-- Bootstrap JS Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/js/bootstrap.bundle.min.js"></script>
 
-<script src="login/js/index.js"></script>
+<script type="module" src="login/js/index.js"></script>
 </body>
 </html>
