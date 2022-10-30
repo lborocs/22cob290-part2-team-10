@@ -1,2 +1,2 @@
 # https://www.geeksforgeeks.org/what-is-htaccess-file-in-php/
-DirectoryIndex index.html index.php
+DirectoryIndex index.html index.php index.js
