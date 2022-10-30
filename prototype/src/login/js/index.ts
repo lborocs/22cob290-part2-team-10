@@ -1,3 +1,5 @@
+import { redirect, isValidWorkEmail } from '../../utils';
+
 type LoginFailedResponse = {
   success: false
   errorMessage: string
@@ -50,7 +52,7 @@ $(() => {
           console.log(data);
           alert(JSON.stringify(data));
 
-          redirect('todo');
+          redirect('todo', { email });
         } else {
           // TODO: notify that incorrect password/email/whatever (not an alert, some sort of like tooltip)
           alert(`ERROR: ${data.errorMessage}`);
@@ -66,14 +68,6 @@ $(() => {
 
   (<any>$('.multiline-tooltip')).tooltip({ html: true });
 });
-
-function redirect(url: string) {
-  window.location.href = url;
-}
-
-function isValidWorkEmail(email: string): boolean {
-  return email.endsWith('@make-it-all.co.uk') && email !== '@make-it-all.co.uk';
-}
 
 const PASSWORD_REGEX = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/;
 

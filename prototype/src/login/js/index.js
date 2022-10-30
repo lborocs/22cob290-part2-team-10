@@ -1,4 +1,4 @@
-"use strict";
+import { redirect, isValidWorkEmail } from '../../utils';
 $(() => {
     $('#login-form').on('submit', function (e) {
         e.preventDefault();
@@ -28,7 +28,7 @@ $(() => {
                 // localStorage.setItem('email', credentials.email);
                 console.log(data);
                 alert(JSON.stringify(data));
-                redirect('todo');
+                redirect('todo', { email });
             }
             else {
                 // TODO: notify that incorrect password/email/whatever (not an alert, some sort of like tooltip)
@@ -44,12 +44,6 @@ $(() => {
     });
     $('.multiline-tooltip').tooltip({ html: true });
 });
-function redirect(url) {
-    window.location.href = url;
-}
-function isValidWorkEmail(email) {
-    return email.endsWith('@make-it-all.co.uk') && email !== '@make-it-all.co.uk';
-}
 const PASSWORD_REGEX = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/;
 function isValidPassword(password) {
     if (password.length < 12)
