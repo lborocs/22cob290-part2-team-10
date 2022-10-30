@@ -1,4 +1,3 @@
-"use strict";
 var LoginFailedReason;
 (function (LoginFailedReason) {
     LoginFailedReason["WRONG_PASSWORD"] = "WRONG_PASSWORD";
@@ -111,3 +110,4 @@ function login($form, { email, password }) {
         $('#login-btn').prop('disabled', false);
     });
 }
+export {};
