@@ -27,7 +27,7 @@ enum PasswordError {
 }
 
 $(() => {
-  $('#show-password').on('click', function (e) {
+  $('#toggle-password').on('click', function (e) {
     const $password = $('#password');
 
     const showing = $password.prop('type') === 'text';
@@ -39,45 +39,38 @@ $(() => {
     $eye.addClass(showing ? 'bi-eye-fill' : 'bi-eye-slash-fill');
   });
 
-
-  // TODO: fix onchange not firing except when submitting form
-  $('#login-form').on('change', '#email #password', function (e) {
-    console.log(this);
-  })
-
-  // TODO: on type remove invalid (not sure if this is correct)
-  // $('#email #password').on('change', function (e) {
-  //   console.log('change');
-  //   console.log(this);
-  //   $(this).removeClass('is-invalid');
-  // });
-
-  // $('#password').on('change', function (e) {
-  //   $('#pwError').text('');
-  // });
+  $('#email, #password').on('input', function (e) {
+    $(this).removeClass('is-invalid');
+  });
 
   $('#login-form').on('submit', function (e) {
     e.preventDefault();
     const $this = $(this);
 
-    const { email, password } = Object.fromEntries(new FormData(this as HTMLFormElement)) as Credentials;
+    const credentials = Object.fromEntries(new FormData(this as HTMLFormElement)) as Credentials;
 
-    if (!isValidWorkEmail(email)) {
+    if (!isValidWorkEmail(credentials.email)) {
       alert('Invalid email!');
       return;
     }
 
-    const pwError = validatePassword(password);
+    const pwError = validatePassword(credentials.password);
     if (pwError) {
-      $('#pwError').text(pwError);
+      passwordError(pwError);
       return;
     }
 
-    login($this);
+    login($this, credentials);
   });
 
   (<any>$('.multiline-tooltip')).tooltip({ html: true });
 });
+
+function passwordError(error: string) {
+  // FIXME: this causes components to resize :/
+  $('#password').addClass('is-invalid');
+  $('#password-feedback').text(error);
+}
 
 function isValidWorkEmail(email: string): boolean {
   return email.endsWith('@make-it-all.co.uk') && email !== '@make-it-all.co.uk';
@@ -107,11 +100,19 @@ function validatePassword(password: string): PasswordError | null {
   return null;
 }
 
-function redirect(url: string) {
-  window.location.href = url;
+// redirect with data: https://stackoverflow.com/a/10022098
+function redirect(url: string, data: Record<string, string>) {
+  const $form = $(`
+  <form action="${url}" method="POST">
+    ${Object.entries(data).map(([key, value]) => `<input name="${key}" value="${value}" />`).join('')}
+  </form>
+  `);
+
+  $('body').append($form);
+  $form.trigger('submit');
 }
 
-function login($form: JQuery<HTMLElement>) {
+function login($form: JQuery<HTMLElement>, { email, password }: Credentials) {
   $('#login-btn').prop('disabled', true);
 
   $.ajax({
@@ -120,33 +121,24 @@ function login($form: JQuery<HTMLElement>) {
     data: $form.serialize(),
     dataType: 'json',
   })
-    .done((data: LoginResponse) => {
-      if (data.success) {
-        // TODO: store email in localStorage? so other pages can access it
-        // localStorage.setItem('email', credentials.email);
-
-        //redirect('todo');
-
-        console.log('LOGGED IN');
+    .done((res: LoginResponse) => {
+      if (res.success) {
+        redirect('todo/', { email });
       } else {
-        console.log(data);
+        console.log(res);
 
-        // TODO: notify that incorrect password/email/whatever (not an alert, some sort of like tooltip/overlay)
-
-        switch (data.errorMessage) {
+        switch (res.errorMessage) {
           case LoginFailedReason.DOESNT_EXIST:
-            console.log('bad email');
             $('#email').addClass('is-invalid');
             break;
 
           case LoginFailedReason.WRONG_PASSWORD:
-            console.log('bad password');
-            $('#password').addClass('is-invalid');
+            passwordError('Incorrect password!');
             break;
 
           default:
-            $('#email #password').addClass('is-invalid');
-            $('pwError').text(data.errorMessage);
+            $('#email').addClass('is-invalid');
+            passwordError(res.errorMessage);
         }
 
       }

@@ -14,7 +14,7 @@ var PasswordError;
     PasswordError["NO_SPECIAL_SYMBOL"] = "No special symbol";
 })(PasswordError || (PasswordError = {}));
 $(() => {
-    $('#show-password').on('click', function (e) {
+    $('#toggle-password').on('click', function (e) {
         const $password = $('#password');
         const showing = $password.prop('type') === 'text';
         $password.prop('type', showing ? 'password' : 'text');
@@ -22,36 +22,31 @@ $(() => {
         $eye.removeClass(showing ? 'bi-eye-slash-fill' : 'bi-eye-fill');
         $eye.addClass(showing ? 'bi-eye-fill' : 'bi-eye-slash-fill');
     });
-    // TODO: fix onchange not firing except when submitting form
-    $('#login-form').on('change', '#email #password', function (e) {
-        console.log(this);
+    $('#email, #password').on('input', function (e) {
+        $(this).removeClass('is-invalid');
     });
-    // TODO: on type remove invalid (not sure if this is correct)
-    // $('#email #password').on('change', function (e) {
-    //   console.log('change');
-    //   console.log(this);
-    //   $(this).removeClass('is-invalid');
-    // });
-    // $('#password').on('change', function (e) {
-    //   $('#pwError').text('');
-    // });
     $('#login-form').on('submit', function (e) {
         e.preventDefault();
         const $this = $(this);
-        const { email, password } = Object.fromEntries(new FormData(this));
-        if (!isValidWorkEmail(email)) {
+        const credentials = Object.fromEntries(new FormData(this));
+        if (!isValidWorkEmail(credentials.email)) {
             alert('Invalid email!');
             return;
         }
-        const pwError = validatePassword(password);
+        const pwError = validatePassword(credentials.password);
         if (pwError) {
-            $('#pwError').text(pwError);
+            passwordError(pwError);
             return;
         }
-        login($this);
+        login($this, credentials);
     });
     $('.multiline-tooltip').tooltip({ html: true });
 });
+function passwordError(error) {
+    // FIXME: this causes components to resize :/
+    $('#password').addClass('is-invalid');
+    $('#password-feedback').text(error);
+}
 function isValidWorkEmail(email) {
     return email.endsWith('@make-it-all.co.uk') && email !== '@make-it-all.co.uk';
 }
@@ -72,10 +67,17 @@ function validatePassword(password) {
         return PasswordError.NO_SPECIAL_SYMBOL;
     return null;
 }
-function redirect(url) {
-    window.location.href = url;
+// redirect with data: https://stackoverflow.com/a/10022098
+function redirect(url, data) {
+    const $form = $(`
+  <form action="${url}" method="POST">
+    ${Object.entries(data).map(([key, value]) => `<input name="${key}" value="${value}" />`).join('')}
+  </form>
+  `);
+    $('body').append($form);
+    $form.trigger('submit');
 }
-function login($form) {
+function login($form, { email, password }) {
     $('#login-btn').prop('disabled', true);
     $.ajax({
         url: $form.attr('action'),
@@ -83,28 +85,22 @@ function login($form) {
         data: $form.serialize(),
         dataType: 'json',
     })
-        .done((data) => {
-        if (data.success) {
-            // TODO: store email in localStorage? so other pages can access it
-            // localStorage.setItem('email', credentials.email);
-            //redirect('todo');
-            console.log('LOGGED IN');
+        .done((res) => {
+        if (res.success) {
+            redirect('todo/', { email });
         }
         else {
-            console.log(data);
-            // TODO: notify that incorrect password/email/whatever (not an alert, some sort of like tooltip/overlay)
-            switch (data.errorMessage) {
+            console.log(res);
+            switch (res.errorMessage) {
                 case LoginFailedReason.DOESNT_EXIST:
-                    console.log('bad email');
                     $('#email').addClass('is-invalid');
                     break;
                 case LoginFailedReason.WRONG_PASSWORD:
-                    console.log('bad password');
-                    $('#password').addClass('is-invalid');
+                    passwordError('Incorrect password!');
                     break;
                 default:
-                    $('#email #password').addClass('is-invalid');
-                    $('pwError').text(data.errorMessage);
+                    $('#email').addClass('is-invalid');
+                    passwordError(res.errorMessage);
             }
         }
     })

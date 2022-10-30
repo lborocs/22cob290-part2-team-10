@@ -1,5 +1,5 @@
 <?php
-// TODO check if they're already logged in
+// TODO check if they're already logged in - don't really need to?
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -73,14 +73,12 @@
                    minlength="12"
                    required
                    >
-            <button id="show-password" class="btn btn-outline-secondary" type="button">
+            <button id="toggle-password" class="btn btn-outline-secondary" type="button">
               <i id="eye" class="bi bi-eye-fill"></i>
             </button>
-            <div class="invalid-feedback">
-              Incorrect password!
+            <div id="password-feedback" class="invalid-feedback">
             </div>
           </div>
-          <span id="pwError" class="text-danger"></span>
         </div>
       </div>
 
