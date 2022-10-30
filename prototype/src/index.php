@@ -45,16 +45,7 @@
       </div>
 
       <div class="form-group row login-form-row">
-        <div class="col-sm-3 d-flex flex-row align-items-center">
-          <label for="password" class="col-form-label">Password</label>
-          <span class="mx-2 d-inline-block multiline-tooltip"
-                tabindex="0"
-                data-toggle="tooltip"
-                title="At least 1 uppercase<br>At least 1 lowercase<br>At least 1 number<br>At least 1 special symbol"
-                >
-            <i class="bi bi-info-circle-fill"></i>
-          </span>
-        </div>
+        <label for="password" class="col-sm-3 col-form-label">Password</label>
         <!-- pw pattern: https://stackoverflow.com/q/1559751
           pw pattern not working here but works in js
           (?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)
@@ -72,6 +63,14 @@
                    placeholder="Password"
                    minlength="12"
                    >
+            <span class="input-group-text d-inline-block multiline-tooltip"
+                  tabindex="0"
+                  data-toggle="tooltip"
+                  title="At least 1 uppercase<br>At least 1 lowercase<br>At least 1 number<br>At least 1 special symbol"
+                  >
+              <i class="bi bi-info-circle-fill"></i>
+            </span>
+
             <button id="toggle-password" class="btn btn-outline-secondary" type="button">
               <i id="eye" class="bi bi-eye-fill"></i>
             </button>
