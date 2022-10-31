@@ -203,3 +203,19 @@ a.article:hover {
         display: none;
     }
 }
+
+/*ADDED CODE FROM KBOARD*/
+.drag_item {
+  cursor: move; /* fallback if grab cursor is unsupported */
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+}
+
+.tasks {
+  min-height: 450px;
+}
+
+#completed {
+	min-height: 488px;
+}
