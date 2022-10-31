@@ -43,7 +43,7 @@ $(function() {
 	var close_modal_button2 = $("#close_modal2");
 	var add_task_modal_button = $("#add_task");
 	
-	var taskno = 1;
+	var taskno = 2;
 	
 	function open_modal(id){
 		add_task_modal_button.prop("onclick", null).off("click");
@@ -93,7 +93,7 @@ $(function() {
 			
 		// handle form
 		$(`#${id}`).append(
-		`<div class="card mb-3 drag_item noDrop" id="task`+ taskno +`" draggable="true" ondragstart="drag(event)" >
+		`<div class="card mb-3 drag_item noDrop" id="task`+ taskno +`" draggable="true" ondragstart="drag(event)">
 		  <div class="card-body">
 			${process_tags(tags)}
 			<p style="font-weight: bold">${title}</p>
