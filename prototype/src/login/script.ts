@@ -1,4 +1,4 @@
-import { redirect, isValidWorkEmail, validatePassword } from '../../utils';
+import { redirect, isValidWorkEmail, validatePassword } from '../utils';
 
 type LoginFailedResponse = {
   success: false

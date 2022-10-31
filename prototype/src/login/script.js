@@ -1,4 +1,4 @@
-import { redirect, isValidWorkEmail, validatePassword } from '../../utils';
+import { redirect, isValidWorkEmail, validatePassword } from '../utils';
 var LoginFailedReason;
 (function (LoginFailedReason) {
     LoginFailedReason["WRONG_PASSWORD"] = "WRONG_PASSWORD";

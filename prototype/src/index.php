@@ -16,7 +16,7 @@
   <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
 
-  <link rel="stylesheet" type="text/css" href="login/css/index.css">
+  <link rel="stylesheet" type="text/css" href="login/styles.css">
 </head>
 
 <body>
@@ -24,7 +24,7 @@
   <div>
     <img src="assets/make_it_all.png" alt="Make It All Logo" class="mb-4">
 
-    <form id="login-form" action="login/login.php" method="POST" class="mt-6">
+    <form id="login-form" action="login/action.php" method="POST" class="mt-6">
       <div class="form-group row login-form-row">
         <label for="email" class="col-sm-3 col-form-label">Email</label>
         <div class="col-sm-9">
@@ -93,6 +93,6 @@
 <!-- Bootstrap JS Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/js/bootstrap.bundle.min.js"></script>
 
-<script type="module" src="login/js/index.js"></script>
+<script type="module" src="login/script.js"></script>
 </body>
 </html>
