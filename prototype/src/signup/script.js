@@ -15,9 +15,9 @@ $(() => {
         $eye.addClass(showing ? 'bi-eye-fill' : 'bi-eye-slash-fill');
     });
     $('#toggle-confirm').on('click', function (e) {
-        const $password = $('#confirm');
-        const showing = $password.prop('type') === 'text';
-        $password.prop('type', showing ? 'password' : 'text');
+        const $confirm = $('#confirm');
+        const showing = $confirm.prop('type') === 'text';
+        $confirm.prop('type', showing ? 'password' : 'text');
         const $eye = $('#confirm-eye');
         $eye.removeClass(showing ? 'bi-eye-slash-fill' : 'bi-eye-fill');
         $eye.addClass(showing ? 'bi-eye-fill' : 'bi-eye-slash-fill');

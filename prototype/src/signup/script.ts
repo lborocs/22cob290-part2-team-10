@@ -36,11 +36,11 @@ $(() => {
   });
 
   $('#toggle-confirm').on('click', function (e) {
-    const $password = $('#confirm');
+    const $confirm = $('#confirm');
 
-    const showing = $password.prop('type') === 'text';
+    const showing = $confirm.prop('type') === 'text';
 
-    $password.prop('type', showing ? 'password' : 'text');
+    $confirm.prop('type', showing ? 'password' : 'text');
 
     const $eye = $('#confirm-eye');
     $eye.removeClass(showing ? 'bi-eye-slash-fill' : 'bi-eye-fill');
