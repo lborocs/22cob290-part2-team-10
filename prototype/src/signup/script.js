@@ -38,14 +38,9 @@ $(() => {
             passwordError(pwError);
             return;
         }
-        pwError = validatePassword(credentials.confirm);
-        if (pwError) {
-            passwordError(pwError, 'confirm');
-            return;
-        }
         if (credentials.password !== credentials.confirm) {
-            passwordError('');
             passwordError('Passwords do not match!', 'confirm');
+            return;
         }
         signup($this, credentials);
     });
