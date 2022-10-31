@@ -135,4 +135,3 @@ function signup($form: JQuery<HTMLElement>, { email, password }: Credentials) {
       $('#signup-btn').prop('disabled', false);
     });
 }
-

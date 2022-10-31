@@ -58,7 +58,7 @@ if (!isset($_REQUEST['token'])) {
         <label for="password" class="col-sm-3 col-form-label">Password</label>
         <div class="col-sm-9">
           <div class="input-group has-validation">
-            <input value="TestPassword123!"
+            <input value="TestPassword456!"
                    type="password"
                    autocomplete="new-password"
                    class="form-control"
@@ -87,7 +87,7 @@ if (!isset($_REQUEST['token'])) {
         <label for="confirm" class="col-sm-3 col-form-label">Confirm Password</label>
         <div class="col-sm-9">
           <div class="input-group has-validation">
-            <input value="TestPassword123"
+            <input value="TestPassword456!"
                    type="password"
                    autocomplete="new-password"
                    class="form-control"
