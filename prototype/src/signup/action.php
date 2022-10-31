@@ -3,21 +3,33 @@
  * Parameters schema:
  *  - email [string]
  *  - password [string]
+ *  - token [JWT token (string)]
  *
  * Response schema:
  *  - success [boolean]
- *  - errorMessage [enum, if success == false] ALREADY_EXIST ...
+ *  - errorMessage [enum, if success == false] ALREADY_EXIST, INVALID_TOKEN, USED_TOKEN ...
  */
 
 require "../credentials.php";
 
 header('Content-Type: application/json');
 
-function error(string $errorMessage) {
+function error(string $errorMessage)
+{
   exit(json_encode([
     'success' => false,
     'errorMessage' => $errorMessage,
   ]));
+}
+
+// hardcoded
+function decrypt_token(string $token): ?string
+{
+  if ($token == 'a-token') {
+    return 'alice@make-it-all.co.uk';
+  }
+
+  return null;
 }
 
 if (!isset($_REQUEST['email'])
@@ -27,14 +39,19 @@ if (!isset($_REQUEST['email'])
 
 $email = $_REQUEST['email'];
 $password = $_REQUEST['password'];
+$token = $_REQUEST['token'];
+
+$inviter = decrypt_token($token);
+
+if ($inviter === null) {
+  error('INVALID_TOKEN');
+}
 
 $response = [
   'success' => false,
 ];
 
-// hardcoded
 $exists = $email == 'alice@make-it-all.co.uk';
-// $correct_password = $password == 'TestPassword123!';
 
 if (!$exists) {
   $response['success'] = true;
@@ -43,22 +60,39 @@ if (!$exists) {
 }
 
 /*
+function used_token(PDO $conn, string $token): bool
+{
+  $sql = <<<SQL
+    SELECT
+      COUNT(*) AS count
+    FROM
+      users
+    WHERE
+      users.invite_token = $token
+  SQL;
+
+  $statement = $conn->query($sql);
+
+  $result = $statement->fetch(PDO::FETCH_ASSOC);
+
+  $count = $result['count'];
+
+  return $count > 0;
+}
+
 try {
   $conn = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
   // set the PDO error mode to exception
   $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-  // count will tell us if there is a user with that email
-  // correct_password will tell us that the password entered is correct
-  // TODO verify works
+  if (used_token(conn, token)) {
+    $conn = null;
+    error('USED_TOKEN');
+  }
+
   $sql = <<<SQL
-    SELECT
-      COUNT(*) AS count,
-      users.password = $password AS correct_password
-    FROM
-      users
-    WHERE
-      users.email = $email
+    INSERT IGNORE INTO users
+    VALUES ($username, $password, $token)
   SQL;
 
   $statement = $conn->query($sql);

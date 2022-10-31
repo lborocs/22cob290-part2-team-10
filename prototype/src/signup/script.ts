@@ -7,6 +7,7 @@ type SignupFailedResponse = {
 
 enum SignupFailedReason {
   ALREADY_EXIST = 'ALREADY_EXIST',
+  INVALID_TOKEN = 'INVALID_TOKEN',
 }
 
 type SignupResponse = SignupFailedResponse | {
@@ -90,20 +91,41 @@ function passwordError(error: string, id: string = 'password') {
   $(`#${id}-feedback`).text(error);
 }
 
+// hardcoded
+function getToken(): string {
+  const url = new URL(window.location.href);
+
+  return url.searchParams.get('token') ?? 'bad-token';
+}
+
 function signup($form: JQuery<HTMLElement>, { email, password }: Credentials) {
   $('#signup-btn').prop('disabled', true);
+
+  const token = getToken();
 
   $.ajax({
     url: $form.attr('action'),
     type: $form.attr('method'),
-    data: $form.serialize(),
+    data: { email, password, token },
     dataType: 'json',
   })
     .done((res: SignupResponse) => {
       if (res.success) {
-        redirect('todo/', { email });
+        redirect('todo', { email });
       } else {
         console.log(res);
+
+        switch (res.errorMessage) {
+          case SignupFailedReason.ALREADY_EXIST:
+            $('#email').addClass('is-invalid');
+            break;
+
+          case SignupFailedReason.INVALID_TOKEN:
+            alert('Invalid token!');
+            break;
+
+          default:
+        }
       }
     })
     .fail((xhr, errorTextStatus, errorMessage) => {

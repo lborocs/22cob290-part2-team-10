@@ -1,7 +1,14 @@
 <?php
 
 // TODO: implement JWT token
-$token = $_REQUEST['token'] ?? '';
+
+// TODO: if token not set, show some sort of error page
+
+// or if no token in URL, have an input for token
+
+if (!isset($_REQUEST['token'])) {
+  // die('Token not set');
+}
 
 ?><!DOCTYPE html>
 <html lang="en">
@@ -10,7 +17,7 @@ $token = $_REQUEST['token'] ?? '';
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Make-It-All</title>
-  <link rel="icon" type="image/png" href="../assets/make_it_all.png">
+  <link rel="icon" type="image/png" href="assets/make_it_all.png">
 
   <!-- jQuery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
@@ -19,15 +26,15 @@ $token = $_REQUEST['token'] ?? '';
   <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
 
-  <link rel="stylesheet" type="text/css" href="signup.css">
+  <link rel="stylesheet" type="text/css" href="signup/styles.css">
 </head>
 
 <body>
 <main class="vh-100 d-flex align-items-center justify-content-center">
   <div>
-    <img src="../assets/make_it_all.png" alt="Make It All Logo" class="mb-4">
+    <img src="assets/make_it_all.png" alt="Make It All Logo" class="mb-4">
 
-    <form id="signup-form" action="signup.php" method="POST" class="mt-6">
+    <form id="signup-form" action="signup/action.php" method="POST" class="mt-6">
       <div class="form-group row form-row">
         <label for="email" class="col-sm-3 col-form-label">Email</label>
         <div class="col-sm-9">
@@ -112,6 +119,6 @@ $token = $_REQUEST['token'] ?? '';
 <!-- Bootstrap JS Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/js/bootstrap.bundle.min.js"></script>
 
-<script type="module" src="signup.js"></script>
+<script type="module" src="signup/script.js"></script>
 </body>
 </html>

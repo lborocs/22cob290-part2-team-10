@@ -2,6 +2,7 @@ import { redirect, isValidWorkEmail, validatePassword } from '../utils';
 var SignupFailedReason;
 (function (SignupFailedReason) {
     SignupFailedReason["ALREADY_EXIST"] = "ALREADY_EXIST";
+    SignupFailedReason["INVALID_TOKEN"] = "INVALID_TOKEN";
 })(SignupFailedReason || (SignupFailedReason = {}));
 // TODO: maybe change input error to tooltips because of spacing
 $(() => {
@@ -55,20 +56,36 @@ function passwordError(error, id = 'password') {
     $(`#${id}`).addClass('is-invalid');
     $(`#${id}-feedback`).text(error);
 }
+// hardcoded
+function getToken() {
+    var _a;
+    const url = new URL(window.location.href);
+    return (_a = url.searchParams.get('token')) !== null && _a !== void 0 ? _a : 'bad-token';
+}
 function signup($form, { email, password }) {
     $('#signup-btn').prop('disabled', true);
+    const token = getToken();
     $.ajax({
         url: $form.attr('action'),
         type: $form.attr('method'),
-        data: $form.serialize(),
+        data: { email, password, token },
         dataType: 'json',
     })
         .done((res) => {
         if (res.success) {
-            redirect('todo/', { email });
+            redirect('todo', { email });
         }
         else {
             console.log(res);
+            switch (res.errorMessage) {
+                case SignupFailedReason.ALREADY_EXIST:
+                    $('#email').addClass('is-invalid');
+                    break;
+                case SignupFailedReason.INVALID_TOKEN:
+                    alert('Invalid token!');
+                    break;
+                default:
+            }
         }
     })
         .fail((xhr, errorTextStatus, errorMessage) => {
