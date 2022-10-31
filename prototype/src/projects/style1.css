@@ -219,3 +219,11 @@ a.article:hover {
 #completed {
 	min-height: 488px;
 }
+
+p.overflow-auto{
+	max-height:100px;
+}
+
+.card drag-item{
+	padding-top: 10px;
+}

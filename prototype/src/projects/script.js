@@ -97,7 +97,7 @@ $(function() {
 		  <div class="card-body">
 			${process_tags(tags)}
 			<p style="font-weight: bold">${title}</p>
-			<p class="mb-0">${description}</p>
+			<p class="mb-0 overflow-auto">${description}</p>
 		  </div>
 		</div>`
 		);
