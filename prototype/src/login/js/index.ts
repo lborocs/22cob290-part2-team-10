@@ -76,7 +76,7 @@ function login($form: JQuery<HTMLElement>, { email, password }: Credentials) {
   })
     .done((res: LoginResponse) => {
       if (res.success) {
-        redirect('todo/', { email });
+        redirect('todo', { email });
       } else {
         console.log(res);
 
