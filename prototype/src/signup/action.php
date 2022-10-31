@@ -41,23 +41,20 @@ $email = $_REQUEST['email'];
 $password = $_REQUEST['password'];
 $token = $_REQUEST['token'];
 
-$inviter = decrypt_token($token);
+$exists = $email == 'alice@make-it-all.co.uk';
 
+if ($exists) {
+  error('ALREADY_EXIST');
+}
+
+$inviter = decrypt_token($token);
 if ($inviter === null) {
   error('INVALID_TOKEN');
 }
 
 $response = [
-  'success' => false,
+  'success' => true,
 ];
-
-$exists = $email == 'alice@make-it-all.co.uk';
-
-if (!$exists) {
-  $response['success'] = true;
-} else {
-  $response['errorMessage'] = 'ALREADY_EXIST';
-}
 
 /*
 function used_token(PDO $conn, string $token): bool
