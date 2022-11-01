@@ -153,9 +153,12 @@
 								<!--EXAMPLE TASK-->
 								<div class="card mb-3 drag_item noDrop" id="task1" draggable="true" ondragstart="drag(event)" >
 								  <div class="card-body">
+										<!-- https://stackoverflow.com/questions/2727717/how-to-remove-the-parent-element-using-plain-javascript idk why it works this way it just does -->
+									<button type="button" class="close" aria-label="Close" onclick="this.parentNode.parentNode.parentNode.removeChild(parentNode.parentNode);">
+									<span aria-hidden="true">&times;</span></button><br>
 									<span class="badge bg-primary text-white mb-2">Tag1</span>
 									<p style="font-weight: bold">Title</p>
-									<p class="mb-0 overflow-auto">You can move these elements between the containers</p>
+									<p class="mb-0">You can move these elements between the containers</p>
 								  </div>
 								</div>	
 								<!--END OF EXAMPLE TASK-->

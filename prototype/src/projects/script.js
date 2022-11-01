@@ -96,6 +96,8 @@ $(function() {
 		`<div class="card mb-3 drag_item noDrop" id="task`+ taskno +`" draggable="true" ondragstart="drag(event)">
 		  <div class="card-body">
 			${process_tags(tags)}
+			<button type="button" class="close" aria-label="Close" onclick="this.parentNode.parentNode.parentNode.removeChild(parentNode.parentNode);">
+			<span aria-hidden="true">&times;</span></button><br>
 			<p style="font-weight: bold">${title}</p>
 			<p class="mb-0 overflow-auto">${description}</p>
 		  </div>
