@@ -1,0 +1,22 @@
+html, body {
+  background: #e9ecef;
+}
+
+.drag_item {
+  cursor: move; /* fallback if grab cursor is unsupported */
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+}
+
+.tasks {
+  min-height: 450px;
+}
+
+.close {
+	float: right;
+}
+
+#completed {
+	min-height: 490px;
+}
