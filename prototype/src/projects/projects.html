@@ -149,7 +149,7 @@
 						<div class="class-body m-2">
 							<!-- List of tasks will be stored inside this card div 
 							ondragover event specifies where the dragged data can be dropped-->
-							<div class="tasks" id="to_do" ondrop="drop(event)" ondragover="allowDrop(event)">	
+							<div class="tasks scroll" id="to_do" ondrop="drop(event)" ondragover="allowDrop(event)">	
 								<!--EXAMPLE TASK-->
 								<div class="card mb-3 drag_item noDrop" id="task1" draggable="true" ondragstart="drag(event)" >
 								  <div class="card-body">
@@ -158,11 +158,13 @@
 									<span aria-hidden="true">&times;</span></button><br>
 									<span class="badge bg-primary text-white mb-2">Tag1</span>
 									<p style="font-weight: bold">Title</p>
-									<p class="mb-0">You can move these elements between the containers</p>
+									<p class="mb-0 overflow-auto">You can move these elements between the containers</p>
 								  </div>
 								</div>	
 								<!--END OF EXAMPLE TASK-->
 							</div>
+						</div>
+						<div class = "card-footer">
 							<div class="btn btn-primary btn-block open_modal" data-id="to_do">Add task</div>
 						</div>
 					</div>				
@@ -176,10 +178,10 @@
 							<h5 class="card-title">In Progress</h5>
 						</div>
 						<div class="class-body m-2">
-							<div class="tasks" id="in_progress" ondrop="drop(event)" ondragover="allowDrop(event)">
-							</div>
+							<div class="tasks scroll" id="in_progress" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+						</div>
+						<div class = "card-footer">
 							<div class="btn btn-primary btn-block open_modal" data-id="in_progress">Add task</div>
-
 						</div>
 					</div>			
 				</div>			
@@ -190,9 +192,11 @@
 						<div class="card-header">
 							<h5 class="card-title">Code Review</h5>
 						</div>
-						<div class="class-body  m-2">
-							<div class="tasks" id="code_review" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-							<div class="btn btn-primary btn-block open_modal" data-id="code_review">Add task</div>
+						<div class="class-body m-2">
+							<div class="tasks scroll" id="code_review" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+						</div>
+						<div class = "card-footer">
+							<div class="btn btn-primary btn-block open_modal" data-id="code_review" >Add task</div>
 						</div>
 					</div>
 					
@@ -205,7 +209,7 @@
 							<h5 class="card-title">Completed</h5>
 						</div>
 						<div class="class-body m-2">
-							<div class="tasks" id="completed" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+							<div class="tasks scroll" id="completed" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
 						</div>
 					</div>
 				</div>					

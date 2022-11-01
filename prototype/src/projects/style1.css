@@ -212,12 +212,8 @@ a.article:hover {
   cursor: -webkit-grab;
 }
 
-.tasks {
-  min-height: 450px;
-}
-
 #completed {
-	min-height: 488px;
+	min-height: 400px;
 }
 
 p.overflow-auto{
@@ -226,4 +222,13 @@ p.overflow-auto{
 
 .card drag-item{
 	padding-top: 10px;
+}
+
+.class-body{
+	height: 400px;
+}
+
+.scroll{
+	height: 100%;
+	overflow-y: auto;
 }
