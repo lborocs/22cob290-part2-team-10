@@ -129,21 +129,21 @@ function get_projects(string $email): array
                 <!--POP-UP FORM-->
                 <form role="form" method="POST" id="task_info" action="">
                   <div class="form-group">
-                    <label class="control-label">Title</label>
+                    <label class="control-label" for="title">Title</label>
                     <div>
                       <input type="text" class="form-control input-lg" name="title" id="title" placeholder="Title"
                         required>
                     </div>
                   </div>
                   <div class="form-group">
-                    <label class="control-label">Description</label>
+                    <label class="control-label" for="description_textarea">Description</label>
                     <div>
                       <textarea class="form-control" id="description_textarea" rows="3" name="description"
                         placeholder="Task description" required></textarea>
                     </div>
                   </div>
                   <div class="form-group">
-                    <label class="control-label">Tags</label>
+                    <label class="control-label" for="tags_textarea">Tags</label>
                     <div>
                       <textarea class="form-control" id="tags_textarea" name="tags" rows="2"
                         placeholder="Enter tags, separated by commas"></textarea>
