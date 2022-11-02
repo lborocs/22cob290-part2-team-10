@@ -14,7 +14,7 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/css/bootstrap.min.css">
   <!-- Bootstrap Icons -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.min.css">
 
   <link rel="stylesheet" type="text/css" href="login/styles.css">
 </head>
@@ -25,9 +25,10 @@
     <img src="assets/make_it_all.png" alt="Make It All Logo" class="mb-4">
 
     <form id="login-form" action="login/action.php" method="POST" class="mt-6">
-      <div class="form-group row login-form-row">
+      <!-- Email -->
+      <div class="form-group row mb-3">
         <label for="email" class="col-sm-3 col-form-label">Email</label>
-        <div class="col-sm-9">
+        <div class="col-sm-9 position-relative">
           <input value="alice@make-it-all.co.uk"
                  type="email"
                  autocomplete="email"
@@ -35,24 +36,17 @@
                  id="email"
                  name="email"
                  placeholder="Enter email"
-                 pattern=".+@make-it-all\.co\.uk"
                  required
                  >
-          <div class="invalid-feedback">
-            You do not have an account!
+          <div id="email-feedback" class="invalid-tooltip">
           </div>
         </div>
       </div>
 
-      <div class="form-group row login-form-row">
+      <!-- Password -->
+      <div class="form-group row mb-3">
         <label for="password" class="col-sm-3 col-form-label">Password</label>
-        <!-- pw pattern: https://stackoverflow.com/q/1559751
-          pw pattern not working here but works in js
-          (?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)
-
-          add .* and it works here
-        -->
-        <div class="col-sm-9">
+        <div class="col-sm-9 position-relative">
           <div class="input-group has-validation">
             <input value="TestPassword123!"
                    type="password"
@@ -70,11 +64,10 @@
                   >
               <i class="bi bi-info-circle-fill"></i>
             </span>
-
             <button id="toggle-password" class="btn btn-outline-secondary" type="button">
               <i id="eye" class="bi bi-eye-fill"></i>
             </button>
-            <div id="password-feedback" class="invalid-feedback">
+            <div id="password-feedback" class="invalid-tooltip">
             </div>
           </div>
         </div>

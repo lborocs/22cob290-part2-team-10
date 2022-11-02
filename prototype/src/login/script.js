@@ -20,24 +20,17 @@ $(() => {
         e.preventDefault();
         const $this = $(this);
         const credentials = Object.fromEntries(new FormData(this));
-        if (!isValidWorkEmail(credentials.email)) {
-            alert('Invalid email!');
-            return;
-        }
+        if (!isValidWorkEmail(credentials.email))
+            emailError('Invalid Make-It-All email');
         const pwError = validatePassword(credentials.password);
-        if (pwError) {
+        if (pwError)
             passwordError(pwError);
+        if (formIsInvalid($this))
             return;
-        }
         login($this, credentials);
     });
     $('.multiline-tooltip').tooltip({ html: true });
 });
-function passwordError(error) {
-    // FIXME: this causes components to resize :/
-    $('#password').addClass('is-invalid');
-    $('#password-feedback').text(error);
-}
 function login($form, { email, password }) {
     $('#login-btn').prop('disabled', true);
     $.ajax({
@@ -54,13 +47,13 @@ function login($form, { email, password }) {
             console.log(res);
             switch (res.errorMessage) {
                 case LoginFailedReason.DOESNT_EXIST:
-                    $('#email').addClass('is-invalid');
+                    emailError('You do not have an account');
                     break;
                 case LoginFailedReason.WRONG_PASSWORD:
-                    passwordError('Incorrect password!');
+                    passwordError('Incorrect password');
                     break;
-                default:
-                    $('#email').addClass('is-invalid');
+                default: // shouldn't happen
+                    emailError('');
                     passwordError(res.errorMessage);
             }
         }
@@ -71,4 +64,16 @@ function login($form, { email, password }) {
         .always(() => {
         $('#login-btn').prop('disabled', false);
     });
+}
+function formIsInvalid($form) {
+    return $form.find('.is-invalid').length > 0;
+}
+function emailError(error) {
+    $('#email').addClass('is-invalid');
+    $('#email-feedback').text(error);
+}
+function passwordError(error) {
+    // FIXME: this causes components to resize :/
+    $('#password').addClass('is-invalid');
+    $('#password-feedback').text(error);
 }

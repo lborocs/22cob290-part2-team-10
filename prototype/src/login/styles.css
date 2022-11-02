@@ -1,9 +1,3 @@
 body {
     background-color: #d3d3d3;
 }
-
-.login-form-row {
-    box-sizing: border-box;
-    height: 70px;
-    /* width: 100%; */
-}
