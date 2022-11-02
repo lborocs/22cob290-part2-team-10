@@ -141,7 +141,7 @@ a.download {
     background: #fff;
     color: #7386D5;
 }
-/* 
+/*
 a.article,
 a.article:hover {
     background: #6d7fcc !important;
@@ -216,19 +216,19 @@ a.article:hover {
 	min-height: 400px;
 }
 
-p.overflow-auto{
+p.overflow-auto {
 	max-height:100px;
 }
 
-.card drag-item{
+.card drag-item {
 	padding-top: 10px;
 }
 
-.class-body{
+.class-body {
 	height: 400px;
 }
 
-.scroll{
+.scroll {
 	height: 100%;
 	overflow-y: auto;
 }
