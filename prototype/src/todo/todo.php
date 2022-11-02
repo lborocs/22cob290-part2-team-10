@@ -1,4 +1,8 @@
-<!DOCTYPE html>
+<?php
+
+$email = $_REQUEST['email'];
+
+?><!DOCTYPE html>
 <html lang="en">
 
 <head>
