@@ -20,6 +20,7 @@ export var PasswordError;
     PasswordError["NO_NUMBER"] = "No number";
     PasswordError["NO_SPECIAL_SYMBOL"] = "No special symbol";
 })(PasswordError || (PasswordError = {}));
+// https://stackoverflow.com/q/1559751
 const LOWERCASE_REGEX = /(?=.*[a-z])/;
 const UPPERCASE_REGEX = /(?=.*[A-Z])/;
 const NUMBER_REGEX = /(?=.*\d)/;
