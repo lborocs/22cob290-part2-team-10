@@ -16,6 +16,7 @@ type SignupResponse = SignupFailedResponse | {
 };
 
 type Credentials = {
+  token: string
   email: string
   password: string
   confirm: string
@@ -48,7 +49,7 @@ $(() => {
     $eye.addClass(showing ? 'bi-eye-fill' : 'bi-eye-slash-fill');
   });
 
-  $('#email, #password, #confirm').on('input', function (e) {
+  $('#token, #email, #password, #confirm').on('input', function (e) {
     $(this).removeClass('is-invalid');
   });
 
@@ -80,28 +81,13 @@ $(() => {
   (<any>$('.multiline-tooltip')).tooltip({ html: true });
 });
 
-function passwordError(error: string, id: string = 'password') {
-  // FIXME: this causes components to resize :/
-  $(`#${id}`).addClass('is-invalid');
-  $(`#${id}-feedback`).text(error);
-}
-
-// hardcoded
-function getToken(): string {
-  const url = new URL(window.location.href);
-
-  return url.searchParams.get('token') ?? 'bad-token';
-}
-
-function signup($form: JQuery<HTMLElement>, { email, password }: Credentials) {
+function signup($form: JQuery<HTMLElement>, { token, email, password }: Credentials) {
   $('#signup-btn').prop('disabled', true);
-
-  const token = getToken();
 
   $.ajax({
     url: $form.attr('action'),
     type: $form.attr('method'),
-    data: { email, password, token },
+    data: { token, email, password },
     dataType: 'json',
   })
     .done((res: SignupResponse) => {
@@ -116,11 +102,11 @@ function signup($form: JQuery<HTMLElement>, { email, password }: Credentials) {
             break;
 
           case SignupFailedReason.INVALID_TOKEN:
-            showInvalidTokenModal('Your invite token is invalid.');
+            tokenError('Your invite token is invalid!');
             break;
 
           case SignupFailedReason.USED_TOKEN:
-            showInvalidTokenModal('Your invite token has already been used.');
+            tokenError('Your invite token has already been used!');
             break;
 
           default:
@@ -135,13 +121,13 @@ function signup($form: JQuery<HTMLElement>, { email, password }: Credentials) {
     });
 }
 
-function showInvalidTokenModal(text: string = '') {
-  const $modal = $('#invalid-token-modal');
+// FIXME: this causes components to resize :/ (i think because it's a input-group and it doesnt have the noWrap class or smthn like that)
+function passwordError(error: string, id: string = 'password') {
+  $(`#${id}`).addClass('is-invalid');
+  $(`#${id}-feedback`).text(error);
+}
 
-  $('.modal-body').text(text);
-
-  // @ts-ignore
-  const modal = bootstrap.Modal.getOrCreateInstance($modal[0]);
-
-  modal.show();
+function tokenError(error: string) {
+  $('#token').addClass('is-invalid');
+  $('#token-feedback').text(error);
 }

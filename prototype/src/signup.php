@@ -2,13 +2,8 @@
 
 // TODO: implement JWT token
 
-// TODO: if token not set, show some sort of error page
-
-// or if no token in URL, have an input for token
-
-if (!isset($_REQUEST['token'])) {
-  // die('Token not set');
-}
+// pre-fill token field with token in URL
+$invite_token = $_REQUEST['token'] ?? '';
 
 ?><!DOCTYPE html>
 <html lang="en">
@@ -31,27 +26,27 @@ if (!isset($_REQUEST['token'])) {
 
 <body>
 <main class="vh-100 d-flex align-items-center justify-content-center">
-  <!-- Invalid invite token modal -->
-  <div id="invalid-token-modal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="invalid-token-modal-label" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="invalid-token-modal-label">Invalid invite token</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div>
     <img src="assets/make_it_all.png" alt="Make It All Logo" class="mb-4">
 
     <form id="signup-form" action="signup/action.php" method="POST" class="mt-6">
+      <!-- Invite token -->
+      <div class="form-group row form-row">
+        <label for="token" class="col-sm-3 col-form-label">Invite Token</label>
+        <div class="col-sm-9">
+          <input value="<?php echo $invite_token ?>"
+                 type="text"
+                 class="form-control"
+                 id="token"
+                 name="token"
+                 placeholder="Enter invite token"
+                 required
+                 >
+          <div id="token-feedback" class="invalid-feedback">
+          </div>
+        </div>
+      </div>
+
       <!-- Email -->
       <div class="form-group row form-row">
         <label for="email" class="col-sm-3 col-form-label">Email</label>
