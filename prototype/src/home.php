@@ -53,6 +53,7 @@ function get_projects(string $email): array
         <img src="home/company-logo.png" alt="company logo" id="company-logo">
       </div>
 
+      <!-- TODO: clean up this tag mess -->
       <ul class="list-unstyled components sidebar-list">
         <li>Email</li>
         <p>

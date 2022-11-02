@@ -26,7 +26,12 @@ function drop(ev: DragEvent) {
   }
 }
 
+// TODO: impl system for not allowing to create new tasks with titles already used
 // const task_titles = new Set<string>();
+
+// TODO: update add_task form validation (bootstrap form validation + use button as submit)
+
+// TODO: impl hover over task to edit (open modal)
 
 $(() => {
   $('#sidebarCollapse').on('click', function () {
