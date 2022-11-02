@@ -41,7 +41,7 @@ function login($form, { email, password }) {
     })
         .done((res) => {
         if (res.success) {
-            redirect('todo', { email });
+            redirect('home', { email });
         }
         else {
             console.log(res);

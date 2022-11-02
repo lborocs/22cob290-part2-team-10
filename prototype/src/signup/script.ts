@@ -91,7 +91,7 @@ function signup($form: JQuery, { token, email, password }: Credentials) {
   })
     .done((res: SignupResponse) => {
       if (res.success) {
-        redirect('todo', { email });
+        redirect('home', { email });
       } else {
         console.log(res);
 
