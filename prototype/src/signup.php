@@ -109,7 +109,6 @@ $invite_token = $_REQUEST['token'] ?? '';
                    placeholder="Enter password again"
                    minlength="12"
                    >
-            </span>
             <button id="toggle-confirm" class="btn btn-outline-secondary" type="button">
               <i id="confirm-eye" class="bi bi-eye-fill"></i>
             </button>

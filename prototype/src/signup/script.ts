@@ -108,7 +108,8 @@ function signup($form: JQuery, { token, email, password }: Credentials) {
             tokenError('Your invite token has already been used!');
             break;
 
-          default:
+          default: // shouldn't happen
+            emailError(res.errorMessage);
         }
       }
     })

@@ -70,7 +70,8 @@ function signup($form, { token, email, password }) {
                 case SignupFailedReason.USED_TOKEN:
                     tokenError('Your invite token has already been used!');
                     break;
-                default:
+                default: // shouldn't happen
+                    emailError(res.errorMessage);
             }
         }
     })

@@ -58,7 +58,7 @@ $(() => {
   (<any>$('.multiline-tooltip')).tooltip({ html: true });
 });
 
-function login($form: JQuery<HTMLElement>, { email, password }: Credentials) {
+function login($form: JQuery<HTMLElement>, { email }: Credentials) {
   $('#login-btn').prop('disabled', true);
 
   $.ajax({
@@ -106,7 +106,6 @@ function emailError(error: string) {
 }
 
 function passwordError(error: string) {
-  // FIXME: this causes components to resize :/
   $('#password').addClass('is-invalid');
   $('#password-feedback').text(error);
 }

@@ -9,7 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Make-It-All</title>
-  <link rel="icon" type="image/png" href="login/assets/make_it_all.png">
+  <link rel="icon" type="image/png" href="assets/make_it_all.png">
 
   <!-- jQuery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
