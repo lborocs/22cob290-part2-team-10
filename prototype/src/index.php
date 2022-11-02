@@ -1,5 +1,7 @@
 <?php
 // TODO check if they're already logged in - don't really need to?
+
+// TODO: allow signing up from here
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
