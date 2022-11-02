@@ -22,7 +22,7 @@
 <body>
 <main class="vh-100 d-flex align-items-center justify-content-center">
   <div>
-    <img src="assets/make_it_all.png" alt="Make It All Logo" class="mb-4">
+    <img src="assets/make_it_all.png" alt="Make-It-All Logo" class="img-fluid mb-3">
 
     <form id="login-form" action="login/action.php" method="POST" class="mt-6">
       <!-- Email -->
