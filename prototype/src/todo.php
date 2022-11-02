@@ -1,6 +1,7 @@
 <?php
 
 $email = $_REQUEST['email'];
+// U03f1rTJup
 
 ?><!DOCTYPE html>
 <html lang="en">
@@ -17,7 +18,7 @@ $email = $_REQUEST['email'];
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
     integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
   <!-- Our Custom CSS -->
-  <link rel="stylesheet" href="style1.css">
+  <link rel="stylesheet" href="todo/style1.css">
 
   <!-- Font Awesome JS -->
   <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js"
@@ -33,7 +34,7 @@ $email = $_REQUEST['email'];
     <!-- Sidebar  -->
     <nav id="sidebar">
       <div class="sidebar-header">
-        <img src="company-logo.png" alt="company logo" id="company-logo">
+        <img src="todo/company-logo.png" alt="company logo" id="company-logo">
       </div>
 
       <ul class="list-unstyled components sidebar-list">
@@ -104,7 +105,7 @@ $email = $_REQUEST['email'];
                 <a class="nav-link" href="#">Projects</a>
               </li>
               <li class="nav-item">
-                <img id="profile-picture" src="kanye.webp" alt="Profile Picture">
+                <img id="profile-picture" src="todo/kanye.webp" alt="Profile Picture">
               </li>
             </ul>
           </div>
@@ -247,7 +248,7 @@ $email = $_REQUEST['email'];
       integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
       crossorigin="anonymous"></script>
 
-    <script src="script.js"></script>
+    <script src="todo/script.js"></script>
 </body>
 
 </html>
