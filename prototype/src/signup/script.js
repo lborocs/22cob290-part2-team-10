@@ -5,7 +5,6 @@ var SignupFailedReason;
     SignupFailedReason["INVALID_TOKEN"] = "INVALID_TOKEN";
     SignupFailedReason["USED_TOKEN"] = "USED_TOKEN";
 })(SignupFailedReason || (SignupFailedReason = {}));
-// TODO: maybe change input error to tooltips because of spacing
 $(() => {
     $('#toggle-password').on('click', function (e) {
         const $password = $('#password');
@@ -30,19 +29,19 @@ $(() => {
         e.preventDefault();
         const $this = $(this);
         const credentials = Object.fromEntries(new FormData(this));
+        // is already handled by HTML
         if (!isValidWorkEmail(credentials.email)) {
-            alert('Invalid email!');
-            return;
+            emailError('Invalid Make-It-All email!');
         }
-        let pwError = validatePassword(credentials.password);
+        const pwError = validatePassword(credentials.password);
         if (pwError) {
             passwordError(pwError);
-            return;
         }
         if (credentials.password !== credentials.confirm) {
             passwordError('Passwords do not match!', 'confirm');
-            return;
         }
+        if (formIsInvalid($this))
+            return;
         signup($this, credentials);
     });
     $('.multiline-tooltip').tooltip({ html: true });
@@ -63,7 +62,7 @@ function signup($form, { token, email, password }) {
             console.log(res);
             switch (res.errorMessage) {
                 case SignupFailedReason.ALREADY_EXIST:
-                    $('#email').addClass('is-invalid');
+                    emailError('You already have an account!');
                     break;
                 case SignupFailedReason.INVALID_TOKEN:
                     tokenError('Your invite token is invalid!');
@@ -82,7 +81,13 @@ function signup($form, { token, email, password }) {
         $('#signup-btn').prop('disabled', false);
     });
 }
-// FIXME: this causes components to resize :/ (i think because it's a input-group and it doesnt have the noWrap class or smthn like that)
+function formIsInvalid($form) {
+    return $form.find('.is-invalid').length > 0;
+}
+function emailError(error) {
+    $('#email').addClass('is-invalid');
+    $('#email-feedback').text(error);
+}
 function passwordError(error, id = 'password') {
     $(`#${id}`).addClass('is-invalid');
     $(`#${id}-feedback`).text(error);

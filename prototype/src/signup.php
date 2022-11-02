@@ -19,7 +19,7 @@ $invite_token = $_REQUEST['token'] ?? '';
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/css/bootstrap.min.css">
   <!-- Bootstrap Icons -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.min.css">
 
   <link rel="stylesheet" type="text/css" href="signup/styles.css">
 </head>
@@ -31,9 +31,9 @@ $invite_token = $_REQUEST['token'] ?? '';
 
     <form id="signup-form" action="signup/action.php" method="POST" class="mt-6">
       <!-- Invite token -->
-      <div class="form-group row form-row">
+      <div class="form-group row mb-3">
         <label for="token" class="col-sm-3 col-form-label">Invite Token</label>
-        <div class="col-sm-9">
+        <div class="col-sm-9 position-relative">
           <input value="<?php echo $invite_token ?>"
                  type="text"
                  class="form-control"
@@ -42,15 +42,15 @@ $invite_token = $_REQUEST['token'] ?? '';
                  placeholder="Enter invite token"
                  required
                  >
-          <div id="token-feedback" class="invalid-feedback">
+          <div id="token-feedback" class="invalid-tooltip">
           </div>
         </div>
       </div>
 
       <!-- Email -->
-      <div class="form-group row form-row">
+      <div class="form-group row mb-3">
         <label for="email" class="col-sm-3 col-form-label">Email</label>
-        <div class="col-sm-9">
+        <div class="col-sm-9 position-relative">
           <input value="bob@make-it-all.co.uk"
                  type="email"
                  autocomplete="email"
@@ -61,16 +61,15 @@ $invite_token = $_REQUEST['token'] ?? '';
                  pattern=".+@make-it-all\.co\.uk"
                  required
                  >
-          <div class="invalid-feedback">
-            You already have an account!
+          <div id="email-feedback" class="invalid-tooltip">
           </div>
         </div>
       </div>
 
       <!-- Password -->
-      <div class="form-group row form-row">
+      <div class="form-group row mb-3">
         <label for="password" class="col-sm-3 col-form-label">Password</label>
-        <div class="col-sm-9">
+        <div class="col-sm-9 position-relative">
           <div class="input-group has-validation">
             <input value="TestPassword456!"
                    type="password"
@@ -91,16 +90,16 @@ $invite_token = $_REQUEST['token'] ?? '';
             <button id="toggle-password" class="btn btn-outline-secondary" type="button">
               <i id="eye" class="bi bi-eye-fill"></i>
             </button>
-            <div id="password-feedback" class="invalid-feedback">
+            <div id="password-feedback" class="invalid-tooltip">
             </div>
           </div>
         </div>
       </div>
 
       <!-- Confirm password -->
-      <div class="form-group row form-row">
+      <div class="form-group row mb-3">
         <label for="confirm" class="col-sm-3 col-form-label">Confirm Password</label>
-        <div class="col-sm-9">
+        <div class="col-sm-9 position-relative">
           <div class="input-group has-validation">
             <input value="TestPassword456!"
                    type="password"
@@ -115,7 +114,7 @@ $invite_token = $_REQUEST['token'] ?? '';
             <button id="toggle-confirm" class="btn btn-outline-secondary" type="button">
               <i id="confirm-eye" class="bi bi-eye-fill"></i>
             </button>
-            <div id="confirm-feedback" class="invalid-feedback">
+            <div id="confirm-feedback" class="invalid-tooltip">
             </div>
           </div>
         </div>
