@@ -1,8 +1,24 @@
 <?php
 
-$email = $_REQUEST['email'];
-// U03f1rTJup
+if (!isset($_REQUEST['email'])) {
+  // redirect to login page if not signed in
+  header('Location: http://team10.sci-project.lboro.ac.uk/', true, 303);
+  die();
+}
 
+$email = $_REQUEST['email'];
+
+// hardcoded
+function get_projects(string $email): array
+{
+  return [
+    'Project 1',
+    'Project 2',
+    'Project 3',
+    'Project 4',
+    'Project 5',
+  ];
+}
 ?><!DOCTYPE html>
 <html lang="en">
 
@@ -38,44 +54,29 @@ $email = $_REQUEST['email'];
       </div>
 
       <ul class="list-unstyled components sidebar-list">
+        <li>Email</li>
         <p>
-          <!-- <a href="mailto:luyandolisimba@yahoo.co.uk"></a> -->
-          Email:<br>johndoe@make-it-all.co.uk
+          Email:<br><?php echo $email ?>
         </p>
         <p>Position:<br>Team Member</p>
         <p>Assigned Projects:</p>
         <div class="scrollable">
-          <li class="active">
-            <a href="#">Project 1</a>
-          </li>
+          <?php
+          $projects = get_projects($email);
 
-          <li>
-            <a href="#">Project 2</a>
-          </li>
-          <li>
-            <a href="#">project 3</a>
-          </li>
-          <li>
-            <a href="#">project 4</a>
-          </li>
-          <li>
-            <a href="#">project 5</a>
-          </li>
-          <li>
-            <a href="#">project 6</a>
-          </li>
-          <li>
-            <a href="#">project 7</a>
-          </li>
-          <li>
-            <a href="#">project 8</a>
-          </li>
-          <li>
-            <a href="#">project 9</a>
-          </li>
+          // none active cos this is showing the user's ToDo list
+          foreach ($projects as &$project_name) {
+            $project_html = <<<HTML
+              <li>
+                <a href="#">$project_name</a>
+              </li>
+            HTML;
+
+            echo $project_html;
+          }
+          ?>
+        </div>
       </ul>
-
-
     </nav>
 
     <div id="content">
@@ -113,7 +114,7 @@ $email = $_REQUEST['email'];
       </nav>
 
       <div class="container">
-        <h1 class="h3">Project name</h1>
+        <h1 class="h3">Your ToDo List</h1>
 
         <div id="modal" class="modal" tabindex="-1" role="dialog">
           <div class="modal-dialog" role="document">
