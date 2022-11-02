@@ -8,6 +8,7 @@ type SignupFailedResponse = {
 enum SignupFailedReason {
   ALREADY_EXIST = 'ALREADY_EXIST',
   INVALID_TOKEN = 'INVALID_TOKEN',
+  USED_TOKEN = 'USED_TOKEN',
 }
 
 type SignupResponse = SignupFailedResponse | {
@@ -115,7 +116,11 @@ function signup($form: JQuery<HTMLElement>, { email, password }: Credentials) {
             break;
 
           case SignupFailedReason.INVALID_TOKEN:
-            alert('Invalid token!');
+            showInvalidTokenModal('Your invite token is invalid.');
+            break;
+
+          case SignupFailedReason.USED_TOKEN:
+            showInvalidTokenModal('Your invite token has already been used.');
             break;
 
           default:
@@ -128,4 +133,15 @@ function signup($form: JQuery<HTMLElement>, { email, password }: Credentials) {
     .always(() => {
       $('#signup-btn').prop('disabled', false);
     });
+}
+
+function showInvalidTokenModal(text: string = '') {
+  const $modal = $('#invalid-token-modal');
+
+  $('.modal-body').text(text);
+
+  // @ts-ignore
+  const modal = bootstrap.Modal.getOrCreateInstance($modal[0]);
+
+  modal.show();
 }

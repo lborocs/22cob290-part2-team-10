@@ -25,11 +25,21 @@ function error(string $errorMessage)
 // hardcoded
 function decrypt_token(string $token): ?string
 {
-  if ($token == 'a-token') {
+  $valid_tokens = [
+    'a-token',
+    'used-token',
+  ];
+
+  if (in_array($token, $valid_tokens)) {
     return 'alice@make-it-all.co.uk';
   }
 
   return null;
+}
+
+function token_has_been_used(string $token): bool
+{
+  return $token === 'used-token';
 }
 
 if (!isset($_REQUEST['email'])
@@ -50,6 +60,10 @@ if ($exists) {
 $inviter = decrypt_token($token);
 if ($inviter === null) {
   error('INVALID_TOKEN');
+}
+
+if (token_has_been_used($token)) {
+  error('USED_TOKEN');
 }
 
 $response = [

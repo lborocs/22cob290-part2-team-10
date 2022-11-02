@@ -3,6 +3,7 @@ var SignupFailedReason;
 (function (SignupFailedReason) {
     SignupFailedReason["ALREADY_EXIST"] = "ALREADY_EXIST";
     SignupFailedReason["INVALID_TOKEN"] = "INVALID_TOKEN";
+    SignupFailedReason["USED_TOKEN"] = "USED_TOKEN";
 })(SignupFailedReason || (SignupFailedReason = {}));
 // TODO: maybe change input error to tooltips because of spacing
 $(() => {
@@ -77,7 +78,10 @@ function signup($form, { email, password }) {
                     $('#email').addClass('is-invalid');
                     break;
                 case SignupFailedReason.INVALID_TOKEN:
-                    alert('Invalid token!');
+                    showInvalidTokenModal('Your invite token is invalid.');
+                    break;
+                case SignupFailedReason.USED_TOKEN:
+                    showInvalidTokenModal('Your invite token has already been used.');
                     break;
                 default:
             }
@@ -89,4 +93,11 @@ function signup($form, { email, password }) {
         .always(() => {
         $('#signup-btn').prop('disabled', false);
     });
+}
+function showInvalidTokenModal(text = '') {
+    const $modal = $('#invalid-token-modal');
+    $('.modal-body').text(text);
+    // @ts-ignore
+    const modal = bootstrap.Modal.getOrCreateInstance($modal[0]);
+    modal.show();
 }

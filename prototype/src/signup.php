@@ -31,10 +31,28 @@ if (!isset($_REQUEST['token'])) {
 
 <body>
 <main class="vh-100 d-flex align-items-center justify-content-center">
+  <!-- Invalid invite token modal -->
+  <div id="invalid-token-modal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="invalid-token-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="invalid-token-modal-label">Invalid invite token</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div>
     <img src="assets/make_it_all.png" alt="Make It All Logo" class="mb-4">
 
     <form id="signup-form" action="signup/action.php" method="POST" class="mt-6">
+      <!-- Email -->
       <div class="form-group row form-row">
         <label for="email" class="col-sm-3 col-form-label">Email</label>
         <div class="col-sm-9">
@@ -54,6 +72,7 @@ if (!isset($_REQUEST['token'])) {
         </div>
       </div>
 
+      <!-- Password -->
       <div class="form-group row form-row">
         <label for="password" class="col-sm-3 col-form-label">Password</label>
         <div class="col-sm-9">
@@ -83,6 +102,7 @@ if (!isset($_REQUEST['token'])) {
         </div>
       </div>
 
+      <!-- Confirm password -->
       <div class="form-group row form-row">
         <label for="confirm" class="col-sm-3 col-form-label">Confirm Password</label>
         <div class="col-sm-9">
@@ -106,12 +126,12 @@ if (!isset($_REQUEST['token'])) {
         </div>
       </div>
 
+      <!-- Submit btn -->
       <div class="form-group row">
         <div class="d-flex justify-content-center">
           <button id="signup-btn" type="submit" class="btn btn-secondary">Sign Up</button>
         </div>
       </div>
-
     </form>
   </div>
 </main>
