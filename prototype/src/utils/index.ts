@@ -23,6 +23,7 @@ export enum PasswordError {
   NO_SPECIAL_SYMBOL = 'No special symbol',
 }
 
+// https://stackoverflow.com/q/1559751
 const LOWERCASE_REGEX = /(?=.*[a-z])/;
 const UPPERCASE_REGEX = /(?=.*[A-Z])/;
 const NUMBER_REGEX = /(?=.*\d)/;
