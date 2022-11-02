@@ -29,7 +29,7 @@ $(() => {
         e.preventDefault();
         const $this = $(this);
         const credentials = Object.fromEntries(new FormData(this));
-        // is already handled by HTML
+        // TODO: may need to check database of employees (from client)
         if (!isValidWorkEmail(credentials.email)) {
             emailError('Invalid Make-It-All email!');
         }

@@ -57,7 +57,7 @@ $(() => {
 
     const credentials = Object.fromEntries(new FormData(this as HTMLFormElement)) as Credentials;
 
-    // is already handled by HTML
+    // TODO: may need to check database of employees (from client)
     if (!isValidWorkEmail(credentials.email)) {
       emailError('Invalid Make-It-All email!');
     }

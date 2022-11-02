@@ -58,7 +58,6 @@ $invite_token = $_REQUEST['token'] ?? '';
                  id="email"
                  name="email"
                  placeholder="Enter email"
-                 pattern=".+@make-it-all\.co\.uk"
                  required
                  >
           <div id="email-feedback" class="invalid-tooltip">
