@@ -78,7 +78,7 @@ $invite_token = $_REQUEST['token'] ?? '';
                    class="form-control"
                    id="password"
                    name="password"
-                   placeholder="Password"
+                   placeholder="Enter password"
                    minlength="12"
                    >
             <span class="input-group-text d-inline-block multiline-tooltip"
@@ -108,7 +108,7 @@ $invite_token = $_REQUEST['token'] ?? '';
                    class="form-control"
                    id="confirm"
                    name="confirm"
-                   placeholder="Password"
+                   placeholder="Enter password again"
                    minlength="12"
                    >
             </span>
