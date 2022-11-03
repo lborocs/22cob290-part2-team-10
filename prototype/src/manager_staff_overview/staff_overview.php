@@ -19,7 +19,7 @@
 
 
 
-	  <div
+	  <div>
 	    <ul class="list-group">
 		  <!-- To do:
 		  - onclick update employee role on database
