@@ -13,6 +13,14 @@ function get_projects(string $email): array
 {
   return array_map(fn($num): string => 'Project ' . $num, range(1, 15));
 }
+
+// TODO: get_tasks - get the user's personal todo list:
+//  assoc_array
+//    todo => array
+//    in_progress => array
+//    code_review => array
+//    completed => array
+
 ?><!DOCTYPE html>
 <html lang="en" data-email="<?php echo $email ?>">
 
@@ -44,7 +52,7 @@ function get_projects(string $email): array
 
 <body>
   <main class="wrapper">
-    <!-- Sidebar  -->
+    <!-- Sidebar -->
     <nav id="sidebar">
       <div class="sidebar-header">
         <img src="home/company-logo.png" alt="company logo" id="company-logo">
@@ -73,11 +81,9 @@ function get_projects(string $email): array
     </nav>
 
     <div id="content">
-
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-
-          <button type="button" id="sidebarCollapse" class="btn  sidebar-toggle-btn">
+          <button type="button" id="sidebarCollapse" class="btn sidebar-toggle-btn">
             <i class="fas fa-align-left"></i>
             <span>Toggle Sidebar</span>
           </button>
@@ -90,24 +96,26 @@ function get_projects(string $email): array
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="nav navbar-nav ml-auto">
               <li class="nav-item active">
-                <a class="nav-link" href="home">Home</a>
+                <a class="nav-link">Home</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="forum">Forum</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="projects">Projects</a>
+                <a class="nav-link" href="projects?name=Project 7">Projects</a>
               </li>
               <li class="nav-item">
                 <img id="profile-picture" src="home/kanye.webp" alt="Profile Picture">
               </li>
             </ul>
           </div>
+
         </div>
       </nav>
 
+      <!-- KBOARD -->
       <div class="container">
-        <h1 class="h3">Your to-do list</h1>
+        <h3>Your to-do list</h3>
 
         <div id="modal" class="modal" tabindex="-1" role="dialog">
           <div class="modal-dialog" role="document">
@@ -160,7 +168,7 @@ function get_projects(string $email): array
         </div>
 
         <div class="row">
-          <!--TO DO COLUMN-->
+          <!-- TO DO COLUMN -->
           <div class="col-12 col-lg-3">
             <div class="card mb-3">
               <div class="card-header">
@@ -176,7 +184,6 @@ function get_projects(string $email): array
                       <button type="button" class="close" aria-label="Close" onclick="remove_task(this)">
                         <span>&times;</span>
                       </button>
-                      <br>
                       <div class="task-tags mb-2">
                         <span class="badge bg-primary text-white mx-1">Tag1</span>
                         <span class="badge bg-primary text-white mx-1">Tag2</span>
@@ -189,12 +196,14 @@ function get_projects(string $email): array
                 </div>
               </div>
               <div class="card-footer">
-                <div class="btn btn-primary btn-block open_modal" data-id="to_do">Add task</div>
+                <button class="btn btn-primary btn-block open_modal" data-id="to_do">
+                  Add task
+                </button>
               </div>
             </div>
           </div>
 
-          <!--IN PROGRESS COLUMN-->
+          <!-- IN PROGRESS COLUMN -->
           <div class="col-12 col-lg-3">
             <div class="card mb-3">
               <div class="card-header">
@@ -205,12 +214,14 @@ function get_projects(string $email): array
                 </div>
               </div>
               <div class="card-footer">
-                <div class="btn btn-primary btn-block open_modal" data-id="in_progress">Add task</div>
+                <button class="btn btn-primary btn-block open_modal" data-id="in_progress">
+                  Add task
+                </button>
               </div>
             </div>
           </div>
 
-          <!--CODE REVIEW COLUMN-->
+          <!-- CODE REVIEW COLUMN -->
           <div class="col-12 col-lg-3">
             <div class="card mb-3">
               <div class="card-header">
@@ -221,12 +232,14 @@ function get_projects(string $email): array
                 </div>
               </div>
               <div class="card-footer">
-                <div class="btn btn-primary btn-block open_modal" data-id="code_review">Add task</div>
+                <button class="btn btn-primary btn-block open_modal" data-id="code_review">
+                  Add task
+                </button>
               </div>
             </div>
           </div>
 
-          <!--COMPLETED COLUMN-->
+          <!-- COMPLETED COLUMN -->
           <div class="col-12 col-lg-3">
             <div class="card mb-3">
               <div class="card-header">

@@ -22,8 +22,6 @@ window.drop = function drop(ev) {
 };
 // 'Title' is hardcoded in home.php
 const taskTitles = new Set(['Title']);
-// TODO LATER: impl hover over task to edit (open modal)
-// TODO LATER: change kanye image to colour with 1st letter of email
 $(() => {
     $('#sidebarCollapse').on('click', function () {
         $('#sidebar').toggleClass('active');
@@ -31,8 +29,10 @@ $(() => {
     $('.nav-link').on('click', function (e) {
         e.preventDefault();
         const url = $(this).attr('href');
-        const email = $('html').attr('data-email');
-        redirect(url, { email });
+        if (url) {
+            const email = $('html').attr('data-email');
+            redirect(url, { email });
+        }
     });
     // Get the modal
     const modal = $("#modal");
@@ -63,7 +63,6 @@ $(() => {
         <button type="button" class="close" aria-label="Close" onclick="remove_task(this)">
           <span>&times;</span>
         </button>
-        <br>
         <div class="task-tags mb-2">
           ${process_tags(tags)}
         </div>

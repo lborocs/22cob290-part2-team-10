@@ -1,5 +1,8 @@
 import { redirect } from '../utils';
 
+// TODO LATER: impl hover over task to edit (open modal)
+// TODO LATER: change kanye image to colour with 1st letter of email
+
 type AddTaskFormData = {
   title: string
   description: string
@@ -33,9 +36,6 @@ window.drop = function drop(ev: DragEvent) {
 // 'Title' is hardcoded in home.php
 const taskTitles = new Set<string>(['Title']);
 
-// TODO LATER: impl hover over task to edit (open modal)
-// TODO LATER: change kanye image to colour with 1st letter of email
-
 $(() => {
   $('#sidebarCollapse').on('click', function () {
     $('#sidebar').toggleClass('active');
@@ -44,10 +44,12 @@ $(() => {
   $('.nav-link').on('click', function (e) {
     e.preventDefault();
 
-    const url = $(this).attr('href')!;
-    const email = $('html').attr('data-email')!;
+    const url = $(this).attr('href');
+    if (url) {
+      const email = $('html').attr('data-email')!;
 
-    redirect(url, { email });
+      redirect(url, { email });
+    }
   });
 
 
@@ -88,7 +90,6 @@ $(() => {
         <button type="button" class="close" aria-label="Close" onclick="remove_task(this)">
           <span>&times;</span>
         </button>
-        <br>
         <div class="task-tags mb-2">
           ${process_tags(tags)}
         </div>
