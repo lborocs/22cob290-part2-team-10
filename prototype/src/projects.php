@@ -1,19 +1,41 @@
-<!DOCTYPE html>
+<?php
+
+
+if (!isset($_REQUEST['email'])) {
+  // redirect to login page if not signed in
+  header('Location: http://team10.sci-project.lboro.ac.uk/', true, 303);
+  die();
+}
+
+$name = $_REQUEST['name'] ?? '';
+$email = $_REQUEST['email'];
+
+// TODO: if project name isn't set, dont show kboard, instad show text to select a project
+
+// TODO: extract functions like get_projects into file(s) that will be imported so not repeating self
+
+// hardcoded
+function get_projects(string $email): array
+{
+  return array_map(fn($num): string => 'Project ' . $num, range(1, 15));
+}
+?><!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- <link rel="stylesheet" href="style.css"> -->
+
+  <title>Make-It-All</title>
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-
-  <title>Team 10</title> <!-- Bootstrap CSS CDN -->
+  <!-- Bootstrap CSS CDN -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
     integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
   <!-- Our Custom CSS -->
-  <link rel="stylesheet" href="style1.css">
+  <link rel="stylesheet" href="projects/style.css">
 
   <!-- Font Awesome JS -->
   <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js"
@@ -29,7 +51,7 @@
     <!-- Sidebar  -->
     <nav id="sidebar">
       <div class="sidebar-header">
-        <img src="company-logo.png" alt="company logo" id="company-logo">
+        <img src="projects/company-logo.png" alt="company logo" id="company-logo">
       </div>
 
       <ul class="list-unstyled components sidebar-list">
@@ -89,7 +111,7 @@
                 <a class="nav-link" href="#">Projects</a>
               </li>
               <li class="nav-item">
-                <img id="profile-picture" src="kanye.webp" alt="Profile Picture">
+                <img id="profile-picture" src="projects/kanye.webp" alt="Profile Picture">
               </li>
             </ul>
           </div>
@@ -241,7 +263,7 @@
       integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
       crossorigin="anonymous"></script>
 
-    <script src="script.js"></script>
+    <script src="projects/script.js"></script>
 </body>
 
 </html>
