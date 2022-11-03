@@ -54,7 +54,7 @@ function get_projects(string $email): array
   <nav id="sidebar">
     <div class="sidebar-header">
       <a href="home">
-        <img src="projects/company-logo.png" alt="company logo" id="company-logo">
+        <img src="assets/company-logo.png" alt="company logo" id="company-logo">
       </a>
     </div>
 
@@ -110,7 +110,7 @@ function get_projects(string $email): array
               <a class="nav-link">Projects</a>
             </li>
             <li class="nav-item">
-              <img id="profile-picture" src="projects/kanye.webp" alt="Profile Picture">
+              <img id="profile-picture" src="assets/kanye.webp" alt="Profile Picture">
             </li>
           </ul>
         </div>
