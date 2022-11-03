@@ -11,13 +11,7 @@ $email = $_REQUEST['email'];
 // hardcoded
 function get_projects(string $email): array
 {
-  return [
-    'Project 1',
-    'Project 2',
-    'Project 3',
-    'Project 4',
-    'Project 5',
-  ];
+  return array_map(fn($num): string => 'Project ' . $num, range(1, 15));
 }
 ?><!DOCTYPE html>
 <html lang="en" data-email="<?php echo $email ?>">
@@ -26,15 +20,18 @@ function get_projects(string $email): array
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- <link rel="stylesheet" href="style.css"> -->
+
+  <title>Make-It-All</title>
+
+  <!-- Bootstrap CSS? I dont think this is doing anything cos of the one below, but leaving it in in case -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 
-  <title>Team 10</title> <!-- Bootstrap CSS CDN -->
+  <!-- Bootstrap CSS CDN -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
     integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
   <!-- Our Custom CSS -->
-  <link rel="stylesheet" href="home/style1.css">
+  <link rel="stylesheet" href="home/style.css">
 
   <!-- Font Awesome JS -->
   <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js"
@@ -46,7 +43,7 @@ function get_projects(string $email): array
 </head>
 
 <body>
-  <div class="wrapper">
+  <main class="wrapper">
     <!-- Sidebar  -->
     <nav id="sidebar">
       <div class="sidebar-header">
@@ -56,7 +53,7 @@ function get_projects(string $email): array
       <!-- TODO: clean up this tag mess -->
       <ul class="list-unstyled components sidebar-list">
         <p>Assigned Projects:</p>
-        <div class="scrollable">
+        <div id="projects-list">
           <?php
           $projects = get_projects($email);
 
@@ -64,7 +61,7 @@ function get_projects(string $email): array
           foreach ($projects as &$project_name) {
             $project_html = <<<HTML
               <li>
-                <a href="#">$project_name</a>
+                <a class="nav-link" href="projects?name=$project_name">$project_name</a>
               </li>
             HTML;
 
@@ -246,21 +243,22 @@ function get_projects(string $email): array
       </div>
     </div>
 
+  </main>
 
-    <!-- jQuery CDN - Slim version (=without AJAX) -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-      crossorigin="anonymous"></script>
-    <!-- Popper.JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
-      integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
-      crossorigin="anonymous"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
-      integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
-      crossorigin="anonymous"></script>
+<!-- jQuery CDN - Slim version (=without AJAX) -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+  integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+  crossorigin="anonymous"></script>
+<!-- Popper.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+  integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+  crossorigin="anonymous"></script>
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+  integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+  crossorigin="anonymous"></script>
 
-    <script type="module" src="home/script.js"></script>
+<script type="module" src="home/script.js"></script>
 </body>
 
 </html>

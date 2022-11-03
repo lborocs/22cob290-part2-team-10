@@ -117,8 +117,8 @@ a[data-toggle="collapse"] {
     max-width: 100%;
 }
 
-.scrollable {
-    height: 300px;
+#projects-list {
+    height: 420px;
     overflow-y: scroll;
 }
 
