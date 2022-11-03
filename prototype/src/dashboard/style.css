@@ -17,6 +17,11 @@ body {
     background: #fafafa;
 }
 
+#page{
+    height: 100vh;
+    display: flex;
+    flex-direction: row;}
+
 p {
     font-family: 'Poppins', sans-serif;
     font-weight: 300;
@@ -48,6 +53,16 @@ a:focus {
     border: none;
 }
 
+.navbar-brand{
+    width: 100%;
+    text-align: center;
+}
+#navCollapse{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
 /* .line {
     width: 100%;
     height: 1px;
@@ -60,9 +75,11 @@ a:focus {
 ----------------------------------------------------- */
 
 .wrapper {
-    display: flex;
+    padding: 0;
+    margin: 0;
     width: 100%;
-    align-items: stretch;
+    display: flex;
+    flex-direction: column;
 }
 
 #sidebar {
@@ -196,26 +213,31 @@ a.article:hover {
     #sidebarCollapse span {
         display: none;
     }
+    .navbar-brand{
+        width: 90%;
+    }
 
 }
 
-@media(max-width:990px) {
+@media(max-width:992px) {
     #profile-picture {
         display: none;
+    }
+    .navbar-brand{
+        width: 77%;
     }
 }
 
 /* Dashboard */
 
-.sidebar {
+/* .sidebar {
     margin: 0;
     padding: 0;
     width: 250px;
     background-color: #d3d3d3;
-    position: fixed;
     height: 100%;
     overflow: auto;
-}
+} */
 
 .scrollbar {
     height: 400px;
