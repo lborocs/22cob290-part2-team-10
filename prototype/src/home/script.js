@@ -20,12 +20,10 @@ window.drop = function drop(ev) {
         console.log("no transfer");
     }
 };
-// DONE TODO: impl system for not allowing to create new tasks with titles already used
 // 'Title' is hardcoded in home.php
 const taskTitles = new Set(['Title']);
-// DONE TODO: update add_task form validation (bootstrap form validation + use button as submit)
-// TODO: impl hover over task to edit (open modal)
-// TODO: change kanye image to colour with 1st letter of email
+// TODO LATER: impl hover over task to edit (open modal)
+// TODO LATER: change kanye image to colour with 1st letter of email
 $(() => {
     $('#sidebarCollapse').on('click', function () {
         $('#sidebar').toggleClass('active');
