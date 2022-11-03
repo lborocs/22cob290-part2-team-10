@@ -1,3 +1,4 @@
+import { redirect } from '../utils';
 /* By default, data/elements cannot be dropped in other elements. To allow a drop, we must prevent the default handling of the element. -w3schools*/
 // @ts-ignore
 window.allowDrop = function allowDrop(ev) {
@@ -28,6 +29,12 @@ const taskTitles = new Set(['Title']);
 $(() => {
     $('#sidebarCollapse').on('click', function () {
         $('#sidebar').toggleClass('active');
+    });
+    $('.nav-link').on('click', function (e) {
+        e.preventDefault();
+        const url = $(this).attr('href');
+        const email = $('html').attr('data-email');
+        redirect(url, { email });
     });
     // Get the modal
     const modal = $("#modal");
@@ -95,4 +102,3 @@ window.remove_task = function remove_task(button) {
     taskTitles.delete(title);
     $taskCard.remove();
 };
-export {};

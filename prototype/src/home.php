@@ -20,7 +20,7 @@ function get_projects(string $email): array
   ];
 }
 ?><!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-email="<?php echo $email ?>">
 
 <head>
   <meta charset="UTF-8">
@@ -93,13 +93,13 @@ function get_projects(string $email): array
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="nav navbar-nav ml-auto">
               <li class="nav-item active">
-                <a class="nav-link" href="#">Home</a>
+                <a class="nav-link" href="home">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Forum</a>
+                <a class="nav-link" href="forum">Forum</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Projects</a>
+                <a class="nav-link" href="projects">Projects</a>
               </li>
               <li class="nav-item">
                 <img id="profile-picture" src="home/kanye.webp" alt="Profile Picture">

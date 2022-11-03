@@ -44,6 +44,15 @@ $(() => {
     $('#sidebar').toggleClass('active');
   });
 
+  $('.nav-link').on('click', function (e) {
+    e.preventDefault();
+
+    const url = $(this).attr('href')!;
+    const email = $('html').attr('data-email')!;
+
+    redirect(url, { email });
+  });
+
 
   // Get the modal
   const modal = $("#modal");
