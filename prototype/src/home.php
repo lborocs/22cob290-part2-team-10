@@ -55,7 +55,6 @@ function get_projects(string $email): array
 
       <!-- TODO: clean up this tag mess -->
       <ul class="list-unstyled components sidebar-list">
-        <li>Email</li>
         <p>
           Email:<br><?php echo $email ?>
         </p>
@@ -123,7 +122,7 @@ function get_projects(string $email): array
               <div class="modal-header">
                 <h5 class="modal-title">Add task</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" id="close_modal1">
-                  <span aria-hidden="true">&times;</span>
+                  <span>&times;</span>
                 </button>
               </div>
               <div class="modal-body">
@@ -154,7 +153,7 @@ function get_projects(string $email): array
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="close_modal2">Close</button>
-                <button type="button" class="btn btn-primary" id="add_task">Add task</button>
+                <button type="submit" form="task_info" class="btn btn-primary">Add task</button>
               </div>
             </div>
           </div>
@@ -167,24 +166,29 @@ function get_projects(string $email): array
               <div class="card-header">
                 <h5 class="card-title">To Do</h5>
               </div>
-              <div class="class-body m-2">
+              <div class="card-body m-2">
                 <!-- List of tasks will be stored inside this card div
                 ondragover event specifies where the dragged data can be dropped-->
-                <div class="tasks" id="to_do" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <div class="tasks scroll overflow-auto" id="to_do" ondrop="drop(event)" ondragover="allowDrop(event)">
                   <!--EXAMPLE TASK-->
                   <div class="card mb-3 drag_item" id="task1" draggable="true" ondragstart="drag(event)">
                     <div class="card-body">
                       <button type="button" class="close" aria-label="Close" onclick="remove_task(this)">
-                        <span aria-hidden="true">&times;</span>
+                        <span>&times;</span>
                       </button>
                       <br>
-                      <span class="badge bg-primary text-white mb-2">Tag1</span>
+                      <div class="mb-2">
+                        <span class="badge bg-primary text-white mx-1">Tag1</span>
+                        <span class="badge bg-primary text-white mx-1">Tag2</span>
+                      </div>
                       <p style="font-weight: bold">Title</p>
-                      <p class="mb-0">You can move these elements between the containers</p>
+                      <p class="mb-0 overflow-auto">You can move these elements between the containers</p>
                     </div>
                   </div>
                   <!--END OF EXAMPLE TASK-->
                 </div>
+              </div>
+              <div class="card-footer">
                 <div class="btn btn-primary btn-block open_modal" data-id="to_do">Add task</div>
               </div>
             </div>
@@ -196,11 +200,12 @@ function get_projects(string $email): array
               <div class="card-header">
                 <h5 class="card-title">In Progress</h5>
               </div>
-              <div class="class-body m-2">
-                <div class="tasks" id="in_progress" ondrop="drop(event)" ondragover="allowDrop(event)">
+              <div class="card-body m-2">
+                <div class="tasks scroll" id="in_progress" ondrop="drop(event)" ondragover="allowDrop(event)">
                 </div>
+              </div>
+              <div class="card-footer">
                 <div class="btn btn-primary btn-block open_modal" data-id="in_progress">Add task</div>
-
               </div>
             </div>
           </div>
@@ -211,13 +216,14 @@ function get_projects(string $email): array
               <div class="card-header">
                 <h5 class="card-title">Code Review</h5>
               </div>
-              <div class="class-body m-2">
-                <div class="tasks" id="code_review" ondrop="drop(event)" ondragover="allowDrop(event)">
+              <div class="card-body m-2">
+                <div class="tasks scroll" id="code_review" ondrop="drop(event)" ondragover="allowDrop(event)">
                 </div>
+              </div>
+              <div class="card-footer">
                 <div class="btn btn-primary btn-block open_modal" data-id="code_review">Add task</div>
               </div>
             </div>
-
           </div>
 
           <!--COMPLETED COLUMN-->
@@ -227,11 +233,12 @@ function get_projects(string $email): array
                 <h5 class="card-title">Completed</h5>
               </div>
               <div class="class-body m-2">
-                <div class="tasks" id="completed" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <div class="tasks scroll" id="completed" ondrop="drop(event)" ondragover="allowDrop(event)">
                 </div>
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </div>

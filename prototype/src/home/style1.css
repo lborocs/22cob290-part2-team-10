@@ -141,6 +141,7 @@ a.download {
     background: #fff;
     color: #7386D5;
 }
+
 /*
 a.article,
 a.article:hover {
@@ -206,20 +207,33 @@ a.article:hover {
 
 /*ADDED CSS FROM KBOARD*/
 .drag_item {
-  cursor: move; /* fallback if grab cursor is unsupported */
-  cursor: grab;
-  cursor: -moz-grab;
-  cursor: -webkit-grab;
+    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
 }
 
 .tasks {
-  min-height: 450px;
+    min-height: 450px;
 }
 
 .close {
-	float: right;
+    float: right;
 }
 
 #completed {
-	min-height: 490px;
+    min-height: 40px;
+}
+
+p.overflow-auto {
+    max-height: 100px;
+}
+
+.card drag-item {
+    padding-top: 10px;
+}
+
+.scroll {
+	height: 100%;
+	overflow-y: auto;
 }
