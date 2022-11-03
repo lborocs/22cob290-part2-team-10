@@ -30,12 +30,14 @@ window.drop = function drop(ev: DragEvent) {
   }
 }
 
-// TODO: impl system for not allowing to create new tasks with titles already used
-// const task_titles = new Set<string>();
+// DONE TODO: impl system for not allowing to create new tasks with titles already used
+// 'Title' is hardcoded in home.php
+const taskTitles = new Set<string>(['Title']);
 
 // DONE TODO: update add_task form validation (bootstrap form validation + use button as submit)
 
 // TODO: impl hover over task to edit (open modal)
+// TODO: change kanye image to colour with 1st letter of email
 
 $(() => {
   $('#sidebarCollapse').on('click', function () {
@@ -46,6 +48,10 @@ $(() => {
   // Get the modal
   const modal = $("#modal");
 
+  $('#title').on('input', function (e) {
+    $(this).removeClass('is-invalid');
+  });
+
   // All buttons for modal
   const close_modal_button1 = $("#close_modal1");
   const close_modal_button2 = $("#close_modal2");
@@ -55,7 +61,18 @@ $(() => {
 
     const $this = $(this);
 
-    const { title, description, tags } = <AddTaskFormData>Object.fromEntries(new FormData(<HTMLFormElement>this));
+    let { title, description, tags } = <AddTaskFormData>Object.fromEntries(new FormData(<HTMLFormElement>this));
+
+    title = title.trim();
+    description = description.trim();
+    tags = tags.trim();
+
+    if (taskTitles.has(title)) {
+      $("#title").addClass("is-invalid");
+      return;
+    } else {
+      taskTitles.add(title);
+    }
 
     const taskContainerId = modal.attr("data-id");
 
@@ -66,11 +83,11 @@ $(() => {
           <span>&times;</span>
         </button>
         <br>
-        <div class="mb-2">
+        <div class="task-tags mb-2">
           ${process_tags(tags)}
         </div>
-        <p style="font-weight: bold">${title}</p>
-        <p class="mb-0 overflow-auto">${description}</p>
+        <p class="task-title" style="font-weight: bold">${title}</p>
+        <p class="task-description mb-0 overflow-auto">${description}</p>
       </div>
     </div>
     `);
@@ -105,7 +122,12 @@ $(() => {
 
 // @ts-ignore
 window.remove_task = function remove_task(button: HTMLButtonElement) {
-  const task_card = button.parentElement!.parentElement!;
+  const taskCard = button.parentElement!.parentElement!;
 
-  $(task_card).remove();
+  const $taskCard = $(taskCard);
+
+  const title = $taskCard.find(".task-title").text();
+  taskTitles.delete(title);
+
+  $taskCard.remove();
 }

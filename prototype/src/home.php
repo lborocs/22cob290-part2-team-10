@@ -124,20 +124,27 @@ function get_projects(string $email): array
               <div class="modal-body">
                 <!--POP-UP FORM-->
                 <form role="form" method="POST" id="task_info" action="">
+                  <!-- no trailing whitespace pattern: https://stackoverflow.com/a/40250762 -->
+                  <!-- title -->
                   <div class="form-group">
                     <label class="control-label" for="title">Title</label>
                     <div>
                       <input type="text" class="form-control input-lg" name="title" id="title" placeholder="Title"
-                        required>
+                        pattern="^[^\s]+.*$" required>
+                      <div class="invalid-feedback">
+                        Please use a unique task title.
+                      </div>
                     </div>
                   </div>
+                  <!-- description -->
                   <div class="form-group">
                     <label class="control-label" for="description_textarea">Description</label>
                     <div>
                       <textarea class="form-control" id="description_textarea" rows="3" name="description"
-                        placeholder="Task description" required></textarea>
+                        placeholder="Task description" pattern="^[^\s]+.*$" required></textarea>
                     </div>
                   </div>
+                  <!-- tags -->
                   <div class="form-group">
                     <label class="control-label" for="tags_textarea">Tags</label>
                     <div>
@@ -173,12 +180,12 @@ function get_projects(string $email): array
                         <span>&times;</span>
                       </button>
                       <br>
-                      <div class="mb-2">
+                      <div class="task-tags mb-2">
                         <span class="badge bg-primary text-white mx-1">Tag1</span>
                         <span class="badge bg-primary text-white mx-1">Tag2</span>
                       </div>
-                      <p style="font-weight: bold">Title</p>
-                      <p class="mb-0 overflow-auto">You can move these elements between the containers</p>
+                      <p class="task-title" style="font-weight: bold">Title</p>
+                      <p class="task-description mb-0 overflow-auto">You can move these elements between the containers</p>
                     </div>
                   </div>
                   <!--END OF EXAMPLE TASK-->
