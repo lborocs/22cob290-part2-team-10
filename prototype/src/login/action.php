@@ -6,14 +6,24 @@
  *
  * Response schema:
  *  - success [boolean]
- *  - errorMessage [enum, if success == false] WRONG_PASSWORD | DOESNT_EXIST .... LEFT_COMPANY?
+ *  - errorMessage [ErrorReason, if success == false]
  */
 
 require "../credentials.php";
 
 header('Content-Type: application/json');
 
-function error(string $errorMessage) {
+// LEFT_COMPANY?
+enum ErrorReason
+{
+  case WRONG_PASSWORD;
+  case DOESNT_EXIST;
+}
+
+function error(string|ErrorReason $error): void
+{
+  $errorMessage = is_string($error) ? $error : $error->name;
+
   exit(json_encode([
     'success' => false,
     'errorMessage' => $errorMessage,
@@ -43,9 +53,9 @@ $correct_password = $password == 'TestPassword123!';
 if ($exists && $correct_password) {
   $response['success'] = true;
 } else if ($exists) {
-  $response['errorMessage'] = 'WRONG_PASSWORD';
+  $response['errorMessage'] = ErrorReason::WRONG_PASSWORD->name;
 } else {
-  $response['errorMessage'] = 'DOESNT_EXIST';
+  $response['errorMessage'] = ErrorReason::DOESNT_EXIST->name;
 }
 
 /*

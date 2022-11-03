@@ -7,15 +7,24 @@
  *
  * Response schema:
  *  - success [boolean]
- *  - errorMessage [enum, if success == false] ALREADY_EXIST, INVALID_TOKEN, USED_TOKEN ...
+ *  - errorMessage [ErrorReason, if success == false]
  */
 
 require "../credentials.php";
 
 header('Content-Type: application/json');
 
-function error(string $errorMessage)
+enum ErrorReason
 {
+  case ALREADY_EXIST;
+  case INVALID_TOKEN;
+  case USED_TOKEN;
+}
+
+function error(string|ErrorReason $error): void
+{
+  $errorMessage = is_string($error) ? $error : $error->name;
+
   exit(json_encode([
     'success' => false,
     'errorMessage' => $errorMessage,
@@ -54,16 +63,16 @@ $token = $_REQUEST['token'];
 $exists = $email == 'alice@make-it-all.co.uk';
 
 if ($exists) {
-  error('ALREADY_EXIST');
+  error(ErrorReason::ALREADY_EXIST);
 }
 
 $inviter = decrypt_token($token);
 if ($inviter === null) {
-  error('INVALID_TOKEN');
+  error(ErrorReason::INVALID_TOKEN);
 }
 
 if (token_has_been_used($token)) {
-  error('USED_TOKEN');
+  error(ErrorReason::USED_TOKEN);
 }
 
 $response = [
