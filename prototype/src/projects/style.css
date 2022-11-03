@@ -117,8 +117,8 @@ a[data-toggle="collapse"] {
     max-width: 100%;
 }
 
-.scrollable {
-    height: 300px;
+#projects-list {
+    height: 420px;
     overflow-y: scroll;
 }
 
@@ -204,31 +204,29 @@ a.article:hover {
     }
 }
 
-/*ADDED CODE FROM KBOARD*/
+/* KBOARD */
 .drag_item {
-  cursor: move; /* fallback if grab cursor is unsupported */
-  cursor: grab;
-  cursor: -moz-grab;
-  cursor: -webkit-grab;
+    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
 }
 
-#completed {
-	min-height: 400px;
+.tasks {
+    /* idk why this works but it seems to work */
+    min-height: 450px;
+    max-height: 400px;
 }
 
 p.overflow-auto {
-	max-height:100px;
+    max-height:100px;
 }
 
 .card drag-item {
-	padding-top: 10px;
-}
-
-.class-body {
-	height: 400px;
+    padding-top: 10px;
 }
 
 .scroll {
-	height: 100%;
-	overflow-y: auto;
+    height: 100%;
+    overflow-y: auto;
 }
