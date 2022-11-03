@@ -55,10 +55,6 @@ function get_projects(string $email): array
 
       <!-- TODO: clean up this tag mess -->
       <ul class="list-unstyled components sidebar-list">
-        <p>
-          Email:<br><?php echo $email ?>
-        </p>
-        <p>Position:<br>Team Member</p>
         <p>Assigned Projects:</p>
         <div class="scrollable">
           <?php
@@ -114,7 +110,7 @@ function get_projects(string $email): array
       </nav>
 
       <div class="container">
-        <h1 class="h3">Your ToDo List</h1>
+        <h1 class="h3">Your to-do list</h1>
 
         <div id="modal" class="modal" tabindex="-1" role="dialog">
           <div class="modal-dialog" role="document">
@@ -166,10 +162,10 @@ function get_projects(string $email): array
               <div class="card-header">
                 <h5 class="card-title">To Do</h5>
               </div>
-              <div class="card-body m-2">
+              <div class="tasks-parent m-2">
                 <!-- List of tasks will be stored inside this card div
                 ondragover event specifies where the dragged data can be dropped-->
-                <div class="tasks scroll overflow-auto" id="to_do" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <div class="tasks scroll" id="to_do" ondrop="drop(event)" ondragover="allowDrop(event)">
                   <!--EXAMPLE TASK-->
                   <div class="card mb-3 drag_item" id="task1" draggable="true" ondragstart="drag(event)">
                     <div class="card-body">
@@ -200,7 +196,7 @@ function get_projects(string $email): array
               <div class="card-header">
                 <h5 class="card-title">In Progress</h5>
               </div>
-              <div class="card-body m-2">
+              <div class="tasks-parent m-2">
                 <div class="tasks scroll" id="in_progress" ondrop="drop(event)" ondragover="allowDrop(event)">
                 </div>
               </div>
@@ -216,7 +212,7 @@ function get_projects(string $email): array
               <div class="card-header">
                 <h5 class="card-title">Code Review</h5>
               </div>
-              <div class="card-body m-2">
+              <div class="tasks-parent m-2">
                 <div class="tasks scroll" id="code_review" ondrop="drop(event)" ondragover="allowDrop(event)">
                 </div>
               </div>
