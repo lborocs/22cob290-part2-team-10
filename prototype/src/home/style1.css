@@ -214,15 +214,13 @@ a.article:hover {
 }
 
 .tasks {
+    /* idk why this works but it seems to work */
     min-height: 450px;
+    max-height: 400px;
 }
 
 .close {
     float: right;
-}
-
-#completed {
-    min-height: 40px;
 }
 
 p.overflow-auto {
@@ -231,10 +229,6 @@ p.overflow-auto {
 
 .card drag-item {
     padding-top: 10px;
-}
-
-.tasks-parent {
-	height: 400px;
 }
 
 .scroll {

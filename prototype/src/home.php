@@ -228,7 +228,7 @@ function get_projects(string $email): array
               <div class="card-header">
                 <h5 class="card-title">Completed</h5>
               </div>
-              <div class="class-body m-2">
+              <div class="tasks-parent m-2">
                 <div class="tasks scroll" id="completed" ondrop="drop(event)" ondragover="allowDrop(event)">
                 </div>
               </div>
