@@ -29,7 +29,7 @@ function get_projects(string $email): array
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Make-It-All</title>
+  <title>Home</title>
 
   <!-- Bootstrap CSS? I dont think this is doing anything cos of the one below, but leaving it in in case -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"

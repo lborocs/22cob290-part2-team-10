@@ -1,13 +1,12 @@
 <?php
 
-
 if (!isset($_REQUEST['email'])) {
   // redirect to login page if not signed in
   header('Location: http://team10.sci-project.lboro.ac.uk/', true, 303);
   die();
 }
 
-$name = $_REQUEST['name'] ?? '';
+$name = $_REQUEST['name'] ?? null;
 $email = $_REQUEST['email'];
 
 // TODO: if project name isn't set, dont show kboard, instad show text to select a project
@@ -29,7 +28,7 @@ function get_projects(string $email): array
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Make-It-All</title>
+  <title><?php echo $name ?? 'Make-It-All Projects' ?></title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
