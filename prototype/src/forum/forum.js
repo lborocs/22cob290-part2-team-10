@@ -69,7 +69,7 @@ function get_comments() {
     }
   }
   for (let i in backgroundComments) {
-    accept = titleSub == "" || backgroundComments[i]["title"].toLocaleLowerCase().startsWith(titleSub);
+    accept = titleSub === "" || backgroundComments[i]["title"].toLocaleLowerCase().startsWith(titleSub);
     accept &= tagFilters.every(t => backgroundComments[i]["tags"].includes(t))
     if (accept) {
       comments.push(backgroundComments[i]);
@@ -143,7 +143,7 @@ function populate_commentboard(comments) {
 function addTagToPost() {
   const postTopicsText = document.getElementById("postTopicsText");
   let topic = postTopicsText.value.trim().toLocaleLowerCase();
-  if (topic.endsWith(",") && "," != topic) {
+  if (topic.endsWith(",") && "," !== topic) {
     topic = topic.slice(0, topic.length - 1);
     postTopicsText.value = "";
     if (document.getElementById("*" + topic) == null) {
