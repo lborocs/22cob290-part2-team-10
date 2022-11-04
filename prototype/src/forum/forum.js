@@ -1,8 +1,15 @@
-function collect_comments_and_tags() {
-  backgroundComments = [
+// ----------------------------------------------------------------------------
+
+function load() {
+  /**
+   * Loads data from the database into the global topic set and
+   * posts collections.
+   */
+
+  const stuff = [
     {
-      "title": "First Comment",
-      "tags": ["Red Hats", "Funny"],
+      "title": "On solid bottles",
+      "tags": ["water sort"],
       "votes": 120,
       "content": "Every solid bottle is pure.",
       "poster": "Guy1",
@@ -10,46 +17,53 @@ function collect_comments_and_tags() {
       "voted": false,
       "index": 3
     }, {
-      "title": "Second Comment",
-      "tags": ["Funny"],
+      "title": "Fortnite",
+      "tags": ["#lol", "#bestgirl", "#cringe"],
       "votes": 24,
-      "content": "An incomplete transfer on an environment graunts an equivelent environment.",
-      "poster": "Guy2",
+      "content": "Wiiierd...",
+      "poster": "Jason",
       "date": "30/10/2022",
       "voted": false,
       "index": 2
     }, {
-      "title": "Third Comment",
-      "tags": ["Red Hats"],
+      "title": "To Jason",
+      "tags": ["jason"],
       "votes": 6,
-      "content": "The fold of an environment is not surpassed by that of it's divisors.",
-      "poster": "Bog",
+      "content": "Could you not.",
+      "poster": "Ogg",
       "date": "30/10/2022",
       "voted": false,
       "index": 1
     }, {
-      "title": "Fourth Comment",
-      "tags": ["Not Red Hats"],
+      "title": "Confession",
+      "tags": ["#lol"],
       "votes": 2,
-      "content": "Environment quotients can be multiplied.",
-      "poster": "Guy3",
+      "content": "I fart on Ogg's chair smoetimes.",
+      "poster": "Jason",
       "date": "30/10/2022",
       "voted": false,
       "index": 0
     }
   ];
-  backgroundComments.forEach(
-    c => c["tags"].forEach(
-      t => add_filters(t)
-    )
+  stuff.forEach(
+    c => (backgroundComments.push(c), c.tags.forEach(t => add_filter(t)))
   );
 }
 
-function add_filters(topic) {
+// ----------------------------------------------------------------------------
+
+function add_filter(topic) {
+  /**
+   * Adds a topic to the filter by topic section.
+   * @param topic - The topic to be added.
+   */
+
   const filterOptions = document.getElementById("filterOptions");
   if (!tagSet.has(topic)) {
     filterOptions.innerHTML += `
-      <div class="col-auto topicDiv" onclick="flipTagFilterParity('${topic}')">
+      <div class="col-auto topicDiv"
+        onclick="flip_tag_filter_parity('${topic}')"
+      >
         <a id="-${topic}" class="tag">${topic}</a>
       </div>
     `;
@@ -57,59 +71,65 @@ function add_filters(topic) {
   tagSet.add(topic)
 }
 
-function get_comments() {
-  const titleSub = document.getElementById("searchField").value.toLocaleLowerCase();
+// ----------------------------------------------------------------------------
+
+window.get_posts = function get_posts() {
+  /**
+    Gets posts that correspond to selected filters, then put them
+    in the page's dashboard.
+  */
+
+  const titleSub = 
+    document.getElementById("searchField").value.toLocaleLowerCase();
   const topicRoster = document.getElementById("filterOptions").childNodes;
   const tagFilters = [];
   var accept = false;
-  const comments = [];
+  const filteredPosts = [];
   for (let i = 1; i < topicRoster.length; i += 2) {
-    if (topicRoster[i].childNodes[1].getAttribute("class").includes("active")) {
+    if (
+      topicRoster[i].childNodes[1].getAttribute("class").includes("active")
+    ) {
       tagFilters.push(topicRoster[i].childNodes[1].innerHTML)
     }
   }
   for (let i in backgroundComments) {
-    accept = titleSub === "" || backgroundComments[i]["title"].toLocaleLowerCase().startsWith(titleSub);
-    accept &= tagFilters.every(t => backgroundComments[i]["tags"].includes(t))
+    accept = titleSub === "" ||
+      backgroundComments[i].title.toLocaleLowerCase().startsWith(titleSub);
+    accept &= tagFilters.every(t => backgroundComments[i].tags.includes(t))
     if (accept) {
-      comments.push(backgroundComments[i]);
+      filteredPosts.push(backgroundComments[i]);
     }
   }
-  document.getElementById("counter").innerHTML = (0 < comments.length) ?
-    (comments.length > 1) ?
-      (comments.length > 100) ?
+  document.getElementById("counter").innerHTML = (0 < filteredPosts.length) ?
+    (filteredPosts.length > 1) ?
+      (filteredPosts.length > 100) ?
         "More than 100 comments were found" :
-        comments.length + " comments were found" :
+        filteredPosts.length + " comments were found" :
       "1 comment was found" :
-    "No comment match your filters...";
-  populate_commentboard(comments);
+    "No comment matches your filters...";
+  populate_postboard(filteredPosts);
 }
 
-window.flipTagFilterParity = function flipTagFilterParity(topic) {
-  const tag = document.getElementById("-" + topic);
-  if (tag.getAttribute("class").endsWith("active")) {
-    tag.setAttribute("class", "tag");
-  } else {
-    tag.setAttribute("class", "tag active");
-  }
-  get_comments();
-}
+// ----------------------------------------------------------------------------
 
-window.activateTagFilter = function activateTagFilter(topic) {
-  document.getElementById("-" + topic).setAttribute("class", "tag active");
-  get_comments()
-}
+function populate_postboard(filteredPosts) {
+  /**
+   * Adds each post from the filtered posts array to the dashboard.
+   * @param filteredPosts - The array of posts filtered from the global posts
+   * constant.
+   */
 
-function populate_commentboard(comments) {
   let htmlTxt = "";
-  for (let i in comments) {
+  for (let i in filteredPosts) {
     let tagLine = "";
-    for (let j in comments[i]["tags"]) {
+    for (let j in filteredPosts[i].tags) {
       tagLine += `
-        <a class="tag" onclick="activateTagFilter('${comments[i]["tags"][j]}')">${comments[i]["tags"][j]}</a>
+        <a class="tag" 
+          onclick="activate_tag_filter('${filteredPosts[i].tags[j]}')"
+        >${filteredPosts[i].tags[j]}</a>
       `;
     }
-    const state = comments[i]["voted"] ?
+    const state = filteredPosts[i].voted ?
       "active" :
       "inactive";
     htmlTxt += `
@@ -118,20 +138,27 @@ function populate_commentboard(comments) {
           <div class="card-body container-fluid">
             <div class="row">
               <div class="col-auto">
-                <h5>${comments[i]["title"]}</h5>
+                <h5>${filteredPosts[i].title}</h5>
               </div>
               <div class="col-auto">
-                <h7>Posted By ${comments[i]["poster"]} on ${comments[i]["date"]}</h7>
+                <h7>
+                  Posted By ${filteredPosts[i].poster} on
+                  ${filteredPosts[i].date}
+                </h7>
               </div>
               <div class="col-auto">
                 ${tagLine}
               </div>
-              <div class="col voteContainer" onclick="flipVoteParity(${i}, ${comments[i]["index"]})">
-                <a class="voteArrow ${state}"><h5><i class="fa fa-arrow-up" aria-hidden="true"></i></h5></a>
-                <p>${comments[i]["votes"]}</P>
+              <div class="col voteContainer"
+                onclick="flip_vote_parity(${i}, ${filteredPosts[i].index})"
+              >
+                <a class="voteArrow ${state}">
+                  <h5><i class="fa fa-arrow-up" aria-hidden="true"></i></h5>
+                </a>
+                <p>${filteredPosts[i].votes}</P>
               </div>
             </div>
-            <p class="card-text">${comments[i]["content"]}</p>
+            <p class="card-text">${filteredPosts[i].content}</p>
           </div>
         </div>
       </div>
@@ -140,7 +167,47 @@ function populate_commentboard(comments) {
   document.getElementById("commentBoard").innerHTML = htmlTxt;
 }
 
-window.addTagToPost = function addTagToPost() {
+// ----------------------------------------------------------------------------
+
+window.flip_tag_filter_parity = function flip_tag_filter_parity(topic) {
+  /**
+   * Flips a topic filter tag from active to inactive or vice versa, depending
+   * on the tag's current state. The dashboard is then refreshed, to align with
+   * the new filter selections.
+   * @param topic - The topic corresponding to the tag to be flipped.
+   */
+  
+  const tag = document.getElementById("-" + topic);
+  if (tag.getAttribute("class").endsWith("active")) {
+    tag.setAttribute("class", "tag");
+  } else {
+    tag.setAttribute("class", "tag active");
+  }
+  get_posts();
+}
+
+// ----------------------------------------------------------------------------
+
+window.activate_tag_filter = function activate_tag_filter(topic) {
+  /**
+   * Puts a topic filter's tag in an active state. The dashboard is then
+   * refreshed, to align with the new filter selections.
+   * @param - The topic corresponding to the tag to be set active.
+   */
+
+  document.getElementById("-" + topic).setAttribute("class", "tag active");
+  get_posts()
+}
+
+// ----------------------------------------------------------------------------
+
+window.add_tag_to_post = function add_tag_to_post() {
+  /**
+   * Takes the entered topic from the text section in the new post form,
+   * and adds a tag, corresponding to the topic, to the tag section of the
+   * form.
+   */
+
   const postTopicsText = document.getElementById("postTopicsText");
   let topic = postTopicsText.value.trim().toLocaleLowerCase();
   if (topic.endsWith(",") && "," !== topic) {
@@ -150,64 +217,91 @@ window.addTagToPost = function addTagToPost() {
       const postTopics = document.getElementById("postTopics");
       postTopics.innerHTML += `
         <div id="*${topic}" class="topicDiv col-auto">
-          <a class="tag newPostTag">${topic} &emsp;<i class="fa fa-times" aria-hidden="true" onclick="removeTopic('*${topic}')"></i></a>
+          <a class="tag newPostTag">
+            ${topic} &emsp;
+            <i class="fa fa-times" aria-hidden="true"
+              onclick="remove_tag('*${topic}')"
+            ></i>
+          </a>
         </div>
       `;
     }
   }
 }
 
-window.removeTopic = function removeTopic(topic) {
+// ----------------------------------------------------------------------------
+
+window.remove_tag = function remove_tag(topic) {
+  /**
+   * Removes a topic tag from the topic section on the new post form.
+   * @param topic - The topic corresponding to the tag to be removed.
+   */
+
   document.getElementById(topic).remove();
 }
 
-window.flipVoteParity= function flipVoteParity(htmlIndex, index) {
-  const container = document.getElementsByClassName("voteContainer")[htmlIndex];
+// ----------------------------------------------------------------------------
+
+window.flip_vote_parity = function flip_vote_parity(htmlIndex, index) {
+  /**
+   * Flips the state of a vote on a post to active or inactive, depending on
+   * it's current state.
+   * @param htmlIndex - The index of the post on the dashboard.
+   * @param index - The index of the post in the global posts array.
+   */
+
+  const container =
+    document.getElementsByClassName("voteContainer")[htmlIndex];
   index = backgroundComments.length - index - 1;
-  if (backgroundComments[index]["voted"]) {
+  if (backgroundComments[index].voted) {
     container.childNodes[1].setAttribute("class", "voteArrow inactive");
-    backgroundComments[index]["voted"] = false;
-    backgroundComments[index]["votes"] -= 1;
+    backgroundComments[index].voted = false;
+    backgroundComments[index].votes -= 1;
   } else {
     container.childNodes[1].setAttribute("class", "voteArrow active");
-    backgroundComments[index]["voted"] = true;
-    backgroundComments[index]["votes"] += 1;
+    backgroundComments[index].voted = true;
+    backgroundComments[index].votes += 1;
   }
   container.childNodes[3].innerHTML = backgroundComments[index]["votes"];
   // update vote in database
 }
 
-window.addPost = function addPost(form, event) {
-  event.preventDefault();
-  console.log("ADD");
+// ----------------------------------------------------------------------------
 
+window.add_post = function add_post(form, event) {
+  /**
+    Adds a new post to the dashboard and database.
+    @param form - The new post form.
+    @param event - The event which fires to call this function.
+  */
+
+  event.preventDefault();
   const tagElements = document.getElementsByClassName("newPostTag");
   const tags = [];
   for (let i = 0; i < tagElements.length; i++) {
     tags.push(tagElements[i].textContent.trim());
-    add_filters(tag);
+    add_filter(tags[i]);
   }
   const post = {
     "title": document.getElementById("postTitle").value,
     "tags": tags,
     "votes": 0,
-    "content": document.getElementById("postTopicsText").value,
+    "content": document.getElementById("postText").value,
     "poster": "You",
     "date": "30/10/2022",
     "voted": false,
     "index": backgroundComments.length
   };
   backgroundComments.unshift(post);
-  populate_commentboard(backgroundComments);
-
+  get_posts();
   form.reset();
-  // remove topics
-  $('#postTopics').empty();
-
+  document.getElementById("postTopics").innerHTML = "";
   const modalElem = document.getElementById('commentEditor');
   const modal = bootstrap.Modal.getOrCreateInstance(modalElem);
   modal.hide();
 }
+
+// ----------------------------------------------------------------------------
 
 const commentEditor = document.getElementById("commentEditor");
 const newPost = document.getElementById("newPost");
@@ -216,21 +310,30 @@ commentEditor.addEventListener(
     newPost.focus();
   }
 );
-let backgroundComments = [];
+
+// ----------------------------------------------------------------------------
+
+const backgroundComments = [];
 const tagSet = new Set();
-collect_comments_and_tags();
-get_comments();
+
+// ----------------------------------------------------------------------------
+
+load();
+get_posts();
+
+// ----------------------------------------------------------------------------
 
 import { redirect } from '../utils';
 
 $(() => {
-  $('.nav-link[href]').on('click', function (e) {
-    e.preventDefault();
-
-    const url = $(this).attr('href');
-
-    const email = $('html').attr('data-email');
-
-    redirect(url, { email });
-  });
+  $('.nav-link[href]').on(
+    'click', function (e) {
+      e.preventDefault();
+      const url = $(this).attr('href');
+      const email = $('html').attr('data-email');
+      redirect(url, { email });
+    }
+  );
 });
+
+// ----------------------------------------------------------------------------
