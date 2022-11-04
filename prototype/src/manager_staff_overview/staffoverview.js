@@ -34,7 +34,7 @@ function get_roles_as_select_menu(selected_role) {
   for (const role of roles) {
     const selected = selected_role === role;
 
-    str = str.concat(`<option ${selected ? 'selected' : ''} >${role}</option>`);
+    str += `<option ${selected ? 'selected' : ''} >${role}</option>`;
   }
 
   return str;
