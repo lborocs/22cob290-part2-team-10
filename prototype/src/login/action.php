@@ -6,12 +6,21 @@
  *
  * Response schema:
  *  - success [boolean]
+ *  - role [Role, if success == true]
  *  - errorMessage [ErrorReason, if success == false]
  */
 
 require "../credentials.php";
 
 header('Content-Type: application/json');
+
+enum Role: string
+{
+  case MANAGER = 'MANAGER';
+  case TEAM_LEADER = 'TEAM_LEADER';
+  case TEAM_MEMBER = 'TEAM_MEMBER';
+  case LEFT_COMPANY = 'LEFT_COMPANY';
+}
 
 // LEFT_COMPANY?
 enum ErrorReason: string
@@ -30,6 +39,41 @@ function error(string|ErrorReason $error): void
   ]));
 }
 
+function get_user(string $email): ?array
+{
+  // hardcoded
+  $staff = [
+    [
+      'email' => 'alice@make-it-all.co.uk',
+      'password' => 'TestPassword123!',
+      'role' => Role::TEAM_MEMBER,
+    ],
+    [
+      'email' => 'john@make-it-all.co.uk',
+      'password' => 'TestPassword123!',
+      'role' => Role::TEAM_LEADER,
+    ],
+    [
+      'email' => 'james@make-it-all.co.uk',
+      'password' => 'TestPassword123!',
+      'role' => Role::MANAGER,
+    ],
+    [
+      'email' => 'olivia@make-it-all.co.uk',
+      'password' => 'TestPassword123!',
+      'role' => Role::LEFT_COMPANY,
+    ],
+  ];
+
+  foreach ($staff as $user) {
+    if ($user['email'] == $email) {
+      return $user;
+    }
+  }
+
+  return null;
+}
+
 if (!isset($_REQUEST['email'])
   || !isset($_REQUEST['password'])) {
   error('Not all params set.');
@@ -46,14 +90,16 @@ $response = [
   'success' => false,
 ];
 
-// hardcoded
-$exists = $email == 'alice@make-it-all.co.uk';
-$correct_password = $password == 'TestPassword123!';
+$user = get_user($email);
 
-if ($exists && $correct_password) {
-  $response['success'] = true;
-} else if ($exists) {
-  $response['errorMessage'] = ErrorReason::WRONG_PASSWORD->value;
+if ($user) {
+  $correct_password = $password == $user['password'];
+  if ($correct_password) {
+    $response['success'] = true;
+    $response['role'] = $user['role']->value;
+  } else {
+    $response['errorMessage'] = ErrorReason::WRONG_PASSWORD->value;
+  }
 } else {
   $response['errorMessage'] = ErrorReason::DOESNT_EXIST->value;
 }

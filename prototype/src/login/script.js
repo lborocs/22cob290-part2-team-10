@@ -4,6 +4,13 @@ var LoginFailedReason;
     LoginFailedReason["WRONG_PASSWORD"] = "WRONG_PASSWORD";
     LoginFailedReason["DOESNT_EXIST"] = "DOESNT_EXIST";
 })(LoginFailedReason || (LoginFailedReason = {}));
+var Role;
+(function (Role) {
+    Role["MANAGER"] = "MANAGER";
+    Role["TEAM_LEADER"] = "TEAM_LEADER";
+    Role["TEAM_MEMBER"] = "TEAM_MEMBER";
+    Role["LEFT_COMPANY"] = "LEFT_COMPANY";
+})(Role || (Role = {}));
 $(() => {
     $('#toggle-password').on('click', function (e) {
         const $password = $('#password');
@@ -41,7 +48,18 @@ function login($form, { email }) {
     })
         .done((res) => {
         if (res.success) {
-            redirect('home', { email });
+            // TODO: maybe if role == MANAGER, show manager dashboard
+            const role = res.role;
+            switch (role) {
+                case Role.MANAGER:
+                    redirect('dashboard', { email, role });
+                    break;
+                case Role.LEFT_COMPANY:
+                    alert('You no longer have access to this website');
+                    break;
+                default:
+                    redirect('home', { email, role });
+            }
         }
         else {
             console.log(res);

@@ -1,6 +1,6 @@
 <?php
 
-// $email = $_REQUEST['email'];
+$email = $_REQUEST['email'] ?? 'johndoe@make-it-all.co.uk';
 
 // hardcoded
 function get_managed_projects(string $email = ''): array
@@ -49,7 +49,7 @@ function get_managed_staff(string $email = ''): array
           <img src="assets/company-logo.png" alt="company logo" id="company-logo">
         </div>
         <br>
-        <p>Email:<br>johndoe@make-it-all.co.uk</p>
+        <p>Email:<br><?php echo $email ?></p>
       </div>
 
       <div class="wrapper">
