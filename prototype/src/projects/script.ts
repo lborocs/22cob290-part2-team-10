@@ -1,4 +1,4 @@
-import { redirect } from '../utils';
+import '../utils/redirect';
 
 // TODO: in AddTask, assign to employee in project
 // TODO LATER: impl hover over task to edit (open modal)
@@ -40,16 +40,6 @@ const taskTitles = new Set<string>(['Title']);
 $(() => {
   $('#sidebarCollapse').on('click', function () {
     $('#sidebar').toggleClass('active');
-  });
-
-  $('.nav-link[href]').on('click', function (e) {
-    e.preventDefault();
-
-    const url = $(this).attr('href')!;
-
-    const email = $('html').attr('data-email')!;
-
-    redirect(url, { email });
   });
 
 

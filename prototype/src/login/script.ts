@@ -1,5 +1,5 @@
-import { resolveModuleName } from 'typescript';
-import { redirect, isValidWorkEmail, validatePassword } from '../utils';
+import { isValidWorkEmail, validatePassword } from '../utils';
+import redirect from '../utils/redirect';
 
 type LoginFailedResponse = {
   success: false

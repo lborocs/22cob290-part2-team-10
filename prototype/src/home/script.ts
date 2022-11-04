@@ -1,4 +1,4 @@
-import { redirect } from '../utils';
+import '../utils/redirect';
 
 // TODO LATER: impl hover over task to edit (open modal)
 // TODO LATER: change kanye image to colour with 1st letter of email
@@ -39,16 +39,6 @@ const taskTitles = new Set<string>(['Title']);
 $(() => {
   $('#sidebarCollapse').on('click', function () {
     $('#sidebar').toggleClass('active');
-  });
-
-  $('.nav-link[href]').on('click', function (e) {
-    e.preventDefault();
-
-    const url = $(this).attr('href')!;
-
-    const email = $('html').attr('data-email')!;
-
-    redirect(url, { email });
   });
 
 

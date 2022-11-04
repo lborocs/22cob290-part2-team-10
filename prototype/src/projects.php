@@ -21,7 +21,7 @@ function get_projects(string $email): array
   return array_map(fn($num): string => "Project $num", range(1, 15));
 }
 ?><!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-email="<?php echo $email ?>">
 
 <head>
   <meta charset="UTF-8">

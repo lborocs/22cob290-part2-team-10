@@ -1,3 +1,5 @@
+import '../utils/redirect';
+
 // ----------------------------------------------------------------------------
 
 function load() {
@@ -77,7 +79,7 @@ window.get_posts = function get_posts() {
     into the dashboard.
   */
 
-  const titleSub = 
+  const titleSub =
     document.getElementById("searchField").value.toLocaleLowerCase();
   const topicRoster = document.getElementById("filterOptions").childNodes;
   const tagFilters = [];
@@ -124,7 +126,7 @@ function populate_postboard(filteredPosts) {
     for (let j in filteredPosts[i].tags) {
       tagLine += `
         <a
-          class="tag" 
+          class="tag"
           onclick="activate_tag_filter('${filteredPosts[i].tags[j]}')"
         >${filteredPosts[i].tags[j]}</a>
       `;
@@ -177,7 +179,7 @@ window.flip_tag_filter_parity = function flip_tag_filter_parity(topic) {
    * the new filter selections.
    * @param topic - The topic corresponding to the tag to be flipped.
    */
-  
+
   const tag = document.getElementById("-" + topic);
   if (tag.getAttribute("class").endsWith("active")) {
     tag.setAttribute("class", "tag");
@@ -322,20 +324,5 @@ const Posts = [];
 
 load();
 get_posts();
-
-// ----------------------------------------------------------------------------
-
-import { redirect } from '../utils';
-
-$(() => {
-  $('.nav-link[href]').on(
-    'click', function (e) {
-      e.preventDefault();
-      const url = $(this).attr('href');
-      const email = $('html').attr('data-email');
-      redirect(url, { email });
-    }
-  );
-});
 
 // ----------------------------------------------------------------------------

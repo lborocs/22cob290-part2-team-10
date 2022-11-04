@@ -1,13 +1,3 @@
-// redirect with data: https://stackoverflow.com/a/10022098
-export function redirect(url, data) {
-    const $form = $(`
-  <form action="${url}" method="POST">
-    ${Object.entries(data).map(([key, value]) => `<input name="${key}" value="${value}" />`).join('')}
-  </form>
-  `);
-    $('body').append($form);
-    $form.trigger('submit');
-}
 export function isValidWorkEmail(email) {
     return email.endsWith('@make-it-all.co.uk') && email !== '@make-it-all.co.uk';
 }

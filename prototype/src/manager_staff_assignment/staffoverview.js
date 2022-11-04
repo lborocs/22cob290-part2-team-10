@@ -1,3 +1,5 @@
+import '../utils/redirect';
+
 const modal = $("#modal");
 const staff_list = $("#staff_list");
 
@@ -143,17 +145,3 @@ for all elements with class name:
 
 
 */
-
-import { redirect } from '../utils';
-
-// TODO: extract to common file
-$(() => {
-  $('.nav-link[href]').on(
-    'click', function (e) {
-      e.preventDefault();
-      const url = $(this).attr('href');
-      const email = $('html').attr('data-email');
-      redirect(url, { email });
-    }
-  );
-});

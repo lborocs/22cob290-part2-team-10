@@ -1,4 +1,5 @@
-import { redirect, isValidWorkEmail, validatePassword } from '../utils';
+import { isValidWorkEmail, validatePassword } from '../utils';
+import redirect from '../utils/redirect';
 var SignupFailedReason;
 (function (SignupFailedReason) {
     SignupFailedReason["ALREADY_EXIST"] = "ALREADY_EXIST";
