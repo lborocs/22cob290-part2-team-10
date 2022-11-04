@@ -57,7 +57,7 @@ function add_filters(topic) {
   tagSet.add(topic)
 }
 
-window.get_comments = function get_comments() {
+function get_comments() {
   const titleSub = document.getElementById("searchField").value.toLocaleLowerCase();
   const topicRoster = document.getElementById("filterOptions").childNodes;
   const tagFilters = [];
@@ -85,7 +85,7 @@ window.get_comments = function get_comments() {
   populate_commentboard(comments);
 }
 
-window.flipTagFilterParity = function flipTagFilterParity(topic) {
+function flipTagFilterParity(topic) {
   const tag = document.getElementById("-" + topic);
   if (tag.getAttribute("class").endsWith("active")) {
     tag.setAttribute("class", "tag");
@@ -218,6 +218,7 @@ commentEditor.addEventListener(
 );
 let backgroundComments = [];
 const tagSet = new Set();
+window.flipTagFilterParity = flipTagFilterParity;
 collect_comments_and_tags();
 get_comments();
 
