@@ -209,7 +209,7 @@ window.add_tag_to_post = function add_tag_to_post() {
 
   const postTopicsText = document.getElementById("postTopicsText");
   let topic = postTopicsText.value.trim().toLocaleLowerCase();
-  if (topic.endsWith(",") && "," !== topic) {
+  if (topic.endsWith(",") && "," != topic) {
     topic = topic.slice(0, topic.length - 1);
     postTopicsText.value = "";
     if (document.getElementById("*" + topic) == null) {
