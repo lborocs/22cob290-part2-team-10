@@ -40,12 +40,12 @@ function get_roles_as_select_menu(selected_role) {
   return str;
 }
 
-function open_modal() {
+window.open_modal = function open_modal() {
   update_employees();
   modal.css('display', "block");
 }
 
-function close_modal() {
+window.close_modal = function close_modal() {
   modal.css('display', "none");
 }
 
@@ -143,3 +143,17 @@ for all elements with class name:
 
 
 */
+
+import { redirect } from '../utils';
+
+// TODO: extract to common file
+$(() => {
+  $('.nav-link[href]').on(
+    'click', function (e) {
+      e.preventDefault();
+      const url = $(this).attr('href');
+      const email = $('html').attr('data-email');
+      redirect(url, { email });
+    }
+  );
+});

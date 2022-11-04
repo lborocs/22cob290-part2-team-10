@@ -1,7 +1,10 @@
 <?php
+
+$email = $_REQUEST['email'] ?? 'johndoe@make-it-all.co.uk';
+
 ?><!DOCTYPE html>
 
-<html lang="en`">
+<html lang="en" data-email="<?php echo $email ?>">
 
 <head>
   <meta charset="UTF-8">
@@ -84,7 +87,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
   <!-- Bootstrap JS -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
-  <script src="manager_staff_assignment/staffoverview.js"></script>
+
+  <script type="module" src="manager_staff_assignment/staffoverview.js"></script>
 
 </body>
 
