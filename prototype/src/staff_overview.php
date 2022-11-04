@@ -27,14 +27,14 @@
           <!--POP-UP FORM-->
           <form role="form" method="POST" id="emp_info" action="">
             <div class="form-group">
-              <label class="control-label">Employee:</label>
+              <label class="control-label" for="employees">Employee:</label>
               <div>
                 <select class="form-select" id="employees" required>
                 </select>
               </div>
             </div>
             <div class="form-group">
-              <label class="control-label">Role:</label>
+              <label class="control-label" for="roles">Role:</label>
               <div>
                 <select class="form-select" id="roles" required>
                 </select>
@@ -70,7 +70,7 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="nav navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link" href="..\dashboard.php">Back to Manager Dashboard</a>
+            <a class="nav-link" href="dashboard">Back to Manager Dashboard</a>
           </li>
         </ul>
       </div>
@@ -88,8 +88,6 @@
       <button type="button" class="btn btn-success" id="save_changes_btn">Save changes</button>
     </div>
   </div>
-  </div>
-
 
   <!--JQUERY CDN-->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
