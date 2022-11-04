@@ -1,6 +1,25 @@
 <?php
-?>
-<!DOCTYPE html>
+
+// $email = $_REQUEST['email'];
+
+// hardcoded
+function get_managed_projects(string $email = ''): array
+{
+  return array_map(fn($num): string => "Project $num", range(1, 9));
+}
+
+// hardcoded
+function get_managed_staff(string $email = ''): array
+{
+  return array_map(fn($num): array => [
+    'name' => "Subordinate $num", // we're gonna want to return their email not name
+    // idk what these numbers are meant to represent in the code that David did
+    'idk1' => rand(3, 31),
+    'idk2' => 31,
+  ], range(1, 9));
+}
+
+?><!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -63,17 +82,16 @@
                 <h2>Complete projects</h2>
                 <div class="scrollbar">
                   <ul class="list-group">
-                    <li class="list-group-item">Project 1</li>
-                    <li class="list-group-item">Project 2</li>
-                    <li class="list-group-item">Project 3</li>
-                    <li class="list-group-item">Project 4</li>
-                    <li class="list-group-item">Project 5</li>
-                    <li class="list-group-item">Project 6</li>
-                    <li class="list-group-item">Project 7</li>
-                    <li class="list-group-item">Project 8</li>
-                    <li class="list-group-item">Project 9</li>
-                  </ul>
+                    <?php
+                    $projects = get_managed_projects();
 
+                    foreach ($projects as &$project_name) {
+                      echo <<<HTML
+                        <li class="list-group-item">$project_name</li>
+                      HTML;
+                    }
+                    ?>
+                  </ul>
                 </div>
               </div>
 
@@ -82,15 +100,19 @@
                 <div class="scrollbar">
 
                   <ul class="list-group">
-                    <li class="list-group-item">Subordinate 1<span class="badge badge-light">31</span><span class="badge badge-light">31</span></li>
-                    <li class="list-group-item">Subordinate 2<span class="badge badge-light">3</span><span class="badge badge-light">31</span></li>
-                    <li class="list-group-item">Subordinate 3<span class="badge badge-light">4</span><span class="badge badge-light">31</span></li>
-                    <li class="list-group-item">Subordinate 4<span class="badge badge-light">23</span><span class="badge badge-light">31</span></li>
-                    <li class="list-group-item">Subordinate 5<span class="badge badge-light">24</span><span class="badge badge-light">31</span></li>
-                    <li class="list-group-item">Subordinate 6<span class="badge badge-light">25</span><span class="badge badge-light">31</span></li>
-                    <li class="list-group-item">Subordinate 7<span class="badge badge-light">11</span><span class="badge badge-light">31</span></li>
-                    <li class="list-group-item">Subordinate 8<span class="badge badge-light">15</span><span class="badge badge-light">31</span></li>
-                    <li class="list-group-item">Subordinate 9<span class="badge badge-light">14</span><span class="badge badge-light">31</span></li>
+                    <?php
+                    $staff = get_managed_staff();
+staff
+                    foreach ($staff as &$employee) {
+                      $name = $employee['name'];
+                      $num1 = $employee['idk1'];
+                      $num2 = $employee['idk2'];
+
+                      echo <<<HTML
+                        <li class="list-group-item">$name<span class="badge badge-light">$num1</span><span class="badge badge-light">$num2</span></li>
+                      HTML;
+                    }
+                    ?>
                   </ul>
                 </div>
               </div>
