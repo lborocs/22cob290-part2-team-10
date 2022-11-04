@@ -4,7 +4,7 @@ $email = $_REQUEST['email'] ?? 'johndoe@make-it-all.co.uk';
 
 ?><!DOCTYPE html>
 
-<html lang="en" data-email="<?php echo $email ?>">
+<html lang="en" data-email="<?= $email ?>">
 
 <head>
   <meta charset="UTF-8">

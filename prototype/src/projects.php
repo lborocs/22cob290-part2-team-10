@@ -21,14 +21,14 @@ function get_projects(string $email): array
   return array_map(fn($num): string => "Project $num", range(1, 15));
 }
 ?><!DOCTYPE html>
-<html lang="en" data-email="<?php echo $email ?>">
+<html lang="en" data-email="<?= $email ?>">
 
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title><?php echo $name ?? 'Make-It-All Projects' ?></title>
+  <title><?= $name ?? 'Make-It-All Projects' ?></title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
@@ -117,7 +117,7 @@ function get_projects(string $email): array
 
     <!-- KBOARD -->
     <div class="container">
-      <h3><?php echo $name ?></h3>
+      <h3><?= $name ?></h3>
 
       <div id="modal" class="modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">

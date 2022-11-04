@@ -79,7 +79,7 @@ a:focus {
 
 #sidebar .sidebar-header {
     padding: 20px;
-    background: var(--seconadary-color);
+    background: var(--secondary-color);
 }
 
 #sidebar ul.components {
@@ -103,7 +103,7 @@ a:focus {
     background: var(--sidebar-hover);
 }
 
-#sidebar ul li.active>a,
+#sidebar ul li.active > a,
 a[aria-expanded="true"] {
     color: #fff;
     background: var(--tertiary-color);
@@ -199,7 +199,7 @@ a.article:hover {
 
 }
 
-@media(max-width:990px) {
+@media (max-width: 990px) {
     #profile-picture {
         display: none;
     }
@@ -228,6 +228,6 @@ p.overflow-auto {
 }
 
 .scroll {
-	height: 100%;
-	overflow-y: auto;
+    height: 100%;
+    overflow-y: auto;
 }

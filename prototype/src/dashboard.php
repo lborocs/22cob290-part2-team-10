@@ -20,7 +20,7 @@ function get_managed_staff(string $email = ''): array
 }
 
 ?><!DOCTYPE html>
-<html lang="en" data-email="<?php echo $email ?>">
+<html lang="en" data-email="<?= $email ?>">
 
 <head>
   <meta charset="UTF-8">
@@ -49,7 +49,7 @@ function get_managed_staff(string $email = ''): array
           <img src="assets/company-logo.png" alt="company logo" id="company-logo">
         </div>
         <br>
-        <p>Email:<br><?php echo $email ?></p>
+        <p>Email:<br><?= $email ?></p>
       </div>
 
       <div class="wrapper">
