@@ -66,7 +66,7 @@ function get_projects(string $email): array
           $projects = get_projects($email);
 
           // none active cos this is showing the user's ToDo list
-          foreach ($projects as &$project_name) {
+          foreach ($projects as $project_name) {
             $project_html = <<<HTML
               <li>
                 <a class="nav-link" href="projects?name=$project_name">$project_name</a>

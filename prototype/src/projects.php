@@ -64,7 +64,7 @@ function get_projects(string $email): array
         <?php
         $projects = get_projects($email);
 
-        foreach ($projects as &$project_name) {
+        foreach ($projects as $project_name) {
           $li_class = '';
 
           if ($project_name == $name) {

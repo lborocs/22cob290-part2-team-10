@@ -85,7 +85,7 @@ function get_managed_staff(string $email = ''): array
                     <?php
                     $projects = get_managed_projects();
 
-                    foreach ($projects as &$project_name) {
+                    foreach ($projects as $project_name) {
                       echo <<<HTML
                         <li class="list-group-item">$project_name</li>
                       HTML;
@@ -103,7 +103,7 @@ function get_managed_staff(string $email = ''): array
                     <?php
                     $staff = get_managed_staff();
 
-                    foreach ($staff as &$employee) {
+                    foreach ($staff as $employee) {
                       $name = $employee['name'];
                       $num1 = $employee['idk1'];
                       $num2 = $employee['idk2'];
