@@ -14,9 +14,9 @@ export function isValidWorkEmail(email: string): boolean {
   return email.endsWith('@make-it-all.co.uk') && email !== '@make-it-all.co.uk';
 }
 
-// TODO: TOO_LONG? need to ask on forum
 export enum PasswordError {
   TOO_SHORT = 'Too short',
+  TOO_LONG = 'Too long',
   NO_UPPERCASE = 'No uppercase letter',
   NO_LOWERCASE = 'No lowercase letter',
   NO_NUMBER = 'No number',
@@ -32,6 +32,9 @@ const SPECIAL_SYMBOL_REGEX = /(?=.*\W)/;
 export function validatePassword(password: string): PasswordError | null {
   if (password.length < 12)
     return PasswordError.TOO_SHORT;
+
+  if (password.length > 64)
+    return PasswordError.TOO_LONG;
 
   if (!LOWERCASE_REGEX.test(password))
     return PasswordError.NO_LOWERCASE;

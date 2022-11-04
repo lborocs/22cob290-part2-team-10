@@ -11,10 +11,10 @@ export function redirect(url, data) {
 export function isValidWorkEmail(email) {
     return email.endsWith('@make-it-all.co.uk') && email !== '@make-it-all.co.uk';
 }
-// TODO: TOO_LONG? need to ask on forum
 export var PasswordError;
 (function (PasswordError) {
     PasswordError["TOO_SHORT"] = "Too short";
+    PasswordError["TOO_LONG"] = "Too long";
     PasswordError["NO_UPPERCASE"] = "No uppercase letter";
     PasswordError["NO_LOWERCASE"] = "No lowercase letter";
     PasswordError["NO_NUMBER"] = "No number";
@@ -28,6 +28,8 @@ const SPECIAL_SYMBOL_REGEX = /(?=.*\W)/;
 export function validatePassword(password) {
     if (password.length < 12)
         return PasswordError.TOO_SHORT;
+    if (password.length > 64)
+        return PasswordError.TOO_LONG;
     if (!LOWERCASE_REGEX.test(password))
         return PasswordError.NO_LOWERCASE;
     if (!UPPERCASE_REGEX.test(password))

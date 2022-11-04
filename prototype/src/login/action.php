@@ -84,7 +84,6 @@ $password = $_REQUEST['password'];
 
 // TODO: check email domain
 // TODO: check password aligns with policy
-// TODO: ask if max pw length of 20 is OK
 
 $response = [
   'success' => false,

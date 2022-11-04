@@ -78,7 +78,6 @@ function login($form: JQuery<HTMLElement>, { email }: Credentials) {
   })
     .done((res: LoginResponse) => {
       if (res.success) {
-        // TODO: maybe if role == MANAGER, show manager dashboard
         const role = res.role;
 
         switch (role) {
@@ -87,7 +86,7 @@ function login($form: JQuery<HTMLElement>, { email }: Credentials) {
             break;
 
           case Role.LEFT_COMPANY:
-            alert('You no longer have access to this website');
+            emailError('You no longer have access to this website');
             break;
 
           default:

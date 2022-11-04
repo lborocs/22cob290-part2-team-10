@@ -58,6 +58,7 @@
                    name="password"
                    placeholder="Password"
                    minlength="12"
+                   maxlength="64"
                    >
             <span class="input-group-text d-inline-block multiline-tooltip"
                   tabindex="0"

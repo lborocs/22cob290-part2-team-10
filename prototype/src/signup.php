@@ -78,6 +78,7 @@ $invite_token = $_REQUEST['token'] ?? '';
                    name="password"
                    placeholder="Enter password"
                    minlength="12"
+                   maxlength="64"
                    >
             <span class="input-group-text d-inline-block multiline-tooltip"
                   tabindex="0"
@@ -108,6 +109,7 @@ $invite_token = $_REQUEST['token'] ?? '';
                    name="confirm"
                    placeholder="Enter password again"
                    minlength="12"
+                   maxlength="64"
                    >
             <button id="toggle-confirm" class="btn btn-outline-secondary" type="button">
               <i id="confirm-eye" class="bi bi-eye-fill"></i>
