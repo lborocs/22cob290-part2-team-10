@@ -12,7 +12,7 @@ function load() {
       "votes": 120,
       "content": "Every solid bottle is pure.",
       "author": "Guy1",
-      "date": "30/10/2022",
+      "date": "Mon Jul 25 2022",
       "voted": false,
       "index": 3
     }, {
@@ -21,7 +21,7 @@ function load() {
       "votes": 24,
       "content": "Wiiierd...",
       "author": "Jason",
-      "date": "30/10/2022",
+      "date": "Mon Jul 25 2022",
       "voted": false,
       "index": 2
     }, {
@@ -30,7 +30,7 @@ function load() {
       "votes": 6,
       "content": "Could you not.",
       "author": "Ogg",
-      "date": "30/10/2022",
+      "date": "Mon Jul 25 2022",
       "voted": false,
       "index": 1
     }, {
@@ -39,7 +39,7 @@ function load() {
       "votes": 2,
       "content": "I fart on Ogg's chair smoetimes.",
       "author": "Jason",
-      "date": "30/10/2022",
+      "date": "Mon Jul 25 2022",
       "voted": false,
       "index": 0
     }
@@ -141,7 +141,7 @@ function populate_postboard(filteredPosts) {
               </div>
               <div class="col-auto">
                 <h7>
-                  Posted By ${filteredPosts[i].author} on
+                  Posted By ${filteredPosts[i].author}, on
                   ${filteredPosts[i].date}
                 </h7>
               </div>
@@ -282,12 +282,12 @@ window.add_post = function add_post(form, event) {
     add_filter(tags[i]);
   }
   const post = {
-    "title": document.getElementById("postTitle").value,
+    "title": document.getElementById("postTitle").value.trim(),
     "tags": tags,
     "votes": 0,
     "content": document.getElementById("postText").value,
     "author": "You",
-    "date": "30/10/2022",
+    "date": (new Date()).toDateString(),
     "voted": false,
     "index": Posts.length
   };
