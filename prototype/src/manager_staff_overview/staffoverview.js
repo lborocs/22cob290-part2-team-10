@@ -31,12 +31,10 @@ const roles = [
 function get_roles_as_select_menu(selected_role) {
   let str = "";
 
-  for (let i = 0; i < roles.length; i++) {
-    if (selected_role === roles[i]) {
-      str = str.concat("<option selected>" + roles[i] + "</option>");
-    } else {
-      str = str.concat("<option>" + roles[i] + "</option>");
-    }
+  for (const role of roles) {
+    const selected = selected_role === role;
+
+    str = str.concat(`<option ${selected ? 'selected' : ''} >${role}</option>`);
   }
 
   return str;
@@ -62,17 +60,18 @@ function update_employees() {
   const role_select = $("#roles");
 
   employee_select.empty();
-  for (let i = 0; i < employee_list.length; i++) {
+
+  for (const emp_name of employee_list) {
     // prevent same employee being added twice
-    const index = active_employees.findIndex(employee => employee.name === employee_list[i]);
+    const index = active_employees.findIndex(employee => employee.name === emp_name);
     if (index === -1) {
-      employee_select.append("<option>" + employee_list[i] + "</option>");
+      employee_select.append(`<option>${emp_name}</option>`);
     }
   }
 
   role_select.empty();
   for (let i = 0; i < roles.length; i++) {
-    role_select.append("<option>" + roles[i] + "</option>");
+    role_select.append(`<option>${roles[i]}</option>`);
   }
 }
 
@@ -83,7 +82,8 @@ function add_employee(eName, eRole) {
   active_employees.push({ name: eName, role: eRole });
 
   staff_list.append(`
-  <li class="list-group-item employee_list_item"><span class="employee_list_item_name">${eName}</span>
+  <li class="list-group-item employee_list_item">
+    <span class="employee_list_item_name">${eName}</span>
     <span class="employee_list_item_role" style="float: right">${eRole}</span>
     <select class="form-select emp_role_select">
       ${get_roles_as_select_menu(eRole)}
@@ -101,15 +101,15 @@ function add_employee(eName, eRole) {
 function update_roles() {
   const employee_list_items = $(".employee_list_item");
   employee_list_items.each(function () {
+    const $this = $(this);
 
-    let name_span = $(this).children(".employee_list_item_name");
-    let ename = name_span.text();
+    const ename = $this.find(".employee_list_item_name").text();
 
-    const selectmenu = $(this).first(".emp_role_select")[0];
-    const role = $("option:selected", selectmenu).text();
+    const role = $this.find("option:selected").text();
+
     if (role === "DELETE EMPLOYEE") {
-      $(this).remove();
-      for (i = 0; i < active_employees.length; i++) {
+      $this.remove();
+      for (let i = 0; i < active_employees.length; i++) {
         if (active_employees[i].name === ename) {
           active_employees.splice(i, 1);
           console.log(active_employees);
@@ -119,7 +119,7 @@ function update_roles() {
       //console.log(active_employees);
       update_employees();
     } else {
-      $(this).children(".employee_list_item_role")[0].textContent = role;
+      $this.find(".employee_list_item_role").text(role);
     }
   });
 }
