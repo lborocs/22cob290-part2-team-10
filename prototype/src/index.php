@@ -31,8 +31,8 @@
       <div class="form-group row mb-3">
         <label for="email" class="col-sm-3 col-form-label">Email</label>
         <div class="col-sm-9 position-relative">
-          <input value="alice@make-it-all.co.uk"
-                 type="email"
+          <!-- value="alice@make-it-all.co.uk" -->
+          <input type="email"
                  autocomplete="email"
                  class="form-control"
                  id="email"
@@ -50,8 +50,8 @@
         <label for="password" class="col-sm-3 col-form-label">Password</label>
         <div class="col-sm-9 position-relative">
           <div class="input-group has-validation">
-            <input value="TestPassword123!"
-                   type="password"
+            <!-- value="TestPassword123!" -->
+            <input type="password"
                    autocomplete="current-password"
                    class="form-control"
                    id="password"

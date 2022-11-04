@@ -51,8 +51,8 @@ $invite_token = $_REQUEST['token'] ?? '';
       <div class="form-group row mb-3">
         <label for="email" class="col-sm-3 col-form-label">Email</label>
         <div class="col-sm-9 position-relative">
-          <input value="bob@make-it-all.co.uk"
-                 type="email"
+          <!-- value="bob@make-it-all.co.uk" -->
+          <input type="email"
                  autocomplete="email"
                  class="form-control"
                  id="email"
@@ -70,8 +70,8 @@ $invite_token = $_REQUEST['token'] ?? '';
         <label for="password" class="col-sm-3 col-form-label">Password</label>
         <div class="col-sm-9 position-relative">
           <div class="input-group has-validation">
-            <input value="TestPassword456!"
-                   type="password"
+            <!-- value="TestPassword456!" -->
+            <input type="password"
                    autocomplete="new-password"
                    class="form-control"
                    id="password"
@@ -100,8 +100,8 @@ $invite_token = $_REQUEST['token'] ?? '';
         <label for="confirm" class="col-sm-3 col-form-label">Confirm Password</label>
         <div class="col-sm-9 position-relative">
           <div class="input-group has-validation">
-            <input value="TestPassword456!"
-                   type="password"
+            <!-- value="TestPassword456!" -->
+            <input type="password"
                    autocomplete="new-password"
                    class="form-control"
                    id="confirm"
