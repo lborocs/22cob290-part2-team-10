@@ -54,18 +54,48 @@ function get_managed_staff(string $email = ''): array
 
       <div class="wrapper">
 
+        <!-- navbar left,middle,right: https://stackoverflow.com/a/20362024 -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <button type="button" id="sidebarCollapse" class="btn  sidebar-toggle-btn">
-            <i class="fas fa-align-left"></i>
-            <span>Toggle Sidebar</span>
-          </button>
-          <span class="navbar-brand mb-0 h1">Manager Dashboard </span>
-          <button class="btn btn-dark d-inline-block d-lg-none ml-auto" id="navCollapse" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <i class="fas fa-align-justify"></i>
-          </button>
+          <!-- left (collapse) -->
+          <div class="navbar-collapse collapse w-100 order-1 order-md-0">
+            <button type="button" class="btn sidebar-toggle-btn sidebarCollapse">
+              <i class="fas fa-align-left"></i>
+              <span>Toggle Sidebar</span>
+            </button>
+          </div>
 
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <!-- middle -->
+          <div class="mx-auto w-100 order-1 d-flex justify-content-between">
+            <!--
+              have to repeat ToggleSidebar button because I couldn't find a way to make left & middle sticky
+              while keeping right collapsable if that makes sense
+
+              - no button to expand left because left is just a ToggleSidebar button which is repeated
+            -->
+            <button type="button" class="btn sidebar-toggle-btn sidebarCollapse d-inline-block d-lg-none">
+              <i class="fas fa-align-left"></i>
+            </button>
+
+            <h1 class="navbar-brand mx-auto mb-0">Manager Dashboard</h1>
+
+            <!-- expand right -->
+            <button class="btn btn-dark d-inline-block d-lg-none"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+              <i class="fas fa-align-justify"></i>
+            </button>
+          </div>
+
+          <!-- right (collapse) -->
+          <div id="navbarSupportedContent" class="navbar-collapse collapse w-100 order-2">
             <ul class="nav navbar-nav ml-auto">
+              <li class="nav-item">
+                  <a class="nav-link" href="forum">Forum</a>
+              </li>
               <li class="nav-item">
                 <a class="nav-link" href="staff_assignment">Staff Assignment</a>
               </li>
