@@ -53,12 +53,12 @@ function load() {
 
 function add_filter(topic) {
   /**
-   * Adds a topic to the filter by topic section, and updates the TagSet.
+   * Adds a topic to the filter by topic section, and updates the TopicSet.
    * @param topic - The topic to be added.
    */
 
   const filterOptions = document.getElementById("filterOptions");
-  if (!TagSet.has(topic)) {
+  if (!TopicSet.has(topic)) {
     filterOptions.innerHTML += `
       <div class="col-auto topicDiv"
         onclick="flip_tag_filter_parity('${topic}')"
@@ -67,7 +67,7 @@ function add_filter(topic) {
       </div>
     `;
   }
-  TagSet.add(topic)
+  TopicSet.add(topic)
 }
 
 // ----------------------------------------------------------------------------
@@ -312,7 +312,7 @@ commentEditor.addEventListener(
 
 // ----------------------------------------------------------------------------
 
-const TagSet = new Set();
+const TopicSet = new Set();
 const Posts = [];
 
 // ----------------------------------------------------------------------------
