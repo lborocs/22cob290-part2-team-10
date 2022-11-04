@@ -49,17 +49,22 @@ function get_user(string $email): ?array
       'role' => Role::TEAM_MEMBER,
     ],
     [
-      'email' => 'john@make-it-all.co.uk',
+      'email' => 'member@make-it-all.co.uk',
+      'password' => 'TestPassword123!',
+      'role' => Role::TEAM_MEMBER,
+    ],
+    [
+      'email' => 'leader@make-it-all.co.uk',
       'password' => 'TestPassword123!',
       'role' => Role::TEAM_LEADER,
     ],
     [
-      'email' => 'james@make-it-all.co.uk',
+      'email' => 'manager@make-it-all.co.uk',
       'password' => 'TestPassword123!',
       'role' => Role::MANAGER,
     ],
     [
-      'email' => 'olivia@make-it-all.co.uk',
+      'email' => 'left@make-it-all.co.uk',
       'password' => 'TestPassword123!',
       'role' => Role::LEFT_COMPANY,
     ],
