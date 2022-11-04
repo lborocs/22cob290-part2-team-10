@@ -17,10 +17,11 @@ body {
     background: #fafafa;
 }
 
-#page{
+#page {
     height: 100vh;
     display: flex;
-    flex-direction: row;}
+    flex-direction: row;
+}
 
 p {
     font-family: 'Poppins', sans-serif;
@@ -53,11 +54,12 @@ a:focus {
     border: none;
 }
 
-.navbar-brand{
+.navbar-brand {
     width: 100%;
     text-align: center;
 }
-#navCollapse{
+
+#navCollapse {
     position: absolute;
     right: 10px;
     top: 10px;
@@ -213,7 +215,8 @@ a.article:hover {
     #sidebarCollapse span {
         display: none;
     }
-    .navbar-brand{
+
+    .navbar-brand {
         width: 90%;
     }
 
@@ -223,7 +226,8 @@ a.article:hover {
     #profile-picture {
         display: none;
     }
-    .navbar-brand{
+
+    .navbar-brand {
         width: 77%;
     }
 }

@@ -12,7 +12,7 @@ function get_managed_projects(string $email = ''): array
 function get_managed_staff(string $email = ''): array
 {
   return array_map(fn($num): array => [
-    'name' => "Subordinate $num", // we're gonna want to return their email not name
+    'name' => "Subordinate $num", // we might want to their email not name?
     // idk what these numbers are meant to represent in the code that David did
     'idk1' => rand(3, 31),
     'idk2' => 31,
@@ -54,8 +54,6 @@ function get_managed_staff(string $email = ''): array
 
       <div class="wrapper">
 
-
-
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
           <button type="button" id="sidebarCollapse" class="btn  sidebar-toggle-btn">
             <i class="fas fa-align-left"></i>
@@ -85,9 +83,13 @@ function get_managed_staff(string $email = ''): array
                     <?php
                     $projects = get_managed_projects();
 
+                    // TODO: show project progress
+
                     foreach ($projects as $project_name) {
                       echo <<<HTML
-                        <li class="list-group-item">$project_name</li>
+                        <li class="list-group-item">
+                          $project_name
+                        </li>
                       HTML;
                     }
                     ?>
@@ -109,7 +111,11 @@ function get_managed_staff(string $email = ''): array
                       $num2 = $employee['idk2'];
 
                       echo <<<HTML
-                        <li class="list-group-item">$name<span class="badge badge-light">$num1</span><span class="badge badge-light">$num2</span></li>
+                        <li class="list-group-item">
+                            $name
+                            <span class="badge badge-light">$num1</span>
+                            <span class="badge badge-light">$num2</span>
+                        </li>
                       HTML;
                     }
                     ?>
