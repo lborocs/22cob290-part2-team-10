@@ -60,11 +60,10 @@ function add_filter(topic) {
   const filterOptions = document.getElementById("filterOptions");
   if (!TopicSet.has(topic)) {
     filterOptions.innerHTML += `
-      <div class="col-auto topicDiv"
+      <div
+        class="col-auto topicDiv"
         onclick="flip_tag_filter_parity('${topic}')"
-      >
-        <a id="-${topic}" class="tag">${topic}</a>
-      </div>
+      ><a id="-${topic}" class="tag">${topic}</a></div>
     `;
   }
   TopicSet.add(topic)
@@ -148,7 +147,8 @@ function populate_postboard(filteredPosts) {
               <div class="col-auto">
                 ${tagLine}
               </div>
-              <div class="col voteContainer"
+              <div
+                class="col voteContainer"
                 onclick="flip_vote_parity(${i}, ${filteredPosts[i].index})"
               >
                 <a class="voteArrow ${state}">
@@ -218,7 +218,8 @@ window.add_tag_to_post = function add_tag_to_post() {
         <div id="*${topic}" class="topicDiv col-auto">
           <a class="tag newPostTag">
             ${topic} &emsp;
-            <i class="fa fa-times" aria-hidden="true"
+            <i
+              class="fa fa-times" aria-hidden="true"
               onclick="remove_tag('*${topic}')"
             ></i>
           </a>
