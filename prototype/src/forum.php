@@ -1,12 +1,12 @@
 <?php
 
-if (!isset($_REQUEST['email'])) {
-  // redirect to login page if not signed in
-  header('Location: http://team10.sci-project.lboro.ac.uk/', true, 303);
-  die();
-}
+// if (!isset($_REQUEST['email'])) {
+//   // redirect to login page if not signed in
+//   header('Location: http://team10.sci-project.lboro.ac.uk/', true, 303);
+//   die();
+// }
 
-$email = $_REQUEST['email'];
+$email = $_REQUEST['email'] ?? 'bruh';
 
 ?><!DOCTYPE html>
 <html lang="en" data-email="<?php echo $email ?>">
@@ -43,7 +43,7 @@ $email = $_REQUEST['email'];
           <i class="fa fa-times" class="btn-close" data-bs-dismiss="modal" aria-label="Close" aria-hidden="true"></i>
         </div>
         <div class="modal-body">
-          <form onsubmit="addPost()">
+          <form onsubmit="addPost(this, event)">
             <p>End every topic with a comma, to add them to your post's topic roster.</p>
             <input type="text" class="textField" id="postTitle" placeholder="Your title..." required>
             <textarea id="postText" class="textField" placeholder="Your post..." rows="3" required></textarea>

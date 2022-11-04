@@ -85,7 +85,7 @@ function get_comments() {
   populate_commentboard(comments);
 }
 
-function flipTagFilterParity(topic) {
+window.flipTagFilterParity = function flipTagFilterParity(topic) {
   const tag = document.getElementById("-" + topic);
   if (tag.getAttribute("class").endsWith("active")) {
     tag.setAttribute("class", "tag");
@@ -95,7 +95,7 @@ function flipTagFilterParity(topic) {
   get_comments();
 }
 
-function activateTagFilter(topic) {
+window.activateTagFilter = function activateTagFilter(topic) {
   document.getElementById("-" + topic).setAttribute("class", "tag active");
   get_comments()
 }
@@ -140,7 +140,7 @@ function populate_commentboard(comments) {
   document.getElementById("commentBoard").innerHTML = htmlTxt;
 }
 
-function addTagToPost() {
+window.addTagToPost = function addTagToPost() {
   const postTopicsText = document.getElementById("postTopicsText");
   let topic = postTopicsText.value.trim().toLocaleLowerCase();
   if (topic.endsWith(",") && "," !== topic) {
@@ -157,11 +157,11 @@ function addTagToPost() {
   }
 }
 
-function removeTopic(topic) {
+window.removeTopic = function removeTopic(topic) {
   document.getElementById(topic).remove();
 }
 
-function flipVoteParity(htmlIndex, index) {
+window.flipVoteParity= function flipVoteParity(htmlIndex, index) {
   const container = document.getElementsByClassName("voteContainer")[htmlIndex];
   index = backgroundComments.length - index - 1;
   if (backgroundComments[index]["voted"]) {
@@ -177,7 +177,10 @@ function flipVoteParity(htmlIndex, index) {
   // update vote in database
 }
 
-function addPost() {
+window.addPost = function addPost(form, event) {
+  event.preventDefault();
+  console.log("ADD");
+
   const tagElements = document.getElementsByClassName("newPostTag");
   const tags = [];
   for (let i = 0; i < tagElements.length; i++) {
@@ -194,7 +197,15 @@ function addPost() {
     "index": backgroundComments.length
   };
   backgroundComments.unshift(post);
-  populate_commentboard();
+  populate_commentboard(backgroundComments);
+
+  form.reset();
+  // remove topics
+  $('#postTopics').empty();
+
+  const modalElem = document.getElementById('commentEditor');
+  const modal = bootstrap.Modal.getOrCreateInstance(modalElem);
+  modal.hide();
 }
 
 const commentEditor = document.getElementById("commentEditor");
