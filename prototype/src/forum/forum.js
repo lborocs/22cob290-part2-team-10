@@ -85,7 +85,7 @@ function get_comments() {
   populate_commentboard(comments);
 }
 
-function flipTagFilterParity(topic) {
+window.flipTagFilterParity = function flipTagFilterParity(topic) {
   const tag = document.getElementById("-" + topic);
   if (tag.getAttribute("class").endsWith("active")) {
     tag.setAttribute("class", "tag");
@@ -218,7 +218,6 @@ commentEditor.addEventListener(
 );
 let backgroundComments = [];
 const tagSet = new Set();
-window.flipTagFilterParity = flipTagFilterParity;
 collect_comments_and_tags();
 get_comments();
 
