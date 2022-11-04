@@ -61,7 +61,7 @@ function get_comments() {
   const titleSub = document.getElementById("searchField").value.toLocaleLowerCase();
   const topicRoster = document.getElementById("filterOptions").childNodes;
   const tagFilters = [];
-  let accept = false;
+  var accept = false;
   const comments = [];
   for (let i = 1; i < topicRoster.length; i += 2) {
     if (topicRoster[i].childNodes[1].getAttribute("class").includes("active")) {
@@ -185,6 +185,7 @@ window.addPost = function addPost(form, event) {
   const tags = [];
   for (let i = 0; i < tagElements.length; i++) {
     tags.push(tagElements[i].textContent.trim());
+    add_filters(tag);
   }
   const post = {
     "title": document.getElementById("postTitle").value,
