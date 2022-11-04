@@ -69,7 +69,7 @@ function get_managed_staff(string $email = ''): array
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="nav navbar-nav ml-auto">
               <li class="nav-item">
-                <a class="nav-link" href="staff_overview">Staff Overview</a>
+                <a class="nav-link" href="staff_assignment">Staff Assignment</a>
               </li>
             </ul>
           </div>

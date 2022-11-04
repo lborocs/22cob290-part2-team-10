@@ -9,7 +9,7 @@
 
   <!--BOOTSTRAP CDN-->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-  <link rel="stylesheet" href="manager_staff_overview/style.css">
+  <link rel="stylesheet" href="manager_staff_assignment/style.css">
 </head>
 
 <body>
@@ -50,19 +50,10 @@
     </div>
   </div>
 
-
-
-
-  <div class="wrapper">
-
-
-
-    <!-- <h1>
-      Staff Overview
-    </h1> -->
+  <main class="wrapper">
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <span class="navbar-brand mb-0 h1">Staff Overview </span>
+      <span class="navbar-brand mb-0 h1">Staff Assignment</span>
       <button class="btn btn-dark d-inline-block d-lg-none ml-auto" id="navCollapse" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <i class="fas fa-align-justify"></i>
       </button>
@@ -76,8 +67,6 @@
       </div>
     </nav>
 
-
-
     <div>
       <ul class="list-group" id="staff_list">
       </ul>
@@ -87,7 +76,7 @@
       <button type="button" class="btn btn-primary" onclick="open_modal()" id="assign_employee_btn">Assign employee</button>
       <button type="button" class="btn btn-success" id="save_changes_btn">Save changes</button>
     </div>
-  </div>
+  </main>
 
   <!--JQUERY CDN-->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -95,7 +84,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
   <!-- Bootstrap JS -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
-  <script src="manager_staff_overview/staffoverview.js"></script>
+  <script src="manager_staff_assignment/staffoverview.js"></script>
 
 </body>
 
