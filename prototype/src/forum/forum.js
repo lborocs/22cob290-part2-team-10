@@ -60,8 +60,8 @@ function add_filters(topic) {
 function get_comments() {
   const titleSub = document.getElementById("searchField").value.toLocaleLowerCase();
   const topicRoster = document.getElementById("filterOptions").childNodes;
-  var tagFilters = [];
-  var accept = false;
+  const tagFilters = [];
+  let accept = false;
   comments = [];
   for (let i = 1; i < topicRoster.length; i += 2) {
     if (topicRoster[i].childNodes[1].getAttribute("class").includes("active")) {
@@ -101,9 +101,9 @@ function activateTagFilter(topic) {
 }
 
 function populate_commentboard(comments) {
-  var htmlTxt = "";
-  var tagLine = "";
+  let htmlTxt = "";
   for (let i in comments) {
+    let tagLine = "";
     for (let j in comments[i]["tags"]) {
       tagLine += `
         <a class="tag" onclick="activateTagFilter('${comments[i]["tags"][j]}')">${comments[i]["tags"][j]}</a>
@@ -136,14 +136,13 @@ function populate_commentboard(comments) {
         </div>
       </div>
     `;
-    tagLine = "";
   }
   document.getElementById("commentBoard").innerHTML = htmlTxt;
 }
 
 function addTagToPost() {
   const postTopicsText = document.getElementById("postTopicsText");
-  var topic = postTopicsText.value.trim().toLocaleLowerCase();
+  let topic = postTopicsText.value.trim().toLocaleLowerCase();
   if (topic.endsWith(",") && "," != topic) {
     topic = topic.slice(0, topic.length - 1);
     postTopicsText.value = "";
@@ -198,14 +197,18 @@ function addPost() {
   populate_commentboard();
 }
 
-var commentEditor = document.getElementById("commentEditor");
-var newPost = document.getElementById("newPost");
+const commentEditor = document.getElementById("commentEditor");
+const newPost = document.getElementById("newPost");
 commentEditor.addEventListener(
   "shown.bs.modal", function () {
     newPost.focus();
   }
 );
-var backgroundComments = [];
-var tagSet = new Set();
+let backgroundComments = [];
+const tagSet = new Set();
 collect_comments_and_tags();
 get_comments();
+
+$(() => {
+
+});
