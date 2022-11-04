@@ -6,7 +6,7 @@
 //   die();
 // }
 
-$email = $_REQUEST['email'] ?? 'bruh';
+  $email = $_REQUEST['email'] ?? 'bruh';
 ?>
 <!DOCTYPE html>
   <html lang="en" data-email="<?php echo $email ?>">
