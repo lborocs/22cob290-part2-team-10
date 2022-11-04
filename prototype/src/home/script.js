@@ -26,13 +26,11 @@ $(() => {
     $('#sidebarCollapse').on('click', function () {
         $('#sidebar').toggleClass('active');
     });
-    $('.nav-link').on('click', function (e) {
+    $('.nav-link[href]').on('click', function (e) {
         e.preventDefault();
         const url = $(this).attr('href');
-        if (url) {
-            const email = $('html').attr('data-email');
-            redirect(url, { email });
-        }
+        const email = $('html').attr('data-email');
+        redirect(url, { email });
     });
     // Get the modal
     const modal = $("#modal");

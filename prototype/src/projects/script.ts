@@ -42,15 +42,14 @@ $(() => {
     $('#sidebar').toggleClass('active');
   });
 
-  $('a').on('click', function (e) {
+  $('.nav-link[href]').on('click', function (e) {
     e.preventDefault();
 
-    const url = $(this).attr('href');
-    if (url) {
-      const email = $('html').attr('data-email')!;
+    const url = $(this).attr('href')!;
 
-      redirect(url, { email });
-    }
+    const email = $('html').attr('data-email')!;
+
+    redirect(url, { email });
   });
 
 
