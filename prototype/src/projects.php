@@ -18,7 +18,7 @@ $email = $_REQUEST['email'];
 // hardcoded
 function get_projects(string $email): array
 {
-  return array_map(fn($num): string => 'Project ' . $num, range(1, 15));
+  return array_map(fn($num): string => "Project $num", range(1, 15));
 }
 ?><!DOCTYPE html>
 <html lang="en">
@@ -71,13 +71,11 @@ function get_projects(string $email): array
             $li_class = 'active';
           }
 
-          $project_html = <<<HTML
-              <li class="$li_class">
-                <a class="nav-link" href="projects?name=$project_name">$project_name</a>
-              </li>
-            HTML;
-
-          echo $project_html;
+          echo <<<HTML
+            <li class="$li_class">
+              <a class="nav-link" href="projects?name=$project_name">$project_name</a>
+            </li>
+          HTML;
         }
         ?>
       </div>
