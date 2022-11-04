@@ -1,5 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+
+if (!isset($_REQUEST['email'])) {
+  // redirect to login page if not signed in
+  header('Location: http://team10.sci-project.lboro.ac.uk/', true, 303);
+  die();
+}
+
+$email = $_REQUEST['email'];
+
+?><!DOCTYPE html>
+<html lang="en" data-email="<?php echo $email ?>">
 
 <head>
   <meta charset="UTF-8">
@@ -19,6 +29,9 @@
   <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js"
     integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY"
     crossorigin="anonymous"></script>
+
+  <!-- jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -77,10 +90,10 @@
         <div id="navbarSupportedContent" class="container-flex collapse navbar-collapse">
           <ul class="nav navbar-nav ml-auto">
             <li class="nav-item">
-              <a class="nav-link"><h5>Home</h5></a>
+              <a class="nav-link" href="home"><h5>Home</h5></a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="forum"><h5>Forum</h5></a>
+            <li class="nav-item active">
+              <a class="nav-link"><h5>Forum</h5></a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="projects?name=Project 7"><h5>Projects</h5></a>
@@ -102,7 +115,7 @@
       </div>
     </div>
   </main>
-  <script src="forum/forum.js"></script>
+  <script type="module" src="forum/forum.js"></script>
 </body>
 
 </html>

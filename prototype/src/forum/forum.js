@@ -62,7 +62,7 @@ function get_comments() {
   const topicRoster = document.getElementById("filterOptions").childNodes;
   const tagFilters = [];
   let accept = false;
-  comments = [];
+  const comments = [];
   for (let i = 1; i < topicRoster.length; i += 2) {
     if (topicRoster[i].childNodes[1].getAttribute("class").includes("active")) {
       tagFilters.push(topicRoster[i].childNodes[1].innerHTML)
@@ -109,7 +109,7 @@ function populate_commentboard(comments) {
         <a class="tag" onclick="activateTagFilter('${comments[i]["tags"][j]}')">${comments[i]["tags"][j]}</a>
       `;
     }
-    state = comments[i]["voted"] ?
+    const state = comments[i]["voted"] ?
       "active" :
       "inactive";
     htmlTxt += `
@@ -179,11 +179,11 @@ function flipVoteParity(htmlIndex, index) {
 
 function addPost() {
   const tagElements = document.getElementsByClassName("newPostTag");
-  tags = [];
+  const tags = [];
   for (let i = 0; i < tagElements.length; i++) {
     tags.push(tagElements[i].textContent.trim());
   }
-  post = {
+  const post = {
     "title": document.getElementById("postTitle").value,
     "tags": tags,
     "votes": 0,
@@ -209,6 +209,16 @@ const tagSet = new Set();
 collect_comments_and_tags();
 get_comments();
 
-$(() => {
+import { redirect } from '../utils';
 
+$(() => {
+  $('.nav-link[href]').on('click', function (e) {
+    e.preventDefault();
+
+    const url = $(this).attr('href');
+
+    const email = $('html').attr('data-email');
+
+    redirect(url, { email });
+  });
 });
