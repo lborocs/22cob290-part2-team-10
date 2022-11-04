@@ -2,8 +2,7 @@
 
 function load() {
   /**
-   * Loads data from the database into the global topic set and
-   * posts collections.
+   * Loads data from the database into the TopicSet and Posts collections.
    */
 
   const stuff = [
@@ -46,7 +45,7 @@ function load() {
     }
   ];
   stuff.forEach(
-    c => (backgroundComments.push(c), c.tags.forEach(t => add_filter(t)))
+    c => (Posts.push(c), c.tags.forEach(t => add_filter(t)))
   );
 }
 
@@ -54,12 +53,12 @@ function load() {
 
 function add_filter(topic) {
   /**
-   * Adds a topic to the filter by topic section.
+   * Adds a topic to the filter by topic section, and updates the TagSet.
    * @param topic - The topic to be added.
    */
 
   const filterOptions = document.getElementById("filterOptions");
-  if (!tagSet.has(topic)) {
+  if (!TagSet.has(topic)) {
     filterOptions.innerHTML += `
       <div class="col-auto topicDiv"
         onclick="flip_tag_filter_parity('${topic}')"
@@ -68,7 +67,7 @@ function add_filter(topic) {
       </div>
     `;
   }
-  tagSet.add(topic)
+  TagSet.add(topic)
 }
 
 // ----------------------------------------------------------------------------
@@ -76,7 +75,7 @@ function add_filter(topic) {
 window.get_posts = function get_posts() {
   /**
     Gets posts that correspond to selected filters, then put them
-    in the page's dashboard.
+    into the dashboard.
   */
 
   const titleSub = 
@@ -92,12 +91,12 @@ window.get_posts = function get_posts() {
       tagFilters.push(topicRoster[i].childNodes[1].innerHTML)
     }
   }
-  for (let i in backgroundComments) {
+  for (let i in Posts) {
     accept = titleSub === "" ||
-      backgroundComments[i].title.toLocaleLowerCase().startsWith(titleSub);
-    accept &= tagFilters.every(t => backgroundComments[i].tags.includes(t))
+      Posts[i].title.toLocaleLowerCase().startsWith(titleSub);
+    accept &= tagFilters.every(t => Posts[i].tags.includes(t))
     if (accept) {
-      filteredPosts.push(backgroundComments[i]);
+      filteredPosts.push(Posts[i]);
     }
   }
   document.getElementById("counter").innerHTML = (0 < filteredPosts.length) ?
@@ -114,7 +113,7 @@ window.get_posts = function get_posts() {
 
 function populate_postboard(filteredPosts) {
   /**
-   * Adds each post from the filtered posts array to the dashboard.
+   * Adds each post from the filtered Posts array to the dashboard.
    * @param filteredPosts - The array of posts filtered from the global posts
    * constant.
    */
@@ -252,17 +251,17 @@ window.flip_vote_parity = function flip_vote_parity(htmlIndex, index) {
 
   const container =
     document.getElementsByClassName("voteContainer")[htmlIndex];
-  index = backgroundComments.length - index - 1;
-  if (backgroundComments[index].voted) {
+  index = Posts.length - index - 1;
+  if (Posts[index].voted) {
     container.childNodes[1].setAttribute("class", "voteArrow inactive");
-    backgroundComments[index].voted = false;
-    backgroundComments[index].votes -= 1;
+    Posts[index].voted = false;
+    Posts[index].votes -= 1;
   } else {
     container.childNodes[1].setAttribute("class", "voteArrow active");
-    backgroundComments[index].voted = true;
-    backgroundComments[index].votes += 1;
+    Posts[index].voted = true;
+    Posts[index].votes += 1;
   }
-  container.childNodes[3].innerHTML = backgroundComments[index]["votes"];
+  container.childNodes[3].innerHTML = Posts[index].votes;
   // update vote in database
 }
 
@@ -270,7 +269,7 @@ window.flip_vote_parity = function flip_vote_parity(htmlIndex, index) {
 
 window.add_post = function add_post(form, event) {
   /**
-    Adds a new post to the dashboard and database.
+    Adds a new post to the dashboard, Posts array and database.
     @param form - The new post form.
     @param event - The event which fires to call this function.
   */
@@ -290,9 +289,9 @@ window.add_post = function add_post(form, event) {
     "author": "You",
     "date": "30/10/2022",
     "voted": false,
-    "index": backgroundComments.length
+    "index": Posts.length
   };
-  backgroundComments.unshift(post);
+  Posts.unshift(post);
   get_posts();
   form.reset();
   document.getElementById("postTopics").innerHTML = "";
@@ -313,8 +312,8 @@ commentEditor.addEventListener(
 
 // ----------------------------------------------------------------------------
 
-const backgroundComments = [];
-const tagSet = new Set();
+const TagSet = new Set();
+const Posts = [];
 
 // ----------------------------------------------------------------------------
 
