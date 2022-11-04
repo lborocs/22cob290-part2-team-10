@@ -84,14 +84,15 @@ window.get_posts = function get_posts() {
   var accept = false;
   const filteredPosts = [];
   for (let i = 1; i < topicRoster.length; i += 2) {
+    console.log(topicRoster[i].childNodes);
     if (
-      topicRoster[i].childNodes[1].getAttribute("class").includes("active")
+      topicRoster[i].childNodes[0].getAttribute("class").includes("active")
     ) {
-      tagFilters.push(topicRoster[i].childNodes[1].innerHTML)
+      tagFilters.push(topicRoster[i].childNodes[0].innerHTML)
     }
   }
   for (let i in Posts) {
-    accept = titleSub === "" ||
+    accept = titleSub == "" ||
       Posts[i].title.toLocaleLowerCase().startsWith(titleSub);
     accept &= tagFilters.every(t => Posts[i].tags.includes(t))
     if (accept) {
