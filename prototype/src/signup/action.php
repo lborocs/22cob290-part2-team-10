@@ -14,16 +14,16 @@ require "../credentials.php";
 
 header('Content-Type: application/json');
 
-enum ErrorReason
+enum ErrorReason: string
 {
-  case ALREADY_EXIST;
-  case INVALID_TOKEN;
-  case USED_TOKEN;
+  case ALREADY_EXIST = 'ALREADY_EXIST';
+  case INVALID_TOKEN = 'INVALID_TOKEN';
+  case USED_TOKEN = 'USED_TOKEN';
 }
 
 function error(string|ErrorReason $error): void
 {
-  $errorMessage = is_string($error) ? $error : $error->name;
+  $errorMessage = is_string($error) ? $error : $error->value;
 
   exit(json_encode([
     'success' => false,

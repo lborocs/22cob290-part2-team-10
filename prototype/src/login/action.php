@@ -14,15 +14,15 @@ require "../credentials.php";
 header('Content-Type: application/json');
 
 // LEFT_COMPANY?
-enum ErrorReason
+enum ErrorReason: string
 {
-  case WRONG_PASSWORD;
-  case DOESNT_EXIST;
+  case WRONG_PASSWORD = 'WRONG_PASSWORD';
+  case DOESNT_EXIST = 'DOESNT_EXIST';
 }
 
 function error(string|ErrorReason $error): void
 {
-  $errorMessage = is_string($error) ? $error : $error->name;
+  $errorMessage = is_string($error) ? $error : $error->value;
 
   exit(json_encode([
     'success' => false,
@@ -53,9 +53,9 @@ $correct_password = $password == 'TestPassword123!';
 if ($exists && $correct_password) {
   $response['success'] = true;
 } else if ($exists) {
-  $response['errorMessage'] = ErrorReason::WRONG_PASSWORD->name;
+  $response['errorMessage'] = ErrorReason::WRONG_PASSWORD->value;
 } else {
-  $response['errorMessage'] = ErrorReason::DOESNT_EXIST->name;
+  $response['errorMessage'] = ErrorReason::DOESNT_EXIST->value;
 }
 
 /*
