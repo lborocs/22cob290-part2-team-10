@@ -122,7 +122,8 @@ function populate_postboard(filteredPosts) {
     let tagLine = "";
     for (let j in filteredPosts[i].tags) {
       tagLine += `
-        <a class="tag" 
+        <a
+          class="tag" 
           onclick="activate_tag_filter('${filteredPosts[i].tags[j]}')"
         >${filteredPosts[i].tags[j]}</a>
       `;
