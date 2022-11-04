@@ -17,10 +17,11 @@ body {
     background: #fafafa;
 }
 
-#page{
+#page {
     height: 100vh;
     display: flex;
-    flex-direction: row;}
+    flex-direction: row;
+}
 
 p {
     font-family: 'Poppins', sans-serif;
@@ -46,12 +47,14 @@ a:focus {
     display: flex;
     flex-direction: column;
 }
-#assign_employee_btn, #save_changes_btn{
+
+#assign_employee_btn, #save_changes_btn {
     width: 10%;
     height: 70px;
     margin: 10px;
 }
-.control-btn-bottom{
+
+.control-btn-bottom {
     width: 100%;
     display: flex;
     flex-direction: row;
