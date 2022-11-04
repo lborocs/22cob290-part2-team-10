@@ -79,7 +79,6 @@
                   placeholder="Enter a topic" onkeyup="add_tag_to_post()"
                 >
                 <div id="postTopics" class="row">
-
                 </div>
                 <br>
                 <button type="submit" id="post">Post</button>
@@ -97,23 +96,23 @@
           <div class="container">
             <div id="leftMain" class="container-fluid">
               <div class="row centeredDiv">
-                  <input
-                    id="searchField" type="search" class="darkGrey textField"
-                    placeholder="Search By Title..." onsearch="get_posts()"
-                  >
+                <input
+                  id="searchField" type="search" class="darkGrey textField"
+                  placeholder="Search By Title..." onsearch="get_posts()"
+                >
               </div>
               <div class="row centeredDiv container-fluid">
-                  <div id="filterPrompt" class="row">
-                      <p>Filter By Topic:</p>
-                  </div>
-                  <div id="filterOptions" class="row">
-                  </div>
+                <div id="filterPrompt" class="row">
+                    <p>Filter By Topic:</p>
+                </div>
+                <div id="filterOptions" class="row">
+                </div>
               </div>
               <div class="row centeredDiv">
-                  <button
-                    id="newPost" type="button" class="mb-3" data-bs-toggle="modal"
-                    data-bs-target="#commentEditor"
-                  ><i class='fa fa-plus'></i> New Post</button>
+                <button
+                  id="newPost" type="button" class="mb-3" data-bs-toggle="modal"
+                  data-bs-target="#commentEditor"
+                ><i class='fa fa-plus'></i> New Post</button>
               </div>
             </div>
           </div>
