@@ -57,7 +57,7 @@ function add_filters(topic) {
   tagSet.add(topic)
 }
 
-function get_comments() {
+window.get_comments = function get_comments() {
   const titleSub = document.getElementById("searchField").value.toLocaleLowerCase();
   const topicRoster = document.getElementById("filterOptions").childNodes;
   const tagFilters = [];
