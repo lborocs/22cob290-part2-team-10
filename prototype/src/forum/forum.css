@@ -145,6 +145,7 @@ html {
 
 .voteArrow {
     color: #a9a9a9;
+    cursor: pointer;
 }
 
 .voteArrow:hover,
