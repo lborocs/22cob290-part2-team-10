@@ -2,21 +2,17 @@
     DEMO STYLE
 */
 
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+
 .navbar {
     background-color: #1c1c1c;
     justify-content: flex-end;
-    height: 10vh;
-    padding-inline: 30px;
-}
-
-li.nav-item {
-    height: 60px;
+    padding: 15px 25px;
 }
 
 .nav-link {
     color: #aaaaaa;
     height: 100%;
-    display: flex;
 }
 
 .nav-link:hover {
@@ -25,11 +21,19 @@ li.nav-item {
 
 .nav-link > h5 {
     margin: 0;
-    padding-block: 10px;
 }
 
 #navbarSupportedContent {
     justify-content: flex-end;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+html {
+    background-color: #0e0e0e;
+    -ms-overflow-style: none;
 }
 
 /* ---------------------------------------------------
@@ -39,27 +43,28 @@ li.nav-item {
 .wrapper {
     display: flex;
     width: 100%;
+    align-items: stretch;
+}
+
+#sidebar.active {
+    margin-left: auto;
+    transition: all 0.3s;
 }
 
 #sidebar {
     background: #0e0e0e;
+    min-width: 250px;
+    max-width: 250px;
+    margin-left: -250px;
+    transition: all 0.3s;
 }
 
 .sidebar-header {
-    padding-top: 20px;
-    padding-inline: 2px;
+    padding: 20px;
 }
 
 #company-logo {
     width: 100%;
-    height: 10vh;
-}
-
-#profile-picture {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    margin-inline: 20px;
 }
 
 /* FIXME: has blue underline from a tag */
@@ -73,7 +78,6 @@ li.nav-item {
     text-align: center;
     background: #e2ba39; /* pick random color? or let user pick? */
     /* display: inline-block; */
-
     font-size: large;
 }
 
@@ -82,11 +86,10 @@ li.nav-item {
   ----------------------------------------------------- */
 
 #content {
-    width: 100%;
     background-color: #0e0e0e;
-    height: 100vh;
-    flex-direction: column;
-    padding-top: 20px;
+    min-height: 100vh;
+    padding: 20px;
+    transition: all 0.3s;
 }
 
 
@@ -187,7 +190,8 @@ li.nav-item {
     margin-block-end: 5px;
 }
 
-button {
+button,
+#sidebarCollapse {
     background-color: #5a2e98;
     color: #dddddd;
     padding: 7px 15px;
@@ -196,7 +200,8 @@ button {
     border: none;
 }
 
-button:hover {
+button:hover,
+#sidebarCollapse:hover {
     background-color: #6735ae;
     color: #fff5f2;
 }
@@ -205,11 +210,6 @@ button:hover {
     width: 100%;
     margin-bottom: 10px;
     padding-inline: 15px;
-}
-
-#main {
-    height: calc(90vh - 20px);
-    padding: 0;
 }
 
 #postText {
@@ -229,7 +229,6 @@ button:hover {
 }
 
 #leftMain {
-    background-color: #0e0e0e;
     padding: 0 5px;
     height: 100%;
     width: 100%;
@@ -241,8 +240,11 @@ button:hover {
 }
 
 #filterPrompt {
-    padding-inline: 5px;
+    padding-inline: 0px;
     color: #dddddd;
+}
+#filterOptions {
+    padding-inline: 0px;
 }
 
 #filterPrompt > p {
@@ -272,15 +274,39 @@ button:hover {
 }
 
 #commentBoard::-webkit-scrollbar,
-#postText::-webkit-scrollbar {
+#postText::-webkit-scrollbar,
+html::-webkit-scrollbar {
     display: none;
 }
 
 #rightMain {
-    background-color: #0e0e0e;
     height: 100%;
+    padding-inline: 0px;
 }
 
 #postTopics {
     margin: 0;
+}
+
+#main {
+    padding: 0px;
+    height: 85vh;
+}
+
+/* ----------------------------------------------------------------------------
+
+---------------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left: auto;
+    }
+
+    #sidebar.active {
+        margin-left: -250px;
+    }
+
+    #sidebarCollapse span {
+        display: none;
+    }
 }
