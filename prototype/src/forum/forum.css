@@ -164,6 +164,7 @@ html {
 .modal-header {
     background-color: #141414;
     padding-inline: 30px;
+    border-width: 0px;
 }
 
 .modal-body {
