@@ -86,7 +86,6 @@ window.get_posts = function get_posts() {
   let accept = false;
   const filteredPosts = [];
   for (let i = 1; i < topicRoster.length; i += 2) {
-    console.log(topicRoster[i].childNodes);
     if (
       topicRoster[i].childNodes[0].getAttribute("class").includes("active")
     ) {
@@ -314,6 +313,22 @@ commentEditor.addEventListener(
     newPost.focus();
   }
 );
+
+// ----------------------------------------------------------------------------
+
+window.flip_sidebar_parity = function flip_sidebar_parity() {
+  /**
+   * Flips the sidebar's state between active and inactive, depending on it's
+   * current state.
+   */
+
+  const sidebar = document.getElementById("sidebar");
+  if (sidebar.getAttribute("class").endsWith("active")) {
+    sidebar.setAttribute("class", "");
+  } else {
+    sidebar.setAttribute("class", "active");
+  }
+}
 
 // ----------------------------------------------------------------------------
 
