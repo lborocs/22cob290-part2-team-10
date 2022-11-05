@@ -7,10 +7,12 @@
  *
  * Response schema:
  *  - success [boolean]
+ *  - role [Role::TEAM_MEMBER]
  *  - errorMessage [ErrorReason, if success == false]
  */
 
 require "../credentials.php";
+require "../backend/users.php";
 
 header('Content-Type: application/json');
 
@@ -32,6 +34,7 @@ function error(string|ErrorReason $error): void
 }
 
 // hardcoded
+// move to /backend?
 function decrypt_token(string $token): ?string
 {
   $valid_tokens = [
@@ -46,11 +49,6 @@ function decrypt_token(string $token): ?string
   return null;
 }
 
-function token_has_been_used(string $token): bool
-{
-  return $token === 'used-token';
-}
-
 if (!isset($_REQUEST['email'])
   || !isset($_REQUEST['password'])) {
   error('Not all params set.');
@@ -60,7 +58,7 @@ $email = $_REQUEST['email'];
 $password = $_REQUEST['password'];
 $token = $_REQUEST['token'];
 
-$exists = $email == 'alice@make-it-all.co.uk';
+$exists = get_user($email) != null;
 
 if ($exists) {
   error(ErrorReason::ALREADY_EXIST);
@@ -75,62 +73,11 @@ if (token_has_been_used($token)) {
   error(ErrorReason::USED_TOKEN);
 }
 
+add_user($email, $password, $token);
+
 $response = [
   'success' => true,
+  'role' => Role::TEAM_MEMBER->value,
 ];
-
-/*
-function used_token(PDO $conn, string $token): bool
-{
-  $sql = <<<SQL
-    SELECT
-      COUNT(*) AS count
-    FROM
-      users
-    WHERE
-      users.invite_token = $token
-  SQL;
-
-  $statement = $conn->query($sql);
-
-  $result = $statement->fetch(PDO::FETCH_ASSOC);
-
-  $count = $result['count'];
-
-  return $count > 0;
-}
-
-try {
-  $conn = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
-  // set the PDO error mode to exception
-  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-  if (used_token(conn, token)) {
-    $conn = null;
-    error('USED_TOKEN');
-  }
-
-  $sql = <<<SQL
-    INSERT IGNORE INTO users
-    VALUES ($username, $password, $token)
-  SQL;
-
-  $statement = $conn->query($sql);
-
-  $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-  // maybe I need to check if $result is empty
-  $exists = $result['count'] > 0;
-  $correct_password = $result['correct_password']; // TODO: think i need to convert to bool
-
-  $response['success'] = $exists && $correct_password;
-
-  $conn = null;
-} catch(PDOException $e) {
-  $response['success'] = false;
-  $response['errorMessage'] = "Connection failed: " . $e->getMessage();
-  unset($response['results']);
-}
-*/
 
 echo json_encode($response);

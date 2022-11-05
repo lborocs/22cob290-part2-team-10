@@ -1,3 +1,4 @@
+import { Role } from '../types';
 import { isValidWorkEmail, validatePassword } from '../utils';
 import redirect from '../utils/redirect';
 var LoginFailedReason;
@@ -5,13 +6,6 @@ var LoginFailedReason;
     LoginFailedReason["WRONG_PASSWORD"] = "WRONG_PASSWORD";
     LoginFailedReason["DOESNT_EXIST"] = "DOESNT_EXIST";
 })(LoginFailedReason || (LoginFailedReason = {}));
-var Role;
-(function (Role) {
-    Role["MANAGER"] = "MANAGER";
-    Role["TEAM_LEADER"] = "TEAM_LEADER";
-    Role["TEAM_MEMBER"] = "TEAM_MEMBER";
-    Role["LEFT_COMPANY"] = "LEFT_COMPANY";
-})(Role || (Role = {}));
 $(() => {
     $('#toggle-password').on('click', function (e) {
         const $password = $('#password');

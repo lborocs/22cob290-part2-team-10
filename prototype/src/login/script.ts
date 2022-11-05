@@ -1,3 +1,4 @@
+import { Role } from '../types';
 import { isValidWorkEmail, validatePassword } from '../utils';
 import redirect from '../utils/redirect';
 
@@ -15,13 +16,6 @@ type LoginResponse = LoginFailedResponse | {
   success: true
   role: Role
 };
-
-enum Role {
-  MANAGER = 'MANAGER',
-  TEAM_LEADER = 'TEAM_LEADER',
-  TEAM_MEMBER = 'TEAM_MEMBER',
-  LEFT_COMPANY = 'LEFT_COMPANY',
-}
 
 type Credentials = {
   email: string
