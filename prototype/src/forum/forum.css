@@ -127,6 +127,7 @@ html {
     border-radius: 20px;
     text-decoration: none;
     margin-inline: 2px;
+    cursor: pointer;
 }
 
 .tag:hover,
