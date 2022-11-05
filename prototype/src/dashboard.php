@@ -7,13 +7,17 @@ $email = $user->email;
 $role = $user->role;
 
 // hardcoded
-function get_managed_projects(string $email = ''): array
+function get_managed_projects(string $email): array
 {
-  return array_map(fn($num): string => "Project $num", range(1, 9));
+  return array_map(fn($num): array => [
+    'name' => "Project $num",
+    'completed' => rand(1, 100),
+    'total' => 100,
+  ], range(1, 9));
 }
 
 // hardcoded
-function get_managed_staff(string $email = ''): array
+function get_managed_staff(string $email): array
 {
   return array_map(fn($num): array => [
     'name' => "Subordinate $num", // we might want to their email not name?
@@ -111,18 +115,38 @@ function get_managed_staff(string $email = ''): array
           <div class="container">
             <div class="row">
               <div class="col-sm">
-                <h2>Complete projects</h2>
+                <h2>Projects</h2>
                 <div class="scrollbar">
                   <ul class="list-group">
                     <?php
-                    $projects = get_managed_projects();
+                    $projects = get_managed_projects($email);
 
-                    // TODO: show project progress
+                    foreach ($projects as $project) {
+                      [
+                        'name' => $name,
+                        'completed' => $completed,
+                        'total' => $total,
+                      ] = $project;
 
-                    foreach ($projects as $project_name) {
+                      $progress = round(($completed / $total) * 100);
+
+                      // TODO: make clickable so they can see more about the project, whether by changing page or
+                      // by showing a modal
+
                       echo <<<HTML
                         <li class="list-group-item">
-                          $project_name
+                          $name
+                          <div class="progress">
+                            <div class="progress-bar progress-bar-striped bg-info progress-bar-animated"
+                                 role="progressbar"
+                                 style="width: $progress%;"
+                                 aria-valuenow="$progress"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100"
+                                 >
+                              $progress%
+                            </div>
+                          </div>
                         </li>
                       HTML;
                     }
@@ -137,7 +161,7 @@ function get_managed_staff(string $email = ''): array
 
                   <ul class="list-group">
                     <?php
-                    $staff = get_managed_staff();
+                    $staff = get_managed_staff($email);
 
                     foreach ($staff as $employee) {
                       $name = $employee['name'];
