@@ -47,17 +47,15 @@ html {
     align-items: stretch;
 }
 
-#sidebar.active {
-    margin-left: auto;
-    transition: all 0.3s;
-}
-
 #sidebar {
     background: #0e0e0e;
     min-width: 250px;
     max-width: 250px;
-    margin-left: -250px;
     transition: all 0.3s;
+}
+
+#sidebar.active {
+    margin-left: -250px;
 }
 
 .sidebar-header {

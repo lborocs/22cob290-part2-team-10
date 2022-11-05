@@ -151,7 +151,7 @@ function populate_postboard(filteredPosts) {
                 ${tagLine}
               </div>
               <div class="col voteContainer">
-                <a 
+                <a
                   class="voteArrow ${state}"
                   onclick="flip_vote_parity(${i}, ${filteredPosts[i].index})"
                 >
@@ -316,28 +316,20 @@ commentEditor.addEventListener(
 
 // ----------------------------------------------------------------------------
 
-window.flip_sidebar_parity = function flip_sidebar_parity() {
-  /**
-   * Flips the sidebar's state between active and inactive, depending on it's
-   * current state.
-   */
-
-  const sidebar = document.getElementById("sidebar");
-  if (sidebar.getAttribute("class").endsWith("active")) {
-    sidebar.setAttribute("class", "");
-  } else {
-    sidebar.setAttribute("class", "active");
-  }
-}
-
-// ----------------------------------------------------------------------------
-
 const TopicSet = new Set();
 const Posts = [];
 
 // ----------------------------------------------------------------------------
 
-load();
-get_posts();
+$(() => {
+  load();
+  get_posts();
+
+  // ----------------------------------------------------------------------------
+
+  $('#sidebarCollapse').on('click', function () {
+    $('#sidebar').toggleClass('active');
+  });
+});
 
 // ----------------------------------------------------------------------------

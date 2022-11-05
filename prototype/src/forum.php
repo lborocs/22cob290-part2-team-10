@@ -9,11 +9,11 @@
 // FIXME: isn't responsive (nav doesn't collapse)
 // FIXME: add toggle sidebar that is in the other pages
 
-  $user_json = $_REQUEST['user'] ?? '{"email": "johndoe@make-it-all.co.uk", "role":"MANAGER"}';
-  $user = json_decode($user_json);
+$user_json = $_REQUEST['user'] ?? '{"email": "johndoe@make-it-all.co.uk", "role":"MANAGER"}';
+$user = json_decode($user_json);
 
-  $email = $user->email;
-  $role = $user->role;
+$email = $user->email;
+$role = $user->role;
 
 ?>
 <!DOCTYPE html>
@@ -97,13 +97,14 @@
       </div>
       <main class="wrapper">
         <!-- Sidebar -->
-        <nav id="sidebar" class="active">
+        <nav id="sidebar" class="">
           <div class="sidebar-header">
             <img
               src="assets/company-logo.png" alt="company logo"
               id="company-logo"
             >
           </div>
+
           <div class="container">
             <div id="leftMain" class="container-fluid">
               <div class="row centeredDiv">
@@ -129,11 +130,12 @@
             </div>
           </div>
         </nav>
+
         <div id="content" class="container-fluid">
           <nav class="navbar navbar-expand-lg">
             <button
               type="button" id="sidebarCollapse"
-              class="sidebar-toggle-btn" onclick="flip_sidebar_parity()"
+              class="sidebar-toggle-btn"
             >
               <i class="fas fa-align-left"></i>
               <span>Toggle Sidebar</span>
