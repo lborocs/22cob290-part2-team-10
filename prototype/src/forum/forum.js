@@ -150,11 +150,11 @@ function populate_postboard(filteredPosts) {
               <div class="col-auto">
                 ${tagLine}
               </div>
-              <div
-                class="col voteContainer"
-                onclick="flip_vote_parity(${i}, ${filteredPosts[i].index})"
-              >
-                <a class="voteArrow ${state}">
+              <div class="col voteContainer">
+                <a 
+                  class="voteArrow ${state}"
+                  onclick="flip_vote_parity(${i}, ${filteredPosts[i].index})"
+                >
                   <h5><i class="fa fa-arrow-up" aria-hidden="true"></i></h5>
                 </a>
                 <p>${filteredPosts[i].votes}</P>
