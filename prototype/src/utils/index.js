@@ -30,3 +30,29 @@ export function validatePassword(password) {
         return PasswordError.NO_SPECIAL_SYMBOL;
     return null;
 }
+// TODO: idk if this works cos Chrome doesn't allow to copy from non-https
+// https://stackoverflow.com/a/65996386
+export function copyToClipboard(content) {
+    // navigator clipboard api needs a secure context (https)
+    if (navigator.clipboard && window.isSecureContext) {
+        // navigator clipboard api method'
+        return navigator.clipboard.writeText(content);
+    }
+    else {
+        // text area method
+        const textArea = document.createElement("textarea");
+        textArea.value = content;
+        // make the textarea out of viewport
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        textArea.style.top = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        return new Promise((res, rej) => {
+            // here the magic happens
+            document.execCommand('copy') ? res() : rej();
+            textArea.remove();
+        });
+    }
+}
