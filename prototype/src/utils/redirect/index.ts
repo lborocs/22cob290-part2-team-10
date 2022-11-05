@@ -1,8 +1,8 @@
 // redirect with data: https://stackoverflow.com/a/10022098
-export default function redirect(url: string, data: Record<string, string>) {
+export default function redirect(url: string, data: Record<string, any>) {
   const $form = $(`
   <form action="${url}" method="POST">
-    ${Object.entries(data).map(([key, value]) => `<input name="${key}" value="${value}" />`).join('')}
+    ${Object.entries(data).map(([key, value]) => `<input name="${key}" value='${JSON.stringify(value)}' />`).join('')}
   </form>
   `);
 
@@ -16,9 +16,9 @@ $(() => {
       e.preventDefault();
 
       const url = $(this).attr('href')!;
-      const email = $('html').attr('data-email')!;
+      const user = JSON.parse($('html').attr('data-user')!);
 
-      redirect(url, { email });
+      redirect(url, { user });
     }
   );
 });

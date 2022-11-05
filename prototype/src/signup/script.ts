@@ -94,7 +94,16 @@ function signup($form: JQuery, { token, email, password }: Credentials) {
   })
     .done((res: SignupResponse) => {
       if (res.success) {
-        redirect('home', { email });
+        const role = res.role;
+
+        switch (role) {
+          case Role.MANAGER:
+            redirect('dashboard', {user: {email, role}});
+            break;
+
+          default:
+            redirect('home', {user: {email, role}});
+        }
       } else {
         console.log(res);
 

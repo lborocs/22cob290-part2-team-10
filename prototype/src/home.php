@@ -1,12 +1,16 @@
 <?php
 
-if (!isset($_REQUEST['email'])) {
+if (!isset($_REQUEST['user'])) {
   // redirect to login page if not signed in
   header('Location: http://team10.sci-project.lboro.ac.uk/', true, 303);
   die();
 }
 
-$email = $_REQUEST['email'];
+$user_json = $_REQUEST['user'];
+$user = json_decode($user_json);
+
+$email = $user->email;
+$role = $user->role;
 
 // hardcoded
 function get_projects(string $email): array
@@ -22,7 +26,7 @@ function get_projects(string $email): array
 //    completed => array
 
 ?><!DOCTYPE html>
-<html lang="en" data-email="<?= $email ?>">
+<html lang="en" data-user='<?= $user_json ?>'>
 
 <head>
   <meta charset="UTF-8">

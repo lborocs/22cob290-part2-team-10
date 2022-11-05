@@ -1,6 +1,10 @@
 <?php
 
-$email = $_REQUEST['email'] ?? 'johndoe@make-it-all.co.uk';
+$user_json = $_REQUEST['user'] ?? '{"email": "johndoe@make-it-all.co.uk", "role":"MANAGER"}';
+$user = json_decode($user_json);
+
+$email = $user->email;
+$role = $user->role;
 
 // hardcoded
 function get_managed_projects(string $email = ''): array
@@ -20,7 +24,7 @@ function get_managed_staff(string $email = ''): array
 }
 
 ?><!DOCTYPE html>
-<html lang="en" data-email="<?= $email ?>">
+<html lang="en" data-user='<?= $user_json ?>'>
 
 <head>
   <meta charset="UTF-8">

@@ -76,7 +76,7 @@ function login($form: JQuery<HTMLElement>, { email }: Credentials) {
 
         switch (role) {
           case Role.MANAGER:
-            redirect('dashboard', { email, role });
+            redirect('dashboard', {user: {email, role}});
             break;
 
           case Role.LEFT_COMPANY:
@@ -84,7 +84,7 @@ function login($form: JQuery<HTMLElement>, { email }: Credentials) {
             break;
 
           default:
-            redirect('home', { email, role });
+            redirect('home', {user: {email, role}});
         }
       } else {
         console.log(res);

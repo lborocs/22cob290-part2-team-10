@@ -1,13 +1,18 @@
 <?php
 
-if (!isset($_REQUEST['email'])) {
+if (!isset($_REQUEST['user'])) {
   // redirect to login page if not signed in
   header('Location: http://team10.sci-project.lboro.ac.uk/', true, 303);
   die();
 }
 
 $name = $_REQUEST['name'] ?? null;
-$email = $_REQUEST['email'];
+
+$user_json = $_REQUEST['user'];
+$user = json_decode($user_json);
+
+$email = $user->email;
+$role = $user->role;
 
 // TODO: if project name isn't set, dont show kboard, instad show text to select a project
 
@@ -21,7 +26,7 @@ function get_projects(string $email): array
   return array_map(fn($num): string => "Project $num", range(1, 15));
 }
 ?><!DOCTYPE html>
-<html lang="en" data-email="<?= $email ?>">
+<html lang="en" data-user='<?= $user_json ?>'>
 
 <head>
   <meta charset="UTF-8">

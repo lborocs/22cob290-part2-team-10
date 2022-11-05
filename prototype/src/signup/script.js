@@ -1,3 +1,4 @@
+import { Role } from '../types';
 import { isValidWorkEmail, validatePassword } from '../utils';
 import redirect from '../utils/redirect';
 var SignupFailedReason;
@@ -57,7 +58,14 @@ function signup($form, { token, email, password }) {
     })
         .done((res) => {
         if (res.success) {
-            redirect('home', { email });
+            const role = res.role;
+            switch (role) {
+                case Role.MANAGER:
+                    redirect('dashboard', { user: { email, role } });
+                    break;
+                default:
+                    redirect('home', { user: { email, role } });
+            }
         }
         else {
             console.log(res);
