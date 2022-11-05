@@ -38,7 +38,7 @@ $(() => {
 
     const $this = $(this);
 
-    const credentials = Object.fromEntries(new FormData(this as HTMLFormElement)) as ChangePwFormData;
+    const formData = Object.fromEntries(new FormData(this as HTMLFormElement)) as ChangePwFormData;
 
     // TODO: during request disable #change-pw-btn
     // TODO: check passwords

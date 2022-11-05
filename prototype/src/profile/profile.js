@@ -21,7 +21,7 @@ $(() => {
     $('#change-pw-form').on('submit', function (e) {
         e.preventDefault();
         const $this = $(this);
-        const credentials = Object.fromEntries(new FormData(this));
+        const formData = Object.fromEntries(new FormData(this));
         // TODO: during request disable #change-pw-btn
         // TODO: check passwords
         // TODO: make ajax request

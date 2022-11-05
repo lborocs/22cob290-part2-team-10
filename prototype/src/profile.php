@@ -6,11 +6,13 @@ if (!isset($_REQUEST['user'])) {
   die();
 }
 
+require "backend/users.php";
+
 $user_json = $_REQUEST['user'];
 $user = json_decode($user_json);
 
 $email = $user->email;
-$role = $user->role;
+$role = Role::from($user->role);
 
 // Using bootstrap 4.1 cos template was designed using it and i cba to convert it to 5
 
@@ -80,15 +82,24 @@ $role = $user->role;
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="nav navbar-nav ml-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="home">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="forum">Forum</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="projects?name=Project 7">Projects</a>
-            </li>
+            <?php if ($role == Role::MANAGER): ?>
+              <li class="nav-item">
+                <a class="nav-link" href="dashboard">Dashboard</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link">Forum</a>
+              </li>
+            <?php else: ?>
+              <li class="nav-item">
+                <a class="nav-link" href="home">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="forum">Forum</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="projects?name=Project 7">Projects</a>
+              </li>
+            <?php endif ?>
             <li class="nav-item active">
               <a>
                 <span class="nav-link d-lg-none d-md-block">Profile</span>
@@ -105,8 +116,14 @@ $role = $user->role;
     <div class="container">
 
       <article>
-        <h3>Email</h3>
-        <span><?= $email ?></span>
+        <div class="mb-3">
+          <h3>Email</h3>
+          <span><?= $email ?></span>
+        </div>
+        <div>
+          <h3>Role</h3>
+          <span><?= $role->value ?></span>
+        </div>
       </article>
 
       <br>
@@ -215,7 +232,6 @@ $role = $user->role;
         </form>
       </article>
 
-      <br>
       <br>
 
       <article>
