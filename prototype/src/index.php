@@ -58,7 +58,7 @@
                    class="form-control"
                    id="password"
                    name="password"
-                   placeholder="Password"
+                   placeholder="Enter password"
                    minlength="12"
                    maxlength="64"
                    >
