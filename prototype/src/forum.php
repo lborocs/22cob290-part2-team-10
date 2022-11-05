@@ -1,5 +1,7 @@
 <?php
 
+require "backend/users.php";
+
 // if (!isset($_REQUEST['email'])) {
 //   // redirect to login page if not signed in
 //   header('Location: http://team10.sci-project.lboro.ac.uk/', true, 303);
@@ -13,7 +15,7 @@ $user_json = $_REQUEST['user'] ?? '{"email": "johndoe@make-it-all.co.uk", "role"
 $user = json_decode($user_json);
 
 $email = $user->email;
-$role = $user->role;
+$role = Role::from($user->role);
 
 ?>
 <!DOCTYPE html>
@@ -145,17 +147,26 @@ $role = $user->role;
               class="container-flex collapse navbar-collapse"
             >
               <ul class="nav navbar-nav ml-auto">
-                <li class="nav-item">
-                  <a class="nav-link" href="home"><h5>Home</h5></a>
-                </li>
-                <li class="nav-item active">
-                  <a class="nav-link"><h5>Forum</h5></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="projects?name=Project 7">
-                    <h5>Projects</h5>
-                  </a>
-                </li>
+                <?php if ($role == Role::MANAGER): ?>
+                  <li class="nav-item">
+                    <a class="nav-link" href="dashboard"><h5>Dashboard</h5></a>
+                  </li>
+                  <li class="nav-item active">
+                    <a class="nav-link"><h5>Forum</h5></a>
+                  </li>
+                <?php else: ?>
+                  <li class="nav-item">
+                    <a class="nav-link" href="home"><h5>Home</h5></a>
+                  </li>
+                  <li class="nav-item active">
+                    <a class="nav-link"><h5>Forum</h5></a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="projects?name=Project 7">
+                      <h5>Projects</h5>
+                    </a>
+                  </li>
+                <?php endif ?>
                 <li class="nav-item">
                   <a href="profile">
                     <span class="nav-link d-lg-none d-md-block">Profile</span>
