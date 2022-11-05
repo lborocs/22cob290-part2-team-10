@@ -6,7 +6,11 @@
 //   die();
 // }
 
-  $email = $_REQUEST['email'] ?? 'bruh';
+// FIXME: isn't responsive (nav doesn't collapse)
+// FIXME: add toggle sidebar that is in the other pages
+
+$email = $_REQUEST['email'] ?? 'bruh';
+
 ?>
 <!DOCTYPE html>
   <html lang="en" data-email="<?= $email ?>">
@@ -136,10 +140,12 @@
                   </a>
                 </li>
                 <li class="nav-item">
-                  <img
-                    id="profile-picture" src="assets/kanye.webp"
-                    alt="Profile Picture"
-                  >
+                  <a href="profile">
+                    <span class="nav-link d-lg-none d-md-block">Profile</span>
+                    <span class="text-avatar d-none d-lg-block">
+                      <?= strtoupper($email[0]) ?>
+                    </span>
+                  </a>
                 </li>
               </ul>
             </div>

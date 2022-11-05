@@ -23,8 +23,8 @@ li.nav-item {
     color: #a885da;
 }
 
-.nav-link>h5 {
-    margin: 0px;
+.nav-link > h5 {
+    margin: 0;
     padding-block: 10px;
 }
 
@@ -62,6 +62,21 @@ li.nav-item {
     margin-inline: 20px;
 }
 
+/* FIXME: has blue underline from a tag */
+.text-avatar {
+    /* https://stackoverflow.com/a/58367383 */
+    width: 40px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    color: #fff;
+    line-height: 40px;
+    text-align: center;
+    background: #e2ba39; /* pick random color? or let user pick? */
+    /* display: inline-block; */
+
+    font-size: large;
+}
+
 /* ---------------------------------------------------
     CONTENT STYLE
   ----------------------------------------------------- */
@@ -82,11 +97,11 @@ li.nav-item {
 .centeredDiv {
     justify-content: center;
     padding-top: 40px;
-    margin: 0%;
+    margin: 0;
 }
 
 .commentDiv {
-    margin: 0%;
+    margin: 0;
     padding-bottom: 20px;
 }
 
@@ -155,7 +170,7 @@ li.nav-item {
 
 .textField {
     background-color: #212121;
-    outline-width: 0px;
+    outline-width: 0;
     border-style: solid;
     border-width: 1px;
     border-radius: 7px;
@@ -194,7 +209,7 @@ button:hover {
 
 #main {
     height: calc(90vh - 20px);
-    padding: 0px;
+    padding: 0;
 }
 
 #postText {
@@ -215,7 +230,7 @@ button:hover {
 
 #leftMain {
     background-color: #0e0e0e;
-    padding: 0% 5px;
+    padding: 0 5px;
     height: 100%;
     width: 100%;
 }
@@ -230,8 +245,8 @@ button:hover {
     color: #dddddd;
 }
 
-#filterPrompt>p {
-    padding-inline: 0px;
+#filterPrompt > p {
+    padding-inline: 0;
 }
 
 #newPost {
@@ -241,7 +256,7 @@ button:hover {
 #resultCounter {
     padding-top: 10px;
     color: #a9a9a9;
-    margin: 0%;
+    margin: 0;
 }
 
 #commentBoard {
@@ -249,7 +264,7 @@ button:hover {
     overflow-y: scroll;
     max-height: calc(100% - 50px);
     -ms-overflow-style: none;
-    margin: 0%;
+    margin: 0;
 }
 
 #postText {
@@ -267,5 +282,5 @@ button:hover {
 }
 
 #postTopics {
-    margin: 0px;
+    margin: 0;
 }

@@ -79,7 +79,7 @@ a:focus {
 
 #sidebar .sidebar-header {
     padding: 20px;
-    background: var(--seconadary-color);
+    background: var(--secondary-color);
 }
 
 #sidebar ul.components {
@@ -103,7 +103,7 @@ a:focus {
     background: var(--sidebar-hover);
 }
 
-#sidebar ul li.active>a,
+#sidebar ul li.active > a,
 a[aria-expanded="true"] {
     color: #fff;
     background: var(--tertiary-color);
@@ -141,6 +141,7 @@ a.download {
     background: #fff;
     color: #7386D5;
 }
+
 /*
 a.article,
 a.article:hover {
@@ -156,16 +157,18 @@ a.article:hover {
     background-color: var(--tertiary-color);
 }
 
-/* .nav { */
-    /* display: flex;
-    align-items: center;
-    justify-content: center; */
-/* } */
-
-#profile-picture {
-    width: 60px;
-    height: 60px;
+.text-avatar {
+    /* https://stackoverflow.com/a/58367383 */
+    width: 40px;
+    aspect-ratio: 1;
     border-radius: 50%;
+    color: #fff;
+    line-height: 40px;
+    text-align: center;
+    background: #e2ba39; /* pick random color? or let user pick? */
+    /* display: inline-block; */
+
+    font-size: large;
 }
 
 /* ---------------------------------------------------
@@ -195,13 +198,9 @@ a.article:hover {
     #sidebarCollapse span {
         display: none;
     }
-
 }
 
-@media(max-width:990px) {
-    #profile-picture {
-        display: none;
-    }
+@media (max-width: 990px) {
 }
 
 /* KBOARD */
@@ -219,7 +218,7 @@ a.article:hover {
 }
 
 p.overflow-auto {
-    max-height:100px;
+    max-height: 100px;
 }
 
 .card drag-item {

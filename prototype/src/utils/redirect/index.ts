@@ -11,7 +11,7 @@ export default function redirect(url: string, data: Record<string, string>) {
 }
 
 $(() => {
-  $('.nav-link[href]').on(
+  $('a[href]').on(
     'click', function (e) {
       e.preventDefault();
 

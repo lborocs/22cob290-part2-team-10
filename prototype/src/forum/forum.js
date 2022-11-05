@@ -83,7 +83,7 @@ window.get_posts = function get_posts() {
     document.getElementById("searchField").value.toLocaleLowerCase();
   const topicRoster = document.getElementById("filterOptions").childNodes;
   const tagFilters = [];
-  var accept = false;
+  let accept = false;
   const filteredPosts = [];
   for (let i = 1; i < topicRoster.length; i += 2) {
     console.log(topicRoster[i].childNodes);

@@ -157,16 +157,18 @@ a.article:hover {
     background-color: var(--tertiary-color);
 }
 
-/* .nav { */
-    /* display: flex;
-    align-items: center;
-    justify-content: center; */
-/* } */
-
-#profile-picture {
-    width: 60px;
-    height: 60px;
+.text-avatar {
+    /* https://stackoverflow.com/a/58367383 */
+    width: 40px;
+    aspect-ratio: 1;
     border-radius: 50%;
+    color: #fff;
+    line-height: 40px;
+    text-align: center;
+    background: #e2ba39; /* pick random color? or let user pick? */
+    /* display: inline-block; */
+
+    font-size: large;
 }
 
 /* ---------------------------------------------------
@@ -196,13 +198,9 @@ a.article:hover {
     #sidebarCollapse span {
         display: none;
     }
-
 }
 
 @media (max-width: 990px) {
-    #profile-picture {
-        display: none;
-    }
 }
 
 /* KBOARD */

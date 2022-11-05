@@ -107,7 +107,12 @@ function get_projects(string $email): array
               <a class="nav-link">Projects</a>
             </li>
             <li class="nav-item">
-              <img id="profile-picture" src="assets/kanye.webp" alt="Profile Picture">
+              <a href="profile">
+                <span class="nav-link d-lg-none d-md-block">Profile</span>
+                <span class="text-avatar d-none d-lg-block">
+                  <?= strtoupper($email[0]) ?>
+                </span>
+              </a>
             </li>
           </ul>
         </div>

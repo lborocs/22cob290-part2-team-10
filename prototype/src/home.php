@@ -22,7 +22,7 @@ function get_projects(string $email): array
 //    completed => array
 
 ?><!DOCTYPE html>
-<html lang="en" data-email="<?php echo $email ?>">
+<html lang="en" data-email="<?= $email ?>">
 
 <head>
   <meta charset="UTF-8">
@@ -105,7 +105,12 @@ function get_projects(string $email): array
                 <a class="nav-link" href="projects?name=Project 7">Projects</a>
               </li>
               <li class="nav-item">
-                <img id="profile-picture" src="assets/kanye.webp" alt="Profile Picture">
+                <a href="profile">
+                  <span class="nav-link d-lg-none d-md-block">Profile</span>
+                  <span class="text-avatar d-none d-lg-block">
+                    <?= strtoupper($email[0]) ?>
+                  </span>
+                </a>
               </li>
             </ul>
           </div>

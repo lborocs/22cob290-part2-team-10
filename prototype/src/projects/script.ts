@@ -2,7 +2,6 @@ import '../utils/redirect';
 
 // TODO: in AddTask, assign to employee in project
 // TODO LATER: impl hover over task to edit (open modal)
-// TODO LATER: change kanye image to colour with 1st letter of email
 
 type AddTaskFormData = {
   title: string

@@ -87,7 +87,7 @@ a:focus {
 
 #sidebar .sidebar-header {
     padding: 20px;
-    background: var(--seconadary-color);
+    background: var(--secondary-color);
 }
 
 #sidebar ul.components {
@@ -165,12 +165,6 @@ a.article:hover {
     background-color: var(--tertiary-color);
 }
 
-#profile-picture {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-}
-
 /* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
@@ -201,9 +195,6 @@ a.article:hover {
 }
 
 @media(max-width:992px) {
-    #profile-picture {
-        display: none;
-    }
 }
 
 /* Dashboard */

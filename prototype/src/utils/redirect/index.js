@@ -9,7 +9,7 @@ export default function redirect(url, data) {
     $form.trigger('submit');
 }
 $(() => {
-    $('.nav-link[href]').on('click', function (e) {
+    $('a[href]').on('click', function (e) {
         e.preventDefault();
         const url = $(this).attr('href');
         const email = $('html').attr('data-email');
