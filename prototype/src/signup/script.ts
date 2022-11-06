@@ -1,5 +1,5 @@
 import { Role } from '../types';
-import { isValidWorkEmail, validatePassword } from '../utils';
+import { formIsInvalid, isValidWorkEmail, validatePassword } from '../utils';
 import redirect from '../utils/redirect';
 
 type SignupFailedResponse = {
@@ -113,10 +113,6 @@ function signup($form: JQuery, { token, email, password }: Credentials) {
     .always(() => {
       $('#signup-btn').prop('disabled', false);
     });
-}
-
-function formIsInvalid($form: JQuery): boolean {
-  return $form.find('.is-invalid').length > 0;
 }
 
 function emailError(error: string) {

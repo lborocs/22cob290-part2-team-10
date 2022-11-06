@@ -56,3 +56,6 @@ export function copyToClipboard(content) {
         });
     }
 }
+export function formIsInvalid($form) {
+    return $form.find('.is-invalid').length > 0;
+}

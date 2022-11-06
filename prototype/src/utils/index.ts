@@ -65,3 +65,7 @@ export function copyToClipboard(content: string): Promise<void> {
       });
   }
 }
+
+export function formIsInvalid($form: JQuery): boolean {
+  return $form.find('.is-invalid').length > 0;
+}

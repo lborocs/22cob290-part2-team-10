@@ -1,4 +1,4 @@
-import { isValidWorkEmail, validatePassword } from '../utils';
+import { formIsInvalid, isValidWorkEmail, validatePassword } from '../utils';
 import redirect from '../utils/redirect';
 var SignupFailedReason;
 (function (SignupFailedReason) {
@@ -76,9 +76,6 @@ function signup($form, { token, email, password }) {
         .always(() => {
         $('#signup-btn').prop('disabled', false);
     });
-}
-function formIsInvalid($form) {
-    return $form.find('.is-invalid').length > 0;
 }
 function emailError(error) {
     $('#email').addClass('is-invalid');

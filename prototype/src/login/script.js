@@ -1,5 +1,5 @@
 import { Role } from '../types';
-import { isValidWorkEmail, validatePassword } from '../utils';
+import { formIsInvalid, isValidWorkEmail, validatePassword } from '../utils';
 import redirect from '../utils/redirect';
 var LoginFailedReason;
 (function (LoginFailedReason) {
@@ -74,9 +74,6 @@ function login($form, { email }) {
         .always(() => {
         $('#login-btn').prop('disabled', false);
     });
-}
-function formIsInvalid($form) {
-    return $form.find('.is-invalid').length > 0;
 }
 function emailError(error) {
     $('#email').addClass('is-invalid');

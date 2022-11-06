@@ -1,5 +1,5 @@
 import { Role } from '../types';
-import { isValidWorkEmail, validatePassword } from '../utils';
+import { formIsInvalid, isValidWorkEmail, validatePassword } from '../utils';
 import redirect from '../utils/redirect';
 
 type LoginFailedResponse = {
@@ -107,10 +107,6 @@ function login($form: JQuery<HTMLElement>, { email }: Credentials) {
     .always(() => {
       $('#login-btn').prop('disabled', false);
     });
-}
-
-function formIsInvalid($form: JQuery): boolean {
-  return $form.find('.is-invalid').length > 0;
 }
 
 function emailError(error: string) {
