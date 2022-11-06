@@ -51,6 +51,14 @@ window.validate = function validate(element) {
     }
 }
 
+// prevent them from entering newlines & instead treat pressing enter as saving project title
+window.validateKey = function validateKey(element, event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    $(element).trigger("blur");
+  }
+}
+
 window.append_project = function append_project(form, event) {
   event.preventDefault();
   const form_data = Object.fromEntries(new FormData(form));
@@ -65,7 +73,7 @@ window.append_project = function append_project(form, event) {
     <li class="list-group-item">
     <p
       contentEditable="true" style="color: black" class="project-name"
-      onfocus="setCurrent(this.textContent)" onblur="validate(this)"
+      onfocus="setCurrent(this.textContent)" onblur="validate(this)" onkeypress="validateKey(this, event)"
     >${title}</p>
       <div class="progress">
         <div class="progress-bar progress-bar-striped bg-info progress-bar-animated"

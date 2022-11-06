@@ -82,6 +82,10 @@ function get_managed_staff(string $email): array
                   <div>
                     <input type="text" class="form-control input-lg" name="title" id="title" placeholder="Project name" required>
                   </div>
+                  <!-- TODO: bootstrap 5 -->
+                  <div class="invalid-feedback">
+                    Project name must be unique.
+                  </div>
                 </div>
               </div>
               <div class="modal-footer">
@@ -93,6 +97,7 @@ function get_managed_staff(string $email): array
         </div>
       </div>
     </div>
+
     <div id="page">
       <div id="sidebar">
         <div class="sidebar-header">
@@ -194,7 +199,7 @@ function get_managed_staff(string $email): array
                         <li class="list-group-item">
                           <p
                             contentEditable="true" style="color: black" class="project-name"
-                            onfocus="setCurrent(this.textContent)" onblur="validate(this)"
+                            onfocus="setCurrent(this.textContent)" onblur="validate(this)" onkeypress="validateKey(this, event)"
                           >$name</p>
                           <div class="progress">
                             <div class="progress-bar progress-bar-striped bg-info progress-bar-animated"
