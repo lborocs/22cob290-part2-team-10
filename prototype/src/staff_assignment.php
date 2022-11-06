@@ -1,8 +1,14 @@
 <?php
 
+if (!isset($_REQUEST['user'])) {
+  // redirect to login page if not signed in
+  header('Location: http://team10.sci-project.lboro.ac.uk/', true, 303);
+  die();
+}
+
 require "backend/users.php";
 
-$user_json = $_REQUEST['user'] ?? '{"email": "johndoe@make-it-all.co.uk", "role":"MANAGER"}';
+$user_json = $_REQUEST['user'];
 $user = json_decode($user_json);
 
 $email = $user->email;
