@@ -112,19 +112,22 @@ $role = Role::from($user->role);
     <div class="container">
 
       <article>
-        <div class="mb-3">
-          <h3>Email</h3>
-          <span><?= $email ?></span>
-        </div>
-        <div>
-          <h3>Role</h3>
-          <span><?= $role->value ?></span>
+        <div class="row">
+          <div class="col">
+            <h3>Email</h3>
+            <span><?= $email ?></span>
+          </div>
+          <div class="col">
+            <h3>Role</h3>
+            <span><?= $role->value ?></span>
+          </div>
         </div>
       </article>
 
       <br>
       <br>
 
+      <!-- TODO: make into a button that opens a modal -->
       <article>
         <h3>Change Password</h3>
         <form id="change-pw-form" action="profile/change_password.php" method="POST" class="mt-6">
@@ -269,6 +272,15 @@ $role = Role::from($user->role);
           </div>
         </div>
       </article>
+
+      <br>
+      <br>
+
+      <a href="/">
+        <button class="btn btn-danger">
+          Log out
+        </button>
+      </a>
 
     </div>
   </div>
