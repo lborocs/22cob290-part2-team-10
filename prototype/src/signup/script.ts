@@ -15,7 +15,7 @@ enum SignupFailedReason {
 
 type SignupResponse = SignupFailedResponse | {
   success: true
-  role: Role
+  role: Exclude<Role, Role.LEFT_COMPANY>
 };
 
 type Credentials = {
@@ -96,14 +96,7 @@ function signup($form: JQuery, { token, email, password }: Credentials) {
       if (res.success) {
         const role = res.role;
 
-        switch (role) {
-          case Role.MANAGER:
-            redirect('dashboard', {user: {email, role}});
-            break;
-
-          default:
-            redirect('home', {user: {email, role}});
-        }
+        redirect('home', {user: {email, role}});
       } else {
         console.log(res);
 

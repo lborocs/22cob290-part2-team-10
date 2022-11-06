@@ -1,10 +1,16 @@
 <?php
 
+require "backend/users.php";
+
 $user_json = $_REQUEST['user'] ?? '{"email": "johndoe@make-it-all.co.uk", "role":"MANAGER"}';
 $user = json_decode($user_json);
 
 $email = $user->email;
-$role = $user->role;
+$role = Role::from($user->role);
+
+if ($role != Role::MANAGER) {
+  die("You do not have access to this page.");
+}
 
 ?><!DOCTYPE html>
 

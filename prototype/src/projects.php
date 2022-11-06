@@ -116,8 +116,13 @@ $emails = get_all_emails_not_left();
             <li class="nav-item active">
               <a class="nav-link">Projects</a>
             </li>
+            <?php if ($role == Role::MANAGER): ?>
+              <li class="nav-item">
+                <a class="nav-link" href="dashboard">Dashboard</a>
+              </li>
+            <?php endif ?>
             <li class="nav-item">
-              <a href="profile">
+              <a href="profile" >
                 <span class="nav-link d-lg-none d-md-block">Profile</span>
                 <span class="text-avatar d-none d-lg-block">
                   <?= strtoupper($email[0]) ?>

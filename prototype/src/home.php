@@ -6,11 +6,13 @@ if (!isset($_REQUEST['user'])) {
   die();
 }
 
+require "backend/users.php";
+
 $user_json = $_REQUEST['user'];
 $user = json_decode($user_json);
 
 $email = $user->email;
-$role = $user->role;
+$role = Role::from($user->role);
 
 // hardcoded
 function get_projects(string $email): array
@@ -24,6 +26,13 @@ function get_projects(string $email): array
 //    in_progress => array
 //    code_review => array
 //    completed => array
+
+/*
+TODO: replace use of data-user with setting of js object & using Object.freeze
+<script>
+  const user = Object.freeze(<?= $user_json ?>);
+</script>
+*/
 
 ?><!DOCTYPE html>
 <html lang="en" data-user='<?= $user_json ?>'>
@@ -108,6 +117,11 @@ function get_projects(string $email): array
               <li class="nav-item">
                 <a class="nav-link" href="projects?name=Project 7">Projects</a>
               </li>
+              <?php if ($role == Role::MANAGER): ?>
+                <li class="nav-item">
+                  <a class="nav-link" href="dashboard">Dashboard</a>
+                </li>
+              <?php endif ?>
               <li class="nav-item">
                 <a href="profile">
                   <span class="nav-link d-lg-none d-md-block">Profile</span>
