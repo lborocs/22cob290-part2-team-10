@@ -45,9 +45,6 @@ function login($form, { email }) {
         if (res.success) {
             const role = res.role;
             switch (role) {
-                case Role.MANAGER:
-                    redirect('dashboard', { user: { email, role } });
-                    break;
                 case Role.LEFT_COMPANY:
                     emailError('You no longer have access to this website');
                     break;

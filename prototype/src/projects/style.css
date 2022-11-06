@@ -217,6 +217,10 @@ a.article:hover {
     max-height: 400px;
 }
 
+.task-title {
+    font-weight: bold;
+}
+
 p.overflow-auto {
     max-height: 100px;
 }

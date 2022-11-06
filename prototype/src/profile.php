@@ -82,30 +82,26 @@ $role = Role::from($user->role);
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="nav navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="home">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="forum">Forum</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="projects?name=Project 7">Projects</a>
+            </li>
             <?php if ($role == Role::MANAGER): ?>
               <li class="nav-item">
                 <a class="nav-link" href="dashboard">Dashboard</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link">Forum</a>
-              </li>
-            <?php else: ?>
-              <li class="nav-item">
-                <a class="nav-link" href="home">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="forum">Forum</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="projects?name=Project 7">Projects</a>
               </li>
             <?php endif ?>
             <li class="nav-item active">
               <a>
                 <span class="nav-link d-lg-none d-md-block">Profile</span>
                 <span class="text-avatar d-none d-lg-block">
-                    <?= strtoupper($email[0]) ?>
-                  </span>
+                  <?= strtoupper($email[0]) ?>
+                </span>
               </a>
             </li>
           </ul>

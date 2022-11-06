@@ -6,11 +6,13 @@ if (!isset($_REQUEST['user'])) {
   die();
 }
 
+require "backend/users.php";
+
 $user_json = $_REQUEST['user'];
 $user = json_decode($user_json);
 
 $email = $user->email;
-$role = $user->role;
+$role = Role::from($user->role);
 
 // hardcoded
 function get_projects(string $email): array
@@ -24,6 +26,13 @@ function get_projects(string $email): array
 //    in_progress => array
 //    code_review => array
 //    completed => array
+
+/*
+TODO: replace use of data-user with setting of js object & using Object.freeze
+<script>
+  const user = Object.freeze(<?= $user_json ?>);
+</script>
+*/
 
 ?><!DOCTYPE html>
 <html lang="en" data-user='<?= $user_json ?>'>
@@ -108,6 +117,11 @@ function get_projects(string $email): array
               <li class="nav-item">
                 <a class="nav-link" href="projects?name=Project 7">Projects</a>
               </li>
+              <?php if ($role == Role::MANAGER): ?>
+                <li class="nav-item">
+                  <a class="nav-link" href="dashboard">Dashboard</a>
+                </li>
+              <?php endif ?>
               <li class="nav-item">
                 <a href="profile">
                   <span class="nav-link d-lg-none d-md-block">Profile</span>
@@ -188,8 +202,8 @@ function get_projects(string $email): array
                 ondragover event specifies where the dragged data can be dropped-->
                 <div class="tasks scroll" id="to_do" ondrop="drop(event)" ondragover="allowDrop(event)">
                   <!--EXAMPLE TASK-->
-                  <div class="card mb-3 drag_item" id="task1" draggable="true" ondragstart="drag(event)">
-                    <div class="card-body">
+                  <div class="card mb-3 drag_item" id="task-Title" draggable="true" ondragstart="drag(event)" >
+                    <div class="card-body pt-3 pb-2">
                       <button type="button" class="close" aria-label="Close" onclick="remove_task(this)">
                         <span>&times;</span>
                       </button>
@@ -197,8 +211,8 @@ function get_projects(string $email): array
                         <span class="badge bg-primary text-white mx-1">Tag1</span>
                         <span class="badge bg-primary text-white mx-1">Tag2</span>
                       </div>
-                      <p class="task-title" style="font-weight: bold">Title</p>
-                      <p class="task-description mb-0 overflow-auto">You can move these elements between the containers</p>
+                      <p class="card-title task-title mb-1">Title</p>
+                      <p class="card-text task-description mb-0 overflow-auto">You can move these elements between the containers</p>
                     </div>
                   </div>
                   <!--END OF EXAMPLE TASK-->
