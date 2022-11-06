@@ -14,7 +14,9 @@ $user_json = $_REQUEST['user'];
 $user = json_decode($user_json);
 
 $email = $user->email;
-$role = $user->role;
+$role = Role::from($user->role);
+
+$can_add_projects = $role == Role::MANAGER || $role == Role::TEAM_LEADER;
 
 // TODO: if project name isn't set, dont show kboard, instad show text to select a project
 
@@ -69,7 +71,7 @@ $emails = get_all_emails_not_left();
 
     <!-- TODO: clean up this tag mess -->
     <ul class="list-unstyled components sidebar-list">
-      <p>Assigned Projects:</p>
+      <p><?= $role == Role::MANAGER ? 'Managed' : 'Assigned' ?> Projects:</p>
       <div id="projects-list">
         <?php
         $projects = get_projects($email);
@@ -244,11 +246,13 @@ $emails = get_all_emails_not_left();
                 <!--END OF EXAMPLE TASK-->
               </div>
             </div>
-            <div class="card-footer">
-              <button class="btn btn-primary btn-block open_modal" data-id="to_do">
-                Add task
-              </button>
-            </div>
+            <?php if ($can_add_projects): ?>
+              <div class="card-footer">
+                <button class="btn btn-primary btn-block open_modal" data-id="to_do">
+                  Add task
+                </button>
+              </div>
+            <?php endif ?>
           </div>
         </div>
 
@@ -262,11 +266,13 @@ $emails = get_all_emails_not_left();
               <div class="tasks scroll" id="in_progress" ondrop="drop(event)" ondragover="allowDrop(event)">
               </div>
             </div>
-            <div class="card-footer">
-              <button class="btn btn-primary btn-block open_modal" data-id="in_progress">
-                Add task
-              </button>
-            </div>
+            <?php if ($can_add_projects): ?>
+              <div class="card-footer">
+                <button class="btn btn-primary btn-block open_modal" data-id="in_progress">
+                  Add task
+                </button>
+              </div>
+            <?php endif ?>
           </div>
         </div>
 
@@ -280,11 +286,13 @@ $emails = get_all_emails_not_left();
               <div class="tasks scroll" id="code_review" ondrop="drop(event)" ondragover="allowDrop(event)">
               </div>
             </div>
-            <div class="card-footer">
-              <button class="btn btn-primary btn-block open_modal" data-id="code_review">
-                Add task
-              </button>
-            </div>
+            <?php if ($can_add_projects): ?>
+              <div class="card-footer">
+                <button class="btn btn-primary btn-block open_modal" data-id="code_review">
+                  Add task
+                </button>
+              </div>
+            <?php endif ?>
           </div>
         </div>
 
