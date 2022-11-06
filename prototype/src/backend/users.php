@@ -37,6 +37,23 @@ $staff = [
   ],
 ];
 
+function get_all_emails(): array
+{
+  global $staff;
+
+  return array_map(fn($emp): string => $emp['email'], $staff);
+}
+
+// TODO: rename?
+function get_all_emails_not_left(): array
+{
+  global $staff;
+
+  $not_left = array_filter($staff, fn($emp): bool => $emp['role'] != Role::LEFT_COMPANY);
+
+  return array_map(fn($emp): string => $emp['email'], $not_left);
+}
+
 function get_user(string $email): ?array
 {
   global $staff;

@@ -6,6 +6,8 @@ if (!isset($_REQUEST['user'])) {
   die();
 }
 
+require "backend/users.php";
+
 $name = $_REQUEST['name'] ?? null;
 
 $user_json = $_REQUEST['user'];
@@ -25,6 +27,9 @@ function get_projects(string $email): array
 {
   return array_map(fn($num): string => "Project $num", range(1, 15));
 }
+
+$emails = get_all_emails_not_left();
+
 ?><!DOCTYPE html>
 <html lang="en" data-user='<?= $user_json ?>'>
 
@@ -152,6 +157,7 @@ function get_projects(string $email): array
                     </div>
                   </div>
                 </div>
+
                 <!-- description -->
                 <div class="form-group">
                   <label class="control-label" for="description_textarea">Description</label>
@@ -160,6 +166,7 @@ function get_projects(string $email): array
                       placeholder="Task description" pattern="^[^\s]+.*$" required></textarea>
                   </div>
                 </div>
+
                 <!-- tags -->
                 <div class="form-group">
                   <label class="control-label" for="tags_textarea">Tags</label>
@@ -168,6 +175,29 @@ function get_projects(string $email): array
                       placeholder="Enter tags, separated by commas"></textarea>
                   </div>
                 </div>
+
+                <!-- assigned employee -->
+                <div class="form-group">
+                  <label class="control-label" for="assignee_select">Assignee</label>
+                  <div>
+                    <select class="custom-select" id="assignee_select" name="assignee" required>
+                      <option selected>Select employee</option>
+                      <?php
+                      foreach ($emails as $email) {
+                        $name = strtok($email, '@');
+
+                        echo <<<HTML
+                          <option value="$email">$name</option>
+                        HTML;
+                      }
+                      ?>
+                    </select>
+                    <div class="invalid-feedback">
+                      Please select an employee.
+                    </div>
+                  </div>
+                </div>
+
               </form>
             </div>
             <div class="modal-footer">
@@ -190,8 +220,8 @@ function get_projects(string $email): array
               ondragover event specifies where the dragged data can be dropped-->
               <div class="tasks scroll" id="to_do" ondrop="drop(event)" ondragover="allowDrop(event)">
                 <!--EXAMPLE TASK-->
-                <div class="card mb-3 drag_item" id="task1" draggable="true" ondragstart="drag(event)">
-                  <div class="card-body">
+                <div class="card mb-3 drag_item" id="task-Title" draggable="true" ondragstart="drag(event)" >
+                  <div class="card-body pt-3 pb-2">
                     <button type="button" class="close" aria-label="Close" onclick="remove_task(this)">
                       <span>&times;</span>
                     </button>
@@ -199,8 +229,11 @@ function get_projects(string $email): array
                       <span class="badge bg-primary text-white mx-1">Tag1</span>
                       <span class="badge bg-primary text-white mx-1">Tag2</span>
                     </div>
-                    <p class="task-title" style="font-weight: bold">Title</p>
-                    <p class="task-description mb-0 overflow-auto">You can move these elements between the containers</p>
+                    <p class="card-title task-title mb-1">Title</p>
+                    <p class="card-text task-description mb-0 overflow-auto">You can move these elements between the containers</p>
+                  </div>
+                  <div class="card-footer text-muted text-center py-1">
+                    alice
                   </div>
                 </div>
                 <!--END OF EXAMPLE TASK-->

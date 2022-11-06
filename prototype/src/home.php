@@ -188,8 +188,8 @@ function get_projects(string $email): array
                 ondragover event specifies where the dragged data can be dropped-->
                 <div class="tasks scroll" id="to_do" ondrop="drop(event)" ondragover="allowDrop(event)">
                   <!--EXAMPLE TASK-->
-                  <div class="card mb-3 drag_item" id="task1" draggable="true" ondragstart="drag(event)">
-                    <div class="card-body">
+                  <div class="card mb-3 drag_item" id="task-Title" draggable="true" ondragstart="drag(event)" >
+                    <div class="card-body pt-3 pb-2">
                       <button type="button" class="close" aria-label="Close" onclick="remove_task(this)">
                         <span>&times;</span>
                       </button>
@@ -197,8 +197,8 @@ function get_projects(string $email): array
                         <span class="badge bg-primary text-white mx-1">Tag1</span>
                         <span class="badge bg-primary text-white mx-1">Tag2</span>
                       </div>
-                      <p class="task-title" style="font-weight: bold">Title</p>
-                      <p class="task-description mb-0 overflow-auto">You can move these elements between the containers</p>
+                      <p class="card-title task-title mb-1">Title</p>
+                      <p class="card-text task-description mb-0 overflow-auto">You can move these elements between the containers</p>
                     </div>
                   </div>
                   <!--END OF EXAMPLE TASK-->
