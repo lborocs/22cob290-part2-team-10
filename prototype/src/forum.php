@@ -1,23 +1,22 @@
 <?php
+  if (!isset($_REQUEST['user'])) {
+    // redirect to login page if not signed in
+    header('Location: http://team10.sci-project.lboro.ac.uk/', true, 303);
+    die();
+  }
 
-if (!isset($_REQUEST['user'])) {
-  // redirect to login page if not signed in
-  header('Location: http://team10.sci-project.lboro.ac.uk/', true, 303);
-  die();
-}
+  // FIXME: isn't responsive (nav doesn't collapse)
+  // FIXME: add toggle sidebar that is in the other pages
 
-// FIXME: isn't responsive (nav doesn't collapse)
-// FIXME: add toggle sidebar that is in the other pages
+  require "backend/users.php";
 
-require "backend/users.php";
+  $user_json = $_REQUEST['user'];
+  $user = json_decode($user_json);
 
-$user_json = $_REQUEST['user'];
-$user = json_decode($user_json);
-
-$email = $user->email;
-$role = Role::from($user->role);
-
+  $email = $user->email;
+  $role = Role::from($user->role);
 ?>
+
 <!DOCTYPE html>
   <html lang="en" data-user='<?= $user_json ?>'>
     <head>
@@ -29,15 +28,17 @@ $role = Role::from($user->role);
       <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
         rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-        crossorigin="anonymous">
+        crossorigin="anonymous"
+      >
       <script
-        src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
-        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+        src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
         crossorigin="anonymous"></script>
       <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
         integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
-        crossorigin="anonymous"></script>
+        crossorigin="anonymous"
+      ></script>
       <!-- Font Awesome JS -->
       <script
         defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js"
@@ -70,6 +71,7 @@ $role = Role::from($user->role);
                 aria-label="Close" aria-hidden="true"
               ></i>
             </div>
+
             <div class="modal-body">
               <form onsubmit="add_post(this, event)">
                 <p>
@@ -97,6 +99,7 @@ $role = Role::from($user->role);
           </div>
         </div>
       </div>
+
       <main class="wrapper">
         <!-- Sidebar -->
         <nav id="sidebar" class="">
@@ -115,6 +118,7 @@ $role = Role::from($user->role);
                   placeholder="Search By Title..." onsearch="get_posts()"
                 >
               </div>
+
               <div class="row centeredDiv container-fluid">
                 <div id="filterPrompt" class="row">
                     <p>Filter By Topic:</p>
@@ -122,6 +126,7 @@ $role = Role::from($user->role);
                 <div id="filterOptions" class="row">
                 </div>
               </div>
+
               <div class="row centeredDiv">
                 <button
                   id="newPost" type="button" class="mb-3"
@@ -142,6 +147,12 @@ $role = Role::from($user->role);
               <i class="fas fa-align-left"></i>
               <span>Toggle Sidebar</span>
             </button>
+            <button
+              id="navbarCollapse" type="button" data-bs-toggle="collapse"
+              data-bs-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent"
+              aria-expanded="false" aria-label="Toggle navigation"
+            ><i class="fas fa-align-justify"></i></button>
             <div
               id="navbarSupportedContent"
               class="container-flex collapse navbar-collapse"
@@ -154,7 +165,9 @@ $role = Role::from($user->role);
                   <a class="nav-link active">Forum</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="projects?name=Project 7">Projects</a>
+                  <a class="nav-link" href="projects?name=Project 7">
+                    Projects
+                  </a>
                 </li>
                 <?php if ($role == Role::MANAGER): ?>
                   <li class="nav-item">
@@ -172,6 +185,7 @@ $role = Role::from($user->role);
               </ul>
             </div>
           </nav>
+
           <div id="main" class="container">
             <div id="rightMain" class="container-fluid">
               <div id="resultCounter" class="row">
@@ -183,6 +197,7 @@ $role = Role::from($user->role);
           </div>
         </div>
       </main>
+
       <!-- Forum script -->
       <script type="module" src="forum/forum.js"></script>
     </body>
