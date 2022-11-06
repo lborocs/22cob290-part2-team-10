@@ -64,6 +64,35 @@ function get_managed_staff(string $email): array
 
 <body>
   <main>
+    <div>
+      <div id="modal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Add Project</h5>
+              <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" id="close_modal1">
+              <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form id="project_info" onsubmit="append_project(this, event)">
+              <div class="modal-body">
+                <!--POP-UP FORM-->
+                <div class="form-group">
+                  <label class="control-label">Title</label>
+                  <div>
+                    <input type="text" class="form-control input-lg" name="title" id="title" placeholder="Project name" required>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="close_modal2">Close</button>
+                <button type="submit" class="btn btn-primary" id="add_project">Add Project</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
     <div id="page">
       <div id="sidebar">
         <div class="sidebar-header">
@@ -145,7 +174,7 @@ function get_managed_staff(string $email): array
               <div class="col-sm">
                 <h2>Projects</h2>
                 <div class="scrollbar">
-                  <ul class="list-group">
+                  <ul class="list-group" id="projects_list">
                     <?php
                     $projects = get_managed_projects($email);
 
@@ -163,7 +192,10 @@ function get_managed_staff(string $email): array
 
                       echo <<<HTML
                         <li class="list-group-item">
-                          $name
+                          <p
+                            contentEditable="true" style="color: black" class="project-name"
+                            onfocus="setCurrent(this.textContent)" onblur="validate(this)"
+                          >$name</p>
                           <div class="progress">
                             <div class="progress-bar progress-bar-striped bg-info progress-bar-animated"
                                  role="progressbar"
@@ -181,6 +213,9 @@ function get_managed_staff(string $email): array
                     ?>
                   </ul>
                 </div>
+                <button class="btn btn-danger mt-4 open_modal">
+                  Add Project
+                </button>
               </div>
 
               <div class="col-sm">
