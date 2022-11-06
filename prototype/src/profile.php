@@ -127,118 +127,140 @@ $role = Role::from($user->role);
       <br>
       <br>
 
-      <!-- TODO: make into a button that opens a modal -->
+
       <article>
         <h3>Change Password</h3>
-        <form id="change-pw-form" action="profile/change_password.php" method="POST" class="mt-6">
-          <!-- Email (hidden) -->
-          <div class="d-none">
-            <label for="email">Email</label>
-            <input type="email"
-                   value="<?= $email ?>"
-                   autocomplete="email"
-                   id="email"
-                   name="email"
-                   required
-                   >
-          </div>
+        <button id="change-pw" class="btn btn-dark" data-toggle="modal" data-target="#change-pw-modal">
+          Change
+        </button>
 
-          <!-- Current password -->
-          <div class="form-group row mb-3">
-            <label for="current" class="col-sm-3 col-form-label">Current Password</label>
-            <div class="col-sm-9 position-relative">
-              <div class="input-group has-validation">
-                <!-- value="TestPassword123!" -->
-                <input type="password"
-                       value=""
-                       autocomplete="current-password"
-                       class="form-control"
-                       id="current"
-                       name="current"
-                       placeholder="Enter current password"
-                       minlength="12"
-                       maxlength="64"
-                       >
-                <span class="input-group-text d-inline-block multiline-tooltip"
-                      tabindex="0"
-                      data-toggle="tooltip"
-                      title="At least 1 uppercase<br>At least 1 lowercase<br>At least 1 number<br>At least 1 special symbol"
-                      >
-                  <i class="bi bi-info-circle-fill"></i>
-                </span>
-                <button class="btn btn-outline-secondary toggle-password-btn" type="button">
-                  <i class="bi bi-eye-fill eye"></i>
+        <div id="change-pw-modal" class="modal" tabindex="-1" role="dialog">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <label class="modal-title">
+                  Change Password
+                </label>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span>&times;</span>
                 </button>
-                <div id="current-feedback" class="invalid-tooltip">
-                </div>
+              </div>
+
+              <div class="modal-body">
+                <form id="change-pw-form" action="profile/change_password.php" method="POST" class="mt-6">
+                  <!-- Email (hidden) -->
+                  <div class="d-none">
+                    <label for="email">Email</label>
+                    <input type="email"
+                           value="<?= $email ?>"
+                           autocomplete="email"
+                           id="email"
+                           name="email"
+                           required
+                           >
+                  </div>
+
+                  <!-- Current password -->
+                  <div class="form-group row mb-3">
+                    <label for="current" class="col-sm-3 col-form-label">Current Password</label>
+                    <div class="col-sm-9 position-relative">
+                      <div class="input-group has-validation">
+                        <!-- value="TestPassword123!" -->
+                        <input type="password"
+                               value=""
+                               autocomplete="current-password"
+                               class="form-control"
+                               id="current"
+                               name="current"
+                               placeholder="Enter current password"
+                               minlength="12"
+                               maxlength="64"
+                               required
+                               >
+                        <span class="input-group-text d-inline-block multiline-tooltip"
+                              tabindex="0"
+                              data-toggle="tooltip"
+                              title="At least 1 uppercase<br>At least 1 lowercase<br>At least 1 number<br>At least 1 special symbol"
+                              >
+                          <i class="bi bi-info-circle-fill"></i>
+                        </span>
+                        <button class="btn btn-outline-secondary toggle-password-btn" type="button">
+                          <i class="bi bi-eye-fill eye"></i>
+                        </button>
+                        <div id="current-feedback" class="invalid-tooltip">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- New password -->
+                  <div class="form-group row mb-3">
+                    <label for="newPassword" class="col-sm-3 col-form-label">New Password</label>
+                    <div class="col-sm-9 position-relative">
+                      <div class="input-group has-validation">
+                        <input type="password"
+                               value=""
+                               autocomplete="new-password"
+                               class="form-control"
+                               id="newPassword"
+                               name="newPassword"
+                               placeholder="Enter new password"
+                               minlength="12"
+                               maxlength="64"
+                               required
+                               >
+                        <button class="btn btn-outline-secondary toggle-password-btn" type="button">
+                          <i class="bi bi-eye-fill eye"></i>
+                        </button>
+                        <div id="newPassword-feedback" class="invalid-tooltip">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Confirm password -->
+                  <div class="form-group row mb-3">
+                    <label for="confirm" class="col-sm-3 col-form-label">Confirm Password</label>
+                    <div class="col-sm-9 position-relative">
+                      <div class="input-group has-validation">
+                        <input type="password"
+                               autocomplete="new-password"
+                               class="form-control"
+                               id="confirm"
+                               name="confirm"
+                               placeholder="Enter new password again"
+                               minlength="12"
+                               maxlength="64"
+                               required
+                               >
+                        <button class="btn btn-outline-secondary toggle-password-btn" type="button">
+                          <i class="bi bi-eye-fill eye"></i>
+                        </button>
+                        <div id="confirm-feedback" class="invalid-tooltip">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                <button type="submit" form="change-pw-form" class="btn btn-primary btn-sm">Change</button>
               </div>
             </div>
           </div>
-
-          <!-- New password -->
-          <div class="form-group row mb-3">
-            <label for="password" class="col-sm-3 col-form-label">New Password</label>
-            <div class="col-sm-9 position-relative">
-              <div class="input-group has-validation">
-                <input type="password"
-                       value=""
-                       autocomplete="new-password"
-                       class="form-control"
-                       id="password"
-                       name="password"
-                       placeholder="Enter new password"
-                       minlength="12"
-                       maxlength="64"
-                       >
-                <button class="btn btn-outline-secondary toggle-password-btn" type="button">
-                  <i class="bi bi-eye-fill eye"></i>
-                </button>
-                <div id="new-feedback" class="invalid-tooltip">
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Confirm password -->
-          <div class="form-group row mb-3">
-            <label for="confirm" class="col-sm-3 col-form-label">Confirm Password</label>
-            <div class="col-sm-9 position-relative">
-              <div class="input-group has-validation">
-                <input type="password"
-                       autocomplete="new-password"
-                       class="form-control"
-                       id="confirm"
-                       name="confirm"
-                       placeholder="Enter new password again"
-                       minlength="12"
-                       maxlength="64"
-                       >
-                <button class="btn btn-outline-secondary toggle-password-btn" type="button">
-                  <i class="bi bi-eye-fill eye"></i>
-                </button>
-                <div id="confirm-feedback" class="invalid-tooltip">
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Submit btn -->
-          <div class="form-group row">
-            <div class="d-flex justify-content-center">
-              <button id="change-pw-btn" type="submit" class="btn btn-secondary">Change</button>
-            </div>
-          </div>
-        </form>
+        </div>
       </article>
 
       <br>
 
       <article>
-        <h3>Invite employee</h3>
+        <h3>Invite Employee</h3>
         <button id="invite" class="btn btn-dark">Generate invite</button>
 
         <div id="invite-modal" class="modal" tabindex="-1" role="dialog">
-          <div class="modal-dialog" role="document">
+          <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
               <div class="modal-header">
                 <label for="invite-url" class="modal-title">

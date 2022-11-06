@@ -1,5 +1,5 @@
 import '../utils/redirect';
-import { copyToClipboard } from '../utils';
+import { copyToClipboard, formIsInvalid, validatePassword } from '../utils';
 
 // hardcoded, will have to get from backend I think
 function generateInviteToken(): string {
@@ -9,7 +9,7 @@ function generateInviteToken(): string {
 type ChangePwFormData = {
   email: string
   current: string
-  password: string
+  newPassword: string
   confirm: string
 };
 
@@ -33,16 +33,37 @@ $(() => {
     $eye.addClass(showing ? 'bi-eye-fill' : 'bi-eye-slash-fill');
   });
 
+  $('input[autocomplete*="password"]').on('input', function (e) {
+    $(this).removeClass('is-invalid');
+  });
+
   $('#change-pw-form').on('submit', function (e) {
     e.preventDefault();
 
     const $this = $(this);
 
     const formData = Object.fromEntries(new FormData(this as HTMLFormElement)) as ChangePwFormData;
+    const { email, current, newPassword, confirm } = formData;
 
-    // TODO: during request disable #change-pw-btn
-    // TODO: check passwords
-    // TODO: make ajax request
+    let pwError = validatePassword(current);
+    if (pwError) {
+      passwordError(pwError, 'current');
+    }
+
+    pwError = validatePassword(newPassword);
+    if (pwError) {
+      passwordError(pwError, 'newPassword');
+    }
+
+    if (newPassword !== confirm) {
+      passwordError('Passwords do not match!', 'confirm');
+    }
+
+    if (formIsInvalid($this))
+      return;
+
+    // TODO: make ajax request, if successful: & maybe show something next to change btn saying it was successful
+    $('#change-pw-modal').modal('hide');
   });
 
   $('#invite').on('click', function (e) {
@@ -68,3 +89,8 @@ $(() => {
       });
   });
 });
+
+function passwordError(error: string, id: string) {
+  $(`#${id}`).addClass('is-invalid');
+  $(`#${id}-feedback`).text(error);
+}
