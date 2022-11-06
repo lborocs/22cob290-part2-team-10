@@ -97,8 +97,11 @@ $(() => {
   }
 
   function process_tags(tags: string): string {
-    return tags.split(",")
-      .map((tag) => `<span class="badge bg-primary text-white mx-1">${tag.trim()}</span>`)
+    const trimmed_tags = tags.split(",").map(tag => tag.trim());
+
+    const unique_tags = [...new Set(trimmed_tags)];
+
+    return unique_tags.map((tag) => `<span class="badge bg-primary text-white mx-1">${tag}</span>`)
       .join("");
   }
 
