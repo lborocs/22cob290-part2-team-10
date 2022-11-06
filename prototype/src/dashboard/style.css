@@ -111,7 +111,7 @@ a:focus {
     background: var(--sidebar-hover);
 }
 
-#sidebar ul li.active>a,
+#sidebar ul li.active > a,
 a[aria-expanded="true"] {
     color: #fff;
     background: var(--tertiary-color);
@@ -194,7 +194,7 @@ a.article:hover {
     }
 }
 
-@media(max-width:992px) {
+@media (max-width: 992px) {
 }
 
 /* Dashboard */
@@ -241,4 +241,8 @@ img {
     /* display: inline-block; */
 
     font-size: large;
+}
+
+.progress-bar[style*="width: 100%"] {
+    background-color: #28a745 !important; /* bg-info */
 }

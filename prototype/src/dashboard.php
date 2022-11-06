@@ -25,7 +25,7 @@ function get_managed_projects(string $email): array
 {
   return array_map(fn($num): array => [
     'name' => "Project $num",
-    'completed' => rand(1, 100),
+    'completed' => rand(10, 100),
     'total' => 100,
   ], range(1, 9));
 }
@@ -185,7 +185,7 @@ function get_managed_staff(string $email): array
                         'total' => $total,
                       ] = $project;
 
-                      $progress = round(($completed / $total) * 100);
+                      $progress = floor(($completed / $total) * 100);
 
                       // TODO: make clickable so they can see more about the project, whether by changing page or
                       // by showing a modal
