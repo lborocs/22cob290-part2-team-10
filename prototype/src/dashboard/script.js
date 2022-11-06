@@ -18,10 +18,9 @@ $(document).ready(function () {
   function show_modal() {
     modal.css("display", "block");
   }
-  
+
   function hide_modal() {
     modal.css("display", "none");
-    modal.removeData();
   }
 
   $(".open_modal").on("click", show_modal);
@@ -34,8 +33,8 @@ var current_value_being_changed = "";
 
 function get_project_names() {
   const projectNames = $('.project-name').map(function() {
-    return $.trim($(this).text());
-  }).get(); 
+    return $(this).text();
+  }).get();
   return projectNames;
 }
 
@@ -55,7 +54,8 @@ window.validate = function validate(element) {
 window.append_project = function append_project(form, event) {
   event.preventDefault();
   const form_data = Object.fromEntries(new FormData(form));
-  const {title} = form_data;
+  let { title } = form_data;
+  title = title.trim();
   const modal = $("#modal");
 
   if (get_project_names().includes(title)) {
@@ -80,10 +80,10 @@ window.append_project = function append_project(form, event) {
       </div>
     </li>
     `);
+
+    form.reset();
+    modal.css("display", "none");
   }
-  form.reset();
-  modal.css("display", "none");
-  modal.removeData();
 };
 
 /*
@@ -97,7 +97,7 @@ TO DO:
 
 
 
-/* 
+/*
 
 * change text
 * check if item in project names with saem name, that isn't this current item
