@@ -7,11 +7,12 @@ var LoginFailedReason;
     LoginFailedReason["DOESNT_EXIST"] = "DOESNT_EXIST";
 })(LoginFailedReason || (LoginFailedReason = {}));
 $(() => {
-    $('#toggle-password').on('click', function (e) {
-        const $password = $('#password');
-        const showing = $password.prop('type') === 'text';
-        $password.prop('type', showing ? 'password' : 'text');
-        const $eye = $('#eye');
+    $('.toggle-password-btn').on('click', function (e) {
+        const $this = $(this);
+        const $pwField = $this.parent().find('input');
+        const showing = $pwField.prop('type') === 'text';
+        $pwField.prop('type', showing ? 'password' : 'text');
+        const $eye = $this.find('.eye');
         $eye.removeClass(showing ? 'bi-eye-slash-fill' : 'bi-eye-fill');
         $eye.addClass(showing ? 'bi-eye-fill' : 'bi-eye-slash-fill');
     });

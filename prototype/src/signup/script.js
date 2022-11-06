@@ -7,19 +7,12 @@ var SignupFailedReason;
     SignupFailedReason["USED_TOKEN"] = "USED_TOKEN";
 })(SignupFailedReason || (SignupFailedReason = {}));
 $(() => {
-    $('#toggle-password').on('click', function (e) {
-        const $password = $('#password');
-        const showing = $password.prop('type') === 'text';
-        $password.prop('type', showing ? 'password' : 'text');
-        const $eye = $('#eye');
-        $eye.removeClass(showing ? 'bi-eye-slash-fill' : 'bi-eye-fill');
-        $eye.addClass(showing ? 'bi-eye-fill' : 'bi-eye-slash-fill');
-    });
-    $('#toggle-confirm').on('click', function (e) {
-        const $confirm = $('#confirm');
-        const showing = $confirm.prop('type') === 'text';
-        $confirm.prop('type', showing ? 'password' : 'text');
-        const $eye = $('#confirm-eye');
+    $('.toggle-password-btn').on('click', function (e) {
+        const $this = $(this);
+        const $pwField = $this.parent().find('input');
+        const showing = $pwField.prop('type') === 'text';
+        $pwField.prop('type', showing ? 'password' : 'text');
+        const $eye = $this.find('.eye');
         $eye.removeClass(showing ? 'bi-eye-slash-fill' : 'bi-eye-fill');
         $eye.addClass(showing ? 'bi-eye-fill' : 'bi-eye-slash-fill');
     });

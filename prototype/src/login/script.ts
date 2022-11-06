@@ -23,14 +23,15 @@ type Credentials = {
 };
 
 $(() => {
-  $('#toggle-password').on('click', function (e) {
-    const $password = $('#password');
+  $('.toggle-password-btn').on('click', function (e) {
+    const $this = $(this);
+    const $pwField = $this.parent().find('input');
 
-    const showing = $password.prop('type') === 'text';
+    const showing = $pwField.prop('type') === 'text';
 
-    $password.prop('type', showing ? 'password' : 'text');
+    $pwField.prop('type', showing ? 'password' : 'text');
 
-    const $eye = $('#eye');
+    const $eye = $this.find('.eye');
     $eye.removeClass(showing ? 'bi-eye-slash-fill' : 'bi-eye-fill');
     $eye.addClass(showing ? 'bi-eye-fill' : 'bi-eye-slash-fill');
   });
