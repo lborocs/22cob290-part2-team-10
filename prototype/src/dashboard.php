@@ -78,7 +78,7 @@ function get_managed_staff(string $email): array
               <div class="modal-body">
                 <!--POP-UP FORM-->
                 <div class="form-group">
-                  <label class="control-label">Title</label>
+                  <label class="control-label" for="title">Title</label>
                   <div>
                     <input type="text" class="form-control input-lg" name="title" id="title" placeholder="Project name" required>
                   </div>
@@ -90,7 +90,7 @@ function get_managed_staff(string $email): array
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="close_modal2">Close</button>
-                <button type="submit" class="btn btn-primary" id="add_project">Add Project</button>
+                <button type="submit" class="btn btn-primary">Add Project</button>
               </div>
             </form>
           </div>
@@ -199,7 +199,7 @@ function get_managed_staff(string $email): array
                         <li class="list-group-item">
                           <p
                             contentEditable="true" style="color: black" class="project-name"
-                            onfocus="setCurrent(this.textContent)" onblur="validate(this)" onkeypress="validateKey(this, event)"
+                            onfocus="setCurrent(this.textContent)" onblur="validate(this)" onkeydown="validateKey(this, event)"
                           >$name</p>
                           <div class="progress">
                             <div class="progress-bar progress-bar-striped bg-info progress-bar-animated"
