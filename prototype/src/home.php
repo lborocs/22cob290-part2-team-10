@@ -1,5 +1,7 @@
 <?php
 
+// FIXME: template navbar here doesn't look the exact same as Projects and Profile
+
 if (!isset($_REQUEST['user'])) {
   // redirect to login page if not signed in
   header('Location: http://team10.sci-project.lboro.ac.uk/', true, 303);
