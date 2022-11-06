@@ -62,7 +62,8 @@ $(() => {
     if (formIsInvalid($this))
       return;
 
-    // TODO: make ajax request, if successful: & maybe show something next to change btn saying it was successful
+    // TODO: make ajax request, if successful: & show toast saying it was successful (BS 4.3+ - will need to upgrade)
+    // https://getbootstrap.com/docs/4.3/components/toasts/
     $('#change-pw-modal').modal('hide');
   });
 

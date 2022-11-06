@@ -127,7 +127,6 @@ $role = Role::from($user->role);
       <br>
       <br>
 
-
       <article>
         <h3>Change Password</h3>
         <button id="change-pw" class="btn btn-dark" data-toggle="modal" data-target="#change-pw-modal">
