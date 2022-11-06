@@ -225,3 +225,20 @@ img {
     margin-left: auto;
     margin-right: auto;
 }
+
+
+/*  */
+
+.text-avatar {
+    /* https://stackoverflow.com/a/58367383 */
+    width: 40px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    color: #fff;
+    line-height: 40px;
+    text-align: center;
+    background: #e2ba39; /* pick random color? or let user pick? */
+    /* display: inline-block; */
+
+    font-size: large;
+}

@@ -1,5 +1,7 @@
 <?php
 
+// FIXME: the template doesn't look the exact same as Home & Projects
+
 require "backend/users.php";
 
 $user_json = $_REQUEST['user'] ?? '{"email": "johndoe@make-it-all.co.uk", "role":"MANAGER"}';
@@ -79,7 +81,7 @@ function get_managed_staff(string $email): array
           </div>
 
           <!-- middle -->
-          <div class="mx-auto w-100 order-1 d-flex justify-content-between">
+          <div class="mx-auto w-100 order-1 d-flex">
             <!--
               have to repeat ToggleSidebar button because I couldn't find a way to make left & middle sticky
               while keeping right collapsable if that makes sense
@@ -108,10 +110,24 @@ function get_managed_staff(string $email): array
           <div id="navbarSupportedContent" class="navbar-collapse collapse w-100 order-2">
             <ul class="nav navbar-nav ml-auto">
               <li class="nav-item">
-                  <a class="nav-link" href="forum">Forum</a>
+                <a class="nav-link" href="home">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="staff_assignment">Staff Assignment</a>
+                <a class="nav-link" href="forum">Forum</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="projects?name=Project 7">Projects</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link">Dashboard</a>
+              </li>
+              <li class="nav-item">
+                <a href="profile">
+                  <span class="nav-link d-lg-none d-md-block">Profile</span>
+                  <span class="text-avatar d-none d-lg-block">
+                    <?= strtoupper($email[0]) ?>
+                  </span>
+                </a>
               </li>
             </ul>
           </div>
@@ -164,7 +180,6 @@ function get_managed_staff(string $email): array
               <div class="col-sm">
                 <h2>Staff Overview</h2>
                 <div class="scrollbar">
-
                   <ul class="list-group">
                     <?php
                     $staff = get_managed_staff($email);
@@ -185,6 +200,11 @@ function get_managed_staff(string $email): array
                     ?>
                   </ul>
                 </div>
+                <a href="staff_assignment">
+                  <button class="btn btn-danger mt-4">
+                    Staff Assignment
+                  </button>
+                </a>
               </div>
             </div>
           </div>
