@@ -33,14 +33,13 @@ $(() => {
 });
 
 function get_project_names() {
-  const projectNames = $('.project-name').map(function () {
+  return $('.project-name').map(function () {
     return $(this).text();
   }).get();
-  return projectNames;
 }
 
 
-let current_value_being_changed = "";
+let current_value_being_changed;
 
 window.setCurrent = function setCurrent(title) {
   current_value_being_changed = title;
@@ -82,10 +81,10 @@ window.append_project = function append_project(form, event) {
   } else {
     $("#projects_list").append(`
     <li class="list-group-item">
-    <p
-      contentEditable="true" style="color: black" class="project-name"
-      onfocus="setCurrent(this.textContent)" onblur="validate(this)" onkeydown="validateKey(this, event)"
-    >${title}</p>
+      <p
+        contentEditable="true" style="color: black" class="project-name"
+        onfocus="setCurrent(this.textContent)" onblur="validate(this)" onkeydown="validateKey(this, event)"
+      >${title}</p>
       <div class="progress">
         <div class="progress-bar progress-bar-striped bg-info progress-bar-animated"
             role="progressbar"
