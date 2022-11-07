@@ -1,0 +1,63 @@
+/*
+    DEMO STYLE
+*/
+
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+
+:root {
+    --primary-color: white;
+    --secondary-color: #d3d3d3;
+    --tertiary-color: #e2ba39;
+    --sidebar-text: black;
+    --sidebar-hover: #e2ba3990;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #fafafa;
+}
+
+#page {
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+}
+
+p {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 300;
+    font-size: 1.1em;
+    line-height: 1.7em;
+    color: #999;
+}
+
+a,
+a:hover,
+a:focus {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.4s;
+}
+
+
+.wrapper {
+    padding: 10px;
+    margin: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#assign_employee_btn, #save_changes_btn {
+    width: 10%;
+    height: 70px;
+    margin: 10px;
+}
+
+.control-btn-bottom {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}

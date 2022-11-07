@@ -1,0 +1,314 @@
+/*
+    DEMO STYLE
+*/
+
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+
+.navbar {
+    background-color: #1c1c1c;
+    justify-content: flex-end;
+    padding: 15px 25px;
+}
+
+.nav-link {
+    color: #aaaaaa;
+    height: 100%;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+    color: #a885da;
+}
+
+.nav-link > h5 {
+    margin: 0;
+}
+
+#navbarSupportedContent {
+    justify-content: flex-end;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+html {
+    background-color: #0e0e0e;
+    -ms-overflow-style: none;
+}
+
+/* ---------------------------------------------------
+    SIDEBAR STYLE
+  ----------------------------------------------------- */
+
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+#sidebar {
+    background: #0e0e0e;
+    min-width: 250px;
+    max-width: 250px;
+    transition: all 0.3s;
+}
+
+#sidebar.active {
+    margin-left: -250px;
+}
+
+.sidebar-header {
+    padding: 20px;
+}
+
+#company-logo {
+    width: 100%;
+}
+
+/* FIXME: has blue underline from a tag */
+.text-avatar {
+    /* https://stackoverflow.com/a/58367383 */
+    width: 40px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    color: #fff;
+    line-height: 40px;
+    text-align: center;
+    background: #e2ba39; /* pick random color? or let user pick? */
+    /* display: inline-block; */
+    font-size: large;
+}
+
+/* ---------------------------------------------------
+    CONTENT STYLE
+  ----------------------------------------------------- */
+
+#content {
+    background-color: #0e0e0e;
+    min-height: 100vh;
+    padding: 20px;
+    transition: all 0.3s;
+}
+
+
+/* ---------------------------------------------------
+    FORUM STYLE
+  ----------------------------------------------------- */
+
+.centeredDiv {
+    justify-content: center;
+    padding-top: 40px;
+    margin: 0;
+}
+
+.commentDiv {
+    margin: 0;
+    padding-bottom: 20px;
+}
+
+.commentCard {
+    background-color: #242424;
+    color: #a9a9a9;
+}
+
+.tagLine {
+    padding-top: 5px;
+    padding-bottom: 20px;
+}
+
+.tag {
+    background-color: #212121;
+    padding-block: 5px;
+    padding-inline: 13px;
+    font-size: small;
+    color: #aaaaaa;
+    border-radius: 20px;
+    text-decoration: none;
+    margin-inline: 2px;
+    cursor: pointer;
+}
+
+.tag:hover,
+.tag.active {
+    background-color: #6735ae;
+    color: #fff5f2;
+}
+
+.voteContainer {
+    display: grid;
+    justify-content: flex-end;
+    align-content: stretch;
+    text-align: center;
+}
+
+.voteArrow {
+    color: #a9a9a9;
+    cursor: pointer;
+}
+
+.voteArrow:hover,
+.voteArrow.active {
+    color: #6735ae;
+}
+
+.vote {
+    justify-content: center;
+}
+
+.modal-content {
+    border-radius: 10px;
+    background-color: #1c1c1c;
+    color: #767676;
+}
+
+.modal-header {
+    background-color: #141414;
+    padding-inline: 30px;
+    border-width: 0px;
+}
+
+.modal-body {
+    padding-top: 30px;
+    padding-inline: 30px;
+}
+
+.textField {
+    background-color: #212121;
+    outline-width: 0;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 7px;
+    color: #aaaaaa;
+    border-color: #303030;
+}
+
+.textField:focus {
+    border-color: #4a4a4a;
+}
+
+.topicDiv {
+    padding: 1px;
+    margin-block-end: 5px;
+}
+
+button,
+#sidebarCollapse {
+    background-color: #5a2e98;
+    color: #dddddd;
+    padding: 7px 15px;
+    border-radius: 5px;
+    outline: none;
+    border: none;
+}
+
+button:hover,
+#sidebarCollapse:hover {
+    background-color: #6735ae;
+    color: #fff5f2;
+}
+
+#postTitle {
+    width: 100%;
+    margin-bottom: 10px;
+    padding-inline: 15px;
+}
+
+#postText {
+    width: 100%;
+    margin-bottom: 10px;
+    padding-inline: 15px;
+}
+
+#post {
+    width: 100%;
+}
+
+#postTopicsText {
+    width: 100%;
+    padding-inline: 15px;
+    margin-bottom: 15px;
+}
+
+#leftMain {
+    padding: 0 5px;
+    height: 100%;
+    width: 100%;
+}
+
+#searchField {
+    height: 30px;
+    width: 90%;
+}
+
+#filterPrompt {
+    padding-inline: 0px;
+    color: #dddddd;
+}
+#filterOptions {
+    padding-inline: 0px;
+}
+
+#filterPrompt > p {
+    padding-inline: 0;
+}
+
+#newPost {
+    width: fit-content;
+}
+
+#resultCounter {
+    padding-top: 10px;
+    color: #a9a9a9;
+    margin: 0;
+}
+
+#commentBoard {
+    width: 100%;
+    overflow-y: scroll;
+    max-height: calc(100% - 50px);
+    -ms-overflow-style: none;
+    margin: 0;
+}
+
+#postText {
+    -ms-overflow-style: none;
+}
+
+#commentBoard::-webkit-scrollbar,
+#postText::-webkit-scrollbar,
+html::-webkit-scrollbar {
+    display: none;
+}
+
+#rightMain {
+    height: 100%;
+    padding-inline: 0px;
+}
+
+#postTopics {
+    margin: 0;
+}
+
+#main {
+    padding: 0px;
+    height: 85vh;
+}
+
+/* ----------------------------------------------------------------------------
+
+---------------------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left: auto;
+    }
+
+    #sidebar.active {
+        margin-left: -250px;
+    }
+
+    #sidebarCollapse span {
+        display: none;
+    }
+}

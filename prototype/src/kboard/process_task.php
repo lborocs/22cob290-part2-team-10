@@ -1,0 +1,4 @@
+<!doctype HTML>
+
+<html>
+</html>

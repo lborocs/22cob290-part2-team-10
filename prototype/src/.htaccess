@@ -1,2 +1,28 @@
 # https://www.geeksforgeeks.org/what-is-htaccess-file-in-php/
+
+# File and dir with same name: https://stackoverflow.com/a/2017766
+
+# fix importing folder/index.js (1)
 DirectoryIndex index.html index.php index.js
+
+# File and dir with same name: https://stackoverflow.com/a/19819301
+Options -MultiViews
+
+RewriteEngine On
+
+# Disable automatic directory detection
+# Prevent mod_dir from appending trailing slashes to directories
+DirectorySlash Off
+
+# Hide extension: https://stackoverflow.com/a/2017766
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.*)$ $1.php [L]
+
+RewriteCond %{REQUEST_FILENAME}\.html -f
+RewriteRule ^(.*)$ $1.html
+
+# fix importing folder/index.js (2) by changing 'folder' to 'folder/'
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteCond %{REQUEST_URI} !(/$|\.)
+RewriteRule (.*) %{REQUEST_URI}/ [R=302,L]
