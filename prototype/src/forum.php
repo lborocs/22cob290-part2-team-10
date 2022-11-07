@@ -1,20 +1,20 @@
 <?php
-  if (!isset($_REQUEST['user'])) {
-    // redirect to login page if not signed in
-    header('Location: http://team10.sci-project.lboro.ac.uk/', true, 303);
-    die();
-  }
 
-  // FIXME: isn't responsive (nav doesn't collapse)
-  // FIXME: add toggle sidebar that is in the other pages
+// FIXME: collapsing toolbar isn't animated when on mobile
 
-  require "backend/users.php";
+if (!isset($_REQUEST['user'])) {
+  // redirect to login page if not signed in
+  header('Location: http://team10.sci-project.lboro.ac.uk/', true, 303);
+  die();
+}
 
-  $user_json = $_REQUEST['user'];
-  $user = json_decode($user_json);
+require "backend/users.php";
 
-  $email = $user->email;
-  $role = Role::from($user->role);
+$user_json = $_REQUEST['user'];
+$user = json_decode($user_json);
+
+$email = $user->email;
+$role = Role::from($user->role);
 ?>
 
 <!DOCTYPE html>
@@ -66,10 +66,10 @@
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLabel">New Post</h5>
-              <i
+              <button
                 class="fa fa-times" class="btn-close" data-bs-dismiss="modal"
-                aria-label="Close" aria-hidden="true"
-              ></i>
+                aria-label="Close" type="button"
+              ></button>
             </div>
 
             <div class="modal-body">
