@@ -89,7 +89,7 @@ $invite_token = $_REQUEST['token'] ?? '';
               <i class="bi bi-info-circle-fill"></i>
             </span>
             <button class="btn btn-outline-secondary toggle-password-btn" type="button">
-              <i id="eye" class="bi bi-eye-fill"></i>
+              <i class="bi bi-eye-fill eye"></i>
             </button>
             <div id="password-feedback" class="invalid-tooltip">
             </div>
@@ -113,7 +113,7 @@ $invite_token = $_REQUEST['token'] ?? '';
                    maxlength="64"
                    >
             <button class="btn btn-outline-secondary toggle-password-btn" type="button">
-              <i id="confirm-eye" class="bi bi-eye-fill"></i>
+              <i class="bi bi-eye-fill eye"></i>
             </button>
             <div id="confirm-feedback" class="invalid-tooltip">
             </div>
