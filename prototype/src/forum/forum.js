@@ -155,7 +155,7 @@ function populate_postboard(filteredPosts) {
                   class="voteArrow ${state}"
                   onclick="flip_vote_parity(${i}, ${filteredPosts[i].index})"
                 >
-                  <h5><i class="fa fa-arrow-up" aria-hidden="true"></i></h5>
+                  <h5><i class="fa fa-arrow-up"></i></h5>
                 </a>
                 <p>${filteredPosts[i].votes}</P>
               </div>
@@ -222,7 +222,7 @@ window.add_tag_to_post = function add_tag_to_post() {
           <a class="tag newPostTag">
             ${topic} &emsp;
             <i
-              class="fa fa-times" aria-hidden="true"
+              class="fa fa-times"
               onclick="remove_tag('*${topic}')"
             ></i>
           </a>

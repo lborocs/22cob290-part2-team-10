@@ -89,7 +89,7 @@ function get_managed_staff(string $email): array
             <div class="modal-header">
               <h5 class="modal-title">Add Project</h5>
               <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" id="close_modal1">
-              <span aria-hidden="true">&times;</span>
+                <span>&times;</span>
               </button>
             </div>
             <form id="project_info" onsubmit="append_project(this, event)">

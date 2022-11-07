@@ -39,7 +39,7 @@ if ($role != Role::MANAGER) {
         <div class="modal-header">
           <h5 class="modal-title">Add employee</h5>
           <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" onclick="close_modal()">
-            <span aria-hidden="true">&times;</span>
+            <span>&times;</span>
           </button>
         </div>
         <div class="modal-body">

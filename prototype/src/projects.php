@@ -147,7 +147,7 @@ $emails = get_all_emails_not_left();
             <div class="modal-header">
               <h5 class="modal-title">Add task</h5>
               <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" id="close_modal1">
-                <span aria-hidden="true">&times;</span>
+                <span>&times;</span>
               </button>
             </div>
             <div class="modal-body">
