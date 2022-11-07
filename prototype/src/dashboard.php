@@ -239,8 +239,7 @@ function get_managed_staff(string $email): array
 
                       echo <<<HTML
                         <li class="list-group-item">
-                            $name
-                            <p contentEditable="true" style="color: black" class="project-name" onchange="update_project_name(this.text)" onblur="check_unique_project_name">$name</p>
+                          $name
                           <div class="progress">
                             <div class="progress-bar progress-bar-striped bg-info progress-bar-animated"
                                  role="progressbar"
