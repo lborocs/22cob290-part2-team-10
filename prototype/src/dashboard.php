@@ -23,22 +23,40 @@ if ($role != Role::MANAGER) {
 // hardcoded
 function get_managed_projects(string $email): array
 {
-  return array_map(fn($num): array => [
+  $result = array_map(fn($num): array => [
     'name' => "Project $num",
     'completed' => rand(10, 100),
     'total' => 100,
-  ], range(1, 9));
+  ], range(1, 8));
+
+  // for demo
+  array_unshift($result, [
+    'name' => 'Complete Project',
+    'completed' => 100,
+    'total' => 100,
+  ]);
+
+  return $result;
 }
 
 // hardcoded
 function get_managed_staff(string $email): array
 {
-  return array_map(fn($num): array => [
+  $result = array_map(fn($num): array => [
     'name' => "Subordinate $num", // we might want to their email not name?
     // idk what these numbers are meant to represent in the code that David did
     'idk1' => rand(10,100),
     'idk2' => 100,
-  ], range(1, 9));
+  ], range(1, 8));
+
+  // for demo
+  array_unshift($result, [
+    'name' => 'Productive employee',
+    'idk1' => 100,
+    'idk2' => 100,
+  ]);
+
+  return $result;
 }
 
 ?><!DOCTYPE html>
