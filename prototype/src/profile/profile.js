@@ -34,6 +34,9 @@ $(() => {
         if (pwError) {
             passwordError(pwError, 'newPassword');
         }
+        else if (current == newPassword) {
+            passwordError('Use a new password!', 'newPassword');
+        }
         if (newPassword !== confirm) {
             passwordError('Passwords do not match!', 'confirm');
         }
@@ -42,9 +45,12 @@ $(() => {
         // TODO: make ajax request, if successful: & show toast saying it was successful (BS 4.3+ - will need to upgrade)
         // https://getbootstrap.com/docs/4.3/components/toasts/
         $('#change-pw-modal').modal('hide');
+        $('#pw-changed-toast').toast('show');
     });
     $('#invite').on('click', function (e) {
-        const $inviteInput = $('#invite-url').removeClass('is-valid');
+        const $inviteInput = $('#invite-url')
+            .removeClass('is-valid')
+            .removeClass('is-invalid');
         const token = generateInviteToken();
         const url = `http://team10.sci-project.lboro.ac.uk/signup?token=${token}`;
         $inviteInput.attr('value', url);
@@ -55,7 +61,7 @@ $(() => {
         const url = $inviteInput.attr('value');
         copyToClipboard(url)
             .then(() => $inviteInput.addClass('is-valid'))
-            .catch((reason) => {
+            .catch((reason = 'Copy failed.') => {
             $inviteInput.addClass('is-invalid');
             $('#copy-failed').text(reason);
         });

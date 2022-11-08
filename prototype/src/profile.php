@@ -133,7 +133,7 @@ $role = Role::from($user->role);
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title">Change Password</h5>
+                <h1 class="modal-title fs-5">Change Password</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
 
@@ -242,6 +242,23 @@ $role = Role::from($user->role);
             </div>
           </div>
         </div>
+
+        <div class="toast-container position-fixed bottom-0 end-0 p-3">
+          <div id="pw-changed-toast" class="toast" role="status" aria-live="polite" aria-atomic="true">
+            <div class="toast-header">
+              <svg class="bd-placeholder-img rounded me-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
+                <!-- bg-success -->
+                <rect width="100%" height="100%" fill="#198754"></rect>
+              </svg>
+              <strong class="me-auto">Success</strong>
+              <small>Now</small>
+              <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+              Password changed.
+            </div>
+          </div>
+        </div>
       </article>
 
       <br>
@@ -254,7 +271,9 @@ $role = Role::from($user->role);
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <label for="invite-url" class="modal-title h5">Invite URL</label>
+                <h1 class="modal-title fs-5">
+                  <label for="invite-url">Invite URL</label>
+                </h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
 
