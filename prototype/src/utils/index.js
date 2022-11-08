@@ -30,12 +30,12 @@ export function validatePassword(password) {
         return PasswordError.NO_SPECIAL_SYMBOL;
     return null;
 }
-// TODO: idk if this works cos Chrome doesn't allow to copy from non-https
+// note: Chrome doesn't allow to copy from non-https (sci-project is http)
 // https://stackoverflow.com/a/65996386
 export function copyToClipboard(content) {
     // navigator clipboard api needs a secure context (https)
     if (navigator.clipboard && window.isSecureContext) {
-        // navigator clipboard api method'
+        // navigator clipboard api method
         return navigator.clipboard.writeText(content);
     }
     else {
