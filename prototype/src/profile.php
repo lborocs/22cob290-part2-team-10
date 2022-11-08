@@ -1,5 +1,7 @@
 <?php
 
+// converted to bootstrap 5
+
 if (!isset($_REQUEST['user'])) {
   // redirect to login page if not signed in
   header('Location: http://team10.sci-project.lboro.ac.uk/', true, 303);
@@ -13,8 +15,6 @@ $user = json_decode($user_json);
 
 $email = $user->email;
 $role = Role::from($user->role);
-
-// Using bootstrap 4.1 cos template was designed using it and i cba to convert it to 5
 
 // maybe just don't have a sidebar?
 
@@ -31,13 +31,9 @@ $role = Role::from($user->role);
   <!-- jQuery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 
-  <!-- Bootstrap CSS? I don't think this is doing anything cos of the one below, but leaving it in in case -->
+  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-
-  <!-- Bootstrap CSS CDN -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
-        integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 
   <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.min.css">
@@ -74,14 +70,14 @@ $role = Role::from($user->role);
           <i class="fas fa-align-left"></i>
           <span>Toggle Sidebar</span>
         </button>
-        <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse"
-                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+        <button class="btn btn-dark d-inline-block d-lg-none ms-auto" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
           <i class="fas fa-align-justify"></i>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="nav navbar-nav ml-auto">
+          <ul class="nav navbar-nav ms-auto">
             <li class="nav-item">
               <a class="nav-link" href="home">Home</a>
             </li>
@@ -129,7 +125,7 @@ $role = Role::from($user->role);
 
       <article>
         <h3>Change Password</h3>
-        <button id="change-pw" class="btn btn-dark" data-toggle="modal" data-target="#change-pw-modal">
+        <button id="change-pw" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#change-pw-modal">
           Change
         </button>
 
@@ -137,12 +133,8 @@ $role = Role::from($user->role);
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <label class="modal-title">
-                  Change Password
-                </label>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span>&times;</span>
-                </button>
+                <h5 class="modal-title">Change Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
 
               <div class="modal-body">
@@ -162,8 +154,8 @@ $role = Role::from($user->role);
                   <!-- Current password -->
                   <div class="form-group row mb-3">
                     <label for="current" class="col-sm-3 col-form-label">Current Password</label>
-                    <div class="col-sm-9 position-relative">
-                      <div class="input-group has-validation">
+                    <div class="col-sm-9">
+                      <div class="input-group has-validation position-relative">
                         <!-- value="TestPassword123!" -->
                         <input type="password"
                                value=""
@@ -178,7 +170,7 @@ $role = Role::from($user->role);
                                >
                         <span class="input-group-text d-inline-block multiline-tooltip"
                               tabindex="0"
-                              data-toggle="tooltip"
+                              data-bs-toggle="tooltip"
                               title="At least 1 uppercase<br>At least 1 lowercase<br>At least 1 number<br>At least 1 special symbol"
                               >
                           <i class="bi bi-info-circle-fill"></i>
@@ -195,8 +187,8 @@ $role = Role::from($user->role);
                   <!-- New password -->
                   <div class="form-group row mb-3">
                     <label for="newPassword" class="col-sm-3 col-form-label">New Password</label>
-                    <div class="col-sm-9 position-relative">
-                      <div class="input-group has-validation">
+                    <div class="col-sm-9">
+                      <div class="input-group has-validation position-relative">
                         <input type="password"
                                value=""
                                autocomplete="new-password"
@@ -220,8 +212,8 @@ $role = Role::from($user->role);
                   <!-- Confirm password -->
                   <div class="form-group row mb-3">
                     <label for="confirm" class="col-sm-3 col-form-label">Confirm Password</label>
-                    <div class="col-sm-9 position-relative">
-                      <div class="input-group has-validation">
+                    <div class="col-sm-9">
+                      <div class="input-group has-validation position-relative">
                         <input type="password"
                                autocomplete="new-password"
                                class="form-control"
@@ -244,7 +236,7 @@ $role = Role::from($user->role);
               </div>
 
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
                 <button type="submit" form="change-pw-form" class="btn btn-primary btn-sm">Change</button>
               </div>
             </div>
@@ -262,32 +254,23 @@ $role = Role::from($user->role);
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <label for="invite-url" class="modal-title">
-                  Invite URL
-                </label>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span>&times;</span>
-                </button>
+                <label for="invite-url" class="modal-title h5">Invite URL</label>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
 
               <div class="modal-body">
                 <div class="input-group has-validation">
                   <input id="invite-url" class="form-control" type="text" readonly>
-                  <div class="input-group-append">
-                    <button id="copy-invite-url" class="btn btn-outline-secondary" type="button">
-                      <i class="bi bi-clipboard2-fill"></i>
-                    </button>
-                  </div>
-                  <div class="valid-tooltip">
-                    Copied!
-                  </div>
-                  <div id="copy-failed" class="invalid-tooltip">
-                  </div>
+                  <button id="copy-invite-url" class="btn btn-outline-secondary" type="button">
+                    <i class="bi bi-clipboard2-fill"></i>
+                  </button>
+                  <div class="valid-feedback">Copied!</div>
+                  <div id="copy-failed" class="invalid-feedback"></div>
                 </div>
               </div>
 
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
               </div>
             </div>
           </div>
@@ -298,9 +281,7 @@ $role = Role::from($user->role);
       <br>
 
       <a href="/">
-        <button class="btn btn-danger">
-          Log out
-        </button>
+        <button class="btn btn-danger">Log out</button>
       </a>
 
     </div>
@@ -313,9 +294,7 @@ $role = Role::from($user->role);
         integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
         crossorigin="anonymous"></script>
 <!-- Bootstrap JS -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
-        integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
-        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script type="module" src="profile/profile.js"></script>
 </body>
