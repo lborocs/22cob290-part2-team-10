@@ -16,8 +16,6 @@ $user = json_decode($user_json);
 $email = $user->email;
 $role = Role::from($user->role);
 
-// maybe just don't have a sidebar?
-
 // TODO: text avatar colors (bg & text)
 
 ?><!DOCTYPE html>
@@ -62,6 +60,21 @@ $role = Role::from($user->role);
 
     <div class="components sidebar-list">
       <!-- TODO: decide what goes in sidebar -->
+      <p>Assigned Projects:</p>
+      <!-- FIXME: doesn't show as scrollable thingy -->
+      <ul class="list-unstyled components projects-list">
+        <?php
+        $projects = get_projects($email);
+
+        foreach ($projects as $project_name) {
+          echo <<<HTML
+            <li>
+              <a class="nav-link" href="projects?name=$project_name">$project_name</a>
+            </li>
+          HTML;
+        }
+        ?>
+      </ul>
     </div>
   </nav>
 
