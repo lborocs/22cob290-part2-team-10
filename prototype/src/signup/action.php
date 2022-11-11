@@ -13,6 +13,8 @@
 
 require "../credentials.php";
 require "../backend/users.php";
+require "../backend/token.php";
+require "../php/params.php";
 
 header('Content-Type: application/json');
 
@@ -49,14 +51,11 @@ function decrypt_token(string $token): ?string
   return null;
 }
 
-if (!isset($_REQUEST['email'])
-  || !isset($_REQUEST['password'])) {
-  error('Not all params set.');
-}
-
-$email = $_REQUEST['email'];
-$password = $_REQUEST['password'];
-$token = $_REQUEST['token'];
+require_and_unpack_params([
+  'email' => &$email,
+  'password' => &$password,
+  'token' => &$token,
+]);
 
 $exists = get_user($email) != null;
 

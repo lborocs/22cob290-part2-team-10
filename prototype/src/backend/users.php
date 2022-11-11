@@ -72,7 +72,7 @@ function add_user(string $email, string $password, string $token): void
   // add to database
 }
 
-function token_has_been_used(string $token): bool
+function change_password(string $email, string $password): void
 {
-  return $token == 'used-token';
+  // update database
 }

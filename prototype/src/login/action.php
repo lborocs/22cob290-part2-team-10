@@ -12,6 +12,7 @@
 
 require "../credentials.php";
 require "../backend/users.php";
+require "../php/params.php";
 
 header('Content-Type: application/json');
 
@@ -32,13 +33,10 @@ function error(string|ErrorReason $error): void
   ]));
 }
 
-if (!isset($_REQUEST['email'])
-  || !isset($_REQUEST['password'])) {
-  error('Not all params set.');
-}
-
-$email = $_REQUEST['email'];
-$password = $_REQUEST['password'];
+require_and_unpack_params([
+  'email' => &$email,
+  'password' => &$password,
+]);
 
 // TODO: check email domain
 // TODO: check password aligns with policy
