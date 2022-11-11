@@ -44,7 +44,7 @@ $(() => {
             return;
         changePassword($this, formData);
     });
-    $('#invite-btn').on('click', async function (e) {
+    $('#invite-modal').on('show.bs.modal', async function (e) {
         const $inviteInput = $('#invite-url')
             .removeClass('is-valid')
             .removeClass('is-invalid');
@@ -52,7 +52,6 @@ $(() => {
         const token = await getInviteToken(user.email);
         const url = `http://team10.sci-project.lboro.ac.uk/signup?token=${token}`;
         $inviteInput.attr('value', url);
-        $('#invite-modal').modal('show');
     });
     $('#copy-invite-url').on('click', function (e) {
         const $inviteInput = $('#invite-url');

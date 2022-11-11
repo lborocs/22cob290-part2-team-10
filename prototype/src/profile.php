@@ -18,6 +18,8 @@ $role = Role::from($user->role);
 
 // maybe just don't have a sidebar?
 
+// TODO: text avatar colors (bg & text)
+
 ?><!DOCTYPE html>
 <html lang="en" data-user='<?= $user_json ?>'>
 
@@ -107,7 +109,7 @@ $role = Role::from($user->role);
 
     <div class="container">
 
-      <article>
+      <section>
         <div class="row">
           <div class="col">
             <h3>Email</h3>
@@ -118,16 +120,14 @@ $role = Role::from($user->role);
             <span><?= $role->value ?></span>
           </div>
         </div>
-      </article>
+      </section>
 
       <br>
       <br>
 
-      <article>
+      <section>
         <h3>Change Password</h3>
-        <button id="change-pw" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#change-pw-modal">
-          Change
-        </button>
+        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#change-pw-modal">Change</button>
 
         <div id="change-pw-modal" class="modal" tabindex="-1" role="dialog">
           <div class="modal-dialog modal-dialog-centered" role="document">
@@ -258,13 +258,13 @@ $role = Role::from($user->role);
             </div>
           </div>
         </div>
-      </article>
+      </section>
 
       <br>
 
-      <article>
+      <section>
         <h3>Invite Employee</h3>
-        <button id="invite-btn" class="btn btn-dark">Generate invite</button>
+        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#invite-modal">Generate invite</button>
 
         <div id="invite-modal" class="modal" tabindex="-1" role="dialog">
           <div class="modal-dialog modal-dialog-centered" role="document">
@@ -293,7 +293,7 @@ $role = Role::from($user->role);
             </div>
           </div>
         </div>
-      </article>
+      </section>
 
       <br>
       <br>
