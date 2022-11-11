@@ -69,3 +69,13 @@ export function copyToClipboard(content: string): Promise<void> {
 export function formIsInvalid($form: JQuery): boolean {
   return $form.find('.is-invalid').length > 0;
 }
+
+export function objectToFormData(data: Record<string, string>): FormData {
+  const formData = new FormData();
+
+  for (let key in data) {
+    formData.append(key, data[key]);
+  }
+
+  return formData;
+}

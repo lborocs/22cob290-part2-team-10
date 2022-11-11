@@ -153,7 +153,7 @@ $role = Role::from($user->role);
 
                   <!-- Current password -->
                   <div class="form-group row mb-3">
-                    <label for="current" class="col-sm-3 col-form-label">Current Password</label>
+                    <label for="currentPassword" class="col-sm-3 col-form-label">Current Password</label>
                     <div class="col-sm-9">
                       <div class="input-group has-validation position-relative">
                         <!-- value="TestPassword123!" -->
@@ -161,8 +161,8 @@ $role = Role::from($user->role);
                                value=""
                                autocomplete="current-password"
                                class="form-control"
-                               id="current"
-                               name="current"
+                               id="currentPassword"
+                               name="currentPassword"
                                placeholder="Enter current password"
                                minlength="12"
                                maxlength="64"
@@ -178,7 +178,7 @@ $role = Role::from($user->role);
                         <button class="btn btn-outline-secondary toggle-password-btn" type="button">
                           <i class="bi bi-eye-fill eye"></i>
                         </button>
-                        <div id="current-feedback" class="invalid-tooltip">
+                        <div id="currentPassword-feedback" class="invalid-tooltip">
                         </div>
                       </div>
                     </div>
@@ -247,7 +247,6 @@ $role = Role::from($user->role);
           <div id="pw-changed-toast" class="toast" role="status" aria-live="polite" aria-atomic="true">
             <div class="toast-header">
               <svg class="bd-placeholder-img rounded me-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
-                <!-- bg-success -->
                 <rect width="100%" height="100%" fill="#198754"></rect>
               </svg>
               <strong class="me-auto">Success</strong>
@@ -265,7 +264,7 @@ $role = Role::from($user->role);
 
       <article>
         <h3>Invite Employee</h3>
-        <button id="invite" class="btn btn-dark">Generate invite</button>
+        <button id="invite-btn" class="btn btn-dark">Generate invite</button>
 
         <div id="invite-modal" class="modal" tabindex="-1" role="dialog">
           <div class="modal-dialog modal-dialog-centered" role="document">

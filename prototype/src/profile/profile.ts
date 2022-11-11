@@ -1,16 +1,25 @@
 import '../utils/redirect';
-import { copyToClipboard, formIsInvalid, validatePassword } from '../utils';
-
-// hardcoded, will have to get from backend I think
-function generateInviteToken(): string {
-  return 'a-token';
-}
+import {copyToClipboard, formIsInvalid, objectToFormData, validatePassword} from '../utils';
+import type { User } from '../types';
 
 type ChangePwFormData = {
   email: string
-  current: string
+  currentPassword: string
   newPassword: string
   confirm: string
+};
+
+type ChangePwFailedResponse = {
+  success: false
+  errorMessage: ChangePwFailedReason
+};
+
+enum ChangePwFailedReason {
+  WRONG_PASSWORD = 'WRONG_PASSWORD',
+}
+
+type ChangePwResponse = ChangePwFailedResponse | {
+  success: true
 };
 
 $(() => {
@@ -40,20 +49,20 @@ $(() => {
   $('#change-pw-form').on('submit', function (e) {
     e.preventDefault();
 
-    const $this = $(this);
+    const $this = $<HTMLFormElement>(<HTMLFormElement>this);
 
     const formData = Object.fromEntries(new FormData(this as HTMLFormElement)) as ChangePwFormData;
-    const { email, current, newPassword, confirm } = formData;
+    const { email, currentPassword, newPassword, confirm } = formData;
 
-    let pwError = validatePassword(current);
+    let pwError = validatePassword(currentPassword);
     if (pwError) {
-      passwordError(pwError, 'current');
+      passwordError(pwError, 'currentPassword');
     }
 
     pwError = validatePassword(newPassword);
     if (pwError) {
       passwordError(pwError, 'newPassword');
-    } else if (current == newPassword) {
+    } else if (currentPassword === newPassword) {
       passwordError('Use a new password!', 'newPassword');
     }
 
@@ -64,19 +73,17 @@ $(() => {
     if (formIsInvalid($this))
       return;
 
-    // TODO: make ajax request, if successful: & show toast saying it was successful (BS 4.3+ - will need to upgrade)
-    // https://getbootstrap.com/docs/4.3/components/toasts/
-    $('#change-pw-modal').modal('hide');
-
-    $('#pw-changed-toast').toast('show');
+    changePassword($this, formData);
   });
 
-  $('#invite').on('click', function (e) {
+  $('#invite-btn').on('click', async function (e) {
     const $inviteInput = $('#invite-url')
       .removeClass('is-valid')
       .removeClass('is-invalid');
 
-    const token = generateInviteToken();
+    const user: User = JSON.parse($('html').attr('data-user')!);
+
+    const token = await getInviteToken(user.email);
     const url = `http://team10.sci-project.lboro.ac.uk/signup?token=${token}`;
 
     $inviteInput.attr('value', url);
@@ -100,4 +107,51 @@ $(() => {
 function passwordError(error: string, id: string) {
   $(`#${id}`).addClass('is-invalid');
   $(`#${id}-feedback`).text(error);
+}
+
+function changePassword($form: JQuery<HTMLFormElement>, { email, currentPassword, newPassword }: ChangePwFormData) {
+  const $submitBtn = $(`button[form=${$form.attr('id')}]`).prop('disabled', true);
+
+  $.ajax({
+    url: $form.attr('action'),
+    type: $form.attr('method'),
+    data: { email, currentPassword, newPassword },
+    dataType: 'json',
+  })
+    .done((res: ChangePwResponse) => {
+      if (res.success) {
+        $('#change-pw-modal').modal('hide');
+        $('#pw-changed-toast').toast('show');
+      } else {
+        console.log(res);
+
+        switch (res.errorMessage) {
+          case ChangePwFailedReason.WRONG_PASSWORD:
+            passwordError('Incorrect password', 'currentPassword');
+            break;
+
+          default:
+            passwordError(res.errorMessage, 'currentPassword');
+        }
+      }
+    })
+    .fail((xhr, errorTextStatus, errorMessage) => {
+      alert(`${errorTextStatus}: ${errorMessage}`);
+    })
+    .always(() => {
+      $submitBtn.prop('disabled', false);
+    });
+}
+
+async function getInviteToken(email: string): Promise<string> {
+  type InviteTokenResponse = {
+    token: string
+  };
+
+  const res: InviteTokenResponse = await fetch('profile/generate_invite.php', {
+    method: 'POST',
+    body: objectToFormData({ email }),
+  }).then(res => res.json());
+
+  return res.token;
 }
