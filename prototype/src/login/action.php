@@ -10,7 +10,6 @@
  *  - errorMessage [ErrorReason, if success == false]
  */
 
-require "../credentials.php";
 require "../store/users.php";
 require "../php/params.php";
 require_once "../php/error.php";

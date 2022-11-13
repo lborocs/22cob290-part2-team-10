@@ -11,7 +11,6 @@
  *  - errorMessage [ErrorReason, if success == false]
  */
 
-require "../credentials.php";
 require "../store/users.php";
 require "../store/token.php";
 require "../php/params.php";
