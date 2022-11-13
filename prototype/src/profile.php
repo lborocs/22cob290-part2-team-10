@@ -66,7 +66,7 @@ $projects = get_project_names($email);
     <div class="components sidebar-list">
       <!-- TODO: decide what goes in sidebar -->
       <p>Assigned Projects:</p>
-      <ul class="list-unstyled components" id="projects-list">
+      <ul class="list-unstyled" id="projects-list">
         <?php
         foreach ($projects as $project_name) {
           echo <<<HTML

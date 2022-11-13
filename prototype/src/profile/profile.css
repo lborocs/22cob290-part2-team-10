@@ -75,12 +75,12 @@ a:focus {
     background: var(--secondary-color);
 }
 
-#sidebar ul.components {
+#sidebar .components {
     padding: 20px 0;
     /* border-bottom: 1px solid #47748b; */
 }
 
-#sidebar ul p {
+#sidebar .sidebar-list p {
     color: var(--sidebar-text);
     padding: 10px;
 }
