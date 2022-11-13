@@ -26,6 +26,40 @@ $can_add_projects = $is_manager || $role === Role::TEAM_LEADER;
 $projects = get_projects($email);
 $emails = get_all_emails_not_left();
 
+$project_data = get_project_data($name);
+
+function tag_to_html(string $tag): string
+{
+  return "<span class='badge bg-primary text-white mx-1'>$tag</span>";
+}
+
+/**
+ * @param Task $task
+ */
+function task_to_html(object $task): string
+{
+  $tags_html = array_map('tag_to_html', $task->tags);
+  $tags_html = join($tags_html);
+
+  return <<<HTML
+  <div class="card mb-3 drag_item" id="task-{$task->title}" draggable="true" ondragstart="drag(event)" >
+    <div class="card-body pt-3 pb-2">
+      <button type="button" class="close" aria-label="Close" onclick="remove_task(this)">
+        <span>&times;</span>
+      </button>
+      <div class="task-tags mb-2">
+        $tags_html
+      </div>
+      <p class="card-title task-title mb-1">{$task->title}</p>
+      <p class="card-text task-description mb-0 overflow-auto">{$task->description}</p>
+    </div>
+    <div class="card-footer text-muted text-center py-1">
+      {$task->assignee}
+    </div>
+  </div>
+  HTML;
+}
+
 ?><!DOCTYPE html>
 <html lang="en" data-user='<?= $user_json ?>'>
 
@@ -218,24 +252,11 @@ $emails = get_all_emails_not_left();
               <!-- List of tasks will be stored inside this card div
               ondragover event specifies where the dragged data can be dropped-->
               <div class="tasks scroll" id="to_do" ondrop="drop(event)" ondragover="allowDrop(event)">
-                <!--EXAMPLE TASK-->
-                <div class="card mb-3 drag_item" id="task-Title" draggable="true" ondragstart="drag(event)" >
-                  <div class="card-body pt-3 pb-2">
-                    <button type="button" class="close" aria-label="Close" onclick="remove_task(this)">
-                      <span>&times;</span>
-                    </button>
-                    <div class="task-tags mb-2">
-                      <span class="badge bg-primary text-white mx-1">Tag1</span>
-                      <span class="badge bg-primary text-white mx-1">Tag2</span>
-                    </div>
-                    <p class="card-title task-title mb-1">Title</p>
-                    <p class="card-text task-description mb-0 overflow-auto">You can move these elements between the containers</p>
-                  </div>
-                  <div class="card-footer text-muted text-center py-1">
-                    alice
-                  </div>
-                </div>
-                <!--END OF EXAMPLE TASK-->
+                <?php
+                foreach ($project_data->todo as $task) {
+                  echo task_to_html($task);
+                }
+                ?>
               </div>
             </div>
             <?php if ($can_add_projects): ?>
@@ -256,6 +277,11 @@ $emails = get_all_emails_not_left();
             </div>
             <div class="tasks-parent m-2">
               <div class="tasks scroll" id="in_progress" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <?php
+                foreach ($project_data->in_progress as $task) {
+                  echo task_to_html($task);
+                }
+                ?>
               </div>
             </div>
             <?php if ($can_add_projects): ?>
@@ -276,6 +302,11 @@ $emails = get_all_emails_not_left();
             </div>
             <div class="tasks-parent m-2">
               <div class="tasks scroll" id="code_review" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <?php
+                foreach ($project_data->code_review as $task) {
+                  echo task_to_html($task);
+                }
+                ?>
               </div>
             </div>
             <?php if ($can_add_projects): ?>
@@ -296,6 +327,11 @@ $emails = get_all_emails_not_left();
             </div>
             <div class="tasks-parent m-2">
               <div class="tasks scroll" id="completed" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <?php
+                foreach ($project_data->completed as $task) {
+                  echo task_to_html($task);
+                }
+                ?>
               </div>
             </div>
           </div>

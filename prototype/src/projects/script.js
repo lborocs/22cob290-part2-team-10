@@ -58,6 +58,7 @@ $(() => {
             return;
         // TODO: call to backend to add task
         const taskContainerId = modal.attr("data-id");
+        // maybe change this to get the task HTML from backend?
         $(`#${taskContainerId}`).append(`
     <div class="card mb-3 drag_item" id="task-${title}" draggable="true" ondragstart="drag(event)" >
       <div class="card-body pt-3 pb-2">
