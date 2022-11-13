@@ -7,7 +7,7 @@
  *  - token [string]
  */
 
-require "../backend/token.php";
+require "../store/token.php";
 require "../php/params.php";
 require_once "../php/error.php";
 
