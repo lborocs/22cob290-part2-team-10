@@ -139,7 +139,7 @@ $staff = get_managed_staff($email);
                 <a class="nav-link" href="forum">Forum</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="projects?name=Project 7">Projects</a>
+                <a class="nav-link" href="projects">Projects</a>
               </li>
               <li class="nav-item active">
                 <a class="nav-link">Dashboard</a>

@@ -20,13 +20,10 @@ $role = Role::from($user->role);
 $is_manager = $role === Role::MANAGER;
 $can_add_projects = $is_manager || $role === Role::TEAM_LEADER;
 
-// TODO: if project name isn't set, dont show kboard, instad show text to select a project
-// TODO: if project isnt in projectlist, show error page, or just show same as when name isnt set
-
 $projects = get_project_names($email);
 $emails = get_all_emails_not_left();
 
-$project_data = get_project_data($name);
+$no_project = $name === null || !in_array($name, $projects);
 
 function tag_to_html(string $tag): string
 {
@@ -142,7 +139,7 @@ function task_to_html(object $task): string
               <a class="nav-link" href="forum">Forum</a>
             </li>
             <li class="nav-item active">
-              <a class="nav-link">Projects</a>
+              <a class="nav-link" <?= $no_project ? '' : 'href="projects"' ?>>Projects</a>
             </li>
             <?php if ($is_manager): ?>
               <li class="nav-item">
@@ -163,6 +160,16 @@ function task_to_html(object $task): string
       </div>
     </nav>
 
+    <?php
+    if ($no_project) {
+      echo <<<HTML
+        <div class="h-75 d-flex align-items-center justify-content-center">
+          <h2>Please select a project from the sidebar</h2>
+        </div>
+      HTML;
+    } else {
+      $project_data = get_project_data($name);
+    ?>
     <!-- KBOARD -->
     <div class="container">
       <h3><?= $name ?></h3>
@@ -339,6 +346,7 @@ function task_to_html(object $task): string
 
       </div>
     </div>
+    <?php } ?>
   </div>
 
 </main>

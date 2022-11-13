@@ -103,7 +103,7 @@ $projects = get_project_names($email);
               <a class="nav-link" href="forum">Forum</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="projects?name=Project 7">Projects</a>
+              <a class="nav-link" href="projects">Projects</a>
             </li>
             <?php if ($is_manager): ?>
               <li class="nav-item">

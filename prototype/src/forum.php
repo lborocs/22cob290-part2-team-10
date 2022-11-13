@@ -165,7 +165,7 @@ $role = Role::from($user->role);
                   <a class="nav-link active">Forum</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="projects?name=Project 7">
+                  <a class="nav-link" href="projects">
                     Projects
                   </a>
                 </li>
