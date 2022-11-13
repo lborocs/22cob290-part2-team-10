@@ -9,18 +9,13 @@ if (!isset($_REQUEST['user'])) {
 }
 
 require "store/users.php";
+require "store/projects.php";
 
 $user_json = $_REQUEST['user'];
 $user = json_decode($user_json);
 
 $email = $user->email;
 $role = Role::from($user->role);
-
-// hardcoded
-function get_projects(string $email): array
-{
-  return array_map(fn($num): string => 'Project ' . $num, range(1, 15));
-}
 
 // TODO: get_tasks - get the user's personal todo list:
 //  assoc_array

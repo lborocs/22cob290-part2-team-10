@@ -9,6 +9,7 @@ if (!isset($_REQUEST['user'])) {
 }
 
 require "store/users.php";
+require "store/projects.php";
 
 $user_json = $_REQUEST['user'];
 $user = json_decode($user_json);

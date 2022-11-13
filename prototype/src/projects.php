@@ -7,6 +7,7 @@ if (!isset($_REQUEST['user'])) {
 }
 
 require "store/users.php";
+require "store/projects.php";
 
 $name = $_REQUEST['name'] ?? null;
 
@@ -23,12 +24,6 @@ $can_add_projects = $role == Role::MANAGER || $role == Role::TEAM_LEADER;
 // TODO: extract functions like get_projects into file(s) that will be imported so not repeating self
 
 // TODO: if project isnt in projectlist, show error page, or just show same as when name isnt set
-
-// hardcoded
-function get_projects(string $email): array
-{
-  return array_map(fn($num): string => "Project $num", range(1, 15));
-}
 
 $emails = get_all_emails_not_left();
 
