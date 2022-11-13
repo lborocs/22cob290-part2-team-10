@@ -14,7 +14,7 @@ $user = json_decode($user_json);
 $email = $user->email;
 $role = Role::from($user->role);
 
-if ($role != Role::MANAGER) {
+if ($role !== Role::MANAGER) {
   die("You do not have access to this page.");
 }
 

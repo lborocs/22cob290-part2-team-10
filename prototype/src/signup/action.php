@@ -65,7 +65,7 @@ if ($exists) {
 }
 
 $inviter = decrypt_token($token);
-if (is_null($inviter)) {
+if ($inviter === null) {
   error(ErrorReason::INVALID_TOKEN);
 }
 

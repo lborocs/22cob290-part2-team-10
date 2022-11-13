@@ -31,11 +31,11 @@ require_and_unpack_params([
 
 $user = get_user($email);
 
-if (is_null($user)) {
+if ($user === null) {
   error(ErrorReason::DOESNT_EXIST);
 }
 
-if ($user['password'] != $currentPassword) {
+if ($currentPassword !== $user['password']) {
   error(ErrorReason::WRONG_PASSWORD);
 }
 

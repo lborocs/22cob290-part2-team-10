@@ -40,11 +40,11 @@ if (!Util::meets_password_policy($password)) {
 
 $user = get_user($email);
 
-if (is_null($user)) {
+if ($user === null) {
   error(ErrorReason::DOESNT_EXIST);
 }
 
-if ($password != $user['password']) {
+if ($password !== $user['password']) {
   error(ErrorReason::WRONG_PASSWORD);
 }
 
