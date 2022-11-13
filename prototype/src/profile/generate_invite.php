@@ -9,20 +9,13 @@
 
 require "../backend/token.php";
 require "../php/params.php";
+require_once "../php/error.php";
+
+header('Content-Type: application/json');
 
 enum ErrorReason: string
 {
   case UNKNOWN = 'UNKNOWN';
-}
-
-function error(string|ErrorReason $error): void
-{
-  $errorMessage = is_string($error) ? $error : $error->value;
-
-  exit(json_encode([
-    'success' => false,
-    'errorMessage' => $errorMessage,
-  ]));
 }
 
 require_and_unpack_params([

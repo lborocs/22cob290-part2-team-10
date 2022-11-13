@@ -13,6 +13,7 @@
 require "../credentials.php";
 require "../backend/users.php";
 require "../php/params.php";
+require_once "../php/error.php";
 
 header('Content-Type: application/json');
 
@@ -20,16 +21,6 @@ enum ErrorReason: string
 {
   case WRONG_PASSWORD = 'WRONG_PASSWORD';
   case DOESNT_EXIST = 'DOESNT_EXIST';
-}
-
-function error(string|ErrorReason $error): void
-{
-  $errorMessage = is_string($error) ? $error : $error->value;
-
-  exit(json_encode([
-    'success' => false,
-    'errorMessage' => $errorMessage,
-  ]));
 }
 
 require_and_unpack_params([
