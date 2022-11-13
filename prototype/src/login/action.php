@@ -14,14 +14,15 @@ require "../credentials.php";
 require "../store/users.php";
 require "../php/params.php";
 require_once "../php/error.php";
+require_once "../php/util.php";
 
 header('Content-Type: application/json');
 
-// LEFT_COMPANY?
 enum ErrorReason: string
 {
   case WRONG_PASSWORD = 'WRONG_PASSWORD';
   case DOESNT_EXIST = 'DOESNT_EXIST';
+  case BAD_CREDENTIALS = 'BAD_CREDENTIALS';
 }
 
 require_and_unpack_params([
@@ -29,8 +30,13 @@ require_and_unpack_params([
   'password' => &$password,
 ]);
 
-// TODO: check email domain
-// TODO: check password aligns with policy
+if (!Util::is_make_it_all_email($email)) {
+  error(ErrorReason::BAD_CREDENTIALS);
+}
+
+if (!Util::meets_password_policy($password)) {
+  error(ErrorReason::BAD_CREDENTIALS);
+}
 
 $user = get_user($email);
 

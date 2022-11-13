@@ -67,6 +67,7 @@ function signup($form, { token, email, password }) {
                     break;
                 default: // shouldn't happen
                     emailError(res.errorMessage);
+                    passwordError('');
             }
         }
     })
@@ -83,7 +84,12 @@ function emailError(error) {
 }
 function passwordError(error, id = 'password') {
     $(`#${id}`).addClass('is-invalid');
-    $(`#${id}-feedback`).text(error);
+    if (error) {
+        $(`#${id}-feedback`).show().text(error);
+    }
+    else {
+        $(`#${id}-feedback`).hide();
+    }
 }
 function tokenError(error) {
     $('#token').addClass('is-invalid');

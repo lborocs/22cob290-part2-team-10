@@ -16,6 +16,7 @@ require "../store/users.php";
 require "../store/token.php";
 require "../php/params.php";
 require_once "../php/error.php";
+require_once "../php/util.php";
 
 header('Content-Type: application/json');
 
@@ -24,6 +25,7 @@ enum ErrorReason: string
   case ALREADY_EXIST = 'ALREADY_EXIST';
   case INVALID_TOKEN = 'INVALID_TOKEN';
   case USED_TOKEN = 'USED_TOKEN';
+  case BAD_CREDENTIALS = 'BAD_CREDENTIALS';
 }
 
 // hardcoded
@@ -48,7 +50,15 @@ require_and_unpack_params([
   'token' => &$token,
 ]);
 
-$exists = get_user($email) != null;
+if (!Util::is_make_it_all_email($email)) {
+  error(ErrorReason::BAD_CREDENTIALS);
+}
+
+if (!Util::meets_password_policy($password)) {
+  error(ErrorReason::BAD_CREDENTIALS);
+}
+
+$exists = get_user($email) !== null;
 
 if ($exists) {
   error(ErrorReason::ALREADY_EXIST);

@@ -10,6 +10,7 @@ type LoginFailedResponse = {
 enum LoginFailedReason {
   WRONG_PASSWORD = 'WRONG_PASSWORD',
   DOESNT_EXIST = 'DOESNT_EXIST',
+  BAD_CREDENTIALS = 'BAD_CREDENTIALS', // will only happen if client side validation doesn't happen
 }
 
 type LoginResponse = LoginFailedResponse | {
@@ -96,8 +97,8 @@ function login($form: JQuery<HTMLElement>, { email }: Credentials) {
             break;
 
           default: // shouldn't happen
-            emailError('');
-            passwordError(res.errorMessage);
+            emailError(res.errorMessage);
+            passwordError('');
         }
       }
     })
@@ -116,5 +117,9 @@ function emailError(error: string) {
 
 function passwordError(error: string) {
   $('#password').addClass('is-invalid');
-  $('#password-feedback').text(error);
+  if (error) {
+    $(`#password-feedback`).show().text(error);
+  } else {
+    $(`#password-feedback`).hide();
+  }
 }

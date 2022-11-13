@@ -1,6 +1,5 @@
 import '../utils/redirect';
 
-// TODO: in AddTask, assign to employee in project
 // TODO LATER: impl hover over task to edit (open modal)
 
 type AddTaskFormData = {

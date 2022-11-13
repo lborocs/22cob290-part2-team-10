@@ -104,6 +104,7 @@ function signup($form: JQuery, { token, email, password }: Credentials) {
 
           default: // shouldn't happen
             emailError(res.errorMessage);
+            passwordError('');
         }
       }
     })
@@ -122,7 +123,11 @@ function emailError(error: string) {
 
 function passwordError(error: string, id: string = 'password') {
   $(`#${id}`).addClass('is-invalid');
-  $(`#${id}-feedback`).text(error);
+  if (error) {
+    $(`#${id}-feedback`).show().text(error);
+  } else {
+    $(`#${id}-feedback`).hide();
+  }
 }
 
 function tokenError(error: string) {

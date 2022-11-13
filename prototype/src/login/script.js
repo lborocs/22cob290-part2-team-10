@@ -5,6 +5,7 @@ var LoginFailedReason;
 (function (LoginFailedReason) {
     LoginFailedReason["WRONG_PASSWORD"] = "WRONG_PASSWORD";
     LoginFailedReason["DOESNT_EXIST"] = "DOESNT_EXIST";
+    LoginFailedReason["BAD_CREDENTIALS"] = "BAD_CREDENTIALS";
 })(LoginFailedReason || (LoginFailedReason = {}));
 $(() => {
     $('.toggle-password-btn').on('click', function (e) {
@@ -63,8 +64,8 @@ function login($form, { email }) {
                     passwordError('Incorrect password');
                     break;
                 default: // shouldn't happen
-                    emailError('');
-                    passwordError(res.errorMessage);
+                    emailError(res.errorMessage);
+                    passwordError('');
             }
         }
     })
@@ -81,5 +82,10 @@ function emailError(error) {
 }
 function passwordError(error) {
     $('#password').addClass('is-invalid');
-    $('#password-feedback').text(error);
+    if (error) {
+        $(`#password-feedback`).show().text(error);
+    }
+    else {
+        $(`#password-feedback`).hide();
+    }
 }
