@@ -23,7 +23,7 @@ $can_add_projects = $is_manager || $role === Role::TEAM_LEADER;
 // TODO: if project name isn't set, dont show kboard, instad show text to select a project
 // TODO: if project isnt in projectlist, show error page, or just show same as when name isnt set
 
-$projects = get_projects($email);
+$projects = get_project_names($email);
 $emails = get_all_emails_not_left();
 
 $project_data = get_project_data($name);

@@ -44,7 +44,7 @@ class ProjectData
 /**
  * @return string[]
  */
-function get_projects(string $email, int $count = 15): array
+function get_project_names(string $email, int $count = 15): array
 {
   return array_map(fn($num): string => 'Project ' . $num, range(1, 15));
 }

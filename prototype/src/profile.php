@@ -19,7 +19,7 @@ $role = Role::from($user->role);
 
 $is_manager = $role === Role::MANAGER;
 
-$projects = get_projects($email);
+$projects = get_project_names($email);
 
 // TODO: text avatar colors (bg & text)
 

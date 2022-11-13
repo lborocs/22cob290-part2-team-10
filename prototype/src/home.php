@@ -17,7 +17,7 @@ $user = json_decode($user_json);
 $email = $user->email;
 $role = Role::from($user->role);
 
-$projects = get_projects($email);
+$projects = get_project_names($email);
 
 // TODO: get_tasks - get the user's personal todo list:
 //  assoc_array
