@@ -143,11 +143,11 @@ function changePassword($form: JQuery<HTMLFormElement>, { email, currentPassword
 }
 
 async function getInviteToken(email: string): Promise<string> {
-  type InviteTokenResponse = {
+  type GenerateInviteResponse = {
     token: string
   };
 
-  const res: InviteTokenResponse = await fetch('profile/generate_invite.php', {
+  const res: GenerateInviteResponse = await fetch('profile/generate_invite.php', {
     method: 'POST',
     body: objectToFormData({ email }),
   }).then(res => res.json());
