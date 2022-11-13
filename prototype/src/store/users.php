@@ -37,6 +37,9 @@ $staff = [
   ],
 ];
 
+/**
+ * @return string[]
+ */
 function get_all_emails(): array
 {
   global $staff;
@@ -44,7 +47,12 @@ function get_all_emails(): array
   return array_map(fn($emp): string => $emp['email'], $staff);
 }
 
-// TODO: rename?
+/**
+ * Returns the emails of all staff still employed by the company
+ * TODO: rename?
+ *
+ * @return string[]
+ */
 function get_all_emails_not_left(): array
 {
   global $staff;

@@ -17,6 +17,8 @@ $user = json_decode($user_json);
 $email = $user->email;
 $role = Role::from($user->role);
 
+$projects = get_projects($email);
+
 // TODO: text avatar colors (bg & text)
 
 ?><!DOCTYPE html>
@@ -65,8 +67,6 @@ $role = Role::from($user->role);
       <!-- FIXME: doesn't show as scrollable thingy -->
       <ul class="list-unstyled components projects-list">
         <?php
-        $projects = get_projects($email);
-
         foreach ($projects as $project_name) {
           echo <<<HTML
             <li>

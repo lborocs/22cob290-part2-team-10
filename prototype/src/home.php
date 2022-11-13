@@ -17,6 +17,8 @@ $user = json_decode($user_json);
 $email = $user->email;
 $role = Role::from($user->role);
 
+$projects = get_projects($email);
+
 // TODO: get_tasks - get the user's personal todo list:
 //  assoc_array
 //    todo => array
@@ -73,8 +75,6 @@ TODO: replace use of data-user with setting of js object & using Object.freeze
         <p>Assigned Projects:</p>
         <div id="projects-list">
           <?php
-          $projects = get_projects($email);
-
           // none active cos this is showing the user's ToDo list
           foreach ($projects as $project_name) {
             $project_html = <<<HTML

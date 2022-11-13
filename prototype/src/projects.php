@@ -25,6 +25,7 @@ $can_add_projects = $role == Role::MANAGER || $role == Role::TEAM_LEADER;
 
 // TODO: if project isnt in projectlist, show error page, or just show same as when name isnt set
 
+$projects = get_projects($email);
 $emails = get_all_emails_not_left();
 
 ?><!DOCTYPE html>
@@ -69,8 +70,6 @@ $emails = get_all_emails_not_left();
       <p><?= $role == Role::MANAGER ? 'Managed' : 'Assigned' ?> Projects:</p>
       <div id="projects-list">
         <?php
-        $projects = get_projects($email);
-
         foreach ($projects as $project_name) {
           $li_class = '';
 
