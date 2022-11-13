@@ -6,7 +6,7 @@ function require_and_unpack_params(array $params): void
 {
   foreach ($params as $param => &$variable) {
     if (!isset($_REQUEST[$param])) {
-      http_response_code(300);
+      http_response_code(400);
       error('Not all params set.');
     }
 
