@@ -9,6 +9,7 @@ if (!isset($_REQUEST['user'])) {
 }
 
 require "store/users.php";
+require "store/manager.php";
 
 $user_json = $_REQUEST['user'];
 $user = json_decode($user_json);
@@ -20,44 +21,8 @@ if ($role != Role::MANAGER) {
   die("You do not have access to this page.");
 }
 
-// hardcoded
-function get_managed_projects(string $email): array
-{
-  $result = array_map(fn($num): array => [
-    'name' => "Project $num",
-    'completed' => rand(10, 100),
-    'total' => 100,
-  ], range(1, 8));
-
-  // for demo
-  array_unshift($result, [
-    'name' => 'Complete Project',
-    'completed' => 100,
-    'total' => 100,
-  ]);
-
-  return $result;
-}
-
-// hardcoded
-function get_managed_staff(string $email): array
-{
-  $result = array_map(fn($num): array => [
-    'name' => "Subordinate $num", // we might want to their email not name?
-    // idk what these numbers are meant to represent in the code that David did
-    'idk1' => rand(10,100),
-    'idk2' => 100,
-  ], range(1, 8));
-
-  // for demo
-  array_unshift($result, [
-    'name' => 'Productive employee',
-    'idk1' => 100,
-    'idk2' => 100,
-  ]);
-
-  return $result;
-}
+$projects = get_managed_projects($email);
+$staff = get_managed_staff($email);
 
 ?><!DOCTYPE html>
 <html lang="en" data-user='<?= $user_json ?>'>
@@ -199,8 +164,6 @@ function get_managed_staff(string $email): array
                 <div class="scrollbar">
                   <ul class="list-group" id="projects_list">
                     <?php
-                    $projects = get_managed_projects($email);
-
                     foreach ($projects as $project) {
                       [
                         'name' => $name,
@@ -246,14 +209,14 @@ function get_managed_staff(string $email): array
                 <div class="scrollbar">
                   <ul class="list-group">
                     <?php
-                    $staff = get_managed_staff($email);
-
                     foreach ($staff as $employee) {
-                      $name = $employee['name'];
-                      $num1 = $employee['idk1'];
-                      $num2 = $employee['idk2'];
+                      [
+                        'name' => $name,
+                        'completed' => $num1,
+                        'total' => $num2,
+                      ] = $employee;
 
-                      $staffprogress = floor(($num1/$num2)*100);
+                      $staffprogress = floor(($num1 / $num2) * 100);
 
                       echo <<<HTML
                         <li class="list-group-item">
