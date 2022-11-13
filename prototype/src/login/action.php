@@ -13,6 +13,7 @@
 require "../credentials.php";
 require "../backend/users.php";
 require "../php/params.php";
+require_once "../php/error.php";
 
 header('Content-Type: application/json');
 
@@ -23,16 +24,6 @@ enum ErrorReason: string
   case DOESNT_EXIST = 'DOESNT_EXIST';
 }
 
-function error(string|ErrorReason $error): void
-{
-  $errorMessage = is_string($error) ? $error : $error->value;
-
-  exit(json_encode([
-    'success' => false,
-    'errorMessage' => $errorMessage,
-  ]));
-}
-
 require_and_unpack_params([
   'email' => &$email,
   'password' => &$password,
@@ -41,22 +32,19 @@ require_and_unpack_params([
 // TODO: check email domain
 // TODO: check password aligns with policy
 
-$response = [
-  'success' => false,
-];
-
 $user = get_user($email);
 
-if ($user) {
-  $correct_password = $password == $user['password'];
-  if ($correct_password) {
-    $response['success'] = true;
-    $response['role'] = $user['role']->value;
-  } else {
-    $response['errorMessage'] = ErrorReason::WRONG_PASSWORD->value;
-  }
-} else {
-  $response['errorMessage'] = ErrorReason::DOESNT_EXIST->value;
+if (is_null($user)) {
+  error(ErrorReason::DOESNT_EXIST);
 }
+
+if ($password != $user['password']) {
+  error(ErrorReason::WRONG_PASSWORD);
+}
+
+$response = [
+  'success' => true,
+  'role' => $user['role']->value,
+];
 
 echo json_encode($response);

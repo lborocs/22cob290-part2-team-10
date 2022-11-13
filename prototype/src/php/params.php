@@ -1,5 +1,7 @@
 <?php
 
+require_once "error.php";
+
 function require_and_unpack_params(array $params): void
 {
   foreach ($params as $param => &$variable) {

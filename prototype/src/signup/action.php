@@ -15,6 +15,7 @@ require "../credentials.php";
 require "../backend/users.php";
 require "../backend/token.php";
 require "../php/params.php";
+require_once "../php/error.php";
 
 header('Content-Type: application/json');
 
@@ -23,16 +24,6 @@ enum ErrorReason: string
   case ALREADY_EXIST = 'ALREADY_EXIST';
   case INVALID_TOKEN = 'INVALID_TOKEN';
   case USED_TOKEN = 'USED_TOKEN';
-}
-
-function error(string|ErrorReason $error): void
-{
-  $errorMessage = is_string($error) ? $error : $error->value;
-
-  exit(json_encode([
-    'success' => false,
-    'errorMessage' => $errorMessage,
-  ]));
 }
 
 // hardcoded
@@ -64,7 +55,7 @@ if ($exists) {
 }
 
 $inviter = decrypt_token($token);
-if ($inviter === null) {
+if (is_null($inviter)) {
   error(ErrorReason::INVALID_TOKEN);
 }
 
