@@ -17,12 +17,10 @@ $user = json_decode($user_json);
 $email = $user->email;
 $role = Role::from($user->role);
 
-$can_add_projects = $role == Role::MANAGER || $role == Role::TEAM_LEADER;
+$is_manager = $role === Role::MANAGER;
+$can_add_projects = $is_manager || $role === Role::TEAM_LEADER;
 
 // TODO: if project name isn't set, dont show kboard, instad show text to select a project
-
-// TODO: extract functions like get_projects into file(s) that will be imported so not repeating self
-
 // TODO: if project isnt in projectlist, show error page, or just show same as when name isnt set
 
 $projects = get_projects($email);
@@ -67,13 +65,13 @@ $emails = get_all_emails_not_left();
 
     <!-- TODO: clean up this tag mess -->
     <ul class="list-unstyled components sidebar-list">
-      <p><?= $role == Role::MANAGER ? 'Managed' : 'Assigned' ?> Projects:</p>
+      <p><?= $is_manager ? 'Managed' : 'Assigned' ?> Projects:</p>
       <div id="projects-list">
         <?php
         foreach ($projects as $project_name) {
           $li_class = '';
 
-          if ($project_name == $name) {
+          if ($project_name === $name) {
             $li_class = 'active';
           }
 
@@ -112,7 +110,7 @@ $emails = get_all_emails_not_left();
             <li class="nav-item active">
               <a class="nav-link">Projects</a>
             </li>
-            <?php if ($role == Role::MANAGER): ?>
+            <?php if ($is_manager): ?>
               <li class="nav-item">
                 <a class="nav-link" href="dashboard">Dashboard</a>
               </li>

@@ -114,7 +114,7 @@ TODO: replace use of data-user with setting of js object & using Object.freeze
               <li class="nav-item">
                 <a class="nav-link" href="projects?name=Project 7">Projects</a>
               </li>
-              <?php if ($role == Role::MANAGER): ?>
+              <?php if ($role === Role::MANAGER): ?>
                 <li class="nav-item">
                   <a class="nav-link" href="dashboard">Dashboard</a>
                 </li>

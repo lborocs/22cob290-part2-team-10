@@ -7,5 +7,5 @@ function generate_token(string $email): string
 
 function token_has_been_used(string $token): bool
 {
-  return $token == 'used-token';
+  return $token === 'used-token';
 }

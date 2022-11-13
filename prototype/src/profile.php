@@ -17,6 +17,8 @@ $user = json_decode($user_json);
 $email = $user->email;
 $role = Role::from($user->role);
 
+$is_manager = $role === Role::MANAGER;
+
 $projects = get_projects($email);
 
 // TODO: text avatar colors (bg & text)
@@ -103,7 +105,7 @@ $projects = get_projects($email);
             <li class="nav-item">
               <a class="nav-link" href="projects?name=Project 7">Projects</a>
             </li>
-            <?php if ($role == Role::MANAGER): ?>
+            <?php if ($is_manager): ?>
               <li class="nav-item">
                 <a class="nav-link" href="dashboard">Dashboard</a>
               </li>

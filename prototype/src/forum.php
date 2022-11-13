@@ -169,7 +169,7 @@ $role = Role::from($user->role);
                     Projects
                   </a>
                 </li>
-                <?php if ($role == Role::MANAGER): ?>
+                <?php if ($role === Role::MANAGER): ?>
                   <li class="nav-item">
                     <a class="nav-link" href="dashboard">Dashboard</a>
                   </li>

@@ -67,7 +67,7 @@ function get_user(string $email): ?array
   global $staff;
 
   foreach ($staff as $user) {
-    if ($user['email'] == $email) {
+    if ($user['email'] === $email) {
       return $user;
     }
   }
