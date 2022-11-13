@@ -6,7 +6,7 @@ if (!isset($_REQUEST['user'])) {
   die();
 }
 
-require "backend/users.php";
+require "store/users.php";
 
 $name = $_REQUEST['name'] ?? null;
 

@@ -8,7 +8,7 @@ if (!isset($_REQUEST['user'])) {
   die();
 }
 
-require "backend/users.php";
+require "store/users.php";
 
 $user_json = $_REQUEST['user'];
 $user = json_decode($user_json);

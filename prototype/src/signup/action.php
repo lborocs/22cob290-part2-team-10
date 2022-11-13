@@ -12,8 +12,8 @@
  */
 
 require "../credentials.php";
-require "../backend/users.php";
-require "../backend/token.php";
+require "../store/users.php";
+require "../store/token.php";
 require "../php/params.php";
 require_once "../php/error.php";
 
@@ -27,7 +27,7 @@ enum ErrorReason: string
 }
 
 // hardcoded
-// move to /backend?
+// move to /store?
 function decrypt_token(string $token): ?string
 {
   $valid_tokens = [

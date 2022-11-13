@@ -11,7 +11,7 @@
  */
 
 require "../credentials.php";
-require "../backend/users.php";
+require "../store/users.php";
 require "../php/params.php";
 require_once "../php/error.php";
 
