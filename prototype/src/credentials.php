@@ -1,5 +1,9 @@
 <?php
-$servername = "sci-mysql";
-$username = "team10";
-$password = "yx9g3wXp5O";
-$database = "team10";
+
+class Credentials
+{
+  const SERVERNAME = 'sci-mysql';
+  const USERNAME = 'team10';
+  const PASSWORD = 'yx9g3wXp5O';
+  const DATABASE = 'team10';
+}

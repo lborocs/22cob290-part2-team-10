@@ -1,4 +1,3 @@
-import '../utils/redirect';
 /* By default, data/elements cannot be dropped in other elements. To allow a drop, we must prevent the default handling of the element. -w3schools*/
 // @ts-ignore
 window.allowDrop = function allowDrop(ev) {
@@ -105,3 +104,4 @@ window.remove_task = function remove_task(button) {
     taskTitles.delete(title);
     $taskCard.remove();
 };
+export {};

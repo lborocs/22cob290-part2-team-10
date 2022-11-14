@@ -11,6 +11,7 @@
  */
 
 require "../store/users.php";
+require "../php/credentials.php";
 require "../php/params.php";
 require_once "../php/error.php";
 
@@ -22,8 +23,9 @@ enum ErrorReason: string
   case DOESNT_EXIST = 'DOESNT_EXIST';
 }
 
+$email = require_and_get_email(false);
+
 require_and_unpack_params([
-  'email' => &$email,
   'currentPassword' => &$currentPassword,
   'newPassword' => &$newPassword,
 ]);

@@ -1,4 +1,3 @@
-import '../utils/redirect';
 const modal = $("#modal");
 const staff_list = $("#staff_list");
 const active_employees = [
@@ -111,6 +110,7 @@ $('#add_employee_btn').on('click', function (e) {
 $('#save_changes_btn').on('click', function (e) {
     update_roles();
 });
+export {};
 /*
 
 for all elements with class name:

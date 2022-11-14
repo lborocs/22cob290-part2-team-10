@@ -1,5 +1,4 @@
-import '../utils/redirect';
-// import { Role } from '../types';
+export {};
 
 type Role = typeof roles[number];
 

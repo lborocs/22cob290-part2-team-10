@@ -23,19 +23,19 @@ $(() => {
     $('#login-form').on('submit', function (e) {
         e.preventDefault();
         const $this = $(this);
-        const credentials = Object.fromEntries(new FormData(this));
-        if (!isValidWorkEmail(credentials.email))
+        const { email, password } = Object.fromEntries(new FormData(this));
+        if (!isValidWorkEmail(email))
             emailError('Invalid Make-It-All email');
-        const pwError = validatePassword(credentials.password);
+        const pwError = validatePassword(password);
         if (pwError)
             passwordError(pwError);
         if (formIsInvalid($this))
             return;
-        login($this, credentials);
+        login($this);
     });
     $('.multiline-tooltip').tooltip({ html: true });
 });
-function login($form, { email }) {
+function login($form) {
     $('#login-btn').prop('disabled', true);
     $.ajax({
         url: $form.attr('action'),
@@ -51,7 +51,7 @@ function login($form, { email }) {
                     emailError('You no longer have access to this website');
                     break;
                 default:
-                    redirect('home', { user: { email, role } });
+                    redirect('home');
             }
         }
         else {

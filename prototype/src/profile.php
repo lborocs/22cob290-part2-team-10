@@ -2,20 +2,13 @@
 
 // converted to bootstrap 5
 
-if (!isset($_REQUEST['user'])) {
-  // redirect to login page if not signed in
-  header('Location: http://team10.sci-project.lboro.ac.uk/', true, 303);
-  die();
-}
-
 require "store/users.php";
 require "store/projects.php";
+require "php/credentials.php";
 
-$user_json = $_REQUEST['user'];
-$user = json_decode($user_json);
-
-$email = $user->email;
-$role = Role::from($user->role);
+$email = require_and_get_email();
+$user = get_user($email);
+$role = $user['role'];
 
 $is_manager = $role === Role::MANAGER;
 
@@ -23,8 +16,10 @@ $projects = get_project_names($email);
 
 // TODO: text avatar colors (bg & text)
 
+// TODO: sign out button deletes cookie
+
 ?><!DOCTYPE html>
-<html lang="en" data-user='<?= $user_json ?>'>
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
@@ -313,9 +308,7 @@ $projects = get_project_names($email);
       <br>
       <br>
 
-      <a href="/">
-        <button class="btn btn-danger">Log out</button>
-      </a>
+      <button id="log-out-btn" class="btn btn-danger">Log out</button>
 
     </div>
   </div>

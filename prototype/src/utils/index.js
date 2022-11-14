@@ -59,10 +59,3 @@ export function copyToClipboard(content) {
 export function formIsInvalid($form) {
     return $form.find('.is-invalid').length > 0;
 }
-export function objectToFormData(data) {
-    const formData = new FormData();
-    for (let key in data) {
-        formData.append(key, data[key]);
-    }
-    return formData;
-}

@@ -1,4 +1,3 @@
-import { Role } from '../types';
 import { formIsInvalid, isValidWorkEmail, validatePassword } from '../utils';
 import redirect from '../utils/redirect';
 
@@ -15,7 +14,6 @@ enum SignupFailedReason {
 
 type SignupResponse = SignupFailedResponse | {
   success: true
-  role: Exclude<Role, Role.LEFT_COMPANY>
 };
 
 type Credentials = {
@@ -83,9 +81,7 @@ function signup($form: JQuery, { token, email, password }: Credentials) {
   })
     .done((res: SignupResponse) => {
       if (res.success) {
-        const role = res.role;
-
-        redirect('home', {user: {email, role}});
+        redirect('home');
       } else {
         console.log(res);
 

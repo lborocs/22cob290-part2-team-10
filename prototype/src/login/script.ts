@@ -45,25 +45,25 @@ $(() => {
     e.preventDefault();
     const $this = $(this);
 
-    const credentials = Object.fromEntries(new FormData(this as HTMLFormElement)) as Credentials;
+    const { email, password } = Object.fromEntries(new FormData(this as HTMLFormElement)) as Credentials;
 
-    if (!isValidWorkEmail(credentials.email))
+    if (!isValidWorkEmail(email))
       emailError('Invalid Make-It-All email');
 
-    const pwError = validatePassword(credentials.password);
+    const pwError = validatePassword(password);
     if (pwError)
       passwordError(pwError);
 
     if (formIsInvalid($this))
       return;
 
-    login($this, credentials);
+    login($this);
   });
 
   (<any>$('.multiline-tooltip')).tooltip({ html: true });
 });
 
-function login($form: JQuery<HTMLElement>, { email }: Credentials) {
+function login($form: JQuery<HTMLElement>) {
   $('#login-btn').prop('disabled', true);
 
   $.ajax({
@@ -82,7 +82,7 @@ function login($form: JQuery<HTMLElement>, { email }: Credentials) {
             break;
 
           default:
-            redirect('home', {user: {email, role}});
+            redirect('home');
         }
       } else {
         console.log(res);

@@ -1,6 +1,5 @@
-import '../utils/redirect';
-import {copyToClipboard, formIsInvalid, objectToFormData, validatePassword} from '../utils';
-import type { User } from '../types';
+import { copyToClipboard, formIsInvalid, validatePassword } from '../utils';
+import redirect from "../utils/redirect";
 
 type ChangePwFormData = {
   email: string
@@ -81,9 +80,7 @@ $(() => {
       .removeClass('is-valid')
       .removeClass('is-invalid');
 
-    const user: User = JSON.parse($('html').attr('data-user')!);
-
-    const token = await getInviteToken(user.email);
+    const token = await getInviteToken();
     const url = `http://team10.sci-project.lboro.ac.uk/signup?token=${token}`;
 
     $inviteInput.attr('value', url);
@@ -101,6 +98,11 @@ $(() => {
         $('#copy-failed').text(reason);
       });
   });
+
+  $('#log-out-btn').on('click', async function (e) {
+    await fetch('profile/logout.php');
+    redirect('/');
+  });
 });
 
 function passwordError(error: string, id: string) {
@@ -108,13 +110,13 @@ function passwordError(error: string, id: string) {
   $(`#${id}-feedback`).text(error);
 }
 
-function changePassword($form: JQuery<HTMLFormElement>, { email, currentPassword, newPassword }: ChangePwFormData) {
+function changePassword($form: JQuery<HTMLFormElement>, { currentPassword, newPassword }: ChangePwFormData) {
   const $submitBtn = $(`button[form=${$form.attr('id')}]`).prop('disabled', true);
 
   $.ajax({
     url: $form.attr('action'),
     type: $form.attr('method'),
-    data: { email, currentPassword, newPassword },
+    data: { currentPassword, newPassword },
     dataType: 'json',
   })
     .done((res: ChangePwResponse) => {
@@ -122,14 +124,12 @@ function changePassword($form: JQuery<HTMLFormElement>, { email, currentPassword
         $('#change-pw-modal').modal('hide');
         $('#pw-changed-toast').toast('show');
       } else {
-        console.log(res);
-
         switch (res.errorMessage) {
           case ChangePwFailedReason.WRONG_PASSWORD:
             passwordError('Incorrect password', 'currentPassword');
             break;
 
-          default:
+          default: // shouldn't happen
             passwordError(res.errorMessage, 'currentPassword');
         }
       }
@@ -142,15 +142,13 @@ function changePassword($form: JQuery<HTMLFormElement>, { email, currentPassword
     });
 }
 
-async function getInviteToken(email: string): Promise<string> {
+async function getInviteToken(): Promise<string> {
   type GenerateInviteResponse = {
     token: string
   };
 
-  const res: GenerateInviteResponse = await fetch('profile/generate_invite.php', {
-    method: 'POST',
-    body: objectToFormData({ email }),
-  }).then(res => res.json());
+  const resp = await fetch('profile/generate_invite.php');
+  const res: GenerateInviteResponse = await resp.json();
 
   return res.token;
 }

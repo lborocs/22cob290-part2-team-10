@@ -1,5 +1,12 @@
 <?php
-// TODO check if they're already logged in - don't really need to?
+
+require "php/credentials.php";
+
+if (cookie_is_set()) {
+  // redirect to home page if already logged in
+  header('Location: http://team10.sci-project.lboro.ac.uk/t10/home', true, 303);
+  die();
+}
 
 // TODO: allow signing up from here
 ?><!DOCTYPE html>
@@ -33,7 +40,7 @@
         <div class="col-sm-9 position-relative">
           <!-- value="alice@make-it-all.co.uk" -->
           <input type="email"
-                 value="@make-it-all.co.uk"
+                 value="alice@make-it-all.co.uk"
                  autocomplete="email"
                  class="form-control"
                  id="email"
@@ -53,7 +60,7 @@
           <div class="input-group has-validation">
             <!-- value="TestPassword123!" -->
             <input type="password"
-                   value=""
+                   value="TestPassword123!"
                    autocomplete="current-password"
                    class="form-control"
                    id="password"

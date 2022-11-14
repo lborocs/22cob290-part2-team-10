@@ -2,20 +2,13 @@
 
 // FIXME: template navbar here doesn't look the exact same as Projects and Profile
 
-if (!isset($_REQUEST['user'])) {
-  // redirect to login page if not signed in
-  header('Location: http://team10.sci-project.lboro.ac.uk/', true, 303);
-  die();
-}
-
 require "store/users.php";
 require "store/projects.php";
+require "php/credentials.php";
 
-$user_json = $_REQUEST['user'];
-$user = json_decode($user_json);
-
-$email = $user->email;
-$role = Role::from($user->role);
+$email = require_and_get_email();
+$user = get_user($email);
+$role = $user['role'];
 
 $projects = get_project_names($email);
 
@@ -26,15 +19,8 @@ $projects = get_project_names($email);
 //    code_review => array
 //    completed => array
 
-/*
-TODO: replace use of data-user with setting of js object & using Object.freeze
-<script>
-  const user = Object.freeze(<?= $user_json ?>);
-</script>
-*/
-
 ?><!DOCTYPE html>
-<html lang="en" data-user='<?= $user_json ?>'>
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">

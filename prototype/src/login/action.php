@@ -47,6 +47,9 @@ if ($password !== $user['password']) {
   error(ErrorReason::WRONG_PASSWORD);
 }
 
+require_once "../php/credentials.php";
+set_credentials($email);
+
 $response = [
   'success' => true,
   'role' => $user['role']->value,

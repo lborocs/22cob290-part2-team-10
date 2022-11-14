@@ -1,5 +1,3 @@
-import '../utils/redirect';
-
 // ------ script for sidebar button --------
 $(() => {
   $('.sidebarCollapse').on('click', function () {

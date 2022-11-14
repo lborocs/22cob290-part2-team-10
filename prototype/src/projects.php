@@ -1,21 +1,14 @@
 <?php
 
-if (!isset($_REQUEST['user'])) {
-  // redirect to login page if not signed in
-  header('Location: http://team10.sci-project.lboro.ac.uk/', true, 303);
-  die();
-}
-
 require "store/users.php";
 require "store/projects.php";
+require "php/credentials.php";
+
+$email = require_and_get_email();
+$user = get_user($email);
+$role = $user['role'];
 
 $name = $_REQUEST['name'] ?? null;
-
-$user_json = $_REQUEST['user'];
-$user = json_decode($user_json);
-
-$email = $user->email;
-$role = Role::from($user->role);
 
 $is_manager = $role === Role::MANAGER;
 $can_add_projects = $is_manager || $role === Role::TEAM_LEADER;
@@ -58,7 +51,7 @@ function task_to_html(object $task): string
 }
 
 ?><!DOCTYPE html>
-<html lang="en" data-user='<?= $user_json ?>'>
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">

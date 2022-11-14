@@ -7,7 +7,6 @@
  *
  * Response schema:
  *  - success [boolean]
- *  - role [Role::TEAM_MEMBER]
  *  - errorMessage [ErrorReason, if success == false]
  */
 
@@ -74,9 +73,11 @@ if (token_has_been_used($token)) {
 
 add_user($email, $password, $token);
 
+require_once "../php/credentials.php";
+set_credentials($email);
+
 $response = [
   'success' => true,
-  'role' => Role::TEAM_MEMBER->value,
 ];
 
 echo json_encode($response);

@@ -1,5 +1,13 @@
 <?php
 
+require "php/credentials.php";
+
+if (cookie_is_set()) {
+  // redirect to home page if already logged in
+  header('Location: http://team10.sci-project.lboro.ac.uk/t10/home', true, 303);
+  die();
+}
+
 // TODO: implement JWT token
 
 // pre-fill token field with token in URL

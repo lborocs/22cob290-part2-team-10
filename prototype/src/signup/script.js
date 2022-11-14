@@ -50,8 +50,7 @@ function signup($form, { token, email, password }) {
     })
         .done((res) => {
         if (res.success) {
-            const role = res.role;
-            redirect('home', { user: { email, role } });
+            redirect('home');
         }
         else {
             console.log(res);

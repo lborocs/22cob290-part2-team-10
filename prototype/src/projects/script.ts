@@ -1,4 +1,4 @@
-import '../utils/redirect';
+export {};
 
 // TODO LATER: impl hover over task to edit (open modal)
 
