@@ -156,13 +156,49 @@ function task_to_html(object $task): string
     </nav>
 
     <?php
-    // TODO: instead of showing this, show projects (buttons in grid)?
     if ($no_project) {
       echo <<<HTML
-        <div class="h-75 d-flex align-items-center justify-content-center">
-          <h2>Please select a project from the sidebar</h2>
-        </div>
+        <div>
+          <div class="pb-4 d-flex align-items-center justify-content-center">
+            <h2>Please select a project</h2>
+          </div>
       HTML;
+
+      $row_len = 4;
+      $rows = array_chunk($projects, $row_len);
+
+      echo '<div class="container pt-4">';
+
+      foreach ($rows as $row) {
+        echo '<div class="row justify-content-start">';
+
+        // TODO: make project card look better & bigger vertical gutter
+        foreach ($row as $project_name) {
+          echo <<<HTML
+            <div class="col-3">
+              <a href="projects?name=$project_name">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">$project_name</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                    <p class="card-text">eeeee</p>
+                  </div>
+                </div>
+              </a>
+            </div>
+          HTML;
+        }
+
+        // spacing if row isn't full
+        $chunk_len = count($row);
+        for ($i = $chunk_len; $i <= $row_len; $i++) {
+          echo '<div class="col-3"></div>';
+        }
+
+        echo '</div>';
+      }
+
+      echo '</div></div>';
     } else {
       $project_data = get_project_data($name);
     ?>
