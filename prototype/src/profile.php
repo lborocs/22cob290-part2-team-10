@@ -14,10 +14,6 @@ $is_manager = $role === Role::MANAGER;
 
 $projects = get_project_names($email);
 
-// TODO: text avatar colors (bg & text)
-
-// TODO: sign out button deletes cookie
-
 ?><!DOCTYPE html>
 <html lang="en">
 
@@ -136,169 +132,213 @@ $projects = get_project_names($email);
       <br>
 
       <section>
-        <h3>Change Password</h3>
-        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#change-pw-modal">Change</button>
+        <div class="row">
+          <div class="col">
+            <h3>Change Password</h3>
+            <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#change-pw-modal">Change</button>
 
-        <div id="change-pw-modal" class="modal" tabindex="-1" role="dialog">
-          <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h1 class="modal-title fs-5">Change Password</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div id="change-pw-modal" class="modal" tabindex="-1" role="dialog">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5">Change Password</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+
+                  <div class="modal-body">
+                    <form id="change-pw-form" action="profile/change_password.php" method="POST" class="mt-6">
+                      <!-- Email (hidden) -->
+                      <div class="d-none">
+                        <label for="email">Email</label>
+                        <input type="email"
+                               value="<?= $email ?>"
+                               autocomplete="email"
+                               id="email"
+                               name="email"
+                               required
+                               >
+                      </div>
+
+                      <!-- Current password -->
+                      <div class="form-group row mb-3">
+                        <label for="currentPassword" class="col-sm-3 col-form-label">Current Password</label>
+                        <div class="col-sm-9">
+                          <div class="input-group has-validation position-relative">
+                            <!-- value="TestPassword123!" -->
+                            <input type="password"
+                                   value=""
+                                   autocomplete="current-password"
+                                   class="form-control"
+                                   id="currentPassword"
+                                   name="currentPassword"
+                                   placeholder="Enter current password"
+                                   minlength="12"
+                                   maxlength="64"
+                                   required
+                                   >
+                            <span class="input-group-text d-inline-block multiline-tooltip"
+                                  tabindex="0"
+                                  data-bs-toggle="tooltip"
+                                  title="At least 1 uppercase<br>At least 1 lowercase<br>At least 1 number<br>At least 1 special symbol"
+                                  >
+                              <i class="bi bi-info-circle-fill"></i>
+                            </span>
+                            <button class="btn btn-outline-secondary toggle-password-btn" type="button">
+                              <i class="bi bi-eye-fill eye"></i>
+                            </button>
+                            <div id="currentPassword-feedback" class="invalid-tooltip">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- New password -->
+                      <div class="form-group row mb-3">
+                        <label for="newPassword" class="col-sm-3 col-form-label">New Password</label>
+                        <div class="col-sm-9">
+                          <div class="input-group has-validation position-relative">
+                            <input type="password"
+                                   value=""
+                                   autocomplete="new-password"
+                                   class="form-control"
+                                   id="newPassword"
+                                   name="newPassword"
+                                   placeholder="Enter new password"
+                                   minlength="12"
+                                   maxlength="64"
+                                   required
+                                   >
+                            <button class="btn btn-outline-secondary toggle-password-btn" type="button">
+                              <i class="bi bi-eye-fill eye"></i>
+                            </button>
+                            <div id="newPassword-feedback" class="invalid-tooltip">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Confirm password -->
+                      <div class="form-group row mb-3">
+                        <label for="confirm" class="col-sm-3 col-form-label">Confirm Password</label>
+                        <div class="col-sm-9">
+                          <div class="input-group has-validation position-relative">
+                            <input type="password"
+                                   autocomplete="new-password"
+                                   class="form-control"
+                                   id="confirm"
+                                   name="confirm"
+                                   placeholder="Enter new password again"
+                                   minlength="12"
+                                   maxlength="64"
+                                   required
+                                   >
+                            <button class="btn btn-outline-secondary toggle-password-btn" type="button">
+                              <i class="bi bi-eye-fill eye"></i>
+                            </button>
+                            <div id="confirm-feedback" class="invalid-tooltip">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" form="change-pw-form" class="btn btn-primary btn-sm">Change</button>
+                  </div>
+                </div>
               </div>
+            </div>
 
-              <div class="modal-body">
-                <form id="change-pw-form" action="profile/change_password.php" method="POST" class="mt-6">
-                  <!-- Email (hidden) -->
-                  <div class="d-none">
-                    <label for="email">Email</label>
-                    <input type="email"
-                           value="<?= $email ?>"
-                           autocomplete="email"
-                           id="email"
-                           name="email"
-                           required
-                           >
-                  </div>
-
-                  <!-- Current password -->
-                  <div class="form-group row mb-3">
-                    <label for="currentPassword" class="col-sm-3 col-form-label">Current Password</label>
-                    <div class="col-sm-9">
-                      <div class="input-group has-validation position-relative">
-                        <!-- value="TestPassword123!" -->
-                        <input type="password"
-                               value=""
-                               autocomplete="current-password"
-                               class="form-control"
-                               id="currentPassword"
-                               name="currentPassword"
-                               placeholder="Enter current password"
-                               minlength="12"
-                               maxlength="64"
-                               required
-                               >
-                        <span class="input-group-text d-inline-block multiline-tooltip"
-                              tabindex="0"
-                              data-bs-toggle="tooltip"
-                              title="At least 1 uppercase<br>At least 1 lowercase<br>At least 1 number<br>At least 1 special symbol"
-                              >
-                          <i class="bi bi-info-circle-fill"></i>
-                        </span>
-                        <button class="btn btn-outline-secondary toggle-password-btn" type="button">
-                          <i class="bi bi-eye-fill eye"></i>
-                        </button>
-                        <div id="currentPassword-feedback" class="invalid-tooltip">
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- New password -->
-                  <div class="form-group row mb-3">
-                    <label for="newPassword" class="col-sm-3 col-form-label">New Password</label>
-                    <div class="col-sm-9">
-                      <div class="input-group has-validation position-relative">
-                        <input type="password"
-                               value=""
-                               autocomplete="new-password"
-                               class="form-control"
-                               id="newPassword"
-                               name="newPassword"
-                               placeholder="Enter new password"
-                               minlength="12"
-                               maxlength="64"
-                               required
-                               >
-                        <button class="btn btn-outline-secondary toggle-password-btn" type="button">
-                          <i class="bi bi-eye-fill eye"></i>
-                        </button>
-                        <div id="newPassword-feedback" class="invalid-tooltip">
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Confirm password -->
-                  <div class="form-group row mb-3">
-                    <label for="confirm" class="col-sm-3 col-form-label">Confirm Password</label>
-                    <div class="col-sm-9">
-                      <div class="input-group has-validation position-relative">
-                        <input type="password"
-                               autocomplete="new-password"
-                               class="form-control"
-                               id="confirm"
-                               name="confirm"
-                               placeholder="Enter new password again"
-                               minlength="12"
-                               maxlength="64"
-                               required
-                               >
-                        <button class="btn btn-outline-secondary toggle-password-btn" type="button">
-                          <i class="bi bi-eye-fill eye"></i>
-                        </button>
-                        <div id="confirm-feedback" class="invalid-tooltip">
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </form>
-              </div>
-
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="change-pw-form" class="btn btn-primary btn-sm">Change</button>
+            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+              <div id="pw-changed-toast" class="toast" role="status" aria-live="polite" aria-atomic="true">
+                <div class="toast-header">
+                  <svg class="bd-placeholder-img rounded me-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
+                    <rect width="100%" height="100%" fill="#198754"></rect>
+                  </svg>
+                  <strong class="me-auto">Success</strong>
+                  <small>Now</small>
+                  <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                  Password changed.
+                </div>
               </div>
             </div>
           </div>
-        </div>
+          <div class="col">
+            <h3>Invite Employee</h3>
+            <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#invite-modal">Generate invite</button>
 
-        <div class="toast-container position-fixed bottom-0 end-0 p-3">
-          <div id="pw-changed-toast" class="toast" role="status" aria-live="polite" aria-atomic="true">
-            <div class="toast-header">
-              <svg class="bd-placeholder-img rounded me-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
-                <rect width="100%" height="100%" fill="#198754"></rect>
-              </svg>
-              <strong class="me-auto">Success</strong>
-              <small>Now</small>
-              <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <div class="toast-body">
-              Password changed.
+            <div id="invite-modal" class="modal" tabindex="-1" role="dialog">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5">
+                      <label for="invite-url">Invite URL</label>
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+
+                  <div class="modal-body">
+                    <div class="input-group has-validation">
+                      <input id="invite-url" class="form-control" type="text" readonly>
+                      <button id="copy-invite-url" class="btn btn-outline-secondary" type="button">
+                        <i class="bi bi-clipboard2-fill"></i>
+                      </button>
+                      <div class="valid-feedback">Copied!</div>
+                      <div id="copy-failed" class="invalid-feedback"></div>
+                    </div>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       <br>
+      <br>
 
       <section>
-        <h3>Invite Employee</h3>
-        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#invite-modal">Generate invite</button>
+        <h3>Avatar</h3>
+        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#avatar-modal">Change avatar colours</button>
 
-        <div id="invite-modal" class="modal" tabindex="-1" role="dialog">
+        <div id="avatar-modal" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog">
           <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
               <div class="modal-header">
                 <h1 class="modal-title fs-5">
-                  <label for="invite-url">Invite URL</label>
+                  <label for="invite-url">Avatar</label>
                 </h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
 
               <div class="modal-body">
-                <div class="input-group has-validation">
-                  <input id="invite-url" class="form-control" type="text" readonly>
-                  <button id="copy-invite-url" class="btn btn-outline-secondary" type="button">
-                    <i class="bi bi-clipboard2-fill"></i>
-                  </button>
-                  <div class="valid-feedback">Copied!</div>
-                  <div id="copy-failed" class="invalid-feedback"></div>
+                <form id="text-avatar-form">
+                  <div class="row">
+                    <label for="avatar-bg" class="col col-form-label">Background colour</label>
+                    <input type="color" class="form-control form-control-color" id="avatar-bg" name="avatar-bg" value="#e2ba39">
+                  </div>
+                  <div class="row mt-1">
+                    <label for="avatar-fg" class="col col-form-label">Text colour</label>
+                    <input type="color" class="form-control form-control-color" id="avatar-fg" name="avatar-fg" value="#ffffff">
+                  </div>
+                </form>
+                <div class="d-lg-none mt-2 alert alert-warning alert-dismissible fade show" role="alert">
+                  You can only see the avatar on larger screens.
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
               </div>
 
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                <button type="submit" form="text-avatar-form" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Save</button>
               </div>
             </div>
           </div>

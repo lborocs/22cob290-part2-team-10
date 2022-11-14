@@ -1,5 +1,5 @@
 import { copyToClipboard, formIsInvalid, validatePassword } from '../utils';
-import redirect from "../utils/redirect";
+import redirect from '../utils/redirect';
 var ChangePwFailedReason;
 (function (ChangePwFailedReason) {
     ChangePwFailedReason["WRONG_PASSWORD"] = "WRONG_PASSWORD";
@@ -8,6 +8,7 @@ $(() => {
     $('#sidebarCollapse').on('click', function () {
         $('#sidebar').toggleClass('active');
     });
+    getTextAvatarFromLocalStorage();
     $('.multiline-tooltip').tooltip({ html: true });
     $('.toggle-password-btn').on('click', function (e) {
         const $this = $(this);
@@ -25,7 +26,7 @@ $(() => {
         e.preventDefault();
         const $this = $(this);
         const formData = Object.fromEntries(new FormData(this));
-        const { email, currentPassword, newPassword, confirm } = formData;
+        const { currentPassword, newPassword, confirm } = formData;
         let pwError = validatePassword(currentPassword);
         if (pwError) {
             passwordError(pwError, 'currentPassword');
@@ -63,8 +64,25 @@ $(() => {
         });
     });
     $('#log-out-btn').on('click', async function (e) {
-        await fetch('profile/logout.php');
+        await fetch('profile/logout.php'); // deletes credential cookie
         redirect('/');
+    });
+    $('#text-avatar-form input[type="color"]').on('input', function (e) {
+        const $this = $(this);
+        const id = this.id;
+        const colour = $this.val();
+        console.log(`--${id} == ${$this.val()}`);
+        $(':root').css({
+            [`--${id}`]: colour,
+        });
+    });
+    $('#avatar-modal').on('hidden.bs.modal', async function (e) {
+        getTextAvatarFromLocalStorage();
+    });
+    $('#text-avatar-form').on('submit', function (e) {
+        e.preventDefault();
+        const textAvatar = Object.fromEntries(new FormData(this));
+        localStorage.setItem('textAvatar', JSON.stringify(textAvatar));
     });
 });
 function passwordError(error, id) {
@@ -105,4 +123,19 @@ async function getInviteToken() {
     const resp = await fetch('profile/generate_invite.php');
     const res = await resp.json();
     return res.token;
+}
+// TODO: move this into template code
+function getTextAvatarFromLocalStorage() {
+    const textAvatarJson = localStorage.getItem('textAvatar');
+    if (textAvatarJson == null)
+        return;
+    const textAvatar = JSON.parse(textAvatarJson);
+    for (const key in textAvatar) {
+        // @ts-ignore
+        const colour = textAvatar[key];
+        $(`#${key}`).val(colour);
+        $(':root').css({
+            [`--${key}`]: colour,
+        });
+    }
 }

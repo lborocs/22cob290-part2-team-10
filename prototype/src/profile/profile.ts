@@ -1,5 +1,5 @@
 import { copyToClipboard, formIsInvalid, validatePassword } from '../utils';
-import redirect from "../utils/redirect";
+import redirect from '../utils/redirect';
 
 type ChangePwFormData = {
   email: string
@@ -21,10 +21,17 @@ type ChangePwResponse = ChangePwFailedResponse | {
   success: true
 };
 
+type TextAvatar = {
+  'avatar-bg': string
+  'avatar-fg': string
+};
+
 $(() => {
   $('#sidebarCollapse').on('click', function () {
     $('#sidebar').toggleClass('active');
   });
+
+  getTextAvatarFromLocalStorage();
 
   $('.multiline-tooltip').tooltip({ html: true });
 
@@ -51,7 +58,7 @@ $(() => {
     const $this = $<HTMLFormElement>(<HTMLFormElement>this);
 
     const formData = Object.fromEntries(new FormData(this as HTMLFormElement)) as ChangePwFormData;
-    const { email, currentPassword, newPassword, confirm } = formData;
+    const { currentPassword, newPassword, confirm } = formData;
 
     let pwError = validatePassword(currentPassword);
     if (pwError) {
@@ -100,8 +107,32 @@ $(() => {
   });
 
   $('#log-out-btn').on('click', async function (e) {
-    await fetch('profile/logout.php');
+    await fetch('profile/logout.php'); // deletes credential cookie
     redirect('/');
+  });
+
+  $('#text-avatar-form input[type="color"]').on('input', function (e) {
+    const $this = $(this);
+    const id = this.id;
+
+    const colour = <string>$this.val();
+
+    console.log(`--${id} == ${$this.val()}`);
+
+    $(':root').css({
+      [`--${id}`]: colour,
+    });
+  });
+
+  $('#avatar-modal').on('hidden.bs.modal', async function (e) {
+    getTextAvatarFromLocalStorage();
+  });
+
+  $('#text-avatar-form').on('submit', function (e) {
+    e.preventDefault();
+
+    const textAvatar = <TextAvatar>Object.fromEntries(new FormData(<HTMLFormElement>this));
+    localStorage.setItem('textAvatar', JSON.stringify(textAvatar));
   });
 });
 
@@ -151,4 +182,25 @@ async function getInviteToken(): Promise<string> {
   const res: GenerateInviteResponse = await resp.json();
 
   return res.token;
+}
+
+// TODO: move this into template code
+function getTextAvatarFromLocalStorage() {
+  const textAvatarJson = localStorage.getItem('textAvatar');
+
+  if (textAvatarJson == null)
+    return;
+
+  const textAvatar: TextAvatar = JSON.parse(textAvatarJson);
+
+  for (const key in textAvatar) {
+    // @ts-ignore
+    const colour = textAvatar[key];
+
+    $(`#${key}`).val(colour);
+
+    $(':root').css({
+      [`--${key}`]: colour,
+    });
+  }
 }
