@@ -115,26 +115,6 @@ a[data-toggle="collapse"] {
     overflow-y: scroll;
 }
 
-.dropdown-toggle::after {
-    top: 50%;
-    right: 20px;
-    display: block;
-    position: absolute;
-    transform: translateY(-50%);
-}
-
-ul ul a {
-    font-size: 0.9em !important;
-    padding-left: 30px !important;
-    background: #6d7fcc;
-}
-
-
-a.download {
-    background: #fff;
-    color: #7386D5;
-}
-
 /*
 a.article,
 a.article:hover {

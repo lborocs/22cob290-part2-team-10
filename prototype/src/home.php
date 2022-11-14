@@ -70,10 +70,9 @@ TODO: replace use of data-user with setting of js object & using Object.freeze
         <img src="assets/company-logo.png" alt="company logo" id="company-logo">
       </div>
 
-      <!-- TODO: clean up this tag mess -->
-      <ul class="list-unstyled components sidebar-list">
+      <div class="components sidebar-list">
         <p>Assigned Projects:</p>
-        <div id="projects-list">
+        <ul class="list-unstyled" id="projects-list">
           <?php
           // none active cos this is showing the user's ToDo list
           foreach ($projects as $project_name) {
@@ -86,8 +85,8 @@ TODO: replace use of data-user with setting of js object & using Object.freeze
             echo $project_html;
           }
           ?>
-        </div>
-      </ul>
+        </ul>
+      </div>
     </nav>
 
     <div id="content">

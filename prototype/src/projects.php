@@ -94,17 +94,12 @@ function task_to_html(object $task): string
       </a>
     </div>
 
-    <!-- TODO: clean up this tag mess -->
-    <ul class="list-unstyled components sidebar-list">
+    <div class="components sidebar-list">
       <p><?= $is_manager ? 'Managed' : 'Assigned' ?> Projects:</p>
-      <div id="projects-list">
+      <ul class="list-unstyled" id="projects-list">
         <?php
         foreach ($projects as $project_name) {
-          $li_class = '';
-
-          if ($project_name === $name) {
-            $li_class = 'active';
-          }
+          $li_class = $project_name === $name ? 'active' : '';
 
           echo <<<HTML
             <li class="$li_class">
@@ -113,8 +108,8 @@ function task_to_html(object $task): string
           HTML;
         }
         ?>
-      </div>
-    </ul>
+      </ul>
+    </div>
   </nav>
 
   <div id="content">
@@ -161,6 +156,7 @@ function task_to_html(object $task): string
     </nav>
 
     <?php
+    // TODO: instead of showing this, show projects (buttons in grid)?
     if ($no_project) {
       echo <<<HTML
         <div class="h-75 d-flex align-items-center justify-content-center">
