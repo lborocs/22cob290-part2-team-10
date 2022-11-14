@@ -40,7 +40,7 @@ if (cookie_is_set()) {
         <div class="col-sm-9 position-relative">
           <!-- value="alice@make-it-all.co.uk" -->
           <input type="email"
-                 value="alice@make-it-all.co.uk"
+                 value="@make-it-all.co.uk"
                  autocomplete="email"
                  class="form-control"
                  id="email"
@@ -60,7 +60,7 @@ if (cookie_is_set()) {
           <div class="input-group has-validation">
             <!-- value="TestPassword123!" -->
             <input type="password"
-                   value="TestPassword123!"
+                   value=""
                    autocomplete="current-password"
                    class="form-control"
                    id="password"
