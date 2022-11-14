@@ -6,7 +6,7 @@ TODO at some point ideally:
 - [ ] Convert template from Bootstrap 4 to 5 (@lisimba8 😠)
   - [x] Already done for `profile`
 - [ ] Move hardcoded values from JS to PHP backend (not that much)
-  - [ ] I think this is only for staff assignment page
+  - [ ] I think this is only needed for staff assignment page
 - [ ] Theme switching
 - [ ] Store logged in user in localStorage (but then how would the PHP page know? - figure that out later)
   - [ ] Or use cookies
