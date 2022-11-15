@@ -1,4 +1,4 @@
-import { copyToClipboard, formIsInvalid, validatePassword } from '../utils';
+import { copyToClipboard, formIsInvalid, getTextAvatarFromLocalStorage, validatePassword } from '../utils';
 import redirect from '../utils/redirect';
 var ChangePwFailedReason;
 (function (ChangePwFailedReason) {
@@ -123,19 +123,4 @@ async function getInviteToken() {
     const resp = await fetch('profile/generate_invite.php');
     const res = await resp.json();
     return res.token;
-}
-// TODO: move this into template code
-function getTextAvatarFromLocalStorage() {
-    const textAvatarJson = localStorage.getItem('textAvatar');
-    if (textAvatarJson == null)
-        return;
-    const textAvatar = JSON.parse(textAvatarJson);
-    for (const key in textAvatar) {
-        // @ts-ignore
-        const colour = textAvatar[key];
-        $(`#${key}`).val(colour);
-        $(':root').css({
-            [`--${key}`]: colour,
-        });
-    }
 }

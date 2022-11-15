@@ -1,4 +1,4 @@
-import { copyToClipboard, formIsInvalid, validatePassword } from '../utils';
+import { copyToClipboard, formIsInvalid, getTextAvatarFromLocalStorage, validatePassword } from '../utils';
 import redirect from '../utils/redirect';
 
 type ChangePwFormData = {
@@ -19,11 +19,6 @@ enum ChangePwFailedReason {
 
 type ChangePwResponse = ChangePwFailedResponse | {
   success: true
-};
-
-type TextAvatar = {
-  'avatar-bg': string
-  'avatar-fg': string
 };
 
 $(() => {
@@ -131,6 +126,12 @@ $(() => {
   $('#text-avatar-form').on('submit', function (e) {
     e.preventDefault();
 
+    // TODO: import from template types
+    type TextAvatar = {
+      'avatar-bg': string
+      'avatar-fg': string
+    };
+
     const textAvatar = <TextAvatar>Object.fromEntries(new FormData(<HTMLFormElement>this));
     localStorage.setItem('textAvatar', JSON.stringify(textAvatar));
   });
@@ -182,25 +183,4 @@ async function getInviteToken(): Promise<string> {
   const res: GenerateInviteResponse = await resp.json();
 
   return res.token;
-}
-
-// TODO: move this into template code
-function getTextAvatarFromLocalStorage() {
-  const textAvatarJson = localStorage.getItem('textAvatar');
-
-  if (textAvatarJson == null)
-    return;
-
-  const textAvatar: TextAvatar = JSON.parse(textAvatarJson);
-
-  for (const key in textAvatar) {
-    // @ts-ignore
-    const colour = textAvatar[key];
-
-    $(`#${key}`).val(colour);
-
-    $(':root').css({
-      [`--${key}`]: colour,
-    });
-  }
 }

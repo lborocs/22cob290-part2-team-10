@@ -59,3 +59,18 @@ export function copyToClipboard(content) {
 export function formIsInvalid($form) {
     return $form.find('.is-invalid').length > 0;
 }
+// TODO: move this into template code
+export function getTextAvatarFromLocalStorage() {
+    const textAvatarJson = localStorage.getItem('textAvatar');
+    if (textAvatarJson == null)
+        return;
+    const textAvatar = JSON.parse(textAvatarJson);
+    for (const key in textAvatar) {
+        // @ts-ignore
+        const colour = textAvatar[key];
+        $(`#${key}`).val(colour);
+        $(':root').css({
+            [`--${key}`]: colour,
+        });
+    }
+}

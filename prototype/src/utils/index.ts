@@ -69,3 +69,29 @@ export function copyToClipboard(content: string): Promise<void> {
 export function formIsInvalid($form: JQuery): boolean {
   return $form.find('.is-invalid').length > 0;
 }
+
+// TODO: move this into template code
+export function getTextAvatarFromLocalStorage() {
+  const textAvatarJson = localStorage.getItem('textAvatar');
+
+  if (textAvatarJson == null)
+    return;
+
+  type TextAvatar = {
+    'avatar-bg': string
+    'avatar-fg': string
+  };
+
+  const textAvatar: TextAvatar = JSON.parse(textAvatarJson);
+
+  for (const key in textAvatar) {
+    // @ts-ignore
+    const colour = textAvatar[key];
+
+    $(`#${key}`).val(colour);
+
+    $(':root').css({
+      [`--${key}`]: colour,
+    });
+  }
+}
