@@ -126,12 +126,6 @@ $(() => {
   $('#text-avatar-form').on('submit', function (e) {
     e.preventDefault();
 
-    // TODO: import from template types
-    type TextAvatar = {
-      'avatar-bg': string
-      'avatar-fg': string
-    };
-
     const textAvatar = <TextAvatar>Object.fromEntries(new FormData(<HTMLFormElement>this));
     localStorage.setItem('textAvatar', JSON.stringify(textAvatar));
   });

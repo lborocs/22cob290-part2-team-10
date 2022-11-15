@@ -338,7 +338,8 @@ $projects = get_project_names($email);
 
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                <button type="submit" form="text-avatar-form" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Save</button>
+                <button type="reset" form="text-avatar-form" class="btn btn-warning btn-sm">Reset</button>
+                <button type="submit" form="text-avatar-form" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Change</button>
               </div>
             </div>
           </div>
