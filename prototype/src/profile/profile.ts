@@ -1,4 +1,4 @@
-import { copyToClipboard, formIsInvalid, getTextAvatarFromLocalStorage, validatePassword } from '../utils';
+import { type TextAvatar, copyToClipboard, formIsInvalid, getTextAvatarFromLocalStorage, validatePassword } from '../utils';
 import redirect from '../utils/redirect';
 
 type ChangePwFormData = {
@@ -26,7 +26,7 @@ $(() => {
     $('#sidebar').toggleClass('active');
   });
 
-  getTextAvatarFromLocalStorage();
+  updateTextAvatar();
 
   $('.multiline-tooltip').tooltip({ html: true });
 
@@ -120,7 +120,7 @@ $(() => {
   });
 
   $('#avatar-modal').on('hidden.bs.modal', async function (e) {
-    getTextAvatarFromLocalStorage();
+    updateTextAvatar();
   });
 
   $('#text-avatar-form').on('submit', function (e) {
@@ -183,4 +183,14 @@ async function getInviteToken(): Promise<string> {
   const res: GenerateInviteResponse = await resp.json();
 
   return res.token;
+}
+
+function updateTextAvatar() {
+  const textAvatar = getTextAvatarFromLocalStorage();
+  if (textAvatar) {
+    for (const key in textAvatar) {
+      const colour = textAvatar[<keyof TextAvatar>key];
+      $(`#${key}`).val(colour);
+    }
+  }
 }

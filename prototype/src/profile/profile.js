@@ -8,7 +8,7 @@ $(() => {
     $('#sidebarCollapse').on('click', function () {
         $('#sidebar').toggleClass('active');
     });
-    getTextAvatarFromLocalStorage();
+    updateTextAvatar();
     $('.multiline-tooltip').tooltip({ html: true });
     $('.toggle-password-btn').on('click', function (e) {
         const $this = $(this);
@@ -77,7 +77,7 @@ $(() => {
         });
     });
     $('#avatar-modal').on('hidden.bs.modal', async function (e) {
-        getTextAvatarFromLocalStorage();
+        updateTextAvatar();
     });
     $('#text-avatar-form').on('submit', function (e) {
         e.preventDefault();
@@ -123,4 +123,13 @@ async function getInviteToken() {
     const resp = await fetch('profile/generate_invite.php');
     const res = await resp.json();
     return res.token;
+}
+function updateTextAvatar() {
+    const textAvatar = getTextAvatarFromLocalStorage();
+    if (textAvatar) {
+        for (const key in textAvatar) {
+            const colour = textAvatar[key];
+            $(`#${key}`).val(colour);
+        }
+    }
 }

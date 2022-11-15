@@ -70,28 +70,27 @@ export function formIsInvalid($form: JQuery): boolean {
   return $form.find('.is-invalid').length > 0;
 }
 
+export type TextAvatar = {
+  'avatar-bg': string
+  'avatar-fg': string
+};
+
 // TODO: move this into template code
-export function getTextAvatarFromLocalStorage() {
+export function getTextAvatarFromLocalStorage(): TextAvatar | null {
   const textAvatarJson = localStorage.getItem('textAvatar');
 
   if (textAvatarJson == null)
-    return;
-
-  type TextAvatar = {
-    'avatar-bg': string
-    'avatar-fg': string
-  };
+    return null;
 
   const textAvatar: TextAvatar = JSON.parse(textAvatarJson);
 
   for (const key in textAvatar) {
-    // @ts-ignore
-    const colour = textAvatar[key];
-
-    $(`#${key}`).val(colour);
+    const colour = textAvatar[<keyof TextAvatar>key];
 
     $(':root').css({
       [`--${key}`]: colour,
     });
   }
+
+  return textAvatar;
 }

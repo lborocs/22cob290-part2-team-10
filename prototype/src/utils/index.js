@@ -63,14 +63,13 @@ export function formIsInvalid($form) {
 export function getTextAvatarFromLocalStorage() {
     const textAvatarJson = localStorage.getItem('textAvatar');
     if (textAvatarJson == null)
-        return;
+        return null;
     const textAvatar = JSON.parse(textAvatarJson);
     for (const key in textAvatar) {
-        // @ts-ignore
         const colour = textAvatar[key];
-        $(`#${key}`).val(colour);
         $(':root').css({
             [`--${key}`]: colour,
         });
     }
+    return textAvatar;
 }
