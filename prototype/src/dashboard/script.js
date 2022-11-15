@@ -1,3 +1,5 @@
+import { getTextAvatarFromLocalStorage } from '../utils';
+
 // ------ script for sidebar button --------
 $(() => {
   $('.sidebarCollapse').on('click', function () {
@@ -28,6 +30,8 @@ $(() => {
   $("#title").on("input", function (e) {
     $(this).removeClass("is-invalid");
   });
+
+  getTextAvatarFromLocalStorage();
 });
 
 function get_project_names() {
