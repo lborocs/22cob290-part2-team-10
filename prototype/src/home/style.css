@@ -10,6 +10,8 @@
     --tertiary-color: #e2ba39;
     --sidebar-text: black;
     --sidebar-hover: #e2ba3990;
+    --avatar-bg: #e2ba39;
+    --avatar-fg: white;
 }
 
 body {
@@ -142,10 +144,10 @@ a.article:hover {
     width: 40px;
     aspect-ratio: 1;
     border-radius: 50%;
-    color: #fff;
+    color: var(--avatar-fg);
     line-height: 40px;
     text-align: center;
-    background: #e2ba39; /* pick random color? or let user pick? */
+    background: var(--avatar-bg);
     /* display: inline-block; */
 
     font-size: large;

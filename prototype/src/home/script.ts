@@ -1,4 +1,4 @@
-export {};
+import { getTextAvatarFromLocalStorage } from '../utils';
 
 // TODO LATER: impl hover over task to edit (open modal)
 
@@ -118,6 +118,8 @@ $(() => {
 
   close_modal_button1.on("click", close_modal);
   close_modal_button2.on("click", close_modal);
+
+  getTextAvatarFromLocalStorage();
 });
 
 // @ts-ignore

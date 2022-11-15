@@ -1,3 +1,4 @@
+import { getTextAvatarFromLocalStorage } from '../utils';
 /* By default, data/elements cannot be dropped in other elements. To allow a drop, we must prevent the default handling of the element. -w3schools*/
 // @ts-ignore
 window.allowDrop = function allowDrop(ev) {
@@ -81,6 +82,7 @@ $(() => {
     });
     close_modal_button1.on("click", close_modal);
     close_modal_button2.on("click", close_modal);
+    getTextAvatarFromLocalStorage();
 });
 // @ts-ignore
 window.remove_task = function remove_task(button) {
@@ -90,4 +92,3 @@ window.remove_task = function remove_task(button) {
     taskTitles.delete(title);
     $taskCard.remove();
 };
-export {};
