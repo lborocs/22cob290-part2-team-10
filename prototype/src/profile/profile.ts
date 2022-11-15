@@ -101,11 +101,6 @@ $(() => {
       });
   });
 
-  $('#log-out-btn').on('click', async function (e) {
-    await fetch('profile/logout.php'); // deletes credential cookie
-    redirect('/');
-  });
-
   $('#avatar-modal').on('hidden.bs.modal', async function (e) {
     updateTextAvatar();
   });
@@ -128,6 +123,11 @@ $(() => {
 
     const textAvatar = <TextAvatar>Object.fromEntries(new FormData(<HTMLFormElement>this));
     localStorage.setItem('textAvatar', JSON.stringify(textAvatar));
+  });
+
+  $('#log-out-btn').on('click', async function (e) {
+    await fetch('profile/logout.php'); // deletes credential cookie
+    redirect('/');
   });
 });
 

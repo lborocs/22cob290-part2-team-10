@@ -63,10 +63,6 @@ $(() => {
             $('#copy-failed').text(reason);
         });
     });
-    $('#log-out-btn').on('click', async function (e) {
-        await fetch('profile/logout.php'); // deletes credential cookie
-        redirect('/');
-    });
     $('#avatar-modal').on('hidden.bs.modal', async function (e) {
         updateTextAvatar();
     });
@@ -83,6 +79,10 @@ $(() => {
         e.preventDefault();
         const textAvatar = Object.fromEntries(new FormData(this));
         localStorage.setItem('textAvatar', JSON.stringify(textAvatar));
+    });
+    $('#log-out-btn').on('click', async function (e) {
+        await fetch('profile/logout.php'); // deletes credential cookie
+        redirect('/');
     });
 });
 function passwordError(error, id) {
