@@ -1,3 +1,5 @@
+import { getTextAvatarFromLocalStorage } from '../utils';
+
 // ----------------------------------------------------------------------------
 
 function load() {
@@ -328,6 +330,8 @@ $(() => {
   $('#sidebarCollapse').on('click', function () {
     $('#sidebar').toggleClass('active');
   });
+
+  getTextAvatarFromLocalStorage();
 });
 
 // ----------------------------------------------------------------------------

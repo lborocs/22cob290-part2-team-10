@@ -4,6 +4,11 @@
 
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 
+:root {
+    --avatar-bg: #e2ba39;
+    --avatar-fg: white;
+}
+
 .navbar {
     background-color: #1c1c1c;
     justify-content: flex-end;
@@ -72,11 +77,12 @@ html {
     width: 40px;
     aspect-ratio: 1;
     border-radius: 50%;
-    color: #fff;
+    color: var(--avatar-fg);
     line-height: 40px;
     text-align: center;
-    background: #e2ba39; /* pick random color? or let user pick? */
+    background: var(--avatar-bg);
     /* display: inline-block; */
+
     font-size: large;
 }
 
