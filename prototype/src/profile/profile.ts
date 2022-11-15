@@ -106,6 +106,10 @@ $(() => {
     redirect('/');
   });
 
+  $('#avatar-modal').on('hidden.bs.modal', async function (e) {
+    updateTextAvatar();
+  });
+
   $('#text-avatar-form input[type="color"]').on('input', function (e) {
     const $this = $(this);
     const id = this.id;
@@ -117,10 +121,6 @@ $(() => {
     $(':root').css({
       [`--${id}`]: colour,
     });
-  });
-
-  $('#avatar-modal').on('hidden.bs.modal', async function (e) {
-    updateTextAvatar();
   });
 
   $('#text-avatar-form').on('submit', function (e) {
