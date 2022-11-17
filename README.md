@@ -140,10 +140,10 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 
 ### Libraries
 
-- TypeScript
-- Next.js
-- React
-- Boostrap (?)
+- TypeScript 4.9
+- Next.js 13
+- React 18
+- Bootstrap (?)
 - React Bootstrap
 - React Boostrap Icons
 - ESLint
