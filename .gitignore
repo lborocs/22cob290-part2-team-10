@@ -1,3 +1,8 @@
 node_modules/
 .idea/
 *.bak
+
+# Next.js
+.next/
+out/
+next-env.d.ts
