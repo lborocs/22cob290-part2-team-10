@@ -1,6 +1,30 @@
 {
-  "extends": "next/core-web-vitals",
+  "extends": [
+    "eslint:recommended",
+    "next/core-web-vitals",
+    "airbnb"
+  ],
   "rules": {
-    "semi": ["error", "always", { "omitLastInOneLineBlock": true }]
+    // disabling errors given because of airbnb:
+
+    // NextJs imports React for us
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-filename-extension": ["warn", { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
+
+    "react/jsx-props-no-spreading": "off",
+
+    // https://stackoverflow.com/a/59268871
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+   ],
+
+   "react/jsx-one-expression-per-line": "off"
   }
 }
