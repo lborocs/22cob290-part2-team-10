@@ -1,5 +1,10 @@
 {
+  "root": true,
   "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "tsconfigRootDir": ".", // prototype_nextjs
+    "project": ["./tsconfig.json"]
+  },
   "plugins": [
     "@typescript-eslint"
   ],
@@ -7,10 +12,13 @@
     "eslint:recommended",
     "next/core-web-vitals",
     "airbnb",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:@typescript-eslint/strict"
   ],
   "rules": {
     // disabling errors given because of airbnb:
+    // "class-methods-use-this": "off",
 
     // https://stackoverflow.com/a/59268871
     "import/extensions": [
