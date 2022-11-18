@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": "src", // TODO: would prefer to use a prefix like ~
     "target": "es2017",
     "lib": [
       "dom",
@@ -19,11 +18,21 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "plugins": [
+      {
+        "name": "next",
+      },
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["src/*"]
+    }
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
+    ".next/types/**/*.ts",
   ],
   "exclude": [
     "node_modules",

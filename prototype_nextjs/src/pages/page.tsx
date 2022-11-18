@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import Image from 'next/image';
 
-import Okay from 'components/Okay';
+import Okay from '~/components/Okay';
 
 import styles from '../styles/Home.module.css';
 
