@@ -144,9 +144,9 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 - Next.js 13
   - Next-Auth
 - React 18
-- Bootstrap (?)
-- React Bootstrap
-- React Boostrap Icons
-- ESLint
+- Bootstrap 5.2
+- React Bootstrap 2.6
+- React Boostrap Icons 1.9
+- ESLint 8.27
 - Prisma
 - ...

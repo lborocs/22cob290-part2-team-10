@@ -19,13 +19,14 @@
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
-    // "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-explicit-any": "off",
 
     // ...
     "semi": "error",
     "comma-dangle": ["error", "always-multiline"],
     "react/self-closing-comp": "warn",
-    "@typescript-eslint/require-await": "warn"
+    "@typescript-eslint/require-await": "warn",
+    "@typescript-eslint/no-empty-function": "off"
   },
   "settings": {
     "react": {
