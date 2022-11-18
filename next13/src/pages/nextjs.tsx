@@ -1,9 +1,8 @@
 import Head from 'next/head';
 import Image from 'next/image';
+import Link from 'next/link';
 
-import Okay from '~/components/Okay';
-
-import styles from '../styles/Home.module.css';
+import styles from '~/styles/Home.module.css';
 
 export default function Home() {
   return (
@@ -19,7 +18,7 @@ export default function Home() {
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
 
-        <Okay />
+        <Link href="login"> LOGIN </Link>
 
         <p className={styles.description}>
           Get started by editing{' '}

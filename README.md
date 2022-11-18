@@ -142,9 +142,11 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 
 - TypeScript 4.9
 - Next.js 13
+  - Next-Auth
 - React 18
 - Bootstrap (?)
 - React Bootstrap
 - React Boostrap Icons
 - ESLint
+- Prisma
 - ...

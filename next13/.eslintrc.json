@@ -3,27 +3,29 @@
   "extends": [
     "next/core-web-vitals",
     "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking"
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended"
   ],
   "parserOptions": {
-    // "tsconfigRootDir": ".", // prototype_nextjs
     "project": "tsconfig.json",
     "ecmaVersion": 2018, // Allows for the parsing of modern ECMAScript features
     "sourceType": "module" // Allows for the use of imports
   },
   "rules": {
+    // From tRPC examples
     // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
-    "@typescript-eslint/no-explicit-any": "off",
+    // "@typescript-eslint/no-explicit-any": "off",
 
-
+    // ...
+    "semi": "error",
+    "comma-dangle": ["error", "always-multiline"],
     "react/self-closing-comp": "warn",
-
-    // modifying typescript-eslint:
-    "@typescript-eslint/require-await": "warn",
+    "@typescript-eslint/require-await": "warn"
   },
   "settings": {
     "react": {
