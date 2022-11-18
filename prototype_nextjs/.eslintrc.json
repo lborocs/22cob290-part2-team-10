@@ -1,17 +1,16 @@
 {
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint"
+  ],
   "extends": [
     "eslint:recommended",
     "next/core-web-vitals",
-    "airbnb"
+    "airbnb",
+    "plugin:@typescript-eslint/recommended"
   ],
   "rules": {
     // disabling errors given because of airbnb:
-
-    // NextJs imports React for us
-    "react/react-in-jsx-scope": "off",
-    "react/jsx-filename-extension": ["warn", { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
-
-    "react/jsx-props-no-spreading": "off",
 
     // https://stackoverflow.com/a/59268871
     "import/extensions": [
@@ -23,8 +22,16 @@
         "ts": "never",
         "tsx": "never"
       }
-   ],
+    ],
 
-   "react/jsx-one-expression-per-line": "off"
+    // NextJs imports React for us
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-filename-extension": ["warn", { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
+
+    "react/jsx-props-no-spreading": "off",
+
+    "react/jsx-one-expression-per-line": "off",
+
+    "no-console": "off"
   }
 }
