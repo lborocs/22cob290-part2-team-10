@@ -24,7 +24,8 @@
 
     // ...
     "quotes": ["warn", "single"],
-    "semi": "error",
+    "semi": "off",
+    "@typescript-eslint/semi": "error",
     "comma-dangle": ["error", "always-multiline"],
     // "prefer-const": "warn", // annoying having it as error
 
