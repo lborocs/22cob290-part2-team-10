@@ -63,17 +63,16 @@
     "comma-style": "error",
     "no-new-wrappers": "error",
     "radix": ["error", "as-needed"],
-    "camelcase": "error",
-    "new-cap": "error",
 
     "react/self-closing-comp": "warn",
 
-    "@typescript-eslint/require-await": "warn",
+    "@typescript-eslint/require-await": "off",
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-misused-promises": "off",
     "@typescript-eslint/no-unsafe-argument": "off", // makes working with fetch so annoying
     "@typescript-eslint/no-unsafe-assignment": "off", // makes working with fetch so annoying
-    "@typescript-eslint/no-unsafe-member-access": "off"
+    "@typescript-eslint/no-unsafe-member-access": "off",
+    "@typescript-eslint/no-non-null-assertion": "off"
   },
   "settings": {
     "react": {
