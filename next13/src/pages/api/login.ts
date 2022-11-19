@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import type { User } from '~/types';
 import { users } from '~/server/store/users';
+import { isValidMakeItAllEmail, validatePassword } from '~/utils';
 
 type RequestSchema = {
   email: string
@@ -28,14 +29,20 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseSchema>,
 ) {
-  const { email, password } = JSON.parse(req.body) as RequestSchema;
+  const { email, password } = req.body as RequestSchema;
 
-  // TODO: verify email & password (BAD_CREDENTIALS)
+  if (!isValidMakeItAllEmail(email) || (validatePassword(password) !== null)) {
+    res.status(200).json({
+      success: false,
+      reason: ErrorReason.BAD_CREDENTIALS,
+    });
+    return;
+  }
 
   const user = users.find((user) => user.email === email);
 
   if (!user) {
-    res.status(400).json({
+    res.status(200).json({
       success: false,
       reason: ErrorReason.DOESNT_EXIST,
     });
@@ -43,7 +50,7 @@ export default function handler(
   }
 
   if (password !== user.password) {
-    res.status(401).json({
+    res.status(200).json({
       success: false,
       reason: ErrorReason.WRONG_PASSWORD,
     });

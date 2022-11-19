@@ -4,12 +4,13 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
+import axios from 'axios';
 
 import EmailField from '~/components/EmailField';
 import PasswordField from '~/components/PasswordField';
 import LoadingButton from '~/components/LoadingButton';
 import { Role } from '~/types';
-import { isValidWorkEmail, validatePassword } from '~/utils';
+import { isValidMakeItAllEmail, validatePassword } from '~/utils';
 
 import { ErrorReason, type ResponseSchema } from '~/pages/api/login';
 
@@ -21,6 +22,7 @@ type LoginFormData = {
   password: string
 }
 
+// TODO
 export function getServerSideProps() {
   // TODO: check for logged in cookie, or use next-auth
   return {
@@ -55,7 +57,7 @@ export default function LoginPage() {
 
     let _badForm = false;
 
-    if (!isValidWorkEmail(email)) {
+    if (!isValidMakeItAllEmail(email)) {
       _badForm = true;
       setEmailFeedback('Invalid Make-It-All email');
     }
@@ -71,11 +73,19 @@ export default function LoginPage() {
 
     setIsLoggingIn(true);
 
-    // TODO: use axios instead of fetch
-    const res: ResponseSchema = await fetch('api/login', {
-      method: 'POST',
-      body: JSON.stringify(formData),
-    }).then((resp) => resp.json());
+    let res: ResponseSchema | null = null;
+    try {
+      const { data } = await axios.post<ResponseSchema>('api/login', formData);
+      res = data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        //handleAxiosError(error);
+      } else {
+        //handleUnexpectedError(error);
+      }
+      alert(error);
+      return;
+    }
 
     console.log(res);
     if (res.success) {
@@ -131,7 +141,7 @@ export default function LoginPage() {
             setFeedback={setPasswordFeedback}
             policyTooltip
           />
-          <Row>
+          <Form.Group as={Row}>
             <div className="d-flex justify-content-center">
               <LoadingButton
                 variant="secondary"
@@ -142,7 +152,7 @@ export default function LoginPage() {
                 Login
               </LoadingButton>
             </div>
-          </Row>
+          </Form.Group>
         </Form>
       </div>
     </main>
