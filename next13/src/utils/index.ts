@@ -1,3 +1,6 @@
+import * as yup from 'yup';
+
+
 export function isValidMakeItAllEmail(email: string): boolean {
   return email.endsWith('@make-it-all.co.uk') && email !== '@make-it-all.co.uk';
 }
@@ -11,18 +14,21 @@ export enum PasswordError {
   NO_SPECIAL_SYMBOL = 'No special symbol',
 }
 
+export const MIN_PASSWORD_LENGTH = 12;
+export const MAX_PASSWORD_LENGTH = 64;
+
 // https://stackoverflow.com/q/1559751
-const LOWERCASE_REGEX = /(?=.*[a-z])/;
-const UPPERCASE_REGEX = /(?=.*[A-Z])/;
-const NUMBER_REGEX = /(?=.*\d)/;
-const SPECIAL_SYMBOL_REGEX = /(?=.*\W)/;
+export const LOWERCASE_REGEX = /(?=.*[a-z])/;
+export const UPPERCASE_REGEX = /(?=.*[A-Z])/;
+export const NUMBER_REGEX = /(?=.*\d)/;
+export const SPECIAL_SYMBOL_REGEX = /(?=.*\W)/;
 
 /* eslint-disable nonblock-statement-body-position */
 export function validatePassword(password: string): PasswordError | null {
-  if (password.length < 12)
+  if (password.length < MIN_PASSWORD_LENGTH)
     return PasswordError.TOO_SHORT;
 
-  if (password.length > 64)
+  if (password.length > MAX_PASSWORD_LENGTH)
     return PasswordError.TOO_LONG;
 
   if (!LOWERCASE_REGEX.test(password))
@@ -40,6 +46,15 @@ export function validatePassword(password: string): PasswordError | null {
   return null;
 }
 /* eslint-enable nonblock-statement-body-position */
+
+export const PASSWORD_SCHEMA = yup.string()
+  .min(MIN_PASSWORD_LENGTH)
+  .max(MAX_PASSWORD_LENGTH)
+  .matches(LOWERCASE_REGEX)
+  .matches(UPPERCASE_REGEX)
+  .matches(NUMBER_REGEX)
+  .matches(SPECIAL_SYMBOL_REGEX)
+  ;
 
 // note: Chrome doesn't allow to copy from non-https (sci-project is http)
 // https://stackoverflow.com/a/65996386
