@@ -80,6 +80,8 @@ URL: `TODO`
 
 Deploy to Vercel for development before using GCP?
 
+https://cloud.google.com/nodejs/getting-started/getting-started-on-compute-engine
+
 ### TODO (feedback from Part 1 presentation)
 
 - Forum
@@ -149,4 +151,5 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 - React Boostrap Icons 1.9
 - ESLint 8.27
 - Prisma
+- Axios 1.1
 - ...
