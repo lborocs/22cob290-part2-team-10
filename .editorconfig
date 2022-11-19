@@ -5,7 +5,7 @@ insert_final_newline = true
 charset = utf-8
 trim_trailing_whitespace = true
 
-[*.{html,php,js,ts}]
+[*.{html,php,js,ts,jsx,tsx}]
 indent_style = space
 indent_size = 2
 
