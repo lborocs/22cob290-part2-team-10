@@ -99,10 +99,7 @@ export function getTextAvatarFromLocalStorage(): TextAvatar | null {
   for (const key in textAvatar) {
     const colour = textAvatar[<keyof TextAvatar>key];
 
-    // FIXME
-    // $(':root').css({
-    //   [`--${key}`]: colour,
-    // });
+    document.documentElement.style.setProperty(`--${key}`, colour);
   }
 
   return textAvatar;
