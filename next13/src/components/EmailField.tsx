@@ -29,12 +29,12 @@ export default function EmailField({
             setEmail(e.target.value);
             setFeedback?.(undefined);
           }}
-          className={feedback ? 'is-invalid' : ''}
+          isInvalid={!!feedback}
           required
         />
-        <div className="invalid-tooltip">
+        <Form.Control.Feedback type="invalid" tooltip>
           {feedback}
-        </div>
+        </Form.Control.Feedback>
       </Col>
     </Form.Group>
   );

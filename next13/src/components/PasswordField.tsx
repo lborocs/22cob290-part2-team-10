@@ -58,13 +58,13 @@ export default function PasswordField({
     <Form.Group as={Row} className="mb-3 position-relative" controlId={controlId}>
       <Form.Label column sm={3}>{label}</Form.Label>
       <Col sm={9}>
-        <InputGroup className="has-validation">
+        <InputGroup hasValidation>
           <Form.Control
             type={showPassword ? 'text' : 'password'}
             name={name}
             autoComplete={autoComplete}
             placeholder={placeholder}
-            className={feedback ? 'is-invalid' : ''}
+            isInvalid={!!feedback}
             onChange={() => setFeedback?.(undefined)}
             required
           />
@@ -78,9 +78,9 @@ export default function PasswordField({
           >
             {showPassword ? <EyeSlashFill /> : <EyeFill />}
           </Button>
-          <div className="invalid-tooltip">
+          <Form.Control.Feedback type="invalid" tooltip>
             {feedback}
-          </div>
+          </Form.Control.Feedback>
         </InputGroup>
       </Col>
     </Form.Group>
