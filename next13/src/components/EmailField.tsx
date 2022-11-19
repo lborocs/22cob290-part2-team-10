@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type useState } from 'react';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
@@ -12,9 +12,6 @@ export default function EmailField({
   feedback?: string
   setFeedback?: ReturnType<typeof useState<string>>[1]
 }) {
-  // initial value
-  const [email, setEmail] = useState('@make-it-all.co.uk');
-
   return (
     <Form.Group as={Row} className="mb-3 position-relative" controlId={controlId}>
       <Form.Label column sm={3}>Email</Form.Label>
@@ -24,11 +21,8 @@ export default function EmailField({
           autoComplete="username"
           name="email"
           placeholder="Enter email"
-          value={email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-            setFeedback?.(undefined);
-          }}
+          defaultValue="@make-it-all.co.uk"
+          onChange={() => setFeedback?.(undefined)}
           isInvalid={!!feedback}
           required
         />
