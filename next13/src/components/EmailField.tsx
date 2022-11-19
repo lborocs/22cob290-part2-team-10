@@ -4,10 +4,12 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 
 export default function EmailField({
+  name,
   controlId = 'email',
   feedback,
   setFeedback,
 }: {
+  name: string
   controlId?: string
   feedback?: string
   setFeedback?: ReturnType<typeof useState<string>>[1]
@@ -19,7 +21,7 @@ export default function EmailField({
         <Form.Control
           type="email"
           autoComplete="username"
-          name="email"
+          name={name}
           placeholder="Enter email"
           defaultValue="@make-it-all.co.uk"
           onChange={() => setFeedback?.(undefined)}

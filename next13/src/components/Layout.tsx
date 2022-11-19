@@ -16,9 +16,9 @@ export default function Layout({ children }: { children: ReactNode }) {
     <>
       <header>
         <nav>
-          <Link href="home" className="">Home</Link>
-          <Link href="forum" className="">Forum</Link>
-          <Link href="projects" className="">Projects</Link>
+          <Link href="/home" className="">Home</Link>
+          <Link href="/forum" className="">Forum</Link>
+          <Link href="/projects" className="">Projects</Link>
         </nav>
       </header>
       <div>
@@ -30,3 +30,6 @@ export default function Layout({ children }: { children: ReactNode }) {
     </>
   );
 }
+
+// TODO: component.auth
+// https://next-auth.js.org/getting-started/client
