@@ -5,7 +5,7 @@ import Spinner from 'react-bootstrap/Spinner';
 type LoadingButtonProps = ButtonProps & {
   isLoading: boolean
   children: React.ReactNode
-}
+};
 
 export default forwardRef(function LoadingButton({
   isLoading,

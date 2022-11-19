@@ -20,7 +20,7 @@ import makeItAllLogo from '~/../public/make_it_all.png';
 type LoginFormData = {
   email: string
   password: string
-}
+};
 
 // TODO
 export function getServerSideProps() {
@@ -84,6 +84,7 @@ export default function LoginPage() {
         //handleUnexpectedError(error);
       }
       alert(error);
+      setIsLoggingIn(false);
       return;
     }
 

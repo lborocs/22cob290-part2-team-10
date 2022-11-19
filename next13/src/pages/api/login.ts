@@ -7,12 +7,12 @@ import { isValidMakeItAllEmail, validatePassword } from '~/utils';
 type RequestSchema = {
   email: string
   password: string
-}
+};
 
 type FailedRequest = {
   success: false
   reason: ErrorReason
-}
+};
 
 export enum ErrorReason {
   WRONG_PASSWORD = 'WRONG_PASSWORD',
@@ -23,7 +23,7 @@ export enum ErrorReason {
 export type ResponseSchema = FailedRequest | {
   success: true
   user: User
-}
+};
 
 export default function handler(
   req: NextApiRequest,
