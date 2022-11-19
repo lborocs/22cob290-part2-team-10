@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 // import { useRouter } from 'next/router';
 import Link from 'next/link';
 
+// TODO
 export async function getServerSideProps(context: any) {
   return {
     props: {}, // will be passed to the page component as props
@@ -16,8 +17,8 @@ export default function Layout({ children }: { children: ReactNode }) {
       <header>
         <nav>
           <Link href="home" className="">Home</Link>
-          <Link href="Forum" className="">Forum</Link>
-          <Link href="Projects" className="">Projects</Link>
+          <Link href="forum" className="">Forum</Link>
+          <Link href="projects" className="">Projects</Link>
         </nav>
       </header>
       <div>
