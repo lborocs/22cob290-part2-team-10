@@ -75,7 +75,9 @@
 
     "@typescript-eslint/require-await": "warn",
     "@typescript-eslint/no-empty-function": "off",
-    "@typescript-eslint/no-misused-promises": "off"
+    "@typescript-eslint/no-misused-promises": "off",
+    "@typescript-eslint/no-unsafe-argument": "off", // makes working with fetch so annoying
+    "@typescript-eslint/no-unsafe-assignment": "off" // makes working with fetch so annoying
   },
   "settings": {
     "react": {

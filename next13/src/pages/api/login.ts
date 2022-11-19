@@ -50,6 +50,8 @@ export default function handler(
     return;
   }
 
+  // TODO: set credential cookie, or use next-auth
+
   res.status(200).json({
     success: true,
     user,

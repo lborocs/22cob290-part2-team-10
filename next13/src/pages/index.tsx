@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 
@@ -21,7 +22,7 @@ type LoginFormData = {
 }
 
 export function getServerSideProps() {
-  // TODO: check for logged in cookie,
+  // TODO: check for logged in cookie, or use next-auth
   return {
     props: {
 
@@ -31,39 +32,50 @@ export function getServerSideProps() {
 
 // TODO: NEXT AUTH
 export default function LoginPage() {
+  const router = useRouter();
+
   const [emailFeedback, setEmailFeedback] = useState<string>();
   const [passwordFeedback, setPasswordFeedback] = useState<string>();
 
+  const [badForm, setBadForm] = useState(false);
+
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+
+  useEffect(() => {
+    setBadForm(emailFeedback !== undefined || passwordFeedback !== undefined);
+  }, [emailFeedback, passwordFeedback]);
 
   const login = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (badForm) return;
+
     const formData = Object.fromEntries(new FormData(e.currentTarget)) as LoginFormData;
     const { email, password } = formData;
 
-    let badForm = false;
+    let _badForm = false;
 
     if (!isValidWorkEmail(email)) {
-      badForm = true;
+      _badForm = true;
       setEmailFeedback('Invalid Make-It-All email');
     }
 
     const pwError = validatePassword(password);
     if (pwError) {
-      badForm = true;
+      _badForm = true;
       setPasswordFeedback(pwError);
     }
 
-    if (badForm) return;
+    setBadForm(_badForm);
+    if (_badForm) return;
 
     setIsLoggingIn(true);
 
     // TODO: use axios instead of fetch
-    const res = await fetch('api/login', {
+    const res: ResponseSchema = await fetch('api/login', {
       method: 'POST',
       body: JSON.stringify(formData),
-    }).then((resp) => resp.json()) as ResponseSchema;
+    }).then((resp) => resp.json());
 
     console.log(res);
     if (res.success) {
@@ -72,7 +84,8 @@ export default function LoginPage() {
       if (user.role === Role.LEFT_COMPANY) {
         setEmailFeedback('You no longer have access to this website');
       } else {
-        // TODO: open home page
+        alert(`Logged in as ${JSON.stringify(user)}`);
+        await router.push('/home');
       }
     } else {
       switch (res.reason) {
@@ -84,8 +97,9 @@ export default function LoginPage() {
           setPasswordFeedback('Incorrect password');
           break;
 
-        default:
-        // TODO
+        default: // shouldn't happen
+          setEmailFeedback(res.reason);
+          setPasswordFeedback(res.reason);
       }
     }
 
@@ -123,6 +137,7 @@ export default function LoginPage() {
                 variant="secondary"
                 type="submit"
                 isLoading={isLoggingIn}
+                disabled={badForm}
               >
                 Login
               </LoadingButton>
