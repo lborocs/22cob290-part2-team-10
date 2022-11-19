@@ -58,15 +58,11 @@ $projects = get_project_names($email);
       <!-- TODO: decide what goes in sidebar -->
       <p>Assigned Projects:</p>
       <ul class="list-unstyled" id="projects-list">
-        <?php
-        foreach ($projects as $project_name) {
-          echo <<<HTML
-            <li>
-              <a class="nav-link" href="projects?name=$project_name">$project_name</a>
-            </li>
-          HTML;
-        }
-        ?>
+        <?php foreach ($projects as $project_name): ?>
+          <li>
+            <a class="nav-link" href="projects?name=$project_name"><?= $project_name ?></a>
+          </li>
+        <?php endforeach ?>
       </ul>
     </div>
   </nav>

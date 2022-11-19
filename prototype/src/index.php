@@ -33,7 +33,7 @@ if (cookie_is_set()) {
   <div>
     <img src="assets/make_it_all.png" alt="Make-It-All Logo" class="img-fluid mb-3">
 
-    <form id="login-form" action="login/action.php" method="POST" class="mt-6">
+    <form id="login-form" action="login/action.php" method="POST">
       <!-- Email -->
       <div class="form-group row mb-3">
         <label for="email" class="col-sm-3 col-form-label">Email</label>
