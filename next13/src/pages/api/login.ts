@@ -28,7 +28,7 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseSchema>,
 ) {
-  const { email, password } = req.body as RequestSchema;
+  const { email, password } = JSON.parse(req.body) as RequestSchema;
 
   // TODO: verify email & password (BAD_CREDENTIALS)
 
