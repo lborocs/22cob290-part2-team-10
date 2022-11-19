@@ -1,6 +1,7 @@
 {
   "parser": "@typescript-eslint/parser", // Specifies the ESLint parser
   "extends": [
+    "eslint:recommended",
     "next/core-web-vitals",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
@@ -22,11 +23,59 @@
     "@typescript-eslint/no-explicit-any": "off",
 
     // ...
+    "quotes": ["warn", "single"],
     "semi": "error",
     "comma-dangle": ["error", "always-multiline"],
+    // "prefer-const": "warn", // annoying having it as error
+
+    // taking from airbnb (mostly modifying severity tho)
+    "quote-props": ["error", "as-needed"],
+    "no-new-object": "error",
+    "object-shorthand": "error",
+    "array-callback-return": "warn",
+    "prefer-destructuring": ["error", {
+      "array": true,
+      "object": true
+    }, {
+      "enforceForRenamedProperties": false
+    }],
+    "prefer-template": "error",
+    "template-curly-spacing": "error",
+    "space-before-function-paren": ["error", {
+      "anonymous": "always",
+      "named": "never",
+      "asyncArrow": "always"
+    }],
+    "space-before-blocks": ["error", "always"],
+    "prefer-spread": "error",
+    "prefer-arrow-callback": ["error", {
+      "allowNamedFunctions": true
+    }],
+    "arrow-spacing": "error",
+    "arrow-parens": "error",
+    "no-confusing-arrow": "error",
+    "implicit-arrow-linebreak": "error",
+    "no-duplicate-imports": "error",
+    "import/first": "error",
+    "import/extensions": "error",
+    "dot-notation": "error",
+    "no-multi-assign": "error",
+    "operator-linebreak": ["error", "none"],
+    "no-nested-ternary": "error",
+    "no-unneeded-ternary": "error",
+    "no-mixed-operators": "error",
+    "nonblock-statement-body-position": ["error", "beside"],
+    "comma-style": "error",
+    "no-new-wrappers": "error",
+    "radix": ["error", "as-needed"],
+    "camelcase": "error",
+    "new-cap": "error",
+
     "react/self-closing-comp": "warn",
+
     "@typescript-eslint/require-await": "warn",
-    "@typescript-eslint/no-empty-function": "off"
+    "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/no-misused-promises": "off"
   },
   "settings": {
     "react": {
