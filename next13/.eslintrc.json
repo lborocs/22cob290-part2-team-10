@@ -33,12 +33,6 @@
     "no-new-object": "error",
     "object-shorthand": "error",
     "array-callback-return": "warn",
-    "prefer-destructuring": ["error", {
-      "array": true,
-      "object": true
-    }, {
-      "enforceForRenamedProperties": false
-    }],
     "prefer-template": "error",
     "template-curly-spacing": "error",
     "space-before-function-paren": ["error", {
