@@ -103,7 +103,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
 
   // use auth's redirection because it gives callback URL
-  if (!session) {
+  if (!session || !session.user) {
     console.log('PROFILE SSR NO SESSION');
     return {
       props: {
@@ -115,7 +115,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     };
   }
 
-  const email = session.user!.email!;
+  const email = session.user.email!;
   const user = getUser(email)!;
 
   return {
