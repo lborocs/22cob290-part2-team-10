@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { User } from 'next-auth';
 import { object, string, type InferType } from 'yup';
 
-import type { User } from '~/types';
+// import type { User } from '~/types';
 import { users } from '~/server/store/users';
 import { PASSWORD_SCHEMA } from '~/utils';
 
@@ -25,7 +26,9 @@ type FailedResponse = {
 
 export type ResponseSchema = FailedResponse | {
   success: true
-  user: User
+  user: User & {
+    name: string
+  }
 };
 
 export default async function handler(
@@ -63,10 +66,16 @@ export default async function handler(
     return;
   }
 
-  // TODO: set credential cookie, or use next-auth
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { password: omit, ...result } = user;
 
   res.status(200).json({
     success: true,
-    user,
-  });
+    user: {
+      id: result.email, // maybe for account.providerAccountId
+      name: `${user.fname} ${user.lname}`,
+      image: 'WHAT IS IMAGE FOR',
+      ...result,
+    },
+  } as any);
 }

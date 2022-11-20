@@ -1,7 +1,11 @@
 import NextAuth, { type NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import axios from 'axios';
 
-import type { User } from '~/types';
+import { Role } from '~/types';
+import type { ResponseSchema as LoginResponse } from '~/pages/api/user/login';
+
+// TODO: extend User type to match what we return from /api/user/login
 
 export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
@@ -14,46 +18,40 @@ export const authOptions: NextAuthOptions = {
       // e.g. domain, username, password, 2FA token, etc.
       // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
-        username: { label: 'Username', type: 'text', placeholder: 'jsmith' },
+        email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials, req) {
-        // You need to provide your own logic here that takes the credentials
-        // submitted and returns either a object representing a user or value
-        // that is false/null if the credentials are invalid.
-        // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
-        // You can also use the `req` object to obtain additional parameters
-        // (i.e., the request IP address)
-        const res = await fetch('/api/user/login1', {
-          method: 'POST',
-          body: JSON.stringify(credentials),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        const user: User = await res.json();
+        const payload = {
+          email: credentials!.email,
+          password: credentials!.password,
+        };
 
-        console.log(`user = ${JSON.stringify(user)}`);
+        const { data } = await axios.post<LoginResponse>('http://localhost:3000/api/user/login', payload);
 
-        // If no error and we have user data, return it
-        if (res.ok && user) {
-          return user as any;
-        }
-        // Return null if user data could not be retrieved
-        return null;
+        if (data.success) return data.user;
+        throw new Error(data.reason);
       },
     }),
   ],
 
   pages: {
-    signIn: '/auth/signin',
-    signOut: '/auth/signout',
+    signIn: '/',
     error: '/auth/error', // Error code passed in query string as ?error=
-    verifyRequest: '/auth/verify-request', // (used for check email message)
     newUser: '/auth/new-user', // New users will be directed here on first sign in (leave the property out if not of interest)
   },
 
   callbacks: {
+    async signIn({ user, account }) {
+      const isAllowedToSignIn = (<any>user).role !== Role.LEFT_COMPANY;
+
+      if (isAllowedToSignIn) return true;
+
+      // Return false to display a default error message
+      return false;
+      // Or you can return a URL to redirect to
+    },
+
     async redirect({ url, baseUrl }) {
       // Allows relative callback URLs
       if (url.startsWith('/')) return `${baseUrl}${url}`;
@@ -62,28 +60,34 @@ export const authOptions: NextAuthOptions = {
       return baseUrl;
     },
 
-    // async jwt({ token, user, account }) {
-    //   if (account && user) {
-    //     return {
-    //       ...token,
-    //       accessToken: user.data.token,
-    //       refreshToken: user.data.refreshToken,
-    //     };
-    //   }
+    async jwt({ token, user: _user, account }) {
+      const user = _user as any;
 
-    //   return token;
-    // },
+      if (user && account) {
+        // modify token...
+      }
 
-    // async session({ session, token }) {
-    //   session.user.accessToken = token.accessToken;
-    //   session.user.refreshToken = token.refreshToken;
-    //   session.user.accessTokenExpires = token.accessTokenExpires;
+      return token;
+    },
 
-    //   return session;
-    // },
+    // FIXME: it seems to give a new session everytime if they were logged in
+
+    async session({ session, token }) {
+      // Send properties to the client, like an access_token and user id from a provider.
+
+      // modify session...
+
+      return session;
+    },
   },
 
-  // Enable debug messages in the console if you are having problems
+  session: {
+    strategy: 'jwt',
+
+    // Seconds - How long until an idle session expires and is no longer valid.
+    maxAge: 24 * 60 * 60, // 24 hrs (test)
+  },
+
   debug: process.env.NODE_ENV === 'development',
 };
 

@@ -27,6 +27,7 @@ function Auth({ children }) {
   // if `{ required: true }` is supplied, `status` can only be 'loading' or 'authenticated'
   const { status } = useSession({ required: true });
 
+  // TODO: show a page central loading spinner
   if (status === 'loading') {
     return <div>Loading...</div>;
   }

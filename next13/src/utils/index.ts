@@ -1,6 +1,5 @@
 import * as yup from 'yup';
 
-
 export function isValidMakeItAllEmail(email: string): boolean {
   return email.endsWith('@make-it-all.co.uk') && email !== '@make-it-all.co.uk';
 }
