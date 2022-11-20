@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { forwardRef, useState } from 'react';
+import type { FormControlProps } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
 import InputGroup from 'react-bootstrap/InputGroup';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Row from 'react-bootstrap/Row';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { EyeFill, EyeSlashFill, InfoCircleFill } from 'react-bootstrap-icons';
 
@@ -33,7 +34,7 @@ function PolicyTooltip() {
   );
 }
 
-export default function PasswordField({
+export default forwardRef(function PasswordField({
   name,
   label = 'Password',
   controlId,
@@ -42,7 +43,8 @@ export default function PasswordField({
   feedback,
   setFeedback,
   policyTooltip,
-}: {
+  ...props
+}: FormControlProps & {
   name: string
   label?: string
   controlId: string
@@ -51,7 +53,7 @@ export default function PasswordField({
   feedback?: string
   setFeedback?: ReturnType<typeof useState<string>>[1]
   policyTooltip?: boolean
-}) {
+}, ref: React.ForwardedRef<HTMLInputElement>) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -66,7 +68,9 @@ export default function PasswordField({
             placeholder={placeholder}
             isInvalid={!!feedback}
             onChange={() => setFeedback?.(undefined)}
+            ref={ref}
             required
+            {...props}
           />
           {policyTooltip && (
             <PolicyTooltip />
@@ -85,4 +89,4 @@ export default function PasswordField({
       </Col>
     </Form.Group>
   );
-}
+});
