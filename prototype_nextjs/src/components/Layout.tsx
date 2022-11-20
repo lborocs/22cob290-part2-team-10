@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 // import { useRouter } from 'next/router';
 
-import ProjectsList from '~/components/ProjectsList';
+import ProjectsList from '~/components/sidebar/ProjectsList';
 
 import styles from '~/styles/Layout.module.css';
 import makeItAllLogo from '~/../public/company-logo.png';
