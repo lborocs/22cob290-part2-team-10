@@ -28,8 +28,8 @@ export default function LoginPage() {
   // or show a toast saying they need to login first (I'm liking this more)
 
   // handle using this as login page for auth flow
-  const { callbackUrl: _callbackUrl } = router.query;
-  const callbackUrl = _callbackUrl as string ?? '/test'; // TODO: /home
+  const { callbackUrl } = router.query;
+  const nextUrl = callbackUrl as string ?? '/test'; // TODO: /home
 
   const [emailFeedback, setEmailFeedback] = useState<string>();
   const [passwordFeedback, setPasswordFeedback] = useState<string>();
@@ -45,8 +45,8 @@ export default function LoginPage() {
   const session = useSession();
 
   if (session.data) {
-    console.log('Logged in?');
-    router.push(callbackUrl);
+    console.log('Logged in');
+    router.push(nextUrl);
     return null;
   }
 

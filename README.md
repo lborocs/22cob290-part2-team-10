@@ -14,7 +14,8 @@
   - [TODO (feedback from Part 1 presentation)](#todo-feedback-from-part-1-presentation)
   - [TODO (not from feedback)](#todo-not-from-feedback)
   - [How it works](#how-it-works-1)
-    - [Backend](#backend)
+  - [How we need to code](#how-we-need-to-code)
+    - [Getting user during SSR](#getting-user-during-ssr)
   - [Pages](#pages-1)
   - [Libraries](#libraries-1)
 <!-- TOC -->
@@ -111,12 +112,61 @@ https://cloud.google.com/nodejs/getting-started/getting-started-on-compute-engin
 
 ### How it works
 
-- Use cookies again? That allows us to know who is logged in when using SSR
-- Instead of storing user's email, store JWT token containing their email, so they can't pretend to be someone else
+- Using [NextAuth.js](https://next-auth.js.org/getting-started/client#usesession) which creates a session (with a JWT storing the user's info)
 
-#### Backend
+### How we need to code
 
-Use `/api`, and return 'fake' data until database is designed and implemented
+- Use API routes to update database (e.g. for things like adding task)
+- Use [SSR](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props) to get info for page (e.g. getting a user's todo list)
+  - See next section for how to get user during SSR
+  - Don't make API route for getting data that is gotten during SSR
+  - Access `/server/store` functions directly instead
+
+#### Getting user during SSR
+
+Example (also can see [profile.tsx](prototype_nextjs/src/pages/profile.tsx)):
+
+```tsx
+import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+
+import { authOptions } from '~/pages/api/auth/[...nextauth]';
+
+// don't use ...props, instead destructure your props in the component params
+export default function ExamplePage({ notLoggedIn, ...props }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  if (notLoggedIn || !props) return null;
+
+  const {/* desctructure props */} = props;
+
+  return (
+    <>
+    </>
+  );
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await unstable_getServerSession(context.req, context.res, authOptions);
+
+  // not logged in, will be handled by _app
+  if (!session || !session.user) {
+    return {
+      props: {
+        notLoggedIn: true,
+      },
+    };
+  }
+
+  const email = session.user.email!; // e.g. alice@make-it-all.co.uk
+
+  /* get whatever data you want to pass to component as a prop */
+
+  return {
+    props: {
+      session,
+      // pass props here
+    }
+  };
+}
+```
 
 ### Pages
 
@@ -126,7 +176,7 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 
 | Page URL                              | Owner | Notes                                                                                   |
 |---------------------------------------|-------|-----------------------------------------------------------------------------------------|
-| `/`                                   |       | Can make `/` display home instead and if user isn't logged in, redirect to `/login`?    |
+| `/`                                   | Dara  | Can make `/` display home instead and if user isn't logged in, redirect to `/login`?    |
 | `/home`                               |       |                                                                                         |
 | `/projects`                           |       | All assigned projects                                                                   |
 | `/projects/[name]`                    |       | A specific project                                                                      |
@@ -137,7 +187,7 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 | `/forum/posts/[id]`                   |       | Display a specific post                                                                 |
 | `/dashboard`                          |       |                                                                                         |
 | `/staff_assignment`                   |       | I think we should rename this URL                                                       |
-| `/profile`                            |       |                                                                                         |
+| `/profile`                            | Dara  |                                                                                         |
 | `/signup`                             |       | Can merge signup and login?                                                             |
 
 ### Libraries

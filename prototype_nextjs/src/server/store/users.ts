@@ -1,4 +1,14 @@
-import { Role, type User } from '~/types';
+import { Role } from '~/types';
+
+// would like to have this in ~/types but that can be after user entity is finalised
+// and thought of a good name for this (User bad name cos clash with nextauth)
+export type User = {
+  fname: string
+  lname: string
+  email: string
+  password: string
+  role: Role
+};
 
 /* TODO: refactor to be like a repository:
 
@@ -49,3 +59,21 @@ export const users: User[] = [
     role: Role.LEFT_COMPANY,
   },
 ];
+
+export type UserInfo = (Omit<User, 'password'> & {
+  name: string
+});
+
+export function getUserInfo(email: string): UserInfo | undefined {
+  const user = users.find((user) => user.email === email);
+
+  if (!user) return user;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { password, ...result } = user;
+
+  return {
+    name: `${user.fname} ${user.lname}`,
+    ...result,
+  };
+}

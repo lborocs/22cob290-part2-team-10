@@ -1,0 +1,26 @@
+/* TODO */
+
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+
+/* TODO: pure selectors arent allowed so dk what to do */
+#root {
+    --primary-color: white;
+    --secondary-color: #d3d3d3;
+    --tertiary-color: #e2ba39;
+    --sidebar-text: black;
+    --sidebar-hover: #e2ba3990;
+    --avatar-bg: #e2ba39;
+    --avatar-fg: white;
+}
+
+.sidebar {
+
+}
+
+.sidebar-header {
+
+}
+
+.components {
+
+}
