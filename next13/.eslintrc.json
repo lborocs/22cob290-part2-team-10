@@ -17,6 +17,7 @@
     "semi": "error",
     "comma-dangle": ["error", "always-multiline"],
     // "prefer-const": "warn", // annoying having it as error
+    "no-unused-vars": ["warn", { "args": "none" }],
 
     // taking from airbnb (mostly modifying severity tho)
     "quote-props": ["error", "as-needed"],
