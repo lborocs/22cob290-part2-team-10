@@ -8,7 +8,6 @@ import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { getUser } from '~/pages/api/user/getUser';
 
 export default function ProfilePage({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  // const { data: session } = useSession();
   if (!user) return null;
 
   const { email, role } = user;
@@ -56,4 +55,4 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   };
 }
 
-// ProfilePage.auth = true;
+ProfilePage.auth = true;
