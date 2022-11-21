@@ -124,20 +124,21 @@ https://cloud.google.com/nodejs/getting-started/getting-started-on-compute-engin
   - Access `/server/store` functions directly instead
     - Make them all `async` because database operations will be `async`
 - You can copy and paste from [page_template](prototype_nextjs/src/pages/examples/page_template.tsx)
+  - Already done for the pages available in navbar (`home`, `forum`, etc.)
 - Run locally and see all examples at [`http://localhost:3000/examples`](http://localhost:3000/examples)
 
 #### Layout/Sidebar
 
 Need to wrap your page's content in a `Layout` component
 
-| Prop           | Type                                                  | How to get it  |
-|----------------|-------------------------------------------------------|----------------|
-| sidebarType    | 'project' &#124; 'custom'                             | Use your brain |
-| sidebarContent | `ReactNode` (only needed if `sidebarType` === custom) | Think          |
-| user           | `UserInfo` (server/store/users)                       | Get from SSR   |
+| Prop           | Type                                                  | How to get it                                                                                                   |
+|----------------|-------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
+| sidebarType    | 'project' &#124; 'custom'                             | Use your brain                                                                                                  |
+| sidebarContent | `ReactNode` (only needed if `sidebarType` === custom) | Create a custom component (see [custom sidebar example](prototype_nextjs/src/pages/examples/custom_sidebar.tsx) |
+| user           | `UserInfo` (server/store/users)                       | Get from SSR                                                                                                    |
 
 - Most pages will have a `sidebarType` of `project`
-  - e.g. forum will be `custom`
+  - e.g. forum should be `custom`
 
 ##### Examples
 
@@ -150,21 +151,21 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 
 > Not sure about the forum pages
 
-| Page URL                              | Owner | Notes                                                                                   |
-|---------------------------------------|-------|-----------------------------------------------------------------------------------------|
-| `/`                                   | Dara  | Can make `/` display home instead and if user isn't logged in, redirect to `/login`?    |
-| `/home`                               |       |                                                                                         |
-| `/projects`                           |       | All assigned projects                                                                   |
-| `/projects/[name]`                    |       | A specific project                                                                      |
-| `/forum`                              |       | Displays all forum topics (TODO: forum redesign)                                        |
-| `/forum?topics=[topic1],[topic2],...` |       | Posts with the specified topics (dynamic page with updating url without changing page)  |
-| `/forum/[topicname]`?                 |       | Displays post summaries for a topic (click to open the page for that post)              |
-| `/forum/posts`                        |       | Display all posts                                                                       |
-| `/forum/posts/[id]`                   |       | Display a specific post                                                                 |
-| `/dashboard`                          |       |                                                                                         |
-| `/staff_assignment`                   |       | I think we should rename this URL                                                       |
-| `/profile`                            | Dara  |                                                                                         |
-| `/signup`                             |       | Can merge signup and login?                                                             |
+| Page URL                              | Owner | Status       | Completed             | Notes                                                                                  |
+|---------------------------------------|-------|--------------|-----------------------|----------------------------------------------------------------------------------------|
+| `/`                                   | Dara  | Complete     | <ul><li>[x] </li><ul> | Can make `/` display home instead and if user isn't logged in, redirect to `/login`?   |
+| `/home`                               |       | Templated    |                       |                                                                                        |
+| `/projects`                           |       | Templated    |                       | Display all projects                                                                   |
+| `/projects/[name]`                    |       | Templated    |                       | A specific project, use `components/Task` and `components/KanbanBoard`                 |
+| `/forum`                              |       | Templated    |                       | Displays all forum topics (TODO: forum redesign)                                       |
+| `/forum?topics=[topic1],[topic2],...` |       |              |                       | Posts with the specified topics (dynamic page with updating url without changing page) |
+| `/forum/[topicname]`?                 |       |              |                       | Displays post summaries for a topic (click to open the page for that post)             |
+| `/forum/posts`                        |       |              |                       | Display all posts                                                                      |
+| `/forum/posts/[id]`                   |       |              |                       | Display a specific post                                                                |
+| `/dashboard`                          |       | Templated    |                       |                                                                                        |
+| `/staff_assignment`                   |       |              |                       | I think we should rename this URL                                                      |
+| `/profile`                            | Dara  | In progress  | <ul><li>[ ] </li><ul> |                                                                                        |
+| `/signup`                             |       | Templated    |                       | Can merge signup and login?                                                            |
 
 ### Libraries
 
