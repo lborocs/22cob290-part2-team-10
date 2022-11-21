@@ -98,8 +98,7 @@ a:focus {
     background: var(--sidebar-hover);
 }
 
-#sidebar ul li.active > a,
-a[aria-expanded="true"] {
+#sidebar ul li.active > a {
     color: #fff;
     background: var(--tertiary-color);
 }
