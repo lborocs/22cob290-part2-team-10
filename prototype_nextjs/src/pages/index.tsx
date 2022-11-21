@@ -5,6 +5,9 @@ import { useRouter } from 'next/router';
 import { useSession, signIn } from 'next-auth/react';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
+import Toast from 'react-bootstrap/Toast';
+import ToastContainer from 'react-bootstrap/ToastContainer';
+// import Holder from 'react-holder'; // TODO
 
 import EmailField from '~/components/EmailField';
 import PasswordField from '~/components/PasswordField';
@@ -23,9 +26,6 @@ type LoginFormData = {
 
 export default function LoginPage() {
   const router = useRouter();
-
-  // TODO: if router.query.callbackUrl is set, show an info thingy that they'll be taken to that page
-  // or show a toast saying they need to login first (I'm liking this more)
 
   // handle using this as login page for auth flow
   const { callbackUrl } = router.query;
@@ -112,6 +112,25 @@ export default function LoginPage() {
         <title>Login - Make-It-All</title>
       </Head>
       <main className={`vh-100 d-flex align-items-center justify-content-center flex-column ${styles.main}`}>
+        {callbackUrl ? (
+          <ToastContainer className="p-3" position="top-center">
+            <Toast bg="warning">
+              <Toast.Header>
+                {/* <Holder
+                // yellow?
+                  width="20px"
+                  height="20px"
+                /> */}
+                <strong className="me-auto">Bootstrap</strong>
+                {/* <small>11 mins ago</small> */}
+              </Toast.Header>
+              <Toast.Body>
+                You need to sign in first.
+              </Toast.Body>
+            </Toast>
+          </ToastContainer>
+        ) : null}
+
         <div>
           <Image
             src={makeItAllLogo}
