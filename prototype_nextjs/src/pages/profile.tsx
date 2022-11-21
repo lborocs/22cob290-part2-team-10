@@ -17,10 +17,9 @@ export default function ProfilePage({ user }: InferGetServerSidePropsType<typeof
 
   const { fname, lname, email, role } = user;
 
-  // TODO: text avatar on the left or smthn, and click on it to open edit modal
-
   // TODO: name editable properly
 
+  // TODO: big text avatar on the left or smthn, and click on it to open edit modal
   // TODO: organise more like Details: name, email, role
 
   return (

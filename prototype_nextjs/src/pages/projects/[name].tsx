@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */ // TODO: remove once this is done
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
@@ -5,19 +6,35 @@ import { unstable_getServerSession } from 'next-auth/next';
 import Layout from '~/components/Layout';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { getUserInfo } from '~/server/store/users';
+import { getProjectInfo } from '~/server/store/projects';
+import KanbanBoard from '~/components/KanbanBoard';
 
-// TODO: DashboardPage
-export default function DashboardPage({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+// TODO: project page (Projects page from before)
+export default function ProjectPage({ user, projectInfo }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   if (!user) return null;
+
+  const {
+    name,
+    manager,
+    leader,
+    members,
+    todo,
+    in_progress,
+    code_review,
+    completed,
+  } = projectInfo;
 
   return (
     <>
       <Head>
-        <title>Dashboard - Make-It-All</title>
+        <title>{name} - Make-It-All</title>
       </Head>
       <Layout user={user} sidebarType="projects">
         <main>
-          {/* TODO */}
+          <h1>{name}</h1>
+          <KanbanBoard
+            project={projectInfo}
+          />
         </main>
       </Layout>
     </>
@@ -27,8 +44,6 @@ export default function DashboardPage({ user }: InferGetServerSidePropsType<type
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
 
-  // not logged in, will be handled by _app
-  // use auth's redirection because it gives callback URL
   if (!session || !session.user) {
     return { props: {} };
   }
@@ -36,10 +51,15 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const email = session.user.email!;
   const user = (await getUserInfo(email))!;
 
+  const { name: projectName } = context.params!;
+
+  const projectInfo = await getProjectInfo(projectName as string);
+
   return {
     props: {
       session,
       user,
+      projectInfo: projectInfo!,
     },
   };
 }

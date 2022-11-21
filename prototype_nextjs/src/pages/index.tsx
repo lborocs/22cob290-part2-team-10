@@ -29,7 +29,7 @@ export default function LoginPage() {
 
   // handle using this as login page for auth flow
   const { callbackUrl } = router.query;
-  const nextUrl = callbackUrl as string ?? '/test'; // TODO: /home
+  const nextUrl = callbackUrl as string ?? '/home';
 
   const [emailFeedback, setEmailFeedback] = useState<string>();
   const [passwordFeedback, setPasswordFeedback] = useState<string>();

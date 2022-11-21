@@ -31,9 +31,9 @@ export default function ProjectsList() {
   if (status !== 'authenticated') return null;
 
   let route: string | undefined;
-  if (router.pathname === '/project/[name]') {
+  if (router.pathname === '/projects/[name]') {
     const { name } = router.query;
-    route = `/project/${encodeURIComponent(name as string)}`;
+    route = `/projects/${encodeURIComponent(name as string)}`;
   }
 
   return (
@@ -41,7 +41,7 @@ export default function ProjectsList() {
       <p className={styles.title}>Assigned Projects:</p>
       <div className={`list-unstyled ${styles['projects-list']}`}>
         {projects.map((projectName, index) => {
-          const url = `/project/${encodeURIComponent(projectName)}`;
+          const url = `/projects/${encodeURIComponent(projectName)}`;
           const active = route === url;
 
           return (

@@ -6,14 +6,14 @@ import Layout from '~/components/Layout';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { getUserInfo } from '~/server/store/users';
 
-// TODO: DashboardPage
-export default function DashboardPage({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+// TODO: ProjectsPage
+export default function ProjectsPage({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   if (!user) return null;
 
   return (
     <>
       <Head>
-        <title>Dashboard - Make-It-All</title>
+        <title>Projects - Make-It-All</title>
       </Head>
       <Layout user={user} sidebarType="projects">
         <main>
@@ -27,8 +27,6 @@ export default function DashboardPage({ user }: InferGetServerSidePropsType<type
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
 
-  // not logged in, will be handled by _app
-  // use auth's redirection because it gives callback URL
   if (!session || !session.user) {
     return { props: {} };
   }

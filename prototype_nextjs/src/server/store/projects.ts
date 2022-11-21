@@ -33,7 +33,14 @@ const projects: ProjectInfo[] = [
     members: [
       'alice',
     ],
-    todo: [],
+    todo: [
+      {
+        title: 'Todo Task Title',
+        description: 'Todo desc....',
+        tags: ['tag1', 'tag2'],
+        assignee: 'timothy',
+      },
+    ],
     in_progress: [],
     code_review: [],
     completed: [],

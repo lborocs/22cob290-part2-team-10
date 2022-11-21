@@ -1,24 +1,26 @@
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 
 import Layout from '~/components/Layout';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { getUserInfo } from '~/server/store/users';
-import { getProjectInfo } from '~/server/store/projects';
 
-// TODO: components/Task
-// TODO: components/Kanban
-
-// TODO: project page (Projects page from before)
-export default function ProjectPage({ user, projectInfo }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+// TODO: SignupPage
+export default function SignupPage({ user, token }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   if (!user) return null;
 
   return (
-    <Layout user={user} sidebarType='projects'>
-      <main>
-        <h1>{projectInfo.name}</h1>
-      </main>
-    </Layout>
+    <>
+      <Head>
+        <title>Signup - Make-It-All</title>
+      </Head>
+      <Layout user={user} sidebarType="projects">
+        <main>
+          {/* TODO */}
+        </main>
+      </Layout>
+    </>
   );
 }
 
@@ -32,15 +34,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const email = session.user.email!;
   const user = (await getUserInfo(email))!;
 
-  const { name: projectName } = context.params!;
-
-  const projectInfo = await getProjectInfo(projectName as string);
+  // should we verify token during SSR?
+  const token = context.params?.token as string | undefined;
 
   return {
     props: {
       session,
       user,
-      projectInfo: projectInfo!,
+      token,
     },
   };
 }

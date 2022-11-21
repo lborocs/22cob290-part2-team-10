@@ -9,7 +9,7 @@ export default function ExamplePage({ user }: InferGetServerSidePropsType<typeof
   if (!user) return null;
 
   return (
-    <Layout user={user} sidebarType='projects'>
+    <Layout user={user} sidebarType="projects">
       <main>
         <h1>Assigned projects sidebar example</h1>
       </main>

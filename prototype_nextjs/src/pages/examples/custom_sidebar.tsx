@@ -9,7 +9,7 @@ export default function ExamplePage({ user }: InferGetServerSidePropsType<typeof
   if (!user) return null;
 
   return (
-    <Layout user={user} sidebarType='custom' sidebarContent={<Sidebar />}>
+    <Layout user={user} sidebarType="custom" sidebarContent={<Sidebar />}>
       <main>
         <h1>Custom sidebar example</h1>
       </main>

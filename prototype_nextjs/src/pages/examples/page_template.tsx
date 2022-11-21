@@ -1,4 +1,5 @@
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 import Button from 'react-bootstrap/Button';
 
@@ -10,13 +11,18 @@ export default function Page({ user }: InferGetServerSidePropsType<typeof getSer
   if (!user) return null;
 
   return (
-    <Layout user={user} sidebarType='projects'>
-      <main>
-        <h1>Page template</h1>
-        <span>ok</span>
-        <Button>test test test</Button>
-      </main>
-    </Layout>
+    <>
+      <Head>
+        <title>Page Template - Make-It-All</title>
+      </Head>
+      <Layout user={user} sidebarType="projects">
+        <main>
+          <h1>Page template</h1>
+          <span>ok</span>
+          <Button>test test test</Button>
+        </main>
+      </Layout>
+    </>
   );
 }
 
