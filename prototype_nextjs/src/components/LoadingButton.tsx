@@ -22,11 +22,13 @@ export default forwardRef(function LoadingButton({
       {isLoading && (
         <>
           <Spinner
-            as='span'
-            animation='border'
-            role='status'
-            size='sm'
-          />
+            as="span"
+            animation="border"
+            role="status"
+            size="sm"
+          >
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
           {' '}
         </>
       )}
