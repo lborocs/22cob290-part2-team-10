@@ -2,6 +2,8 @@
 import { SessionProvider, useSession } from 'next-auth/react';
 import { config } from '@fortawesome/fontawesome-svg-core';
 
+import LoadingPage from '~/components/LoadingPage';
+
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '~/styles/globals.css';
@@ -30,9 +32,8 @@ function Auth({ children }) {
   // if `{ required: true }` is supplied, `status` can only be 'loading' or 'authenticated'
   const { status } = useSession({ required: true });
 
-  // TODO: show a page central loading spinner
   if (status === 'loading') {
-    return <div>Loading...</div>;
+    return <LoadingPage />;
   }
 
   return children;
