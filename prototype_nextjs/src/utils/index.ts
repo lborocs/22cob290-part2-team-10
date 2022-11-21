@@ -17,10 +17,10 @@ export const MIN_PASSWORD_LENGTH = 12;
 export const MAX_PASSWORD_LENGTH = 64;
 
 // https://stackoverflow.com/q/1559751
-export const LOWERCASE_REGEX = /(?=.*[a-z])/;
-export const UPPERCASE_REGEX = /(?=.*[A-Z])/;
-export const NUMBER_REGEX = /(?=.*\d)/;
-export const SPECIAL_SYMBOL_REGEX = /(?=.*\W)/;
+export const LOWERCASE_REGEX = /(.*[a-z])/;
+export const UPPERCASE_REGEX = /(.*[A-Z])/;
+export const NUMBER_REGEX = /(.*\d)/;
+export const SPECIAL_SYMBOL_REGEX = /(.*\W)/;
 
 /* eslint-disable nonblock-statement-body-position */
 export function validatePassword(password: string): PasswordError | null {
