@@ -3,7 +3,7 @@ import { User } from 'next-auth';
 import { object, string, type InferType } from 'yup';
 
 // import type { User } from '~/types';
-import { users } from '~/server/store/users';
+import { getAllUsers } from '~/server/store/users';
 import { PASSWORD_SCHEMA } from '~/utils';
 
 export enum ErrorReason {
@@ -48,6 +48,7 @@ export default async function handler(
 
   const { email, password } = req.body as RequestSchema;
 
+  const users = await getAllUsers();
   const user = users.find((user) => user.email === email);
 
   if (!user) {

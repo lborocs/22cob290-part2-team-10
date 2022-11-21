@@ -3,9 +3,11 @@ import Image from 'next/image';
 // import { useRouter } from 'next/router';
 
 import ProjectsList from '~/components/sidebar/ProjectsList';
+import type { UserInfo } from '~/server/store/users';
 
 import styles from '~/styles/Layout.module.css';
 import makeItAllLogo from '~/../public/company-logo.png';
+import { Role } from '~/types';
 
 // gives flexibility to have more shared sidebars (not just projects)
 type SidebarType = 'projects' | 'custom';
@@ -21,12 +23,14 @@ type CustomSidebar = {
 };
 
 type LayoutProps = (DefaultSidebar | CustomSidebar) & {
+  user: UserInfo
   children: React.ReactNode
 };
 
 export default function Layout({
   sidebarType,
   sidebarContent,
+  user,
   children,
 }: LayoutProps) {
   // const router = useRouter();
@@ -51,6 +55,7 @@ export default function Layout({
             <Image
               src={makeItAllLogo}
               alt="Company Logo"
+              priority
             />
           </Link>
         </div>
@@ -67,6 +72,9 @@ export default function Layout({
             <Link href="/home">Home</Link>
             <Link href="/forum">Forum</Link>
             <Link href="/projects">Projects</Link>
+            {user.role === Role.MANAGER && (
+              <Link href="/dashboard">Dashboard</Link>
+            )}
             {/* TODO: text avatar (maybe make it its own component) */}
             <Link href="/profile">Profile</Link>
           </nav>

@@ -22,7 +22,7 @@ etc.
 
 */
 
-export const users: User[] = [
+const users: User[] = [
   {
     fname: 'Alice',
     lname: 'Jane',
@@ -60,11 +60,15 @@ export const users: User[] = [
   },
 ];
 
+export async function getAllUsers(): Promise<User[]> {
+  return users;
+}
+
 export type UserInfo = (Omit<User, 'password'> & {
   name: string
 });
 
-export function getUserInfo(email: string): UserInfo | undefined {
+export async function getUserInfo(email: string): Promise<UserInfo | undefined> {
   const user = users.find((user) => user.email === email);
 
   if (!user) return user;

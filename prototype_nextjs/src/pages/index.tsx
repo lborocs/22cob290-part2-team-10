@@ -153,3 +153,5 @@ export default function LoginPage() {
     </>
   );
 }
+
+LoginPage.noauth = true;

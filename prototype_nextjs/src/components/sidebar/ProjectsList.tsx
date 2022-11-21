@@ -1,19 +1,31 @@
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-
-import { getAssignedProjects } from '~/server/store/projects';
+import axios from 'axios';
 
 import styles from '~/styles/ProjectsList.module.css';
 
 export default function ProjectsList() {
   const { data: session, status } = useSession();
 
-  console.log('ProjectsList.session = ', session);
+  console.log('ProjectsList.session =', session);
+  const [projects, setProjects] = useState<string[]>([]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    axios.get<string[]>('/api/projects/getAssignedProjects', { signal })
+      .then(({ data }) => setProjects(data))
+      .catch((e) => { })
+      ;
+
+    return () => {
+      controller.abort();
+    };
+  }, []);
 
   if (status !== 'authenticated') return null;
-
-  const email = session.user!.email!;
-  const projects = getAssignedProjects(email);
 
   return (
     <div className={styles['sidebar-list']}>

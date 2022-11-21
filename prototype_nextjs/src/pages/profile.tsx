@@ -13,8 +13,8 @@ import Layout from '~/components/Layout';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { getUserInfo } from '~/server/store/users';
 
-export default function ProfilePage({ notLoggedIn, user }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  if (notLoggedIn || !user) return null;
+export default function ProfilePage({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  if (!user) return null;
 
   const { fname, lname, email, role } = user;
 
@@ -27,7 +27,7 @@ export default function ProfilePage({ notLoggedIn, user }: InferGetServerSidePro
       <Head>
         <title>Profile - Make-ItAll</title>
       </Head>
-      <Layout sidebarType='projects'>
+      <Layout user={user} sidebarType='projects'>
         <main>
           <section>
             <Row>
@@ -108,15 +108,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   // not logged in, will be handled by _app
   // use auth's redirection because it gives callback URL
   if (!session || !session.user) {
-    return {
-      props: {
-        notLoggedIn: true,
-      },
-    };
+    return { props: {} };
   }
 
   const email = session.user.email!;
-  const user = getUserInfo(email)!;
+  const user = (await getUserInfo(email))!;
 
   return {
     props: {
@@ -125,5 +121,3 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   };
 }
-
-ProfilePage.auth = true;

@@ -16,6 +16,8 @@
   - [How it works](#how-it-works-1)
   - [How we need to code](#how-we-need-to-code)
     - [Getting user during SSR](#getting-user-during-ssr)
+    - [Layout/Sidebar](#layoutsidebar)
+      - [Examples](#examples)
   - [Pages](#pages-1)
   - [Libraries](#libraries-1)
 <!-- TOC -->
@@ -118,55 +120,29 @@ https://cloud.google.com/nodejs/getting-started/getting-started-on-compute-engin
 
 - Use API routes to update database (e.g. for things like adding task)
 - Use [SSR](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props) to get info for page (e.g. getting a user's todo list)
-  - See next section for how to get user during SSR
+  - See [example](prototype_nextjs/src/pages/examples/user_ssr.tsx) for how to get user during SSR
   - Don't make API route for getting data that is gotten during SSR
   - Access `/server/store` functions directly instead
+    - Make them all `async` because database operations will be `async`
+- You can copy and paste from [page_template](prototype_nextjs/src/pages/examples/page_template.tsx)
 
-#### Getting user during SSR
+#### Layout/Sidebar
 
-Example (also can see [profile.tsx](prototype_nextjs/src/pages/profile.tsx)):
+Need to wrap your page's content in a `Layout` component
 
-```tsx
-import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+| Prop           | Type                                                  | How to get it  |
+|----------------|-------------------------------------------------------|----------------|
+| sidebarType    | 'project' &#124; 'custom'                             | Use your brain |
+| sidebarContent | `ReactNode` (only needed if `sidebarType` === custom) | Think          |
+| user           | `UserInfo` (server/store/users)                       | Get from SSR   |
 
-import { authOptions } from '~/pages/api/auth/[...nextauth]';
+- Most pages will have a `sidebarType` of `project`
+  - e.g. forum will be `custom`
 
-// don't use ...props, instead destructure your props in the component params
-export default function ExamplePage({ notLoggedIn, ...props }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  if (notLoggedIn || !props) return null;
+##### Examples
 
-  const {/* desctructure props */} = props;
-
-  return (
-    <>
-    </>
-  );
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await unstable_getServerSession(context.req, context.res, authOptions);
-
-  // not logged in, will be handled by _app
-  if (!session || !session.user) {
-    return {
-      props: {
-        notLoggedIn: true,
-      },
-    };
-  }
-
-  const email = session.user.email!; // e.g. alice@make-it-all.co.uk
-
-  /* get whatever data you want to pass to component as a prop */
-
-  return {
-    props: {
-      session,
-      // pass props here
-    }
-  };
-}
-```
+- [Sidebar that lists the user's assigned projects](prototype_nextjs/src/pages/examples/projects_sidebar.tsx)
+- [Custom sidebar](prototype_nextjs/src/pages/examples/custom_sidebar.tsx)
 
 ### Pages
 

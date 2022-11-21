@@ -1,4 +1,4 @@
-export function getAssignedProjects(email: string): string[] {
+export async function getAssignedProjects(email: string): Promise<string[]> {
   return [
     'Project 1',
     'Project 2',

@@ -4,20 +4,18 @@ import { SessionProvider, useSession } from 'next-auth/react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '~/styles/globals.css';
 
-// TODO: default layout (navbar, sidebar)
-
 export default function App({
   Component,
   pageProps: { session, ...pageProps },
 }) {
   return (
     <SessionProvider session={session}>
-      {Component.auth ? (
+      {Component.noauth ? (
+        <Component {...pageProps} />
+      ) : (
         <Auth>
           <Component {...pageProps} />
         </Auth>
-      ) : (
-        <Component {...pageProps} />
       )}
     </SessionProvider>
   );
