@@ -20,6 +20,7 @@
     "react-bootstrap": "^2.6.0",
     "react-bootstrap-icons": "^1.9.1",
     "react-dom": "^18.2.0",
+    "sharp": "^0.31.2",
     "yup": "^0.32.11"
   },
   "devDependencies": {
