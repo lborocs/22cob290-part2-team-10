@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { SessionProvider, useSession } from 'next-auth/react';
 import { config } from '@fortawesome/fontawesome-svg-core';
 

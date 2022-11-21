@@ -66,16 +66,12 @@ export default function Layout({
               src={makeItAllLogo}
               alt="Company logo"
               className={styles['company-logo']}
-              // width={83}
-              // height={24}
               priority
             />
           </Link>
-          {/* <img src="company-logo.png" alt="company logo" id="company-logo" /> */}
-
         </div>
 
-        <div className={`${styles['sidebar-content']}`}>
+        <div className={styles['sidebar-content']}>
           {getSidebarContent()}
         </div>
       </aside>
@@ -89,11 +85,15 @@ export default function Layout({
                 className={styles['sidebar-toggle-btn']}
               >
                 <FontAwesomeIcon icon={faAlignLeft} />
+                {' '}
                 <span className="d-none d-md-inline">Toggle Sidebar</span>
               </Button>
 
-              <Navbar.Brand>Brand
-
+              <Navbar.Brand>
+                {/*
+                  TODO: get rid of brand/have prop that is something like pageTitle
+                  TODO: center brand horizontally
+                */}
               </Navbar.Brand>
 
               <Navbar.Toggle
@@ -145,7 +145,9 @@ function Profile({ user }: { user: UserInfo }) {
   return (
     <>
       <span className="d-lg-none">Profile</span>
-      <span className="d-none d-lg-inline"><TextAvatar user={user} /></span>
+      <span className="d-none d-lg-inline">
+        <TextAvatar user={user} />
+      </span>
     </>
   );
 }

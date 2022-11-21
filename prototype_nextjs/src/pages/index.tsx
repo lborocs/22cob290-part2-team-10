@@ -117,7 +117,7 @@ export default function LoginPage() {
             <Toast>
               <Toast.Header>
                 <RoundedRect fill="#ffc107" />
-                <strong className="me-auto">Bootstrap</strong>
+                <strong className="me-auto">Sign in</strong>
                 {/* <small>11 mins ago</small> */}
               </Toast.Header>
               <Toast.Body>
