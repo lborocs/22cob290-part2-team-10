@@ -7,11 +7,11 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Toast from 'react-bootstrap/Toast';
 import ToastContainer from 'react-bootstrap/ToastContainer';
-// import Holder from 'react-holder'; // TODO
 
 import EmailField from '~/components/EmailField';
 import PasswordField from '~/components/PasswordField';
 import LoadingButton from '~/components/LoadingButton';
+import RoundedRect from '~/components/RoundedRect';
 import { isValidMakeItAllEmail, validatePassword } from '~/utils';
 
 import { ErrorReason } from '~/pages/api/user/login';
@@ -114,13 +114,9 @@ export default function LoginPage() {
       <main className={`vh-100 d-flex align-items-center justify-content-center flex-column ${styles.main}`}>
         {callbackUrl ? (
           <ToastContainer className="p-3" position="top-center">
-            <Toast bg="warning">
+            <Toast>
               <Toast.Header>
-                {/* <Holder
-                // yellow?
-                  width="20px"
-                  height="20px"
-                /> */}
+                <RoundedRect fill="#ffc107" />
                 <strong className="me-auto">Bootstrap</strong>
                 {/* <small>11 mins ago</small> */}
               </Toast.Header>
