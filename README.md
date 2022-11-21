@@ -178,6 +178,7 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 - React Boostrap Icons 1.9
 - Font Awesome Icons 6.2
 - ESLint 8.27
+  - TODO: setup Prettier
 - Prisma
 - Axios 1.1
 - ...
