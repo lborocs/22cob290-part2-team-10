@@ -1,5 +1,6 @@
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import { unstable_getServerSession } from 'next-auth/next';
+import Button from 'react-bootstrap/Button';
 
 import Layout from '~/components/Layout';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
@@ -13,7 +14,7 @@ export default function Page({ user }: InferGetServerSidePropsType<typeof getSer
       <main>
         <h1>Page template!</h1>
         <span>ok</span>
-        <button>test test test</button>
+        <Button>test test test</Button>
       </main>
     </Layout>
   );
