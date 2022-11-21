@@ -1,17 +1,20 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
 
 import styles from '~/styles/ProjectsList.module.css';
 
 export default function ProjectsList() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
+  const router = useRouter();
 
-  console.log('ProjectsList.session =', session);
   const [projects, setProjects] = useState<string[]>([]);
 
   useEffect(() => {
+    if (status !== 'authenticated') return;
+
     const controller = new AbortController();
     const signal = controller.signal;
 
@@ -27,16 +30,32 @@ export default function ProjectsList() {
 
   if (status !== 'authenticated') return null;
 
+  let route: string | undefined;
+  if (router.pathname === '/project/[name]') {
+    const { name } = router.query;
+    route = `/project/${encodeURIComponent(name as string)}`;
+  }
+
   return (
-    <div className={styles['sidebar-list']}>
-      <p>Assigned Projects:</p>
-      <ul className="list-unstyled">
-        {projects.map((projectName, index) => (
-          <li key={index}>
-            <Link href={`project/${projectName}`}>{projectName}</Link>
-          </li>
-        ))}
-      </ul>
+    <div>
+      <p className={styles.title}>Assigned Projects:</p>
+      <div className={`list-unstyled ${styles['projects-list']}`}>
+        {projects.map((projectName, index) => {
+          const url = `/project/${encodeURIComponent(projectName)}`;
+          const active = route === url;
+
+          return (
+            <li key={index}>
+              <Link
+                href={url}
+                className={`nav-link ${styles['project-link']} ${active ? styles.active : ''}`}
+              >
+                {projectName}
+              </Link>
+            </li>
+          );
+        })}
+      </div>
     </div>
   );
 }

@@ -1,0 +1,13 @@
+.text-avatar {
+    /* https://stackoverflow.com/a/58367383 */
+    width: 40px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    color: var(--avatar-fg);
+    line-height: 40px;
+    text-align: center;
+    background: var(--avatar-bg);
+    display: inline-block;
+
+    font-size: large;
+}

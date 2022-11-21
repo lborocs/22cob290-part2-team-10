@@ -1,28 +1,33 @@
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
-import Button from 'react-bootstrap/Button';
 
 import Layout from '~/components/Layout';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { getUserInfo } from '~/server/store/users';
 
-export default function Page({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function DashboardPage({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   if (!user) return null;
 
   return (
-    <Layout user={user} sidebarType='projects'>
-      <main>
-        <h1>Page template</h1>
-        <span>ok</span>
-        <Button>test test test</Button>
-      </main>
-    </Layout>
+    <>
+      <Head>
+        <title>Dashboard - Make-It-All</title>
+      </Head>
+      <Layout user={user} sidebarType='projects'>
+        <main>
+          Dashboard!
+        </main>
+      </Layout>
+    </>
   );
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
 
+  // not logged in, will be handled by _app
+  // use auth's redirection because it gives callback URL
   if (!session || !session.user) {
     return { props: {} };
   }

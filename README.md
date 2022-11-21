@@ -15,7 +15,6 @@
   - [TODO (not from feedback)](#todo-not-from-feedback)
   - [How it works](#how-it-works-1)
   - [How we need to code](#how-we-need-to-code)
-    - [Getting user during SSR](#getting-user-during-ssr)
     - [Layout/Sidebar](#layoutsidebar)
       - [Examples](#examples)
   - [Pages](#pages-1)
@@ -125,6 +124,7 @@ https://cloud.google.com/nodejs/getting-started/getting-started-on-compute-engin
   - Access `/server/store` functions directly instead
     - Make them all `async` because database operations will be `async`
 - You can copy and paste from [page_template](prototype_nextjs/src/pages/examples/page_template.tsx)
+- Run locally and see all examples at [`http://localhost:3000/examples`](http://localhost:3000/examples)
 
 #### Layout/Sidebar
 
@@ -175,6 +175,7 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 - Bootstrap 5.2
 - React Bootstrap 2.6
 - React Boostrap Icons 1.9
+- Font Awesome Icons 6.2
 - ESLint 8.27
 - Prisma
 - Axios 1.1

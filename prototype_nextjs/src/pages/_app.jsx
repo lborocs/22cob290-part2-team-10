@@ -1,8 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { SessionProvider, useSession } from 'next-auth/react';
+import { config } from '@fortawesome/fontawesome-svg-core';
 
+import '@fortawesome/fontawesome-svg-core/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '~/styles/globals.css';
+
+// https://fontawesome.com/v5/docs/web/use-with/react#getting-font-awesome-css-to-work
+config.autoAddCss = false;
 
 export default function App({
   Component,

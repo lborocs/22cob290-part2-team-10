@@ -82,24 +82,6 @@ export function copyToClipboard(content: string): Promise<void> {
   }
 }
 
-export type TextAvatar = {
-  'avatar-bg': string
-  'avatar-fg': string
-};
-
-// TODO: move this into template code
-export function getTextAvatarFromLocalStorage(): TextAvatar | null {
-  const textAvatarJson = localStorage.getItem('textAvatar');
-
-  if (textAvatarJson == null) return null;
-
-  const textAvatar = JSON.parse(textAvatarJson) as TextAvatar;
-
-  for (const key in textAvatar) {
-    const colour = textAvatar[<keyof TextAvatar>key];
-
-    document.documentElement.style.setProperty(`--${key}`, colour);
-  }
-
-  return textAvatar;
+export function range(start: number, end: number): number[] {
+  return Array.from({length: (end - start)}, (v, k) => k + start);
 }

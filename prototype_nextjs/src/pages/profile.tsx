@@ -2,7 +2,6 @@ import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'nex
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 import { signOut } from 'next-auth/react';
-
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -22,12 +21,14 @@ export default function ProfilePage({ user }: InferGetServerSidePropsType<typeof
 
   // TODO: name editable properly
 
+  // TODO: organise more like Details: name, email, role
+
   return (
     <>
       <Head>
-        <title>Profile - Make-ItAll</title>
+        <title>Profile - Make-It-All</title>
       </Head>
-      <Layout user={user} sidebarType='projects'>
+      <Layout user={user} sidebarType="projects">
         <main>
           <section>
             <Row>
@@ -62,7 +63,7 @@ export default function ProfilePage({ user }: InferGetServerSidePropsType<typeof
             <Row>
               <Col>
                 <h3>Change Password</h3>
-                <Button variant='dark'>
+                <Button variant="dark">
                   Change
                 </Button>
 
@@ -70,7 +71,7 @@ export default function ProfilePage({ user }: InferGetServerSidePropsType<typeof
               </Col>
               <Col>
                 <h3>Invite Employee</h3>
-                <Button variant='dark'>
+                <Button variant="dark">
                   Generate invite
                 </Button>
 
@@ -84,7 +85,7 @@ export default function ProfilePage({ user }: InferGetServerSidePropsType<typeof
 
           <section>
             <h3>Avatar</h3>
-            <Button variant='dark'>
+            <Button variant="dark">
               Change avatar colours
             </Button>
             {/*  TODO: modal */}
@@ -93,7 +94,7 @@ export default function ProfilePage({ user }: InferGetServerSidePropsType<typeof
           <br />
           <br />
 
-          <Button variant='danger' onClick={() => signOut({ callbackUrl: '/' })}>
+          <Button variant="danger" onClick={() => signOut({ callbackUrl: '/' })}>
             Sign Out
           </Button>
         </main>
