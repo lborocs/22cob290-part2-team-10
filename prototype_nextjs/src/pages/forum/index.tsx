@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 
 import Layout from '~/components/Layout';
+import ForumSidebar from '~/components/sidebar/ForumSidebar';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { getUserInfo } from '~/server/store/users';
 
@@ -26,15 +27,6 @@ export default function ForumPage({ user }: InferGetServerSidePropsType<typeof g
           {/* TODO */}
         </main>
       </Layout>
-    </>
-  );
-}
-
-// TODO: ForumSidebar
-function ForumSidebar() {
-  return (
-    <>
-    {/* TODO */}
     </>
   );
 }
