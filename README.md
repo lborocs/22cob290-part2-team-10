@@ -14,7 +14,9 @@
   - [TODO (feedback from Part 1 presentation)](#todo-feedback-from-part-1-presentation)
   - [TODO (not from feedback)](#todo-not-from-feedback)
   - [How it works](#how-it-works-1)
-    - [Backend](#backend)
+  - [How we need to code](#how-we-need-to-code)
+    - [Layout/Sidebar](#layoutsidebar)
+      - [Examples](#examples)
   - [Pages](#pages-1)
   - [Libraries](#libraries-1)
 <!-- TOC -->
@@ -80,6 +82,8 @@ URL: `TODO`
 
 Deploy to Vercel for development before using GCP?
 
+https://cloud.google.com/nodejs/getting-started/getting-started-on-compute-engine
+
 ### TODO (feedback from Part 1 presentation)
 
 - Forum
@@ -109,12 +113,37 @@ Deploy to Vercel for development before using GCP?
 
 ### How it works
 
-- Use cookies again? That allows us to know who is logged in when using SSR
-- Instead of storing user's email, store JWT token containing their email, so they can't pretend to be someone else
+- Using [NextAuth.js](https://next-auth.js.org/getting-started/client#usesession) which creates a session (with a JWT storing the user's info)
 
-#### Backend
+### How we need to code
 
-Use `/api`, and return 'fake' data until database is designed and implemented
+- Use API routes to update database (e.g. for things like adding task)
+- Use [SSR](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props) to get info for page (e.g. getting a user's todo list)
+  - See [example](prototype_nextjs/src/pages/examples/user_ssr.tsx) for how to get user during SSR
+  - Don't make API route for getting data that is gotten during SSR
+  - Access `/server/store` functions directly instead
+    - Make them all `async` because database operations will be `async`
+- You can copy and paste from [page_template](prototype_nextjs/src/pages/examples/page_template.tsx)
+  - Already done for the pages available in navbar (`home`, `forum`, etc.)
+- Run locally and see all examples at [`http://localhost:3000/examples`](http://localhost:3000/examples)
+
+#### Layout/Sidebar
+
+Need to wrap your page's content in a `Layout` component
+
+| Prop           | Type                                                  | How to get it                                                                                                   |
+|----------------|-------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
+| sidebarType    | 'project' &#124; 'custom'                             | Use your brain                                                                                                  |
+| sidebarContent | `ReactNode` (only needed if `sidebarType` === custom) | Create a custom component (see [custom sidebar example](prototype_nextjs/src/pages/examples/custom_sidebar.tsx) |
+| user           | `UserInfo` (server/store/users)                       | Get from SSR                                                                                                    |
+
+- Most pages will have a `sidebarType` of `project`
+  - e.g. forum should be `custom`
+
+##### Examples
+
+- [Sidebar that lists the user's assigned projects](prototype_nextjs/src/pages/examples/projects_sidebar.tsx)
+- [Custom sidebar](prototype_nextjs/src/pages/examples/custom_sidebar.tsx)
 
 ### Pages
 
@@ -122,29 +151,34 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 
 > Not sure about the forum pages
 
-| Page URL                              | Owner | Notes                                                                                   |
-|---------------------------------------|-------|-----------------------------------------------------------------------------------------|
-| `/`                                   |       | Can make `/` display home instead and if user isn't logged in, redirect to `/login`?    |
-| `/home`                               |       |                                                                                         |
-| `/projects`                           |       | All assigned projects                                                                   |
-| `/projects/[name]`                    |       | A specific project                                                                      |
-| `/forum`                              |       | Displays all forum topics (TODO: forum redesign)                                        |
-| `/forum?topics=[topic1],[topic2],...` |       | Posts with the specified topics (dynamic page with updating url without changing page)  |
-| `/forum/[topicname]`?                 |       | Displays post summaries for a topic (click to open the page for that post)              |
-| `/forum/posts`                        |       | Display all posts                                                                       |
-| `/forum/posts/[id]`                   |       | Display a specific post                                                                 |
-| `/dashboard`                          |       |                                                                                         |
-| `/staff_assignment`                   |       | I think we should rename this URL                                                       |
-| `/profile`                            |       |                                                                                         |
-| `/signup`                             |       | Can merge signup and login?                                                             |
+| Page URL                              | Owner | Status       | Completed             | Notes                                                                                  |
+|---------------------------------------|-------|--------------|-----------------------|----------------------------------------------------------------------------------------|
+| `/`                                   | Dara  | Complete     | <ul><li>[x] </li><ul> | Can make `/` display home instead and if user isn't logged in, redirect to `/login`?   |
+| `/home`                               |       | Templated    |                       |                                                                                        |
+| `/projects`                           |       | Templated    |                       | Display all projects                                                                   |
+| `/projects/[name]`                    |       | Templated    |                       | A specific project, use `components/Task` and `components/KanbanBoard`                 |
+| `/forum`                              |       | Templated    |                       | Displays all forum topics (TODO: forum redesign)                                       |
+| `/forum?topics=[topic1],[topic2],...` |       |              |                       | Posts with the specified topics (dynamic page with updating url without changing page) |
+| `/forum/[topicname]`?                 |       |              |                       | Displays post summaries for a topic (click to open the page for that post)             |
+| `/forum/posts`                        |       |              |                       | Display all posts                                                                      |
+| `/forum/posts/[id]`                   |       |              |                       | Display a specific post                                                                |
+| `/dashboard`                          |       | Templated    |                       |                                                                                        |
+| `/staff_assignment`                   |       |              |                       | I think we should rename this URL                                                      |
+| `/profile`                            | Dara  | In progress  | <ul><li>[ ] </li><ul> |                                                                                        |
+| `/signup`                             |       | Templated    |                       | Can merge signup and login?                                                            |
 
 ### Libraries
 
-- TypeScript
-- Next.js
-- React
-- Boostrap (?)
-- React Bootstrap
-- React Boostrap Icons
-- ESLint
+- TypeScript 4.9
+- Next.js 13
+  - Next-Auth
+- React 18
+- Bootstrap 5.2
+- React Bootstrap 2.6
+- React Boostrap Icons 1.9
+- Font Awesome Icons 6.2
+- ESLint 8.27
+  - TODO: setup Prettier
+- Prisma
+- Axios 1.1
 - ...
