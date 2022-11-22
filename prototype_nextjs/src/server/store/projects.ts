@@ -7,6 +7,7 @@ export async function getAssignedProjects(email: string): Promise<string[]> {
 }
 
 // TODO: design db
+// TODO: maybe return UserInfo instead of email?
 export type ProjectInfo = {
   name: string
   manager: string

@@ -23,6 +23,12 @@ export const NUMBER_REGEX = /(.*\d)/;
 export const SPECIAL_SYMBOL_REGEX = /(.*\W)/;
 
 /* eslint-disable nonblock-statement-body-position */
+/**
+ * Checks that the provided password conforms to the password policy.
+ *
+ * @param password
+ * @return The error reason (`PasswordError`), or `null` if the password is valid
+ */
 export function validatePassword(password: string): PasswordError | null {
   if (password.length < MIN_PASSWORD_LENGTH)
     return PasswordError.TOO_SHORT;
@@ -55,8 +61,13 @@ export const PASSWORD_SCHEMA = yup.string()
   .matches(SPECIAL_SYMBOL_REGEX)
   ;
 
-// note: Chrome doesn't allow to copy from non-https (sci-project is http)
-// https://stackoverflow.com/a/65996386
+/**
+ * @note Chrome doesn't allow to copy from non-https (sci-project is http)
+ *
+ * @param content The text string to copy
+ *
+ * [Stack Overflow](https://stackoverflow.com/a/65996386)
+ */
 export function copyToClipboard(content: string): Promise<void> {
   // navigator clipboard api needs a secure context (https)
   if (navigator.clipboard && window.isSecureContext) {
@@ -82,6 +93,11 @@ export function copyToClipboard(content: string): Promise<void> {
   }
 }
 
+/**
+ * @param start The start number (inclusive)
+ * @param end The end number (inclusive)
+ * @returns list of numbers from `start` to `end`
+ */
 export function range(start: number, end: number): number[] {
-  return Array.from({length: (end - start)}, (v, k) => k + start);
+  return Array.from({ length: (end - start) }, (v, k) => k + start);
 }
