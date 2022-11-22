@@ -1,25 +1,8 @@
-import { useEffect } from 'react';
+import { forwardRef, useEffect } from 'react';
 
 import { type UserInfo } from '~/server/store/users';
 
 import styles from '~/styles/TextAvatar.module.css';
-
-export default function TextAvatar({ user }: { user: UserInfo }) {
-  const { fname, lname } = user;
-
-  const firstInitial = fname[0].toUpperCase();
-  const lastInitial = lname[0].toUpperCase();
-
-  useEffect(() => {
-    getTextAvatarFromLocalStorage();
-  }, []);
-
-  return (
-    <span className={styles['text-avatar']}>
-      {firstInitial}{lastInitial}
-    </span>
-  );
-}
 
 type TextAvatar = {
   'avatar-bg': string
@@ -41,3 +24,44 @@ function getTextAvatarFromLocalStorage() {
 
   return textAvatar;
 }
+
+export interface TextAvatarProps extends React.ComponentPropsWithoutRef<'span'> {
+  user: UserInfo
+  size?: string
+}
+
+export default forwardRef(function LoadingButton({
+  user,
+  size = '40px',
+  ...props
+}: TextAvatarProps, ref: React.ForwardedRef<HTMLButtonElement>): JSX.Element {
+  const { fname, lname } = user;
+
+  const firstInitial = fname[0].toUpperCase();
+  const lastInitial = lname[0].toUpperCase();
+
+  useEffect(() => {
+    getTextAvatarFromLocalStorage();
+  }, []);
+
+  const {
+    className,
+    style,
+    ...passedProps
+  } = props;
+
+  return (
+    <span
+      className={`${styles['text-avatar']} ${className ?? ''}`}
+      style={{
+        width: size,
+        lineHeight: size,
+        ...style,
+      }}
+      ref={ref}
+      {...passedProps}
+    >
+      {firstInitial}{lastInitial}
+    </span>
+  );
+});
