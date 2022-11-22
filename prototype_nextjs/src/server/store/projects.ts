@@ -1,12 +1,5 @@
 import { range } from '~/utils';
 
-export async function getAssignedProjects(email: string): Promise<string[]> {
-  return projects.filter((project) => project.members.includes(email)
-    || project.manager === email
-    || project.leader === email
-  ).map((project) => project.name);
-}
-
 // TODO: design db
 // TODO: maybe return UserInfo instead of email?
 export type ProjectInfo = {
@@ -52,6 +45,17 @@ const projects: ProjectInfo[] = range(1, numProjects).map((num) => ({
   ],
 }));
 
+export async function getAllProjects(): Promise<ProjectInfo[]> {
+  return [...projects];
+}
+
 export async function getProjectInfo(name: string): Promise<ProjectInfo | null> {
   return projects.find((project) => project.name === name) ?? null;
+}
+
+export async function getAssignedProjects(email: string): Promise<string[]> {
+  return projects.filter((project) => project.members.includes(email)
+    || project.manager === email
+    || project.leader === email
+  ).map((project) => project.name);
 }
