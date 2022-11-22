@@ -95,7 +95,7 @@ export function copyToClipboard(content: string): Promise<void> {
 
 /**
  * @param start The start number (inclusive)
- * @param end The end number (inclusive)
+ * @param end The end number (exclusive)
  * @returns list of numbers from `start` to `end`
  */
 export function range(start: number, end: number): number[] {
