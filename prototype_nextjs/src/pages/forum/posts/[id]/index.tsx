@@ -1,23 +1,48 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */ // TODO: remove once this is done
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
+import Error from 'next/error';
 import { unstable_getServerSession } from 'next-auth/next';
 
 import Layout from '~/components/Layout';
 import ForumSidebar from '~/components/sidebar/ForumSidebar';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { getUserInfo } from '~/server/store/users';
-import { getAllPosts, type Post } from '~/server/store/posts';
+import { getPost } from '~/server/store/posts';
 
-// TODO: ForumPage
-export default function ForumPage({ user, posts }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+// Dara recommends using something like Luxon (https://github.com/moment/luxon) to display how long ago a post was made
+// and when they hover over it, have a tooltip saying the actual date & time
+
+// TODO: PostPage
+export default function PostPage({ user, post }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   if (!user) return null;
+
+  if (!post) {
+    return (
+      <Error
+        statusCode={404}
+        title="Post does not exist"
+      />
+    );
+  }
+
+  const {
+    id,
+    author,
+    datePosted,
+    title,
+    content,
+    topics,
+  } = post;
+
+  const pageTitle = `${title} - Make-It-All`;
+
+  const date = new Date(datePosted);
 
   return (
     <>
       <Head>
-        <title>Forum - Make-It-All</title>
+        <title>{pageTitle}</title>
       </Head>
       <Layout
         user={user}
@@ -28,32 +53,14 @@ export default function ForumPage({ user, posts }: InferGetServerSidePropsType<t
       >
         <main>
           {/* TODO */}
-          {posts.map((post, index) => (
-            <ForumPost key={index} post={post} />
-          ))}
+          <h1>{title}</h1>
+          Date posted: {date.toUTCString()}
         </main>
       </Layout>
     </>
   );
 }
 
-// TODO
-function ForumPost({ post }: { post: Post }) {
-  const {
-    id,
-    author,
-    datePosted,
-    title,
-    content,
-    topics,
-  } = post;
-
-  return (
-    <Link href={`/forum/posts/${id}`}>
-      <span className="h3">{title}</span>
-    </Link>
-  );
-}
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
@@ -65,13 +72,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const email = session.user.email!;
   const user = (await getUserInfo(email))!;
 
-  const posts = await getAllPosts();
+  const { id } = context.params!;
+  const post = await getPost(parseInt(id as string));
 
   return {
     props: {
       session,
       user,
-      posts,
+      post,
     },
   };
 }

@@ -1,23 +1,37 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */ // TODO: remove once this is done
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
+import Error from 'next/error';
 import { unstable_getServerSession } from 'next-auth/next';
 
 import Layout from '~/components/Layout';
 import ForumSidebar from '~/components/sidebar/ForumSidebar';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { getUserInfo } from '~/server/store/users';
-import { getAllPosts, type Post } from '~/server/store/posts';
+import { getPost } from '~/server/store/posts';
 
-// TODO: ForumPage
-export default function ForumPage({ user, posts }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+// TODO: EditPostPage
+export default function EditPostPage({ user, post }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   if (!user) return null;
+
+  if (!post) {
+    return (
+      <Error
+        statusCode={404}
+        title="Post does not exist"
+      />
+    );
+  }
+
+  const {
+    title,
+  } = post;
+
+  const pageTitle = `Edit ${title} - Make-It-All`;
 
   return (
     <>
       <Head>
-        <title>Forum - Make-It-All</title>
+        <title>{pageTitle}</title>
       </Head>
       <Layout
         user={user}
@@ -28,9 +42,6 @@ export default function ForumPage({ user, posts }: InferGetServerSidePropsType<t
       >
         <main>
           {/* TODO */}
-          {posts.map((post, index) => (
-            <ForumPost key={index} post={post} />
-          ))}
         </main>
       </Layout>
     </>
@@ -38,23 +49,6 @@ export default function ForumPage({ user, posts }: InferGetServerSidePropsType<t
 }
 
 // TODO
-function ForumPost({ post }: { post: Post }) {
-  const {
-    id,
-    author,
-    datePosted,
-    title,
-    content,
-    topics,
-  } = post;
-
-  return (
-    <Link href={`/forum/posts/${id}`}>
-      <span className="h3">{title}</span>
-    </Link>
-  );
-}
-
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
 
@@ -65,13 +59,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const email = session.user.email!;
   const user = (await getUserInfo(email))!;
 
-  const posts = await getAllPosts();
+  const { id } = context.params!;
+  const post = await getPost(parseInt(id as string));
 
   return {
     props: {
       session,
       user,
-      posts,
+      post,
     },
   };
 }

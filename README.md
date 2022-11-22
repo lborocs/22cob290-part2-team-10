@@ -18,6 +18,8 @@
     - [Layout/Sidebar](#layoutsidebar)
       - [Examples](#examples)
   - [Pages](#pages-1)
+  - [Database](#database)
+    - [Entities](#entities)
   - [Libraries](#libraries-1)
 <!-- TOC -->
 
@@ -107,6 +109,7 @@ https://cloud.google.com/nodejs/getting-started/getting-started-on-compute-engin
 ### TODO (not from feedback)
 
 - [ ] Project name editable (managers/team leaders only)
+- [ ] Delete project (managers/team leaders only with confirmation dialog)
 - [ ] Make page for creating a new project instead of using a modal
 - [ ] Decide what goes in manager dashboard sidebar
   - Same as every other page? (list of projects)
@@ -138,7 +141,7 @@ Need to wrap your page's content in a `Layout` component
 | user           | `UserInfo` (server/store/users)                       | Get from SSR                                                                                                    |
 
 - Most pages will have a `sidebarType` of `project`
-  - e.g. forum should be `custom`
+  - e.g. main forum page should be `custom`
 
 ##### Examples
 
@@ -151,22 +154,34 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 
 > Not sure about the forum pages
 
-| Page URL                              | Owner | Status       | Completed             | Notes                                                                                                                                                              |
-|---------------------------------------|-------|--------------|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `/`                                   | Dara  | Complete     | <ul><li>[x] </li><ul> | Can make `/` display home instead and if user isn't logged in, redirect to `/login`?                                                                               |
-| `/home`                               |       | Templated    |                       |                                                                                                                                                                    |
-| `/projects`                           |       | Templated    |                       | Display all projects                                                                                                                                               |
-| `/projects/[name]`                    |       | Templated    |                       | A specific project, use `components/Task` and `components/KanbanBoard`. Could change dynamic route to project ID                                                   |
-| `/projects/new`                       |       | Templated    |                       | Creating a new project (accessed from manager dashboard)                                                                                                           |
-| `/forum`                              |       | Templated    |                       | Displays all forum topics (TODO: forum redesign)                                                                                                                   |
-| `/forum?topics=[topic1],[topic2],...` |       |              |                       | (Same page as ^, but with modified functionality when topics are specified) Posts with the specified topics (dynamic page with updating url without changing page) |
-| `/forum/[topicname]`?                 |       |              |                       | Displays post summaries for a topic (click to open the page for that post)                                                                                         |
-| `/forum/posts`                        |       |              |                       | Display all posts                                                                                                                                                  |
-| `/forum/posts/[id]`                   |       |              |                       | Display a specific post                                                                                                                                            |
-| `/dashboard`                          |       | Templated    |                       |                                                                                                                                                                    |
-| `/staff_assignment`                   |       |              |                       | I think we should rename this URL                                                                                                                                  |
-| `/profile`                            | Dara  | In progress  | <ul><li>[ ] </li><ul> |                                                                                                                                                                    |
-| `/signup`                             |       | Templated    |                       | Can merge signup and login?                                                                                                                                        |
+| Page URL                              | Owner | Status      | Completed             | Notes                                                                                                                                                              |
+|---------------------------------------|-------|-------------|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `/`                                   | Dara  | Complete    | <ul><li>[x] </li><ul> | Can make `/` display home instead and if user isn't logged in, redirect to `/login`?                                                                               |
+| `/home`                               |       | Templated   |                       |                                                                                                                                                                    |
+| `/projects`                           |       | Templated   |                       | Display all projects                                                                                                                                               |
+| `/projects/[name]`                    |       | Templated   |                       | A specific project, use `components/Task` and `components/KanbanBoard`. Could change dynamic route to project ID                                                   |
+| `/projects/new`                       |       | Templated   |                       | Creating a new project (accessed from manager dashboard)                                                                                                           |
+| `/forum`                              |       | Templated   |                       | Displays all forum topics (TODO: forum redesign)                                                                                                                   |
+| `/forum?topics=[topic1],[topic2],...` |       | Templated   |                       | (Same page as ^, but with modified functionality when topics are specified) Posts with the specified topics (dynamic page with updating url without changing page) |
+| `/forum/topics/[topicname]`?          |       |             |                       | Displays post summaries for a topic (click to open the page for that post)                                                                                         |
+| `/forum/posts`                        |       |             |                       | Display all posts                                                                                                                                                  |
+| `/forum/posts/[id]`                   |       | Templated   |                       | Display a specific post                                                                                                                                            |
+| `/forum/posts/[id]/edit`              |       | Templated   |                       | I think having a new page to edit a post will make it easier to implement                                                                                          |
+| `/dashboard`                          |       | Templated   |                       |                                                                                                                                                                    |
+| `/staff_assignment`                   |       |             |                       | I think we should rename this URL                                                                                                                                  |
+| `/profile`                            | Dara  | In progress | <ul><li>[ ] </li><ul> |                                                                                                                                                                    |
+| `/signup`                             |       | Templated   |                       | Can merge signup and login?                                                                                                                                        |
+
+### Database
+
+#### Entities
+
+- User
+- Project
+- Project Task
+- Post
+
+TODO: ERM diagram (could make tables entity property tables to help plan ERM diagram)
 
 ### Libraries
 
