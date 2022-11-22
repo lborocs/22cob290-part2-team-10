@@ -10,9 +10,6 @@ import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { getUserInfo } from '~/server/store/users';
 import { getPost } from '~/server/store/posts';
 
-// Dara recommends using something like Luxon (https://github.com/moment/luxon) to display how long ago a post was made
-// and when they hover over it, have a tooltip saying the actual date & time
-
 // TODO: PostPage
 export default function PostPage({ user, post }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   if (!user) return null;

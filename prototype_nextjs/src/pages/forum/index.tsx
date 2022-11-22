@@ -37,6 +37,9 @@ export default function ForumPage({ user, posts }: InferGetServerSidePropsType<t
   );
 }
 
+// Dara recommends using something like Luxon (https://github.com/moment/luxon) to display how long ago a post was made
+// and when they hover over it, have a tooltip saying the actual date & time
+
 // TODO
 function ForumPost({ post }: { post: Post }) {
   const {

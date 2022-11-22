@@ -152,7 +152,7 @@ Need to wrap your page's content in a `Layout` component
 
 Use dynamic routes instead of URL params, with similar functionality to a REST API
 
-> Not sure about the forum pages
+> Not sure about the forum pages that aren't yet templated
 
 | Page URL                              | Owner | Status      | Completed             | Notes                                                                                                                                                              |
 |---------------------------------------|-------|-------------|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -162,7 +162,7 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 | `/projects/[name]`                    |       | Templated   |                       | A specific project, use `components/Task` and `components/KanbanBoard`. Could change dynamic route to project ID                                                   |
 | `/projects/new`                       |       | Templated   |                       | Creating a new project (accessed from manager dashboard)                                                                                                           |
 | `/forum`                              |       | Templated   |                       | Displays all forum topics (TODO: forum redesign)                                                                                                                   |
-| `/forum?topics=[topic1],[topic2],...` |       | Templated   |                       | (Same page as ^, but with modified functionality when topics are specified) Posts with the specified topics (dynamic page with updating url without changing page) |
+| `/forum?topics=[topic1],[topic2],...` |       | -           |                       | (Same page as ^, but with modified functionality when topics are specified) Posts with the specified topics (dynamic page with updating url without changing page) |
 | `/forum/topics/[topicname]`?          |       |             |                       | Displays post summaries for a topic (click to open the page for that post)                                                                                         |
 | `/forum/posts`                        |       |             |                       | Display all posts                                                                                                                                                  |
 | `/forum/posts/[id]`                   |       | Templated   |                       | Display a specific post                                                                                                                                            |
