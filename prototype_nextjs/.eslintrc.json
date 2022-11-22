@@ -15,7 +15,13 @@
     // ...
     "quotes": ["warn", "single"],
     "semi": "error",
-    "comma-dangle": ["error", "always-multiline"],
+    "comma-dangle": ["error", {
+      "arrays": "always-multiline",
+      "objects": "always-multiline",
+      "imports": "always-multiline",
+      "exports": "always-multiline",
+      "functions": "only-multiline"
+    }],
     // "prefer-const": "warn", // annoying having it as error
     "no-unused-vars": ["warn", { "args": "none" }],
 
@@ -45,7 +51,7 @@
     "import/extensions": "error",
     "dot-notation": "error",
     "no-multi-assign": "error",
-    "operator-linebreak": ["error", "none"],
+    "operator-linebreak": ["warn", "before"],
     "no-nested-ternary": "error",
     "no-unneeded-ternary": "error",
     "no-mixed-operators": "error",
