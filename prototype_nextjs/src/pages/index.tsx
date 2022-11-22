@@ -98,6 +98,7 @@ export default function LoginPage() {
           break;
 
         default: // shouldn't happen
+          console.error(resp);
           setEmailFeedback(errorReason);
           setPasswordFeedback(errorReason);
       }

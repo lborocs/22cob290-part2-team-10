@@ -27,7 +27,7 @@ export const authOptions: NextAuthOptions = {
           password: credentials!.password,
         };
 
-        const { data } = await axios.post<LoginResponse>('http://localhost:3000/api/user/login', payload);
+        const { data } = await axios.post<LoginResponse>(`${process.env.NEXTAUTH_URL as string}/api/user/login`, payload);
 
         if (data.success) return data.user;
         throw new Error(data.reason);
