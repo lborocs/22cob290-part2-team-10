@@ -23,6 +23,7 @@
 }
 
 .sidebar-toggle-btn:hover {
+    color: black;
     background-color: var(--tertiary-color);
     border-color: var(--tertiary-color);
 }
