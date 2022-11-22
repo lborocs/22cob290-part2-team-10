@@ -52,6 +52,6 @@ const projects: ProjectInfo[] = range(1, numProjects).map((num) => ({
   ],
 }));
 
-export async function getProjectInfo(name: string): Promise<ProjectInfo | undefined> {
-  return projects.find((project) => project.name === name);
+export async function getProjectInfo(name: string): Promise<ProjectInfo | null> {
+  return projects.find((project) => project.name === name) ?? null;
 }

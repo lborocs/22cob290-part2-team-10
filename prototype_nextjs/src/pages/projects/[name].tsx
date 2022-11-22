@@ -1,17 +1,27 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */ // TODO: remove once this is done
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
+import Error from 'next/error';
 import { unstable_getServerSession } from 'next-auth/next';
 
 import Layout from '~/components/Layout';
+import KanbanBoard from '~/components/KanbanBoard';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { getUserInfo } from '~/server/store/users';
 import { getProjectInfo } from '~/server/store/projects';
-import KanbanBoard from '~/components/KanbanBoard';
 
 // TODO: project page (Projects page from before)
 export default function ProjectPage({ user, projectInfo }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   if (!user) return null;
+
+  if (!projectInfo) {
+    return (
+      <Error
+        statusCode={404}
+        title="Project does not exist"
+      />
+    );
+  }
 
   const {
     name,
@@ -59,7 +69,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     props: {
       session,
       user,
-      projectInfo: projectInfo!,
+      projectInfo,
     },
   };
 }
