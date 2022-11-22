@@ -66,7 +66,7 @@ export const PASSWORD_SCHEMA = yup.string()
  *
  * @param content The text string to copy
  *
- * [Stack Overflow](https://stackoverflow.com/a/65996386)
+ * [Source](https://stackoverflow.com/a/65996386)
  */
 export function copyToClipboard(content: string): Promise<void> {
   // navigator clipboard api needs a secure context (https)
@@ -95,9 +95,11 @@ export function copyToClipboard(content: string): Promise<void> {
 
 /**
  * @param start The start number (inclusive)
- * @param end The end number (exclusive)
+ * @param end The end number (inclusive)
  * @returns list of numbers from `start` to `end`
+ *
+ * [Source](https://stackoverflow.com/a/38213213)
  */
 export function range(start: number, end: number): number[] {
-  return Array.from({ length: (end - start) }, (v, k) => k + start);
+  return [...Array(end).keys()].map((i) => i + start);
 }

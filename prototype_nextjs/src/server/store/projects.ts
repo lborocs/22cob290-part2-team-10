@@ -29,7 +29,7 @@ export type Task = {
 
 const numProjects = 10;
 
-const projects: ProjectInfo[] = range(1, 1 + numProjects).map((num) => ({
+const projects: ProjectInfo[] = range(1, numProjects).map((num) => ({
   name: `Project ${num}`,
   manager: 'manager@make-it-all.co.uk',
   leader: 'leader@make-it-all.co.uk',
