@@ -34,10 +34,12 @@ export default function ProjectPage({ user, projectInfo }: InferGetServerSidePro
     completed,
   } = projectInfo;
 
+  const pageTitle = `${name} - Make-It-All`;
+
   return (
     <>
       <Head>
-        <title>{name} - Make-It-All</title>
+        <title>{pageTitle}</title>
       </Head>
       <Layout user={user} sidebarType="projects">
         <main>
