@@ -151,21 +151,22 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 
 > Not sure about the forum pages
 
-| Page URL                              | Owner | Status       | Completed             | Notes                                                                                  |
-|---------------------------------------|-------|--------------|-----------------------|----------------------------------------------------------------------------------------|
-| `/`                                   | Dara  | Complete     | <ul><li>[x] </li><ul> | Can make `/` display home instead and if user isn't logged in, redirect to `/login`?   |
-| `/home`                               |       | Templated    |                       |                                                                                        |
-| `/projects`                           |       | Templated    |                       | Display all projects                                                                   |
-| `/projects/[name]`                    |       | Templated    |                       | A specific project, use `components/Task` and `components/KanbanBoard`                 |
-| `/forum`                              |       | Templated    |                       | Displays all forum topics (TODO: forum redesign)                                       |
-| `/forum?topics=[topic1],[topic2],...` |       |              |                       | Posts with the specified topics (dynamic page with updating url without changing page) |
-| `/forum/[topicname]`?                 |       |              |                       | Displays post summaries for a topic (click to open the page for that post)             |
-| `/forum/posts`                        |       |              |                       | Display all posts                                                                      |
-| `/forum/posts/[id]`                   |       |              |                       | Display a specific post                                                                |
-| `/dashboard`                          |       | Templated    |                       |                                                                                        |
-| `/staff_assignment`                   |       |              |                       | I think we should rename this URL                                                      |
-| `/profile`                            | Dara  | In progress  | <ul><li>[ ] </li><ul> |                                                                                        |
-| `/signup`                             |       | Templated    |                       | Can merge signup and login?                                                            |
+| Page URL                              | Owner | Status       | Completed             | Notes                                                                                                                                                              |
+|---------------------------------------|-------|--------------|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `/`                                   | Dara  | Complete     | <ul><li>[x] </li><ul> | Can make `/` display home instead and if user isn't logged in, redirect to `/login`?                                                                               |
+| `/home`                               |       | Templated    |                       |                                                                                                                                                                    |
+| `/projects`                           |       | Templated    |                       | Display all projects                                                                                                                                               |
+| `/projects/[name]`                    |       | Templated    |                       | A specific project, use `components/Task` and `components/KanbanBoard`. Could change dynamic route to project ID                                                   |
+| `/projects/new`                       |       | Templated    |                       | Creating a new project (accessed from manager dashboard)                                                                                                           |
+| `/forum`                              |       | Templated    |                       | Displays all forum topics (TODO: forum redesign)                                                                                                                   |
+| `/forum?topics=[topic1],[topic2],...` |       |              |                       | (Same page as ^, but with modified functionality when topics are specified) Posts with the specified topics (dynamic page with updating url without changing page) |
+| `/forum/[topicname]`?                 |       |              |                       | Displays post summaries for a topic (click to open the page for that post)                                                                                         |
+| `/forum/posts`                        |       |              |                       | Display all posts                                                                                                                                                  |
+| `/forum/posts/[id]`                   |       |              |                       | Display a specific post                                                                                                                                            |
+| `/dashboard`                          |       | Templated    |                       |                                                                                                                                                                    |
+| `/staff_assignment`                   |       |              |                       | I think we should rename this URL                                                                                                                                  |
+| `/profile`                            | Dara  | In progress  | <ul><li>[ ] </li><ul> |                                                                                                                                                                    |
+| `/signup`                             |       | Templated    |                       | Can merge signup and login?                                                                                                                                        |
 
 ### Libraries
 
@@ -178,7 +179,7 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 - React Boostrap Icons 1.9
 - Font Awesome Icons 6.2
 - ESLint 8.27
-  - TODO: setup Prettier
+  - TODO: setup Prettier?
 - Prisma
 - Axios 1.1
 - ...
