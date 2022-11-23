@@ -6,9 +6,10 @@ import Toast from 'react-bootstrap/Toast';
 import ToastContainer from 'react-bootstrap/ToastContainer';
 import axios from 'axios';
 
+import EmailField from '~/components/EmailField';
+import LoadingButton from '~/components/LoadingButton';
 import PasswordField from '~/components/PasswordField';
 import RoundedRect from '~/components/RoundedRect';
-import EmailField from '~/components/EmailField';
 import { validatePassword } from '~/utils';
 import type { RequestSchema as ChangePwPayload, ResponseSchema as ChangePwResponse } from '~/pages/api/user/change-password';
 
@@ -30,6 +31,7 @@ export default function ChangePasswordModal({ email, show, onHide }: {
 
   const [badForm, setBadForm] = useState(false);
 
+  const [changingPw, setChangingPw] = useState(false);
   const [pwChanged, setPwChanged] = useState(false);
 
   useEffect(() => {
@@ -44,8 +46,7 @@ export default function ChangePasswordModal({ email, show, onHide }: {
 
     if (badForm) return;
 
-    const formData = Object.fromEntries(new FormData(e.currentTarget)) as ChangePwFormData;
-    const { currentPassword, newPassword, confirm } = formData;
+    const { currentPassword, newPassword, confirm } = Object.fromEntries(new FormData(e.currentTarget)) as ChangePwFormData;
 
     let _badForm = false;
 
@@ -72,6 +73,8 @@ export default function ChangePasswordModal({ email, show, onHide }: {
     setBadForm(_badForm);
     if (_badForm) return;
 
+    setChangingPw(true);
+
     const payload: ChangePwPayload = {
       currentPassword,
       newPassword,
@@ -83,6 +86,8 @@ export default function ChangePasswordModal({ email, show, onHide }: {
       setPwChanged(true);
       onHide();
     } else setPasswordFeedback('Incorrect password');
+
+    setChangingPw(false);
   };
 
   return (
@@ -144,14 +149,16 @@ export default function ChangePasswordModal({ email, show, onHide }: {
           <Button variant="secondary" size="sm" onClick={onHide}>
             Close
           </Button>
-          <Button
+          <LoadingButton
             type="submit"
             form="change-pw-form"
             variant="primary"
             size="sm"
+            isLoading={changingPw}
+            loadingContent="Changing"
           >
             Change
-          </Button>
+          </LoadingButton>
         </Modal.Footer>
       </Modal>
 
