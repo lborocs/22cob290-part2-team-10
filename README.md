@@ -197,19 +197,20 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 
 > Not sure about the forum pages that aren't yet templated
 
-| Page URL                              | Owner | Status                | Completed             | Notes                                                                                                                                                              |
+| Page URL/Route                        | Owner | Status                | Completed             | Notes                                                                                                                                                              |
 |---------------------------------------|-------|-----------------------|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `/`                                   | Dara  | Complete              | <ul><li>[x] </li><ul> | Can make `/` display home instead and if user isn't logged in, redirect to `/login`?                                                                               |
 | `/home`                               |       | Templated             |                       |                                                                                                                                                                    |
 | `/projects`                           |       | Templated             |                       | Display all projects                                                                                                                                               |
-| `/projects/[id]`                      |       | Templated             |                       | A specific project, use `components/Task` and `components/KanbanBoard`. Could change dynamic route to project ID                                                   |
+| `/projects/[id]`                      |       | Templated             |                       | A specific project, use `components/Task` and `components/KanbanBoard`                                                                                             |
+| `/projects/[id]/overview`?            | Faye? | Templated             |                       | Manager's overview of a project. Not sure about the URL name                                                                                                       |
 | `/projects/new`                       |       | Templated             |                       | Creating a new project (accessed from manager dashboard)                                                                                                           |
-| `/forum`                              |       | Templated             |                       | Displays all forum topics (TODO: forum redesign)                                                                                                                   |
-| `/forum?topics=[topic1],[topic2],...` |       | -                     |                       | (Same page as ^, but with modified functionality when topics are specified) Posts with the specified topics (dynamic page with updating url without changing page) |
+| `/forum`                              | Ade?  | Templated             |                       | Displays all forum topics (TODO: forum redesign)                                                                                                                   |
+| `/forum?topics=[topic1],[topic2],...` | ^     | -                     |                       | (Same page as ^, but with modified functionality when topics are specified) Posts with the specified topics (dynamic page with updating url without changing page) |
 | `/forum/topics/[topicname]`?          |       |                       |                       | Displays post summaries for a topic (click to open the page for that post)                                                                                         |
 | `/forum/posts`                        |       |                       |                       | Display all posts                                                                                                                                                  |
 | `/forum/posts/[id]`                   |       | Templated             |                       | Display a specific post                                                                                                                                            |
-| `/forum/posts/[id]/edit`              |       | Templated             |                       | Dara thinks having a new page to edit a post will make it easier to implement                                                                                      |
+| `/forum/posts/[id]/edit`?             |       | Templated             |                       | Dara thinks having a new page to edit a post may make it easier to implement                                                                                       |
 | `/dashboard`                          |       | Templated             |                       |                                                                                                                                                                    |
 | `/staff_assignment`                   |       |                       |                       | Dara thinks we should rename this URL                                                                                                                              |
 | `/profile`                            | Dara  | Functionally complete | <ul><li>[ ] </li><ul> |                                                                                                                                                                    |
@@ -222,7 +223,7 @@ Prisma also has nice features such as
 [auto-joins](https://www.prisma.io/docs/concepts/components/prisma-client/relation-queries#nested-reads).
 
 Dara thinks it'd be better to use `/server/store` as like an interface rather than directly accessing the Prisma Client,
-but will discuss later
+but will discuss later when designing database
 
 #### Entities
 
