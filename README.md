@@ -238,16 +238,16 @@ TODO: ERM diagram (could make tables entity property tables to help plan ERM dia
 
 ### Libraries
 
-- TypeScript 4.9
-- ESLint 8.27
-  - TODO: setup Prettier?
-- React 18
-- Next.js 13
-  - Next-Auth 4.17
-- Bootstrap 5.2
-- React Bootstrap 2.6
-- React Boostrap Icons 1.9
-- Font Awesome Icons 6.2
-- Axios 1.1
-- Prisma
-- ...
+| Name                                                                    | Minor Version | Purpose                                     |
+|-------------------------------------------------------------------------|---------------|---------------------------------------------|
+| [TypeScript](https://www.typescriptlang.org/)                           | 4.9           | Programming language                        |
+| [ESLint](https://eslint.org/)                                           | 8.27          | Static code analysis                        |
+| [React](https://reactjs.org/)                                           | 18.2          | UI library                                  |
+| [Next.Js](https://nextjs.org/)                                          | 13.0          | Full stack framework                        |
+| [NextAuth.js](https://next-auth.js.org/)                                | 4.17          | Authentication                              |
+| [Bootstrap](https://getbootstrap.com/)                                  | 5.2           | CSS Framework                               |
+| [React Boostrap](https://react-bootstrap.github.io/)                    | 2.6           | Bootstrap React components                  |
+| [React Boostrap Icons](https://github.com/ismamz/react-bootstrap-icons) | 1.9           | Bootstrap Icons React components            |
+| [Axios](https://axios-http.com/)                                        | 1.1           | HTTP client (use instead of the `fetch` API |
+| [Prisma](https://www.prisma.io/)                                        | -             | Database ORM                                |
+| ...                                                                     |               |                                             |
