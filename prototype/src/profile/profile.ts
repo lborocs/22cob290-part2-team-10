@@ -111,7 +111,7 @@ $(() => {
 
     const colour = <string>$this.val();
 
-    console.log(`--${id} == ${$this.val()}`);
+    console.log(`--${id} == ${colour}`);
 
     $(':root').css({
       [`--${id}`]: colour,

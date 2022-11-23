@@ -43,7 +43,7 @@
       "allowNamedFunctions": true
     }],
     "arrow-spacing": "error",
-    "arrow-parens": "error",
+    "arrow-parens": "warn",
     "no-confusing-arrow": "error",
     "implicit-arrow-linebreak": "error",
     "no-duplicate-imports": "error",

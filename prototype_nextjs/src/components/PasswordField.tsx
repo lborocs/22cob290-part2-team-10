@@ -41,6 +41,7 @@ export default forwardRef(function PasswordField({
   autoComplete = 'current-password',
   placeholder = 'Enter password',
   feedback,
+  feedbackTooltip = true,
   setFeedback,
   policyTooltip,
   ...props
@@ -51,13 +52,18 @@ export default forwardRef(function PasswordField({
   autoComplete?: string
   placeholder?: string
   feedback?: string
+  feedbackTooltip?: boolean
   setFeedback?: ReturnType<typeof useState<string>>[1]
   policyTooltip?: boolean
 }, ref: React.ForwardedRef<HTMLInputElement>) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <Form.Group as={Row} className="mb-3 position-relative" controlId={controlId}>
+    <Form.Group
+      as={Row}
+      className={`mb-3 ${feedbackTooltip ? 'position-relative' : ''}`}
+      controlId={controlId}
+    >
       <Form.Label column sm={3}>{label}</Form.Label>
       <Col sm={9}>
         <InputGroup hasValidation>
@@ -82,7 +88,7 @@ export default forwardRef(function PasswordField({
           >
             {showPassword ? <EyeSlashFill /> : <EyeFill />}
           </Button>
-          <Form.Control.Feedback type="invalid" tooltip>
+          <Form.Control.Feedback type="invalid" tooltip={feedbackTooltip}>
             {feedback}
           </Form.Control.Feedback>
         </InputGroup>

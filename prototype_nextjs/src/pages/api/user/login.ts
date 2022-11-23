@@ -3,8 +3,8 @@ import { User } from 'next-auth';
 import { object, string, type InferType } from 'yup';
 
 // import type { User } from '~/types';
-import { getAllUsers } from '~/server/store/users';
 import { PASSWORD_SCHEMA } from '~/utils';
+import { isCorrectPassword, getUserInfo } from '~/server/store/users';
 
 export enum ErrorReason {
   WRONG_PASSWORD = 'WRONG_PASSWORD',
@@ -48,10 +48,9 @@ export default async function handler(
 
   const { email, password } = req.body as RequestSchema;
 
-  const users = await getAllUsers();
-  const user = users.find((user) => user.email === email);
+  const userInfo = await getUserInfo(email);
 
-  if (!user) {
+  if (!userInfo) {
     res.status(200).json({
       success: false,
       reason: ErrorReason.DOESNT_EXIST,
@@ -59,7 +58,7 @@ export default async function handler(
     return;
   }
 
-  if (password !== user.password) {
+  if (!await isCorrectPassword(email, password)) {
     res.status(200).json({
       success: false,
       reason: ErrorReason.WRONG_PASSWORD,
@@ -67,16 +66,13 @@ export default async function handler(
     return;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { password: omit, ...result } = user;
-
   res.status(200).json({
     success: true,
     user: {
-      id: result.email, // maybe for account.providerAccountId
-      name: `${user.fname} ${user.lname}`,
+      ...userInfo,
+      id: userInfo.email, // maybe for account.providerAccountId
+      name: `${userInfo.fname} ${userInfo.lname}`,
       image: 'WHAT IS IMAGE FOR',
-      ...result,
     },
   } as any);
 }

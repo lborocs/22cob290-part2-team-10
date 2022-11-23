@@ -18,6 +18,7 @@ export default function SignupPage({ user, token }: InferGetServerSidePropsType<
       <Layout user={user} sidebarType="projects">
         <main>
           {/* TODO */}
+          token = {token}
         </main>
       </Layout>
     </>
@@ -35,7 +36,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const user = (await getUserInfo(email))!;
 
   // should we verify token during SSR?
-  const token = context.params?.token as string | undefined;
+  const token = context.query?.token as string | undefined ?? null;
 
   return {
     props: {

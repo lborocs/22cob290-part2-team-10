@@ -1,26 +1,30 @@
+import { useState } from 'react';
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 import { signOut } from 'next-auth/react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
+import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 
 import Layout from '~/components/Layout';
+import TextAvatar from '~/components/TextAvatar';
+import UserDetails from '~/components/profile/UserDetails';
+import ChangePasswordModal from '~/components/profile/ChangePasswordModal';
+import InviteModal from '~/components/profile/InviteModal';
+import TextAvatarModal from '~/components/profile/TextAvatarModal';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { getUserInfo } from '~/server/store/users';
 
+import styles from '~/styles/Profile.module.css';
+
 export default function ProfilePage({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const [showTextAvatarModal, setShowTextAvatarModal] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
+
   if (!user) return null;
-
-  const { fname, lname, email, role } = user;
-
-  // TODO: name editable properly
-
-  // TODO: big text avatar on the left or smthn, and click on it to open edit modal
-  // TODO: organise more like Details: name, email, role
 
   // TODO: select theme
 
@@ -31,31 +35,30 @@ export default function ProfilePage({ user }: InferGetServerSidePropsType<typeof
       </Head>
       <Layout user={user} sidebarType="projects">
         <main>
-          <section>
+          <Container>
             <Row>
-              <Form.Group as={Col} lg={5}>
-                <InputGroup>
-                  <InputGroup.Text>Name</InputGroup.Text>
-                  <Form.Control
-                    defaultValue={fname}
+              <Col sm="auto" className="d-flex justify-content-center pb-4 pe-md-4">
+                <div>
+                  <TextAvatar
+                    user={user}
+                    className={styles['text-avatar']}
+                    size="120px"
+                    style={{
+                      fontSize: '3em',
+                    }}
+                    onClick={() => setShowTextAvatarModal(true)}
                   />
-                  <Form.Control
-                    defaultValue={lname}
+                  <TextAvatarModal
+                    show={showTextAvatarModal}
+                    onHide={() => setShowTextAvatarModal(false)}
                   />
-                </InputGroup>
-              </Form.Group>
-            </Row>
-            <Row>
-              <Col>
-                <h3>Email</h3>
-                <span>{email}</span>
+                </div>
               </Col>
               <Col>
-                <h3>Role</h3>
-                <span>{role}</span>
+                <UserDetails user={user} />
               </Col>
             </Row>
-          </section>
+          </Container>
 
           <br />
           <br />
@@ -64,32 +67,34 @@ export default function ProfilePage({ user }: InferGetServerSidePropsType<typeof
             <Row>
               <Col>
                 <h3>Change Password</h3>
-                <Button variant="dark">
+                <Button
+                  variant="dark"
+                  onClick={() => setShowPasswordModal(true)}
+                >
                   Change
                 </Button>
 
-                {/* TODO: modal & toast */}
+                <ChangePasswordModal
+                  email={user.email}
+                  show={showPasswordModal}
+                  onHide={() => setShowPasswordModal(false)}
+                />
               </Col>
               <Col>
                 <h3>Invite Employee</h3>
-                <Button variant="dark">
+                <Button
+                  variant="dark"
+                  onClick={() => setShowInviteModal(true)}
+                >
                   Generate invite
                 </Button>
 
-                {/* TODO: modal */}
+                <InviteModal
+                  show={showInviteModal}
+                  onHide={() => setShowInviteModal(false)}
+                />
               </Col>
             </Row>
-          </section>
-
-          <br />
-          <br />
-
-          <section>
-            <h3>Avatar</h3>
-            <Button variant="dark">
-              Change avatar colours
-            </Button>
-            {/*  TODO: modal */}
           </section>
 
           <br />
