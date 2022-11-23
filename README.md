@@ -17,6 +17,8 @@
   - [How we need to code](#how-we-need-to-code)
     - [Layout/Sidebar](#layoutsidebar)
       - [Examples](#examples)
+    - [Code Style](#code-style)
+      - [Imports](#imports)
   - [Pages](#pages-1)
   - [Database](#database)
     - [Entities](#entities)
@@ -142,11 +144,52 @@ Need to wrap your page's content in a `Layout` component
 
 - Most pages will have a `sidebarType` of `project`
   - e.g. main forum page should be `custom`
+    - The different forum pages will probably have different sidebar content
 
 ##### Examples
 
 - [Sidebar that lists the user's assigned projects](prototype_nextjs/src/pages/examples/projects_sidebar.tsx)
 - [Custom sidebar](prototype_nextjs/src/pages/examples/custom_sidebar.tsx)
+
+
+#### Code Style
+
+- Dara has set up a too strict but decent ESLint config (basically a code style)
+  - **Make sure your editor/IDE has ESLint support enabled, e.g. VSCode has the ESLint extension**
+  - This is important because we're being marked on the quality of our code
+
+##### Imports
+
+Imports should be in the order ([example](prototype_nextjs/src/pages/profile.tsx)):
+
+- External libraries
+  - react (e.g. `useState`)
+  - NextJs (e.g. `GetServerSidePropsContext`)
+  - NextJs subpackages (e.g. `Head` from `next/head`)
+  - Next-Auth (e.g. `signIn` from `next-auth/next`)
+  - React Boostrap/UI library (e.g. `Button` from `react-bootstrap/Button`)
+  - Any other external libraries (e.g. `axios`)
+- [space]
+- Our code
+  - Components (e.g. `Layout` from `~/components/Layout`)
+  - `~/types`
+  - `~/utils`
+  - `~/pages/api` **in order they're used in when thinking about a page's entire life cycle (SSR->client)**
+    - e.g. `import { authOptions } from '~/pages/api/auth/[...nextauth]'` is always first because it used in the first line of `getServerSideProps`
+  - `~/server` **in order they're used in when thinking about a page's entire life cycle (SSR->client)**
+  - Anything else
+- [space]
+- Other
+  - External CSS (e.g. from Bootstrap)
+  - Our CSS (e.g. `[componentname].module.css`)
+  - Images
+  - Anything else
+
+> Below isn't really necessary, but is nice, the grouping above is more important
+
+In each of the above groups, imports should be in alphabetic order of the file they're being imported from or logically grouped:
+- e.g. `next/head` imports go before `next/link`
+- the meaning of "logically grouping" is very loose here, as long as the imports aren't a mess you're gucci
 
 ### Pages
 
