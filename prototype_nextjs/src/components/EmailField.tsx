@@ -8,16 +8,22 @@ export default forwardRef(function EmailField({
   name,
   controlId = 'email',
   feedback,
+  feedbackTooltip = true,
   setFeedback,
   ...props
 }: FormControlProps & {
   name: string
   controlId?: string
   feedback?: string
+  feedbackTooltip?: boolean
   setFeedback?: ReturnType<typeof useState<string>>[1]
 }, ref: React.ForwardedRef<HTMLInputElement>) {
   return (
-    <Form.Group as={Row} className="mb-3 position-relative" controlId={controlId}>
+    <Form.Group
+      as={Row}
+      className={`mb-3 ${feedbackTooltip ? 'position-relative' : ''}`}
+      controlId={controlId}
+    >
       <Form.Label column sm={3}>Email</Form.Label>
       <Col sm={9}>
         <Form.Control
@@ -32,7 +38,7 @@ export default forwardRef(function EmailField({
           required
           {...props}
         />
-        <Form.Control.Feedback type="invalid" tooltip>
+        <Form.Control.Feedback type="invalid" tooltip={feedbackTooltip}>
           {feedback}
         </Form.Control.Feedback>
       </Col>
