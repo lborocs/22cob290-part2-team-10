@@ -35,7 +35,7 @@ export default function ProfilePage({ user }: InferGetServerSidePropsType<typeof
       </Head>
       <Layout user={user} sidebarType="projects">
         <main>
-          <Container>
+          <Container as="section">
             <Row>
               <Col sm="auto" className="d-flex justify-content-center pb-4 pe-md-4">
                 <div>

@@ -1,4 +1,6 @@
 // TODO: implement JWT
+// or maybe a different method that gives a shorter URL
+// (compression algorithm?)
 
 let count = 0;
 

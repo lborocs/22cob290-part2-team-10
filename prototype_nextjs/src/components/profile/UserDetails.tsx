@@ -51,6 +51,7 @@ export default function UserDetails({ user }: {
   };
 
   // TODO: add a glow to firstName & lastName to show it's editable?
+  // see https://stackoverflow.com/a/14822905
 
   return (
     <>
