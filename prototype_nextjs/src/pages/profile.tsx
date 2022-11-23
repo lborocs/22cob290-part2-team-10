@@ -97,6 +97,7 @@ export default function ProfilePage({ user }: InferGetServerSidePropsType<typeof
                 </Button>
 
                 <ChangePasswordModal
+                  email={user.email}
                   show={showPasswordModal}
                   onHide={() => setShowPasswordModal(false)}
                 />

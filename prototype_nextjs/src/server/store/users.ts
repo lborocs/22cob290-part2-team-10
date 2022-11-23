@@ -71,7 +71,7 @@ export async function getUserInfo(email: string): Promise<UserInfo | undefined> 
   };
 }
 
-export async function correctPassword(email: string, password: string): Promise<boolean | null> {
+export async function isCorrectPassword(email: string, password: string): Promise<boolean | null> {
   const user = users.find((user) => user.email === email);
 
   if (!user) return null;
