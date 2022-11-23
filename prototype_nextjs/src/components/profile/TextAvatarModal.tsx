@@ -119,7 +119,6 @@ export default function TextAvatarModal({ show, onHide }: {
 
       <Modal.Footer>
         <Button
-          type="button"
           variant="secondary"
           size="sm"
           onClick={() => {
