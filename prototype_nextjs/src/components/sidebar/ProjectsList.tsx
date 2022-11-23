@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
 
-import type { ResponseSchema as GetProjectResponse } from '~/pages/api/projects/getAssignedProjects';
+import type { ResponseSchema as GetProjectResponse } from '~/pages/api/projects/get-assigned-projects';
 
 import styles from '~/styles/ProjectsList.module.css';
 
@@ -20,7 +20,7 @@ export default function ProjectsList() {
     const controller = new AbortController();
     const signal = controller.signal;
 
-    axios.get<GetProjectResponse>('/api/projects/getAssignedProjects', { signal })
+    axios.get<GetProjectResponse>('/api/projects/get-assigned-projects', { signal })
       .then(({ data }) => setProjects(data))
       .catch((e) => console.error(e))
       ;

@@ -11,6 +11,8 @@ import Row from 'react-bootstrap/Row';
 
 import Layout from '~/components/Layout';
 import TextAvatar from '~/components/TextAvatar';
+import ChangePasswordModal from '~/components/profile/ChangePasswordModal';
+import InviteModal from '~/components/profile/InviteModal';
 import TextAvatarModal from '~/components/profile/TextAvatarModal';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { getUserInfo } from '~/server/store/users';
@@ -19,6 +21,8 @@ import styles from '~/styles/Profile.module.css';
 
 export default function ProfilePage({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [showTextAvatarModal, setShowTextAvatarModal] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
 
   if (!user) return null;
 
@@ -85,19 +89,31 @@ export default function ProfilePage({ user }: InferGetServerSidePropsType<typeof
             <Row>
               <Col>
                 <h3>Change Password</h3>
-                <Button variant="dark">
+                <Button
+                  variant="dark"
+                  onClick={() => setShowPasswordModal(true)}
+                >
                   Change
                 </Button>
 
-                {/* TODO: modal & toast */}
+                <ChangePasswordModal
+                  show={showPasswordModal}
+                  onHide={() => setShowPasswordModal(false)}
+                />
               </Col>
               <Col>
                 <h3>Invite Employee</h3>
-                <Button variant="dark">
+                <Button
+                  variant="dark"
+                  onClick={() => setShowInviteModal(true)}
+                >
                   Generate invite
                 </Button>
 
-                {/* TODO: modal */}
+                <InviteModal
+                  show={showInviteModal}
+                  onHide={() => setShowInviteModal(false)}
+                />
               </Col>
             </Row>
           </section>
