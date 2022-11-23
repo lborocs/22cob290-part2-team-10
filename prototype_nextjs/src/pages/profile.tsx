@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
@@ -9,10 +10,16 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Row from 'react-bootstrap/Row';
 
 import Layout from '~/components/Layout';
+import TextAvatar from '~/components/TextAvatar';
+import TextAvatarModal from '~/components/profile/TextAvatarModal';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { getUserInfo } from '~/server/store/users';
 
+import styles from '~/styles/Profile.module.css';
+
 export default function ProfilePage({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const [showTextAvatarModal, setShowTextAvatarModal] = useState(false);
+
   if (!user) return null;
 
   const { fname, lname, email, role } = user;
@@ -31,6 +38,20 @@ export default function ProfilePage({ user }: InferGetServerSidePropsType<typeof
       </Head>
       <Layout user={user} sidebarType="projects">
         <main>
+          <section>
+            <TextAvatar
+              user={user}
+              className={styles['text-avatar']}
+              size="80px"
+              // TODO: make font a bit bigger
+              onClick={() => setShowTextAvatarModal(true)}
+            />
+            <TextAvatarModal
+              show={showTextAvatarModal}
+              onHide={() => setShowTextAvatarModal(false)}
+            />
+          </section>
+
           <section>
             <Row>
               <Form.Group as={Col} lg={5}>
@@ -79,17 +100,6 @@ export default function ProfilePage({ user }: InferGetServerSidePropsType<typeof
                 {/* TODO: modal */}
               </Col>
             </Row>
-          </section>
-
-          <br />
-          <br />
-
-          <section>
-            <h3>Avatar</h3>
-            <Button variant="dark">
-              Change avatar colours
-            </Button>
-            {/*  TODO: modal */}
           </section>
 
           <br />

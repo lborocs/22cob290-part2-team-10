@@ -4,25 +4,35 @@ import { type UserInfo } from '~/server/store/users';
 
 import styles from '~/styles/TextAvatar.module.css';
 
-type TextAvatar = {
+export type TextAvatar = {
   'avatar-bg': string
   'avatar-fg': string
 };
 
-function getTextAvatarFromLocalStorage() {
+export const getDefaultTextAvatar = () => ({
+  'avatar-bg': '#e2ba39',
+  'avatar-fg': '#ffffff',
+});
+
+// localStorage acting as our store
+export function getTextAvatarFromStore(): TextAvatar {
   const textAvatarJson = localStorage.getItem('textAvatar');
 
-  if (textAvatarJson == null) return null;
+  if (textAvatarJson == null) return getDefaultTextAvatar();
 
-  const textAvatar = JSON.parse(textAvatarJson) as TextAvatar;
+  return JSON.parse(textAvatarJson) as TextAvatar;
+}
 
+export function updateTextAvatarStore(textAvatar: TextAvatar) {
+  localStorage.setItem('textAvatar', JSON.stringify(textAvatar));
+}
+
+export function updateTextAvatarCss(textAvatar: TextAvatar) {
   for (const key in textAvatar) {
     const colour = textAvatar[key as keyof TextAvatar];
 
     document.documentElement.style.setProperty(`--${key}`, colour);
   }
-
-  return textAvatar;
 }
 
 export interface TextAvatarProps extends React.ComponentPropsWithoutRef<'span'> {
@@ -41,7 +51,9 @@ export default forwardRef(function LoadingButton({
   const lastInitial = lname[0].toUpperCase();
 
   useEffect(() => {
-    getTextAvatarFromLocalStorage();
+    // localStorage acting as our store
+    const textAvatar = getTextAvatarFromStore();
+    updateTextAvatarCss(textAvatar);
   }, []);
 
   const {
