@@ -5,7 +5,7 @@ import type { UnauthorisedResponse } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { getAssignedProjects } from '~/server/store/projects';
 
-export type ResponseSchema = string[];
+export type ResponseSchema = Awaited<ReturnType<typeof getAssignedProjects>>;
 
 export default async function handler(
   req: NextApiRequest,

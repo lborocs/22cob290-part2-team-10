@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
 
+import type { ProjectInfo } from '~/types';
 import type { ResponseSchema as GetProjectResponse } from '~/pages/api/projects/get-assigned-projects';
 
 import styles from '~/styles/ProjectsList.module.css';
@@ -12,7 +13,7 @@ export default function ProjectsList() {
   const { status } = useSession();
   const router = useRouter();
 
-  const [projects, setProjects] = useState<string[]>([]);
+  const [projects, setProjects] = useState<ProjectInfo[]>([]);
 
   useEffect(() => {
     if (status !== 'authenticated') return;
@@ -33,17 +34,17 @@ export default function ProjectsList() {
   if (status !== 'authenticated') return null;
 
   let route: string | undefined;
-  if (router.pathname === '/projects/[name]') {
-    const { name } = router.query;
-    route = `/projects/${encodeURIComponent(name as string)}`;
+  if (router.pathname === '/projects/[id]') {
+    const { id } = router.query;
+    route = `/projects/${id as string}`;
   }
 
   return (
     <div>
       <p className={styles.title}>Assigned Projects:</p>
       <div className={`list-unstyled ${styles['projects-list']}`}>
-        {projects.map((projectName, index) => {
-          const url = `/projects/${encodeURIComponent(projectName)}`;
+        {projects.map((project, index) => {
+          const url = `/projects/${project.id}`;
           const active = route === url;
 
           return (
@@ -52,7 +53,7 @@ export default function ProjectsList() {
                 href={url}
                 className={`nav-link ${styles['project-link']} ${active ? styles.active : ''}`}
               >
-                {projectName}
+                {project.name}
               </Link>
             </li>
           );

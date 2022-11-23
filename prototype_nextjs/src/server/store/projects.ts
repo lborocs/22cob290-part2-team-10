@@ -35,9 +35,9 @@ export async function getProjectInfo(id: number): Promise<ProjectInfo | null> {
   return projects.find((project) => project.id === id) ?? null;
 }
 
-export async function getAssignedProjects(email: string): Promise<string[]> {
+export async function getAssignedProjects(email: string): Promise<ProjectInfo[]> {
   return projects.filter((project) => project.members.includes(email)
     || project.manager === email
     || project.leader === email
-  ).map((project) => project.name);
+  );
 }
