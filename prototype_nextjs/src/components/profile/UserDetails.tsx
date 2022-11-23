@@ -9,7 +9,7 @@ import axios from 'axios';
 
 import LoadingButton from '~/components/LoadingButton';
 import RoundedRect from '~/components/RoundedRect';
-import type { UserInfo } from '~/server/store/users';
+import { type UserInfo } from '~/types';
 import type { RequestSchema as ChangeNamePayload, ResponseSchema as ChangeNameResponse } from '~/pages/api/user/change-name';
 
 type DetailsFormData = {

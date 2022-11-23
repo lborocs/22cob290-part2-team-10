@@ -1,4 +1,4 @@
-import type { Task } from '~/server/store/projects';
+import type { Task } from '~/types';
 
 // TODO: React Bootstrap Card
 export default function Task({ task }: {

@@ -1,13 +1,5 @@
+import type { Post } from '~/types';
 import { range } from '~/utils';
-
-export type Post = {
-  id: number
-  author: string
-  datePosted: number
-  title: string
-  content: string
-  topics: string[]
-};
 
 /**
  * Generate a random date between today and the start of 2022.

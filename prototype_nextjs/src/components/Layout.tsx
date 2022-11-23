@@ -11,8 +11,7 @@ import { faAlignJustify, faAlignLeft } from '@fortawesome/free-solid-svg-icons';
 
 import ProjectsList from '~/components/sidebar/ProjectsList';
 import TextAvatar from '~/components/TextAvatar';
-import { Role } from '~/types';
-import type { UserInfo } from '~/server/store/users';
+import { Role, type UserInfo } from '~/types';
 
 import styles from '~/styles/Layout.module.css';
 import makeItAllLogo from '~/../public/company-logo.png';

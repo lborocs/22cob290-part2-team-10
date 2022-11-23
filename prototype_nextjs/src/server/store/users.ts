@@ -1,14 +1,4 @@
-import { Role } from '~/types';
-
-// would like to have this in ~/types but that can be after user entity is finalised
-// and we've thought of a good name for this (User bad name cos clash with next-auth)
-export type User = {
-  fname: string
-  lname: string
-  email: string
-  password: string
-  role: Role
-};
+import { Role, type User, type UserInfo } from '~/types';
 
 const users: User[] = [
   {
@@ -51,10 +41,6 @@ const users: User[] = [
 export async function getAllUsers(): Promise<User[]> {
   return users;
 }
-
-export type UserInfo = (Omit<User, 'password'> & {
-  name: string
-});
 
 export async function getUserInfo(email: string): Promise<UserInfo | undefined> {
   const user = users.find((user) => user.email === email);

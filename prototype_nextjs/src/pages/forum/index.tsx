@@ -6,9 +6,10 @@ import { unstable_getServerSession } from 'next-auth/next';
 
 import ForumSidebar from '~/components/sidebar/ForumSidebar';
 import Layout from '~/components/Layout';
+import type { Post } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { getUserInfo } from '~/server/store/users';
-import { getAllPosts, type Post } from '~/server/store/posts';
+import { getAllPosts } from '~/server/store/posts';
 
 // TODO: ForumPage
 export default function ForumPage({ user, posts }: InferGetServerSidePropsType<typeof getServerSideProps>) {

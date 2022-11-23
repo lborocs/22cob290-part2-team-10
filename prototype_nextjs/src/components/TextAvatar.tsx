@@ -1,6 +1,6 @@
 import { forwardRef, useEffect } from 'react';
 
-import { type UserInfo } from '~/server/store/users';
+import { type UserInfo } from '~/types';
 
 import styles from '~/styles/TextAvatar.module.css';
 

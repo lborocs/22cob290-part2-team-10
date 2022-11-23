@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */ // TODO: remove once this is done
 import TaskComponent from '~/components/Task';
-import type { ProjectInfo } from '~/server/store/projects';
+import type { ProjectInfo } from '~/types';
 
 // TODO: React Bootstrap
 export default function KanbanBoard({ project }: {

@@ -1,25 +1,5 @@
+import type { ProjectInfo } from '~/types';
 import { range } from '~/utils';
-
-// TODO: design db
-
-// TODO: maybe return UserInfo instead of email? - that'll be solved by prisma
-export type ProjectInfo = {
-  name: string
-  manager: string
-  leader: string
-  members: string[]
-  todo: Task[]
-  in_progress: Task[]
-  code_review: Task[]
-  completed: Task[]
-};
-
-export type Task = {
-  title: string
-  description: string
-  tags: string[]
-  assignee: string
-};
 
 const numProjects = 10;
 
