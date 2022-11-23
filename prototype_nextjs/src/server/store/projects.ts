@@ -4,6 +4,7 @@ import { range } from '~/utils';
 const numProjects = 10;
 
 const projects: ProjectInfo[] = range(1, numProjects).map((num) => ({
+  id: num,
   name: `Project ${num}`,
   manager: 'manager@make-it-all.co.uk',
   leader: 'leader@make-it-all.co.uk',
@@ -30,8 +31,8 @@ export async function getAllProjects(): Promise<ProjectInfo[]> {
   return [...projects];
 }
 
-export async function getProjectInfo(name: string): Promise<ProjectInfo | null> {
-  return projects.find((project) => project.name === name) ?? null;
+export async function getProjectInfo(id: number): Promise<ProjectInfo | null> {
+  return projects.find((project) => project.id === id) ?? null;
 }
 
 export async function getAssignedProjects(email: string): Promise<string[]> {

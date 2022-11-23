@@ -63,9 +63,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const email = session.user.email!;
   const user = (await getUserInfo(email))!;
 
-  const { name: projectName } = context.params!;
+  const { id: projectId } = context.params!;
 
-  const projectInfo = await getProjectInfo(projectName as string);
+  const projectInfo = await getProjectInfo(parseInt(projectId as string));
 
   return {
     props: {

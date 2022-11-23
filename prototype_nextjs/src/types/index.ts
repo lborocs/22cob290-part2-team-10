@@ -24,6 +24,7 @@ export type UserInfo = (Omit<User, 'password'> & {
 
 // TODO: maybe return UserInfo instead of email? - that'll be solved by prisma
 export type ProjectInfo = {
+  id: number
   name: string
   manager: string
   leader: string
