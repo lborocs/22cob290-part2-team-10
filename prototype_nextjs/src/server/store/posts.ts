@@ -9,8 +9,17 @@ export type Post = {
   topics: string[]
 };
 
-// https://stackoverflow.com/a/9035732
-function randomDate(): number {
+/**
+ * Generate a random date between today and the start of 2022.
+ *
+ * Example:
+ * ```ts
+ * const randomDate = new Date(randomTimeMs());
+ * ```
+ *
+ * [Source](https://stackoverflow.com/a/9035732)
+ */
+function randomTimeMs(): number {
   const start = new Date(2022, 1, 1).getTime();
   const end = Date.now();
 
@@ -24,7 +33,7 @@ const numPosts = 10;
 const posts: Post[] = range(1, numPosts).map((num) => ({
   id: num,
   author: 'alice@make-it-all.co.uk',
-  datePosted: randomDate(),
+  datePosted: randomTimeMs(),
   title: `Post ${num}`,
   content: `${num} squared = ${num * num}`,
   topics: range(1, num).map((n) => `Topic ${n}`),

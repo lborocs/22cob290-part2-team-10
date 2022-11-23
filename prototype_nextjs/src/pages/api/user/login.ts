@@ -3,8 +3,8 @@ import { User } from 'next-auth';
 import { object, string, type InferType } from 'yup';
 
 // import type { User } from '~/types';
-import { isCorrectPassword, getUserInfo } from '~/server/store/users';
 import { PASSWORD_SCHEMA } from '~/utils';
+import { isCorrectPassword, getUserInfo } from '~/server/store/users';
 
 export enum ErrorReason {
   WRONG_PASSWORD = 'WRONG_PASSWORD',

@@ -1,7 +1,8 @@
 import { range } from '~/utils';
 
 // TODO: design db
-// TODO: maybe return UserInfo instead of email?
+
+// TODO: maybe return UserInfo instead of email? - that'll be solved by prisma
 export type ProjectInfo = {
   name: string
   manager: string
