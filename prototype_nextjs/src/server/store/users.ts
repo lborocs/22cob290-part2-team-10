@@ -1,7 +1,7 @@
 import { Role } from '~/types';
 
 // would like to have this in ~/types but that can be after user entity is finalised
-// and thought of a good name for this (User bad name cos clash with nextauth)
+// and we've thought of a good name for this (User bad name cos clash with next-auth)
 export type User = {
   fname: string
   lname: string
@@ -9,18 +9,6 @@ export type User = {
   password: string
   role: Role
 };
-
-/* TODO: refactor to be like a repository:
-
-getAllUsers
-
-getUser(email) (dont return pw?)
-
-correctPassword(email, password) *only if not returning password^
-
-etc.
-
-*/
 
 const users: User[] = [
   {
@@ -73,6 +61,7 @@ export async function getUserInfo(email: string): Promise<UserInfo | undefined> 
 
   if (!user) return user;
 
+  // omit the password
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { password, ...result } = user;
 
@@ -80,4 +69,16 @@ export async function getUserInfo(email: string): Promise<UserInfo | undefined> 
     name: `${user.fname} ${user.lname}`,
     ...result,
   };
+}
+
+export async function correctPassword(email: string, password: string): Promise<boolean | null> {
+  const user = users.find((user) => user.email === email);
+
+  if (!user) return null;
+
+  return user.password === password;
+}
+
+export async function changePassword(email: string, newPassword: string): Promise<void> {
+  // TODO: database
 }
