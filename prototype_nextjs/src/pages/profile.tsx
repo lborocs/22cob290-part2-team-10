@@ -5,12 +5,12 @@ import { unstable_getServerSession } from 'next-auth/next';
 import { signOut } from 'next-auth/react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
+import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 
 import Layout from '~/components/Layout';
 import TextAvatar from '~/components/TextAvatar';
+import UserDetails from '~/components/profile/UserDetails';
 import ChangePasswordModal from '~/components/profile/ChangePasswordModal';
 import InviteModal from '~/components/profile/InviteModal';
 import TextAvatarModal from '~/components/profile/TextAvatarModal';
@@ -26,13 +26,6 @@ export default function ProfilePage({ user }: InferGetServerSidePropsType<typeof
 
   if (!user) return null;
 
-  const { fname, lname, email, role } = user;
-
-  // TODO: name editable properly
-
-  // TODO: big text avatar on the left or smthn, and click on it to open edit modal
-  // TODO: organise more like Details: name, email, role
-
   // TODO: select theme
 
   return (
@@ -42,45 +35,30 @@ export default function ProfilePage({ user }: InferGetServerSidePropsType<typeof
       </Head>
       <Layout user={user} sidebarType="projects">
         <main>
-          <section>
-            <TextAvatar
-              user={user}
-              className={styles['text-avatar']}
-              size="80px"
-              // TODO: make font a bit bigger
-              onClick={() => setShowTextAvatarModal(true)}
-            />
-            <TextAvatarModal
-              show={showTextAvatarModal}
-              onHide={() => setShowTextAvatarModal(false)}
-            />
-          </section>
-
-          <section>
+          <Container>
             <Row>
-              <Form.Group as={Col} lg={5}>
-                <InputGroup>
-                  <InputGroup.Text>Name</InputGroup.Text>
-                  <Form.Control
-                    defaultValue={fname}
+              <Col sm="auto" className="d-flex justify-content-center pb-4 pe-md-4">
+                <div>
+                  <TextAvatar
+                    user={user}
+                    className={styles['text-avatar']}
+                    size="120px"
+                    style={{
+                      fontSize: '3em',
+                    }}
+                    onClick={() => setShowTextAvatarModal(true)}
                   />
-                  <Form.Control
-                    defaultValue={lname}
+                  <TextAvatarModal
+                    show={showTextAvatarModal}
+                    onHide={() => setShowTextAvatarModal(false)}
                   />
-                </InputGroup>
-              </Form.Group>
-            </Row>
-            <Row>
-              <Col>
-                <h3>Email</h3>
-                <span>{email}</span>
+                </div>
               </Col>
               <Col>
-                <h3>Role</h3>
-                <span>{role}</span>
+                <UserDetails user={user} />
               </Col>
             </Row>
-          </section>
+          </Container>
 
           <br />
           <br />

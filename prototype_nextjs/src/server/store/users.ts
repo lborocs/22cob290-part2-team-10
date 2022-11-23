@@ -81,4 +81,19 @@ export async function isCorrectPassword(email: string, password: string): Promis
 
 export async function changePassword(email: string, newPassword: string): Promise<void> {
   // TODO: database
+  const user = users.find((user) => user.email === email);
+
+  if (!user) return;
+
+  user.password = newPassword;
+}
+
+export async function changeName(email: string, firstName: string, lastName: string): Promise<void> {
+  // TODO: database
+  const user = users.find((user) => user.email === email);
+
+  if (!user) return;
+
+  user.fname = firstName;
+  user.lname = lastName;
 }
