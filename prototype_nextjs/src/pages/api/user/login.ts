@@ -3,7 +3,7 @@ import { User } from 'next-auth';
 import { object, string, type InferType } from 'yup';
 
 // import type { User } from '~/types';
-import { correctPassword, getUserInfo } from '~/server/store/users';
+import { isCorrectPassword, getUserInfo } from '~/server/store/users';
 import { PASSWORD_SCHEMA } from '~/utils';
 
 export enum ErrorReason {
@@ -58,7 +58,7 @@ export default async function handler(
     return;
   }
 
-  if (!correctPassword(email, password)) {
+  if (!await isCorrectPassword(email, password)) {
     res.status(200).json({
       success: false,
       reason: ErrorReason.WRONG_PASSWORD,
