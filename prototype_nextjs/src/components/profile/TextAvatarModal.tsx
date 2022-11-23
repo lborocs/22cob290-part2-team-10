@@ -150,7 +150,7 @@ export default function TextAvatarModal({ show, onHide }: {
           size="sm"
           onClick={onHide}
         >
-          Change
+          Save
         </Button>
       </Modal.Footer>
     </Modal>
