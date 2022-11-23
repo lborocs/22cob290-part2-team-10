@@ -8,11 +8,11 @@ type FailedResponse = {
   message: string
 };
 
-export type ResponseSchema = FailedResponse | string[];
+export type ResponseSchema = string[];
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseSchema>,
+  res: NextApiResponse<FailedResponse | ResponseSchema>,
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
 
