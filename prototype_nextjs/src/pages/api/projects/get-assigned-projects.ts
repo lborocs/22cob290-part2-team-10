@@ -1,18 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { unstable_getServerSession } from 'next-auth/next';
 
+import type { UnauthorisedResponse } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { getAssignedProjects } from '~/server/store/projects';
-
-type FailedResponse = {
-  message: string
-};
 
 export type ResponseSchema = string[];
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<FailedResponse | ResponseSchema>,
+  res: NextApiResponse<UnauthorisedResponse | ResponseSchema>,
 ) {
   const session = await unstable_getServerSession(req, res, authOptions);
 

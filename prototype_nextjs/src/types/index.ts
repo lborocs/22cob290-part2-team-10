@@ -4,3 +4,7 @@ export enum Role {
   TEAM_MEMBER = 'TEAM_MEMBER',
   LEFT_COMPANY = 'LEFT_COMPANY',
 }
+
+export type UnauthorisedResponse = {
+  message: string;
+};
