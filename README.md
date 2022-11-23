@@ -166,15 +166,24 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 | `/forum/topics/[topicname]`?          |       |             |                       | Displays post summaries for a topic (click to open the page for that post)                                                                                         |
 | `/forum/posts`                        |       |             |                       | Display all posts                                                                                                                                                  |
 | `/forum/posts/[id]`                   |       | Templated   |                       | Display a specific post                                                                                                                                            |
-| `/forum/posts/[id]/edit`              |       | Templated   |                       | I think having a new page to edit a post will make it easier to implement                                                                                          |
+| `/forum/posts/[id]/edit`              |       | Templated   |                       | Dara thinks having a new page to edit a post will make it easier to implement                                                                                      |
 | `/dashboard`                          |       | Templated   |                       |                                                                                                                                                                    |
-| `/staff_assignment`                   |       |             |                       | I think we should rename this URL                                                                                                                                  |
+| `/staff_assignment`                   |       |             |                       | Dara thinks we should rename this URL                                                                                                                              |
 | `/profile`                            | Dara  | In progress | <ul><li>[ ] </li><ul> |                                                                                                                                                                    |
 | `/signup`                             |       | Templated   |                       | Can merge signup and login?                                                                                                                                        |
 
 ### Database
 
+We will use [Prisma](https://github.com/prisma/prisma) as an ORM, so we have type safety + don't have to write SQL.
+Prisma also has nice features such as
+[auto-joins](https://www.prisma.io/docs/concepts/components/prisma-client/relation-queries#nested-reads).
+
+Dara thinks it'd be better to use `/server/store` as like an interface rather than directly accessing the Prisma Client,
+but will discuss later
+
 #### Entities
+
+All will have unique IDs? (autoincrement/cuid/uuid)
 
 - User
 - Project
