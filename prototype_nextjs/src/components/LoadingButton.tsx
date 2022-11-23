@@ -4,11 +4,13 @@ import Spinner from 'react-bootstrap/Spinner';
 
 type LoadingButtonProps = ButtonProps & {
   isLoading: boolean
+  loadingContent?: React.ReactNode
   children: React.ReactNode
 };
 
 export default forwardRef(function LoadingButton({
   isLoading,
+  loadingContent,
   children,
   ...props
 }: LoadingButtonProps, ref: React.ForwardedRef<HTMLButtonElement>): JSX.Element {
@@ -19,7 +21,7 @@ export default forwardRef(function LoadingButton({
       ref={ref}
       {...props}
     >
-      {isLoading && (
+      {isLoading ? (
         <>
           <Spinner
             as="span"
@@ -30,9 +32,9 @@ export default forwardRef(function LoadingButton({
             <span className="visually-hidden">Loading...</span>
           </Spinner>
           {' '}
+          {loadingContent}
         </>
-      )}
-      {children}
+      ) : children}
     </Button>
   );
 });
