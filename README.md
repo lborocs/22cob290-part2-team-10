@@ -238,15 +238,15 @@ TODO: ERM diagram (could make tables entity property tables to help plan ERM dia
 ### Libraries
 
 - TypeScript 4.9
-- Next.js 13
-  - Next-Auth
+- ESLint 8.27
+  - TODO: setup Prettier?
 - React 18
+- Next.js 13
+  - Next-Auth 4.17
 - Bootstrap 5.2
 - React Bootstrap 2.6
 - React Boostrap Icons 1.9
 - Font Awesome Icons 6.2
-- ESLint 8.27
-  - TODO: setup Prettier?
-- Prisma
 - Axios 1.1
+- Prisma
 - ...
