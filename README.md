@@ -171,22 +171,24 @@ Imports should be in the order ([example](prototype_nextjs/src/pages/profile.tsx
   - NextJs subpackages (e.g. `Head` from `next/head`)
   - Next-Auth (e.g. `signIn` from `next-auth/next`)
   - React Boostrap/UI library (e.g. `Button` from `react-bootstrap/Button`)
-  - Any other external libraries (e.g. `axios`)
+  - _Any other external libraries (e.g. `axios`)_
 - [space]
 - Our code
   - Components (e.g. `Layout` from `~/components/Layout`)
+  - `~/store`
   - `~/types`
   - `~/utils`
+  - _Any other client-side things_
   - `~/pages/api` **in order they're used in when thinking about a page's entire life cycle (SSR->client)**
     - e.g. `import { authOptions } from '~/pages/api/auth/[...nextauth]'` is always first because it used in the first line of `getServerSideProps`
   - `~/server` **in order they're used in when thinking about a page's entire life cycle (SSR->client)**
-  - Anything else
+  - _Anything else_
 - [space]
 - Other
   - External CSS (e.g. from Bootstrap)
   - Our CSS (e.g. `[componentname].module.css`)
   - Images
-  - Anything else
+  - _Anything else_
 
 > Below isn't really necessary, but is nice, the grouping above is more important
 
@@ -276,6 +278,7 @@ TODO: ERM diagram (could make tables entity property tables to help plan ERM dia
 | [React Boostrap](https://react-bootstrap.github.io/)                    | 2.6           | Bootstrap React components                  |
 | [React Boostrap Icons](https://github.com/ismamz/react-bootstrap-icons) | 1.9           | Bootstrap Icons React components            |
 | [Axios](https://axios-http.com/)                                        | 1.1           | HTTP client (use instead of the `fetch` API |
+| [zustand](https://github.com/pmndrs/zustand)                            | 4.1           | State management                            |
 | [Prisma](https://www.prisma.io/)                                        | -             | Database ORM                                |
 | [node.bcrypt.js](https://github.com/kelektiv/node.bcrypt.js)            | 5.1           | Hashing user passwords                      |
 | [react-markdown](https://github.com/remarkjs/react-markdown)?           | -             | Render markdown content in forum posts      |
