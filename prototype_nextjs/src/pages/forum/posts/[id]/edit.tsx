@@ -4,7 +4,7 @@ import Error from 'next/error';
 import { unstable_getServerSession } from 'next-auth/next';
 
 import Layout from '~/components/Layout';
-import ForumSidebar from '~/components/sidebar/ForumSidebar';
+import ForumSidebar from '~/components/layout/sidebar/ForumSidebar';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { ssrGetUserInfo } from '~/server/utils';
 import { getPost } from '~/server/store/posts';

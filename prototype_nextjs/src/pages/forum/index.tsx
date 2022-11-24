@@ -4,8 +4,8 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { unstable_getServerSession } from 'next-auth/next';
 
-import ForumSidebar from '~/components/sidebar/ForumSidebar';
 import Layout from '~/components/Layout';
+import ForumSidebar from '~/components/layout/sidebar/ForumSidebar';
 import type { Post } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { ssrGetUserInfo } from '~/server/utils';

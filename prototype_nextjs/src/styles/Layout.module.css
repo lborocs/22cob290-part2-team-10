@@ -4,18 +4,6 @@
     align-items: stretch;
 }
 
-.sidebar {
-    min-width: 250px;
-    max-width: 250px;
-    background: var(--secondary-color);
-    color: var(--sidebar-text);
-    transition: all 0.3s;
-}
-
-.sidebar.hidden {
-    margin-left: -250px;
-}
-
 .sidebar-toggle-btn {
     color: black;
     background-color: var(--secondary-color);
@@ -26,21 +14,6 @@
     color: black;
     background-color: var(--tertiary-color);
     border-color: var(--tertiary-color);
-}
-
-.sidebar-header {
-    padding: 20px;
-    background: var(--secondary-color);
-}
-
-.company-logo {
-    max-width: 100%;
-    height: auto;
-}
-
-.sidebar-content {
-    padding: 20px 0;
-    /* border-bottom: 1px solid #47748b; */
 }
 
 .navbar {

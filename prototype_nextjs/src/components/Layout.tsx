@@ -1,22 +1,15 @@
 import { useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { useRouter } from 'next/router';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
-import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAlignJustify, faAlignLeft } from '@fortawesome/free-solid-svg-icons';
-import { useStore } from 'zustand';
 
-import ProjectsList from '~/components/sidebar/ProjectsList';
-import TextAvatar from '~/components/TextAvatar';
-import { useUserStore } from '~/store/userStore';
-import { Role } from '~/types';
+import Sidebar from '~/components/layout/Sidebar';
+import ProjectsList from '~/components/layout/sidebar/ProjectsList';
 
 import styles from '~/styles/Layout.module.css';
-import makeItAllLogo from '~/../public/company-logo.png';
+import LayoutNav from './layout/LayoutNav';
 
 // gives flexibility to have more shared sidebars (not just projects)
 type SidebarType = 'projects' | 'custom';
@@ -40,12 +33,7 @@ export default function Layout({
   sidebarContent,
   children,
 }: LayoutProps) {
-  const router = useRouter();
-
-  const userStore = useUserStore();
-  const role = useStore(userStore, (state) => state.user.role);
-
-  const [hideSidebar, setHideSidebar] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(true);
 
   const getSidebarContent = (): React.ReactNode => {
     switch (sidebarType) {
@@ -56,34 +44,19 @@ export default function Layout({
     }
   };
 
-  const route = router.pathname;
-
   return (
     <div className={styles.wrapper}>
-      {/* sidebar */}
-      <aside className={`${styles.sidebar} ${hideSidebar ? styles.hidden : ''}`} >
-        <div className={styles['sidebar-header']}>
-          <Link href="/home">
-            <Image
-              src={makeItAllLogo}
-              alt="Company logo"
-              className={styles['company-logo']}
-              priority
-            />
-          </Link>
-        </div>
-
-        <div className={styles['sidebar-content']}>
-          {getSidebarContent()}
-        </div>
-      </aside>
+      <Sidebar
+        show={showSidebar}
+        content={getSidebarContent()}
+      />
 
       <div className={styles.content}>
         <header>
           <Navbar expand="lg" className={styles.navbar}>
             <Container fluid>
               <Button
-                onClick={() => setHideSidebar((hide) => !hide)}
+                onClick={() => setShowSidebar((show) => !show)}
                 className={styles['sidebar-toggle-btn']}
               >
                 <FontAwesomeIcon icon={faAlignLeft} />
@@ -109,28 +82,7 @@ export default function Layout({
               </Navbar.Toggle>
 
               <Navbar.Collapse id="nav" className="justify-content-end">
-                <Nav
-                  activeKey={route}
-                  className="align-items-lg-center"
-                >
-                  <Link href="/home" passHref legacyBehavior>
-                    <Nav.Link>Home</Nav.Link>
-                  </Link>
-                  <Link href="/forum" passHref legacyBehavior>
-                    <Nav.Link>Forum</Nav.Link>
-                  </Link>
-                  <Link href="/projects" passHref legacyBehavior>
-                    <Nav.Link>Projects</Nav.Link>
-                  </Link>
-                  {role === Role.MANAGER && (
-                    <Link href="/dashboard" passHref legacyBehavior>
-                      <Nav.Link>Dashboard</Nav.Link>
-                    </Link>
-                  )}
-                  <Link href="/profile" passHref legacyBehavior>
-                    <Nav.Link><Profile /></Nav.Link>
-                  </Link>
-                </Nav>
+                <LayoutNav />
               </Navbar.Collapse>
 
             </Container>
@@ -140,16 +92,5 @@ export default function Layout({
         {children}
       </div>
     </div>
-  );
-}
-
-function Profile() {
-  return (
-    <>
-      <span className="d-lg-none">Profile</span>
-      <span className="d-none d-lg-inline">
-        <TextAvatar />
-      </span>
-    </>
   );
 }
