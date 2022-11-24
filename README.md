@@ -304,15 +304,15 @@ TODO: ERM diagram (could make tables entity property tables to help plan ERM dia
 | Name                                                                    | Minor Version | Purpose                                     |
 |-------------------------------------------------------------------------|---------------|---------------------------------------------|
 | [TypeScript](https://www.typescriptlang.org/)                           | 4.9           | Programming language                        |
-| [ESLint](https://eslint.org/)                                           | 8.27          | Static code analysis                        |
+| [ESLint](https://eslint.org/)                                           | 8.28          | Static code analysis                        |
 | [React](https://reactjs.org/)                                           | 18.2          | UI library                                  |
 | [Next.Js](https://nextjs.org/)                                          | 13.0          | Full stack framework                        |
 | [NextAuth.js](https://next-auth.js.org/)                                | 4.17          | Authentication                              |
 | [sharp](https://nextjs.org/docs/messages/sharp-missing-in-production)   | 0.31          | Next.Js Image Optimization (not used by us) |
 | [Bootstrap](https://getbootstrap.com/)                                  | 5.2           | CSS Framework                               |
 | [React Boostrap](https://react-bootstrap.github.io/)                    | 2.6           | Bootstrap React components                  |
-| [React Boostrap Icons](https://github.com/ismamz/react-bootstrap-icons) | 1.9           | Bootstrap Icons React components            |
-| [Axios](https://axios-http.com/)                                        | 1.1           | HTTP client (use instead of the `fetch` API |
+| [React Boostrap Icons](https://github.com/ismamz/react-bootstrap-icons) | 1.10          | Bootstrap Icons React components            |
+| [Axios](https://axios-http.com/)                                        | 1.2           | HTTP client (use instead of the `fetch` API |
 | [zustand](https://github.com/pmndrs/zustand)                            | 4.1           | State management                            |
 | [Prisma](https://www.prisma.io/)                                        | -             | Database ORM                                |
 | [node.bcrypt.js](https://github.com/kelektiv/node.bcrypt.js)            | 5.1           | Hashing user passwords                      |
