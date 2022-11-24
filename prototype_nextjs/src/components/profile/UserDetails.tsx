@@ -6,10 +6,11 @@ import Row from 'react-bootstrap/Row';
 import Toast from 'react-bootstrap/Toast';
 import ToastContainer from 'react-bootstrap/ToastContainer';
 import axios from 'axios';
+import { useStore } from 'zustand';
 
 import LoadingButton from '~/components/LoadingButton';
 import RoundedRect from '~/components/RoundedRect';
-import { type UserInfo } from '~/types';
+import { useUserStore } from '~/store/userStore';
 import type { RequestSchema as ChangeNamePayload, ResponseSchema as ChangeNameResponse } from '~/pages/api/user/change-name';
 
 type DetailsFormData = {
@@ -24,10 +25,9 @@ enum ChangeStatus {
   FAILED,
 }
 
-export default function UserDetails({ user, setUser }: {
-  user: UserInfo
-  setUser: (user: UserInfo) => void
-}) {
+export default function UserDetails() {
+  const userStore = useUserStore();
+  const { setFirstName, setLastName, user } = useStore(userStore);
   const { fname, lname, email, role } = user;
 
   const [changeStatus, setChangeStatus] = useState(ChangeStatus.NOT_CHANGED);
@@ -45,12 +45,11 @@ export default function UserDetails({ user, setUser }: {
 
     if (data.success) {
       setChangeStatus(ChangeStatus.SUCCEEDED);
+
       const { firstName, lastName } = formData;
-      setUser({
-        ...user,
-        fname: firstName,
-        lname: lastName,
-      });
+
+      setFirstName(firstName);
+      setLastName(lastName);
     } else { // should never happen
       console.log(data);
       setChangeStatus(ChangeStatus.FAILED);

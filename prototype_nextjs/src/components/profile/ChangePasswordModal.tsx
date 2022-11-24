@@ -5,23 +5,23 @@ import Modal from 'react-bootstrap/Modal';
 import Toast from 'react-bootstrap/Toast';
 import ToastContainer from 'react-bootstrap/ToastContainer';
 import axios from 'axios';
+import { useStore } from 'zustand';
 
 import EmailField from '~/components/EmailField';
 import LoadingButton from '~/components/LoadingButton';
 import PasswordField from '~/components/PasswordField';
 import RoundedRect from '~/components/RoundedRect';
+import { useUserStore } from '~/store/userStore';
 import { validatePassword } from '~/utils';
 import type { RequestSchema as ChangePwPayload, ResponseSchema as ChangePwResponse } from '~/pages/api/user/change-password';
 
 type ChangePwFormData = {
-  email: string
   currentPassword: string
   newPassword: string
   confirm: string
 };
 
-export default function ChangePasswordModal({ email, show, onHide }: {
-  email: string
+export default function ChangePasswordModal({ show, onHide }: {
   show: boolean
   onHide: () => void
 }) {
@@ -33,6 +33,9 @@ export default function ChangePasswordModal({ email, show, onHide }: {
 
   const [changingPw, setChangingPw] = useState(false);
   const [pwChanged, setPwChanged] = useState(false);
+
+  const userStore = useUserStore();
+  const email = useStore(userStore, (state) => state.user.email);
 
   useEffect(() => {
     setBadForm(passwordFeedback !== undefined
