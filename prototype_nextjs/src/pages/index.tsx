@@ -13,10 +13,24 @@ import PasswordField from '~/components/PasswordField';
 import LoadingButton from '~/components/LoadingButton';
 import RoundedRect from '~/components/RoundedRect';
 import { isValidMakeItAllEmail, validatePassword } from '~/utils';
-import { ErrorReason } from '~/pages/api/user/login';
 
 import styles from '~/styles/Login.module.css';
 import makeItAllLogo from '~/../public/make_it_all.png';
+
+/*
+ * Identical to /api/user/login.ErrorReason, but importing that will give error because the api
+ * imports /server/store/user which imports `bcrypt`
+ *
+ * I believe that causes the page to try to import bcrypt on the client which is an obvious nono
+ *
+ * The error:
+ * `Module not found: Can't resolve 'fs'`
+ */
+enum ErrorReason {
+  WRONG_PASSWORD = 'WRONG_PASSWORD',
+  DOESNT_EXIST = 'DOESNT_EXIST',
+  BAD_CREDENTIALS = 'BAD_CREDENTIALS',
+}
 
 type LoginFormData = {
   email: string
