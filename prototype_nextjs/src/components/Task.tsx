@@ -6,7 +6,7 @@ export default function Task({ task }: {
 }) {
   const { title, description, tags, assignee } = task;
   return (
-    <div>
+    <div className="d-flex flex-column">
       <h1>{title}</h1>
       <p>{description}</p>
       <span>

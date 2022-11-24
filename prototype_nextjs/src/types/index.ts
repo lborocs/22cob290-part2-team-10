@@ -1,4 +1,7 @@
 // TODO: design db
+// TODO: include like manhours taken
+
+// TODO: might have to refactor how roles work if they're project specific, which it looks like they are lol
 
 export enum Role {
   MANAGER = 'MANAGER',
@@ -6,6 +9,8 @@ export enum Role {
   TEAM_MEMBER = 'TEAM_MEMBER',
   LEFT_COMPANY = 'LEFT_COMPANY',
 }
+
+// TOOD: implement user ID & use it to getUserInfo instead of email
 
 // TODO: finalise user entity and think of a good name for this
 // (User bad name cos clash with next-auth)
@@ -29,6 +34,11 @@ export type ProjectInfo = {
   manager: string
   leader: string
   members: string[]
+  tasks: ProjectTasks
+};
+
+// additional type to make it easier to only show the tasks assigned to a certain user
+export type ProjectTasks = {
   todo: Task[]
   in_progress: Task[]
   code_review: Task[]
@@ -40,6 +50,7 @@ export type Task = {
   description: string
   tags: string[]
   assignee: string
+  additional: string[] // TODO: rename (its basicalyl the ppl that can also see the task)
 };
 
 export type Post = {

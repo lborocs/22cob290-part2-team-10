@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */ // TODO: remove once this is done
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
-import Error from 'next/error';
 import { unstable_getServerSession } from 'next-auth/next';
 
 import Layout from '~/components/Layout';
-import KanbanBoard from '~/components/KanbanBoard';
+import { Role } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { getUserInfo } from '~/server/store/users';
 import { getProjectInfo } from '~/server/store/projects';
@@ -14,24 +13,11 @@ import { getProjectInfo } from '~/server/store/projects';
 export default function ProjectOverviewPage({ user, projectInfo }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   if (!user) return null;
 
-  if (!projectInfo) {
-    return (
-      <Error
-        statusCode={404}
-        title="Project does not exist"
-      />
-    );
-  }
-
   const {
     name,
     manager,
     leader,
     members,
-    todo,
-    in_progress,
-    code_review,
-    completed,
   } = projectInfo;
 
   const pageTitle = `${name} - Make-It-All`;
@@ -44,9 +30,13 @@ export default function ProjectOverviewPage({ user, projectInfo }: InferGetServe
       <Layout user={user} sidebarType="projects">
         <main>
           <h1>{name}</h1>
-          <KanbanBoard
-            project={projectInfo}
-          />
+          <div className="d-flex flex-column">
+            <p>Manager: {manager}</p>
+            <p>Leader: {leader}</p>
+            <p>
+              Members: {members.map((member, index) => <span key={index}>{member}</span>)}
+            </p>
+          </div>
         </main>
       </Layout>
     </>
@@ -63,9 +53,32 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const email = session.user.email!;
   const user = (await getUserInfo(email))!;
 
-  const { id: projectId } = context.params!;
+  // only managers can see the project overview
+  // TODO?: should we show an error page saying they aren't authorised to see this page?
+  if (user.role !== Role.MANAGER) {
+    return {
+      redirect: {
+        destination: '/home',
+        permanent: false,
+      },
+    };
+  }
 
-  const projectInfo = await getProjectInfo(parseInt(projectId as string));
+  const { id } = context.params!;
+  const projectId = id as string;
+
+  // no need to handle projectId being NaN because getProjectInfo should just return null if it's NaN
+  const projectInfo = await getProjectInfo(parseInt(projectId));
+
+  // TODO?: should we show an error page instead or redirecting to `/projects` if the project doesn't exist?
+  if (!projectInfo) {
+    return {
+      redirect: {
+        destination: '/projects',
+        permanent: false,
+      },
+    };
+  }
 
   return {
     props: {

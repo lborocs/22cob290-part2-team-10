@@ -1,37 +1,24 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */ // TODO: remove once this is done
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
-import Error from 'next/error';
 import { unstable_getServerSession } from 'next-auth/next';
 
 import Layout from '~/components/Layout';
 import KanbanBoard from '~/components/KanbanBoard';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
+import { type ProjectInfo, Role } from '~/types';
 import { getUserInfo } from '~/server/store/users';
-import { getProjectInfo } from '~/server/store/projects';
+import { getAssignedTasks, getProjectInfo } from '~/server/store/projects';
 
 // TODO: project page (Projects page from before)
-export default function ProjectPage({ user, projectInfo }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function ProjectPage({ user, projectInfo, tasks }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   if (!user) return null;
-
-  if (!projectInfo) {
-    return (
-      <Error
-        statusCode={404}
-        title="Project does not exist"
-      />
-    );
-  }
 
   const {
     name,
     manager,
     leader,
     members,
-    todo,
-    in_progress,
-    code_review,
-    completed,
   } = projectInfo;
 
   const pageTitle = `${name} - Make-It-All`;
@@ -45,7 +32,7 @@ export default function ProjectPage({ user, projectInfo }: InferGetServerSidePro
         <main>
           <h1>{name}</h1>
           <KanbanBoard
-            project={projectInfo}
+            tasks={tasks}
           />
         </main>
       </Layout>
@@ -63,15 +50,35 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const email = session.user.email!;
   const user = (await getUserInfo(email))!;
 
-  const { id: projectId } = context.params!;
+  const { id } = context.params!;
+  const projectId = id as string;
 
-  const projectInfo = await getProjectInfo(parseInt(projectId as string));
+  // no need to handle projectId being NaN because getProjectInfo should just return null if it's NaN
+  const projectInfo = await getProjectInfo(parseInt(projectId));
+
+  // TODO?: should we show an error page instead or redirecting to `/projects` if the project doesn't exist?
+  if (!projectInfo) {
+    return {
+      redirect: {
+        destination: '/projects',
+        permanent: false,
+      },
+    };
+  }
+
+  // TODO: redirect/error page if this user isn't allowed to see this project
+
+  // only show the tasks that the user is allowed to see if they're a team member
+  const tasks = user.role === Role.TEAM_MEMBER
+    ? await getAssignedTasks(email, projectInfo)
+    : projectInfo.tasks;
 
   return {
     props: {
       session,
       user,
-      projectInfo,
+      projectInfo: projectInfo as Omit<ProjectInfo, 'tasks'>,
+      tasks,
     },
   };
 }
