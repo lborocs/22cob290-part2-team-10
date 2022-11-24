@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+import type { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useSession, signIn } from 'next-auth/react';
+import { unstable_getServerSession } from 'next-auth/next';
+import { signIn } from 'next-auth/react';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Toast from 'react-bootstrap/Toast';
@@ -13,6 +15,7 @@ import PasswordField from '~/components/PasswordField';
 import LoadingButton from '~/components/LoadingButton';
 import RoundedRect from '~/components/RoundedRect';
 import { isValidMakeItAllEmail, validatePassword } from '~/utils';
+import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 import styles from '~/styles/Login.module.css';
 import makeItAllLogo from '~/../public/make_it_all.png';
@@ -57,14 +60,6 @@ export default function LoginPage() {
     setBadForm(emailFeedback !== undefined || passwordFeedback !== undefined);
   }, [emailFeedback, passwordFeedback]);
 
-  const session = useSession();
-
-  if (session.data) {
-    console.log('Logged in');
-    router.push(nextUrl);
-    return null;
-  }
-
   const login = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -95,27 +90,33 @@ export default function LoginPage() {
       redirect: false,
       email,
       password,
+      callbackUrl: nextUrl,
     });
 
-    if (resp?.error) {
-      const errorReason = resp.error;
-      switch (errorReason) {
-        case ErrorReason.DOESNT_EXIST:
-          setEmailFeedback('You do not have an account');
-          break;
+    if (resp) {
+      if (resp.error) {
+        console.log(resp);
+        const errorReason = resp.error;
+        switch (errorReason) {
+          case ErrorReason.DOESNT_EXIST:
+            setEmailFeedback('You do not have an account');
+            break;
 
-        case ErrorReason.WRONG_PASSWORD:
-          setPasswordFeedback('Incorrect password');
-          break;
+          case ErrorReason.WRONG_PASSWORD:
+            setPasswordFeedback('Incorrect password');
+            break;
 
-        case 'AccessDenied': // left the company
-          setEmailFeedback('You no longer have access to this website');
-          break;
+          case 'AccessDenied': // left the company
+            setEmailFeedback('You no longer have access to this website');
+            break;
 
-        default: // shouldn't happen
-          console.error(resp);
-          setEmailFeedback(errorReason);
-          setPasswordFeedback(errorReason);
+          default: // shouldn't happen
+            console.error(resp);
+            setEmailFeedback(errorReason);
+            setPasswordFeedback(errorReason);
+        }
+      } else {
+        router.push(nextUrl);
       }
     }
 
@@ -186,6 +187,25 @@ export default function LoginPage() {
       </main>
     </>
   );
+}
+
+// TODO: use SSR instead of in client to check if they're logged in
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await unstable_getServerSession(context.req, context.res, authOptions);
+
+  // if logged in, redirect to home page
+  if (session && session.user) {
+    const { callbackUrl } = context.query;
+
+    return {
+      redirect: {
+        destination: callbackUrl ?? '/home',
+        permanent: false,
+      },
+    };
+  }
+
+  return { props: {} };
 }
 
 LoginPage.noauth = true;
