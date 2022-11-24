@@ -32,7 +32,7 @@ export default forwardRef(function LoadingButton({
             <span className="visually-hidden">Loading...</span>
           </Spinner>
           {' '}
-          {loadingContent}
+          {loadingContent ?? children}
         </>
       ) : children}
     </Button>
