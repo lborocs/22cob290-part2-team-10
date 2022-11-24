@@ -22,6 +22,7 @@
   - [Pages](#pages-1)
   - [Database](#database)
     - [Entities](#entities)
+    - [User passwords](#user-passwords)
   - [Libraries](#libraries-1)
 <!-- TOC -->
 
@@ -236,6 +237,25 @@ All will have unique IDs? (autoincrement/cuid/uuid)
 
 TODO: ERM diagram (could make tables entity property tables to help plan ERM diagram)
 
+#### User passwords
+
+- Store a hash of each user's password in database
+  - User's raw password is not stored in database :heavy_check_mark:
+- Hash their passwords using bcrypt
+ ([Wikipedia](https://en.wikipedia.org/wiki/Bcrypt) - [Library](https://github.com/kelektiv/node.bcrypt.js))
+
+> Should we implement functionality to reset password?
+>
+> But how would it work?
+>
+> A possible impl.:
+>   - manager gets a link to give to employee (with like a token specifying the employee)
+>   - employee opens that link and resets their password
+>
+> cons:
+>   - manager could reset the password of any employee they want (could abuse it)
+>     - we should ask client about this?
+
 ### Libraries
 
 | Name                                                                    | Minor Version | Purpose                                     |
@@ -250,4 +270,5 @@ TODO: ERM diagram (could make tables entity property tables to help plan ERM dia
 | [React Boostrap Icons](https://github.com/ismamz/react-bootstrap-icons) | 1.9           | Bootstrap Icons React components            |
 | [Axios](https://axios-http.com/)                                        | 1.1           | HTTP client (use instead of the `fetch` API |
 | [Prisma](https://www.prisma.io/)                                        | -             | Database ORM                                |
+| [node.bcrypt.js](https://github.com/kelektiv/node.bcrypt.js)            | -             | Hashing user passwords                      |
 | ...                                                                     |               |                                             |
