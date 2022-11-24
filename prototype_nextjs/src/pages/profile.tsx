@@ -24,23 +24,26 @@ export default function ProfilePage({ user }: InferGetServerSidePropsType<typeof
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
 
+  // use to update text avatar when user changes their name
+  const [currentUser, setCurrentUser] = useState(user!);
+
   if (!user) return null;
 
-  // TODO: select theme
+  // TODO: theme switcher
 
   return (
     <>
       <Head>
         <title>Profile - Make-It-All</title>
       </Head>
-      <Layout user={user} sidebarType="projects">
+      <Layout user={currentUser} sidebarType="projects">
         <main>
           <Container as="section">
             <Row>
               <Col sm="auto" className="d-flex justify-content-center pb-4 pe-md-4">
                 <div>
                   <TextAvatar
-                    user={user}
+                    user={currentUser}
                     className={styles['text-avatar']}
                     size="120px"
                     style={{
@@ -55,7 +58,10 @@ export default function ProfilePage({ user }: InferGetServerSidePropsType<typeof
                 </div>
               </Col>
               <Col>
-                <UserDetails user={user} />
+                <UserDetails
+                  user={currentUser}
+                  setUser={setCurrentUser}
+                />
               </Col>
             </Row>
           </Container>

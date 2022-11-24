@@ -24,8 +24,9 @@ enum ChangeStatus {
   FAILED,
 }
 
-export default function UserDetails({ user }: {
+export default function UserDetails({ user, setUser }: {
   user: UserInfo
+  setUser: (user: UserInfo) => void
 }) {
   const { fname, lname, email, role } = user;
 
@@ -44,6 +45,12 @@ export default function UserDetails({ user }: {
 
     if (data.success) {
       setChangeStatus(ChangeStatus.SUCCEEDED);
+      const { firstName, lastName } = formData;
+      setUser({
+        ...user,
+        fname: firstName,
+        lname: lastName,
+      });
     } else { // should never happen
       console.log(data);
       setChangeStatus(ChangeStatus.FAILED);
