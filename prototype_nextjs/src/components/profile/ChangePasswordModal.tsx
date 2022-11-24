@@ -112,7 +112,7 @@ export default function ChangePasswordModal({ email, show, onHide }: {
             <div className="d-none">
               <EmailField
                 name="email"
-                value={email}
+                defaultValue={email}
               />
             </div>
             <PasswordField
