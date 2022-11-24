@@ -19,7 +19,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
 
   if (!session || !session.user) {
-    return { props: {} };
+    return { notFound: true };
   }
 
   const user = await ssrGetUserInfo(session);

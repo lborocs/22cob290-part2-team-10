@@ -11,9 +11,7 @@ import { ssrGetUserInfo } from '~/server/utils';
 import { getAssignedTasks, getProjectInfo } from '~/server/store/projects';
 
 // TODO: project page (Projects page from before)
-export default function ProjectPage({ user, projectInfo, tasks }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  if (!user) return null;
-
+export default function ProjectPage({ projectInfo, tasks }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
     name,
     manager,
@@ -28,7 +26,7 @@ export default function ProjectPage({ user, projectInfo, tasks }: InferGetServer
       <Head>
         <title>{pageTitle}</title>
       </Head>
-      <Layout user={user} sidebarType="projects">
+      <Layout sidebarType="projects">
         <main>
           <h1>{name}</h1>
           <KanbanBoard
@@ -44,7 +42,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
 
   if (!session || !session.user) {
-    return { props: {} };
+    return { notFound: true };
   }
 
   const user = await ssrGetUserInfo(session);

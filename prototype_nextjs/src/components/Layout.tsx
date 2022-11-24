@@ -8,10 +8,12 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAlignJustify, faAlignLeft } from '@fortawesome/free-solid-svg-icons';
+import { useStore } from 'zustand';
 
 import ProjectsList from '~/components/sidebar/ProjectsList';
 import TextAvatar from '~/components/TextAvatar';
-import { Role, type UserInfo } from '~/types';
+import { useUserStore } from '~/store/userStore';
+import { Role } from '~/types';
 
 import styles from '~/styles/Layout.module.css';
 import makeItAllLogo from '~/../public/company-logo.png';
@@ -30,17 +32,18 @@ type CustomSidebar = {
 };
 
 type LayoutProps = (DefaultSidebar | CustomSidebar) & {
-  user: UserInfo
   children: React.ReactNode
 };
 
 export default function Layout({
   sidebarType,
   sidebarContent,
-  user,
   children,
 }: LayoutProps) {
   const router = useRouter();
+
+  const userStore = useUserStore();
+  const role = useStore(userStore, (state) => state.user.role);
 
   const [hideSidebar, setHideSidebar] = useState(false);
 
@@ -119,13 +122,13 @@ export default function Layout({
                   <Link href="/projects" passHref legacyBehavior>
                     <Nav.Link>Projects</Nav.Link>
                   </Link>
-                  {user.role === Role.MANAGER && (
+                  {role === Role.MANAGER && (
                     <Link href="/dashboard" passHref legacyBehavior>
                       <Nav.Link>Dashboard</Nav.Link>
                     </Link>
                   )}
                   <Link href="/profile" passHref legacyBehavior>
-                    <Nav.Link><Profile user={user} /></Nav.Link>
+                    <Nav.Link><Profile /></Nav.Link>
                   </Link>
                 </Nav>
               </Navbar.Collapse>
@@ -140,12 +143,12 @@ export default function Layout({
   );
 }
 
-function Profile({ user }: { user: UserInfo }) {
+function Profile() {
   return (
     <>
       <span className="d-lg-none">Profile</span>
       <span className="d-none d-lg-inline">
-        <TextAvatar user={user} />
+        <TextAvatar />
       </span>
     </>
   );

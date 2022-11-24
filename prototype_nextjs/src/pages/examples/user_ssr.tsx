@@ -25,8 +25,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
 
   // not logged in, will be handled by _app
+  // return `notFound: true` as a hacky way to have non-null page props for typescript
   if (!session || !session.user) {
-    return { props: {} };
+    return { notFound: true };
   }
 
   const user = await ssrGetUserInfo(session);

@@ -12,16 +12,13 @@ import { ssrGetUserInfo } from '~/server/utils';
 import { getAllPosts } from '~/server/store/posts';
 
 // TODO: ForumPage
-export default function ForumPage({ user, posts }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  if (!user) return null;
-
+export default function ForumPage({ posts }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
       <Head>
         <title>Forum - Make-It-All</title>
       </Head>
       <Layout
-        user={user}
         sidebarType="custom"
         sidebarContent={
           <ForumSidebar />
@@ -63,7 +60,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
 
   if (!session || !session.user) {
-    return { props: {} };
+    return { notFound: true };
   }
 
   const user = await ssrGetUserInfo(session);

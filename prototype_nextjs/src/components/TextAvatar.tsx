@@ -1,6 +1,7 @@
 import { forwardRef, useEffect } from 'react';
+import { useStore } from 'zustand';
 
-import { type UserInfo } from '~/types';
+import { useUserStore } from '~/store/userStore';
 
 import styles from '~/styles/TextAvatar.module.css';
 
@@ -36,22 +37,18 @@ export function updateTextAvatarCss(textAvatar: TextAvatar) {
 }
 
 export interface TextAvatarProps extends React.ComponentPropsWithoutRef<'span'> {
-  user: UserInfo
   size?: string
 }
 
 export default forwardRef(function LoadingButton({
-  user,
   size = '40px',
   ...props
-}: TextAvatarProps, ref: React.ForwardedRef<HTMLButtonElement>): JSX.Element {
-  const { fname, lname } = user;
-
-  const firstInitial = fname[0].toUpperCase();
-  const lastInitial = lname[0].toUpperCase();
+}: TextAvatarProps, ref: React.ForwardedRef<HTMLButtonElement>) {
+  const userStore = useUserStore();
+  const firstInitial = useStore(userStore, (state) => state.user.fname[0].toUpperCase());
+  const lastInitial = useStore(userStore, (state) => state.user.lname[0].toUpperCase());
 
   useEffect(() => {
-    // localStorage acting as our store
     const textAvatar = getTextAvatarFromStore();
     updateTextAvatarCss(textAvatar);
   }, []);

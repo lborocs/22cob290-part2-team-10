@@ -10,9 +10,7 @@ import { ssrGetUserInfo } from '~/server/utils';
 import { getProjectInfo } from '~/server/store/projects';
 
 // TODO: ProjectOverviewPage
-export default function ProjectOverviewPage({ user, projectInfo }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  if (!user) return null;
-
+export default function ProjectOverviewPage({ projectInfo }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
     name,
     manager,
@@ -27,7 +25,7 @@ export default function ProjectOverviewPage({ user, projectInfo }: InferGetServe
       <Head>
         <title>{pageTitle}</title>
       </Head>
-      <Layout user={user} sidebarType="projects">
+      <Layout sidebarType="projects">
         <main>
           <h1>{name}</h1>
           <div className="d-flex flex-column">
@@ -47,7 +45,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
 
   if (!session || !session.user) {
-    return { props: {} };
+    return { notFound: true };
   }
 
   const user = await ssrGetUserInfo(session);

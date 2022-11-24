@@ -13,7 +13,7 @@ export default forwardRef(function LoadingButton({
   loadingContent,
   children,
   ...props
-}: LoadingButtonProps, ref: React.ForwardedRef<HTMLButtonElement>): JSX.Element {
+}: LoadingButtonProps, ref: React.ForwardedRef<HTMLButtonElement>) {
   return (
     <Button
       disabled={props.disabled || isLoading}

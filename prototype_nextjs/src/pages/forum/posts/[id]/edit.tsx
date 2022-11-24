@@ -10,9 +10,7 @@ import { ssrGetUserInfo } from '~/server/utils';
 import { getPost } from '~/server/store/posts';
 
 // TODO: EditPostPage
-export default function EditPostPage({ user, post }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  if (!user) return null;
-
+export default function EditPostPage({ post }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   if (!post) {
     return (
       <Error
@@ -34,7 +32,6 @@ export default function EditPostPage({ user, post }: InferGetServerSidePropsType
         <title>{pageTitle}</title>
       </Head>
       <Layout
-        user={user}
         sidebarType="custom"
         sidebarContent={
           <ForumSidebar />
@@ -53,7 +50,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
 
   if (!session || !session.user) {
-    return { props: {} };
+    return { notFound: true };
   }
 
   const user = await ssrGetUserInfo(session);

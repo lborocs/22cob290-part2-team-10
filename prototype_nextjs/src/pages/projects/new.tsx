@@ -7,15 +7,14 @@ import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { ssrGetUserInfo } from '~/server/utils';
 
 // TODO: NewProjectPage
-export default function NewProjectPage({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  if (!user) return null;
+export default function NewProjectPage({ }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 
   return (
     <>
       <Head>
         <title>New Project - Make-It-All</title>
       </Head>
-      <Layout user={user} sidebarType="projects">
+      <Layout sidebarType="projects">
         <main>
           {/* TODO */}
         </main>
@@ -28,7 +27,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
 
   if (!session || !session.user) {
-    return { props: {} };
+    return { notFound: true };
   }
 
   const user = await ssrGetUserInfo(session);
