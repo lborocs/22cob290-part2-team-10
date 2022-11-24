@@ -8,7 +8,7 @@ import ForumSidebar from '~/components/sidebar/ForumSidebar';
 import Layout from '~/components/Layout';
 import type { Post } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import { getUserInfo } from '~/server/store/users';
+import { ssrGetUserInfo } from '~/server/utils';
 import { getAllPosts } from '~/server/store/posts';
 
 // TODO: ForumPage
@@ -66,8 +66,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { props: {} };
   }
 
-  const email = session.user.email!;
-  const user = (await getUserInfo(email))!;
+  const user = await ssrGetUserInfo(session);
 
   const posts = await getAllPosts();
 

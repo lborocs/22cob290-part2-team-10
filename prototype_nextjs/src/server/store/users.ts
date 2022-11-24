@@ -2,6 +2,7 @@ import { Role, type User, type UserInfo } from '~/types';
 
 const users: User[] = [
   {
+    id: '30',
     fname: 'Alice',
     lname: 'Jane',
     email: 'alice@make-it-all.co.uk',
@@ -9,6 +10,7 @@ const users: User[] = [
     role: Role.TEAM_MEMBER,
   },
   {
+    id: '90',
     fname: 'Jane',
     lname: 'Doe',
     email: 'member@make-it-all.co.uk',
@@ -16,6 +18,7 @@ const users: User[] = [
     role: Role.TEAM_MEMBER,
   },
   {
+    id: '32',
     fname: 'Matt',
     lname: 'Smith',
     email: 'leader@make-it-all.co.uk',
@@ -23,6 +26,7 @@ const users: User[] = [
     role: Role.TEAM_LEADER,
   },
   {
+    id: '67',
     fname: 'John',
     lname: 'Smith',
     email: 'manager@make-it-all.co.uk',
@@ -30,6 +34,7 @@ const users: User[] = [
     role: Role.MANAGER,
   },
   {
+    id: '2',
     fname: 'Bob',
     lname: 'Skee',
     email: 'left@make-it-all.co.uk',
@@ -42,7 +47,22 @@ export async function getAllUsers(): Promise<User[]> {
   return users;
 }
 
-export async function getUserInfo(email: string): Promise<UserInfo | undefined> {
+export async function getUserInfo(id: string): Promise<UserInfo | undefined> {
+  const user = users.find((user) => user.id === id);
+
+  if (!user) return user;
+
+  // omit the user's password
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { password, ...result } = user;
+
+  return {
+    name: `${user.fname} ${user.lname}`,
+    ...result,
+  };
+}
+
+export async function getUserInfoByEmail(email: string): Promise<UserInfo | undefined> {
   const user = users.find((user) => user.email === email);
 
   if (!user) return user;
@@ -56,6 +76,7 @@ export async function getUserInfo(email: string): Promise<UserInfo | undefined> 
     ...result,
   };
 }
+
 
 export async function isCorrectPassword(email: string, password: string): Promise<boolean | null> {
   const user = users.find((user) => user.email === email);

@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { User } from 'next-auth';
+import type { User } from 'next-auth';
 import { object, string, type InferType } from 'yup';
 
 // import type { User } from '~/types';
 import { PASSWORD_SCHEMA } from '~/utils';
-import { isCorrectPassword, getUserInfo } from '~/server/store/users';
+import { getUserInfoByEmail, isCorrectPassword } from '~/server/store/users';
 
 export enum ErrorReason {
   WRONG_PASSWORD = 'WRONG_PASSWORD',
@@ -48,7 +48,7 @@ export default async function handler(
 
   const { email, password } = req.body as RequestSchema;
 
-  const userInfo = await getUserInfo(email);
+  const userInfo = await getUserInfoByEmail(email);
 
   if (!userInfo) {
     res.status(200).json({
@@ -70,9 +70,8 @@ export default async function handler(
     success: true,
     user: {
       ...userInfo,
-      id: userInfo.email, // maybe for account.providerAccountId
       name: `${userInfo.fname} ${userInfo.lname}`,
-      image: 'WHAT IS IMAGE FOR',
+      image: 'WHAT IS IMAGE FOR?????????????????????????????',
     },
   } as any);
 }

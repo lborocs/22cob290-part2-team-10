@@ -6,7 +6,7 @@ import { unstable_getServerSession } from 'next-auth/next';
 import Layout from '~/components/Layout';
 import ForumSidebar from '~/components/sidebar/ForumSidebar';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import { getUserInfo } from '~/server/store/users';
+import { ssrGetUserInfo } from '~/server/utils';
 import { getPost } from '~/server/store/posts';
 
 // TODO: EditPostPage
@@ -56,8 +56,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { props: {} };
   }
 
-  const email = session.user.email!;
-  const user = (await getUserInfo(email))!;
+  const user = await ssrGetUserInfo(session);
 
   const { id } = context.params!;
   const post = await getPost(parseInt(id as string));

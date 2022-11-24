@@ -1,4 +1,4 @@
-import NextAuth, { type NextAuthOptions } from 'next-auth';
+import NextAuth, { type NextAuthOptions, type User } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import axios from 'axios';
 
@@ -6,6 +6,10 @@ import { Role } from '~/types';
 import type { ResponseSchema as LoginResponse } from '~/pages/api/user/login';
 
 // TODO: extend User type to match what we return from /api/user/login
+
+export interface SessionUser extends User {
+  id: string
+}
 
 export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
@@ -60,11 +64,12 @@ export const authOptions: NextAuthOptions = {
       return baseUrl;
     },
 
-    async jwt({ token, user: _user, account }) {
-      const user = _user as any;
+    async jwt({ token, user, account }) {
+      // const user = _user as any; // should be from LoginResponse
 
       if (user && account) {
         // modify token...
+        token.uid = user.id;
       }
 
       return token;
@@ -75,7 +80,11 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       // Send properties to the client, like an access_token and user id from a provider.
 
-      // modify session...
+      if (session.user) {
+        // modify session...
+        const sUser = session.user as SessionUser;
+        sUser.id = token.uid as string;
+      }
 
       return session;
     },

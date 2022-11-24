@@ -16,6 +16,7 @@ export enum Role {
 // (User bad name cos clash with next-auth)
 // then we can use this
 export type User = {
+  id: string
   fname: string
   lname: string
   email: string

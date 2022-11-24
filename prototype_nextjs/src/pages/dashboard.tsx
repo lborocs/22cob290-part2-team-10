@@ -4,7 +4,7 @@ import { unstable_getServerSession } from 'next-auth/next';
 
 import Layout from '~/components/Layout';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import { getUserInfo } from '~/server/store/users';
+import { ssrGetUserInfo } from '~/server/utils';
 
 // TODO: DashboardPage
 export default function DashboardPage({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) {
@@ -27,14 +27,11 @@ export default function DashboardPage({ user }: InferGetServerSidePropsType<type
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
 
-  // not logged in, will be handled by _app
-  // use auth's redirection because it gives callback URL
   if (!session || !session.user) {
     return { props: {} };
   }
 
-  const email = session.user.email!;
-  const user = (await getUserInfo(email))!;
+  const user = await ssrGetUserInfo(session);
 
   return {
     props: {
@@ -43,3 +40,4 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   };
 }
+

@@ -15,7 +15,7 @@ import ChangePasswordModal from '~/components/profile/ChangePasswordModal';
 import InviteModal from '~/components/profile/InviteModal';
 import TextAvatarModal from '~/components/profile/TextAvatarModal';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import { getUserInfo } from '~/server/store/users';
+import { ssrGetUserInfo } from '~/server/utils';
 
 import styles from '~/styles/Profile.module.css';
 
@@ -124,8 +124,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { props: {} };
   }
 
-  const email = session.user.email!;
-  const user = (await getUserInfo(email))!;
+  const user = await ssrGetUserInfo(session);
 
   return {
     props: {

@@ -6,7 +6,7 @@ import { unstable_getServerSession } from 'next-auth/next';
 import Layout from '~/components/Layout';
 import { Role } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import { getUserInfo } from '~/server/store/users';
+import { ssrGetUserInfo } from '~/server/utils';
 import { getProjectInfo } from '~/server/store/projects';
 
 // TODO: ProjectOverviewPage
@@ -50,8 +50,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { props: {} };
   }
 
-  const email = session.user.email!;
-  const user = (await getUserInfo(email))!;
+  const user = await ssrGetUserInfo(session);
 
   // only managers can see the project overview
   // TODO?: should we show an error page saying they aren't authorised to see this page?

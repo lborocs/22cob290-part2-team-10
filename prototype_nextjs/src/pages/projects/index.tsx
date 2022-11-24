@@ -4,7 +4,7 @@ import { unstable_getServerSession } from 'next-auth/next';
 
 import Layout from '~/components/Layout';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import { getUserInfo } from '~/server/store/users';
+import { ssrGetUserInfo } from '~/server/utils';
 
 // TODO: ProjectsPage
 export default function ProjectsPage({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) {
@@ -31,8 +31,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { props: {} };
   }
 
-  const email = session.user.email!;
-  const user = (await getUserInfo(email))!;
+  const user = await ssrGetUserInfo(session);
 
   return {
     props: {

@@ -2,7 +2,7 @@ import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'nex
 import { unstable_getServerSession } from 'next-auth/next';
 
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import { getUserInfo } from '~/server/store/users';
+import { ssrGetUserInfo } from '~/server/utils';
 
 export default function ExamplePage({
   user,
@@ -26,8 +26,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { props: {} };
   }
 
-  const email = session.user.email!; // e.g. alice@make-it-all.co.uk
-  const user = (await getUserInfo(email))!;
+  const user = await ssrGetUserInfo(session);
 
   /* get whatever data you want to pass to component as a prop */
 
@@ -39,3 +38,4 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   };
 }
+

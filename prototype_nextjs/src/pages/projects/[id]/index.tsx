@@ -7,7 +7,7 @@ import Layout from '~/components/Layout';
 import KanbanBoard from '~/components/KanbanBoard';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { type ProjectInfo, Role } from '~/types';
-import { getUserInfo } from '~/server/store/users';
+import { ssrGetUserInfo } from '~/server/utils';
 import { getAssignedTasks, getProjectInfo } from '~/server/store/projects';
 
 // TODO: project page (Projects page from before)
@@ -47,8 +47,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { props: {} };
   }
 
-  const email = session.user.email!;
-  const user = (await getUserInfo(email))!;
+  const user = await ssrGetUserInfo(session);
+  const { email } = user;
 
   const { id } = context.params!;
   const projectId = id as string;
