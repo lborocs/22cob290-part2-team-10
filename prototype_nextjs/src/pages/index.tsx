@@ -44,6 +44,8 @@ export default function LoginPage() {
   const { callbackUrl } = router.query;
   const nextUrl = callbackUrl as string ?? '/home';
 
+  const [showLoginModal, setShowLoginModal] = useState(callbackUrl !== undefined);
+
   const [emailFeedback, setEmailFeedback] = useState<string>();
   const [passwordFeedback, setPasswordFeedback] = useState<string>();
 
@@ -128,7 +130,10 @@ export default function LoginPage() {
       <main className={`vh-100 d-flex align-items-center justify-content-center flex-column ${styles.main}`}>
         {callbackUrl ? (
           <ToastContainer className="p-3" position="top-center">
-            <Toast>
+            <Toast
+              show={showLoginModal}
+              onClose={() => setShowLoginModal(false)}
+            >
               <Toast.Header>
                 <RoundedRect fill="#ffc107" />
                 <strong className="me-auto">Sign in</strong>
