@@ -133,6 +133,8 @@ https://cloud.google.com/nodejs/getting-started/getting-started-on-compute-engin
   - Already done for the pages available in navbar (`home`, `forum`, etc.)
 - Run locally and see all examples at [`http://localhost:3000/examples`](http://localhost:3000/examples)
 
+> !!!! TODO: use a state manager like zustand to store userInfo instead of passing it to every component in page
+
 #### Layout/Sidebar
 
 Need to wrap your page's content in a `Layout` component
@@ -242,7 +244,11 @@ TODO: ERM diagram (could make tables entity property tables to help plan ERM dia
 - Store a hash of each user's password in database
   - User's raw password is not stored in database :heavy_check_mark:
 - Hash their passwords using bcrypt
- ([Wikipedia](https://en.wikipedia.org/wiki/Bcrypt) - [Library](https://github.com/kelektiv/node.bcrypt.js))
+(
+[Article](https://codahale.com/how-to-safely-store-a-password/) -
+[Library](https://github.com/kelektiv/node.bcrypt.js) -
+[Wikipedia](https://en.wikipedia.org/wiki/Bcrypt)
+)
 
 > Should we implement functionality to reset password?
 >
