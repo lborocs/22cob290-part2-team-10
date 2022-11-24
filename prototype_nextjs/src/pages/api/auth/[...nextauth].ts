@@ -75,8 +75,6 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
 
-    // FIXME: it seems to give a new session everytime if they were logged in
-
     async session({ session, token }) {
       // Send properties to the client, like an access_token and user id from a provider.
 

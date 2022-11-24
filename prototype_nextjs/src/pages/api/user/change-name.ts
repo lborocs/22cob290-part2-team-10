@@ -7,8 +7,8 @@ import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { changeName } from '~/server/store/users';
 
 const requestSchema = object({
-  firstName: string().required(), // TODO: not empty?
-  lastName: string().required(),
+  firstName: string().trim().required(),
+  lastName: string().trim().required(),
 });
 
 export type RequestSchema = InferType<typeof requestSchema>;
@@ -28,8 +28,9 @@ export default async function handler(
     return;
   }
 
+  let content: ReturnType<typeof requestSchema.validateSync>;
   try {
-    requestSchema.validateSync(req.body, { strict: true });
+    content = requestSchema.validateSync(req.body, { strict: true });
   } catch (err) {
     res.status(200).json({
       success: false,
@@ -38,7 +39,7 @@ export default async function handler(
     return;
   }
 
-  const { firstName, lastName } = req.body as RequestSchema;
+  const { firstName, lastName } = content;
 
   const email = session.user.email!;
 

@@ -50,7 +50,7 @@ export default function UserDetails() {
 
       setFirstName(firstName);
       setLastName(lastName);
-    } else { // should never happen
+    } else {
       console.log(data);
       setChangeStatus(ChangeStatus.FAILED);
     }
@@ -144,7 +144,7 @@ export default function UserDetails() {
             <small>Now</small>
           </Toast.Header>
           <Toast.Body>
-            Please try again later.
+            Please try again.
           </Toast.Body>
         </Toast>
       </ToastContainer>

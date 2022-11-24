@@ -84,7 +84,6 @@ export default function Layout({
               <Navbar.Collapse id="nav" className="justify-content-end">
                 <LayoutNav />
               </Navbar.Collapse>
-
             </Container>
           </Navbar>
         </header>
