@@ -21,7 +21,7 @@ export default forwardRef(function EmailField({
   return (
     <Form.Group
       as={Row}
-      className={`mb-3 ${feedbackTooltip ? 'position-relative' : ''}`}
+      className={`mb-3 ${feedbackTooltip ? 'position-relative' : ''} ${props.type === 'hidden' ? 'd-none' : ''}`}
       controlId={controlId}
     >
       <Form.Label column sm={3}>Email</Form.Label>

@@ -108,13 +108,11 @@ export default function ChangePasswordModal({ email, show, onHide }: {
             id="change-pw-form"
             onSubmit={changePassword}
           >
-            {/* Email (hidden) */}
-            <div className="d-none">
-              <EmailField
-                name="email"
-                defaultValue={email}
-              />
-            </div>
+            <EmailField
+              name="email"
+              defaultValue={email}
+              type="hidden"
+            />
             <PasswordField
               name="currentPassword"
               controlId="currentPassword"
