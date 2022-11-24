@@ -271,10 +271,12 @@ TODO: ERM diagram (could make tables entity property tables to help plan ERM dia
 | [React](https://reactjs.org/)                                           | 18.2          | UI library                                  |
 | [Next.Js](https://nextjs.org/)                                          | 13.0          | Full stack framework                        |
 | [NextAuth.js](https://next-auth.js.org/)                                | 4.17          | Authentication                              |
+| [sharp](https://nextjs.org/docs/messages/sharp-missing-in-production)   | 0.31          | Next.Js Image Optimization (not used by us) |
 | [Bootstrap](https://getbootstrap.com/)                                  | 5.2           | CSS Framework                               |
 | [React Boostrap](https://react-bootstrap.github.io/)                    | 2.6           | Bootstrap React components                  |
 | [React Boostrap Icons](https://github.com/ismamz/react-bootstrap-icons) | 1.9           | Bootstrap Icons React components            |
 | [Axios](https://axios-http.com/)                                        | 1.1           | HTTP client (use instead of the `fetch` API |
 | [Prisma](https://www.prisma.io/)                                        | -             | Database ORM                                |
-| [node.bcrypt.js](https://github.com/kelektiv/node.bcrypt.js)            | -             | Hashing user passwords                      |
+| [node.bcrypt.js](https://github.com/kelektiv/node.bcrypt.js)            | 5.1           | Hashing user passwords                      |
+| [react-markdown](https://github.com/remarkjs/react-markdown)?           | -             | Render markdown content in forum posts      |
 | ...                                                                     |               |                                             |
