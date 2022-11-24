@@ -1,20 +1,19 @@
-import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import type { GetServerSidePropsContext } from 'next';
 import { unstable_getServerSession } from 'next-auth/next';
+import { useStore } from 'zustand';
 
+import { useUserStore } from '~/store/userStore';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { ssrGetUserInfo } from '~/server/utils';
 
-export default function ExamplePage({
-  user,
-  /* the rest of your props */
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  if (!user) return null;
-
-  const { email, name } = user;
+export default function ExamplePage() {
+  const userStore = useUserStore();
+  const email = useStore(userStore, (state) => state.user.email);
+  const name = useStore(userStore, (state) => state.user.name);
 
   return (
     <main>
-      <div className="h2 mb-4">Using <code>user</code> prop</div>
+      <div className="h2 mb-4">Using <code>userStore</code></div>
       <h1>Email: {email}</h1>
       <span>Name: {name}</span>
     </main>
@@ -36,7 +35,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       session,
-      user, // NEED to return user for layout
+      user, // NEED to return user for `userStore`
       // pass props here
     },
   };

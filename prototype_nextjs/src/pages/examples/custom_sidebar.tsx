@@ -1,15 +1,13 @@
-import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import type { GetServerSidePropsContext } from 'next';
 import { unstable_getServerSession } from 'next-auth/next';
 
 import Layout from '~/components/Layout';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { ssrGetUserInfo } from '~/server/utils';
 
-export default function ExamplePage({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  if (!user) return null;
-
+export default function ExamplePage() {
   return (
-    <Layout user={user} sidebarType="custom" sidebarContent={<Sidebar />}>
+    <Layout sidebarType="custom" sidebarContent={<Sidebar />}>
       <main>
         <h1>Custom sidebar example</h1>
       </main>

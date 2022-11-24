@@ -6,15 +6,15 @@ import Layout from '~/components/Layout';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { ssrGetUserInfo } from '~/server/utils';
 
-export default function Page({ user }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  if (!user) return null;
-
+//! remove next line if you want props
+// eslint-disable-next-line no-empty-pattern
+export default function Page({  }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
       <Head>
         <title>Page Template - Make-It-All</title>
       </Head>
-      <Layout user={user} sidebarType="projects">
+      <Layout sidebarType="projects">
         <main>
           <h1>Page template</h1>
           <span>~ok~</span>

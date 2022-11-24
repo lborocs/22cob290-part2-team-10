@@ -21,7 +21,14 @@ export default function ExamplesPage() {
           <section>
             <h2>Page</h2>
             <ul>
-              <li><Link href="/examples/user_ssr">Getting user during SSR</Link></li>
+              <li><Link href="/examples/user_ssr">
+                Getting user from <code>user</code> prop from SSR <small><strong>(not recommended)</strong></small>
+              </Link></li>
+            </ul>
+            <ul>
+              <li><Link href="/examples/user_userstore">
+                Getting user from <code>userStore</code> <small><strong>(recommended)</strong></small>
+              </Link></li>
             </ul>
           </section>
         </ListGroup.Item>
