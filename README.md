@@ -15,6 +15,8 @@
   - [TODO (not from feedback)](#todo-not-from-feedback)
   - [How it works](#how-it-works-1)
   - [How we need to code](#how-we-need-to-code)
+    - [Knowing who is logged in](#knowing-who-is-logged-in)
+    - [Client-side state management](#client-side-state-management)
     - [Layout/Sidebar](#layoutsidebar)
       - [Examples](#examples)
     - [Code Style](#code-style)
@@ -133,7 +135,40 @@ https://cloud.google.com/nodejs/getting-started/getting-started-on-compute-engin
   - Already done for the pages available in navbar (`home`, `forum`, etc.)
 - Run locally and see all examples at [`http://localhost:3000/examples`](http://localhost:3000/examples)
 
-> !!!! TODO: use a state manager like zustand to store userInfo instead of passing it to every component in page
+
+#### Knowing who is logged in
+
+There are two ways to know who is logged in:
+1. Reading the `user` prop passed to the page component by `getServerSideProps` ([example](prototype_nextjs/src/pages/examples/user_ssr.tsx))
+2. Reading `state.user` from the client-side store `store/userStore` (see next section) ([example](prototype_nextjs/src/pages/examples/user_userstore.tsx))
+
+Strongly recommend using number 2 because you'll know if anything about the user changes (e.g. their name) while they're on your page
+and the type is not null, whereas the type of the `user` prop is nullable (because the user might not be logged in, but in reality
+they will always be logged in on your page) and handling that in TypeScript will be annoying.
+
+Example of using `userStore`:
+
+```tsx
+import { useStore } from 'zustand';
+
+import { useUserStore } from '~/store/userStore';
+
+// use inside a component
+const userStore = useUserStore();
+// the component will re-render whenever `email` changes
+const email = useStore(userStore, (state) => state.user.email);
+```
+
+#### Client-side state management
+
+- Using [zustand](https://github.com/pmndrs/zustand)
+- [Decent zustand youtube tutorial](https://youtu.be/sqTPGMipjHk)
+
+Note that we are not using zustand how it is _usually_ used and how it is used in the video.
+Instead, we are using it with [React context](https://github.com/pmndrs/zustand) to essentially
+use dependency injection - we inject the user in `_app.jsx`. We do this so we don't repeatedly
+set the user in each page: instead we just set the user once (for all pages requiring authorization)
+in `_app.jsx.
 
 #### Layout/Sidebar
 
