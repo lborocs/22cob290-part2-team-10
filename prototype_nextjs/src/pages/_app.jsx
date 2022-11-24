@@ -2,6 +2,7 @@ import { SessionProvider, useSession } from 'next-auth/react';
 import { config } from '@fortawesome/fontawesome-svg-core';
 
 import LoadingPage from '~/components/LoadingPage';
+import { UserStoreProvider } from '~/store/userStore';
 
 import '@fortawesome/fontawesome-svg-core/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -20,7 +21,9 @@ export default function App({
         <Component {...pageProps} />
       ) : (
         <Auth>
-          <Component {...pageProps} />
+          <UserStoreProvider user={pageProps.user}>
+            <Component {...pageProps} />
+          </UserStoreProvider>
         </Auth>
       )}
     </SessionProvider>
