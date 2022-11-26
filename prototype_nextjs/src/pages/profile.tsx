@@ -65,9 +65,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
 
   // not logged in, will be handled by _app
-  // use auth's redirection because it gives callback URL
+  // use auth's redirection because it provides callback URL
   if (!session || !session.user) {
-    return { props: {} };
+    return { notFound: true };
   }
 
   const user = await ssrGetUserInfo(session);

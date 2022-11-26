@@ -8,6 +8,8 @@ async function hashPassword(raw: string): Promise<string> {
   return await bcrypt.hash(raw, saltRounds);
 }
 
+const testPassword = hashPassword('TestPassword123!');
+
 // Next.Js's SWC compiler doesn't support top-level await yet :(
 const users: Promise<User[]> = (async () => [
   {
@@ -15,7 +17,7 @@ const users: Promise<User[]> = (async () => [
     fname: 'Alice',
     lname: 'Jane',
     email: 'alice@make-it-all.co.uk',
-    password: await hashPassword('TestPassword123!'),
+    password: await testPassword,
     role: Role.TEAM_MEMBER,
   },
   {
@@ -23,7 +25,7 @@ const users: Promise<User[]> = (async () => [
     fname: 'Jane',
     lname: 'Doe',
     email: 'member@make-it-all.co.uk',
-    password: await hashPassword('TestPassword123!'),
+    password: await testPassword,
     role: Role.TEAM_MEMBER,
   },
   {
@@ -31,7 +33,7 @@ const users: Promise<User[]> = (async () => [
     fname: 'Matt',
     lname: 'Smith',
     email: 'leader@make-it-all.co.uk',
-    password: await hashPassword('TestPassword123!'),
+    password: await testPassword,
     role: Role.TEAM_LEADER,
   },
   {
@@ -39,7 +41,7 @@ const users: Promise<User[]> = (async () => [
     fname: 'John',
     lname: 'Smith',
     email: 'manager@make-it-all.co.uk',
-    password: await hashPassword('TestPassword123!'),
+    password: await testPassword,
     role: Role.MANAGER,
   },
   {
@@ -47,7 +49,7 @@ const users: Promise<User[]> = (async () => [
     fname: 'Bob',
     lname: 'Skee',
     email: 'left@make-it-all.co.uk',
-    password: await hashPassword('TestPassword123!'),
+    password: await testPassword,
     role: Role.LEFT_COMPANY,
   },
 ])();
