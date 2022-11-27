@@ -4,7 +4,7 @@ import type { z } from 'zod';
 
 import ChangeNameSchema from '~/schemas/api/user/changeName';
 import type { UnauthorisedResponse } from '~/types';
-import { authOptions } from '~/pages/api/auth/[...nextauth]';
+import { authOptions, type SessionUser } from '~/pages/api/auth/[...nextauth]';
 import { changeName } from '~/server/store/users';
 
 export type RequestSchema = z.infer<typeof ChangeNameSchema>;
@@ -36,9 +36,9 @@ export default async function handler(
 
   const { firstName, lastName } = safeParseResult.data;
 
-  const email = session.user.email!;
+  const userId = (session.user as SessionUser).id;
 
-  changeName(email, firstName, lastName);
+  changeName(userId, firstName, lastName);
 
   res.status(200).json({ success: true });
 }

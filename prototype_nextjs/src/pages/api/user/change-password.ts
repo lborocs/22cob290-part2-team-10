@@ -2,9 +2,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { unstable_getServerSession } from 'next-auth/next';
 import type { z } from 'zod';
 
-import type { UnauthorisedResponse } from '~/types';
 import ChangePasswordSchema from '~/schemas/api/user/changePassword';
-import { authOptions } from '~/pages/api/auth/[...nextauth]';
+import type { UnauthorisedResponse } from '~/types';
+import { authOptions, type SessionUser } from '~/pages/api/auth/[...nextauth]';
 import { changePassword, isCorrectPassword } from '~/server/store/users';
 
 export type RequestSchema = z.infer<typeof ChangePasswordSchema>;
@@ -36,14 +36,14 @@ export default async function handler(
 
   const { currentPassword, newPassword } = safeParseResult.data;
 
-  const email = session.user.email!;
-  console.log('session.user =', session.user);
+  const userId = (session.user as SessionUser).id;
 
-  if (!await isCorrectPassword(email, currentPassword)) {
+  if (!await isCorrectPassword(userId, currentPassword)) {
     res.status(200).json({ success: false });
+    return;
   }
 
-  changePassword(email, newPassword);
+  changePassword(userId, newPassword);
 
   res.status(200).json({ success: true });
 }

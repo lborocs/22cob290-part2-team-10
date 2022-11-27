@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { User } from 'next-auth';
 
-// import type { User } from '~/types';
 import SignInSchema, { type SignInCredentials } from '~/schemas/signin';
+// import type { User } from '~/types';
 import { getUserInfoByEmail, isCorrectPassword } from '~/server/store/users';
 
 export enum ErrorReason {
@@ -52,7 +52,7 @@ export default async function handler(
     return;
   }
 
-  if (!await isCorrectPassword(email, password)) {
+  if (!await isCorrectPassword(userInfo.id, password)) {
     res.status(200).json({
       success: false,
       reason: ErrorReason.WRONG_PASSWORD,
