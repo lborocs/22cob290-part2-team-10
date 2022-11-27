@@ -20,7 +20,7 @@ import styles from '~/styles/SignIn.module.css';
 import makeItAllLogo from '~/../public/make_it_all.png';
 
 /*
- * Identical to /api/user/login.ErrorReason, but importing that will give error because the api
+ * Identical to /api/user/signIn.ErrorReason, but importing that will give error because the api
  * imports /server/store/user which imports `bcrypt`
  *
  * I believe that causes the page to try to import bcrypt on the client which is an obvious nono
