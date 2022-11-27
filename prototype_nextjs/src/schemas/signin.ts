@@ -25,9 +25,11 @@ export const passwordSchema = z.string()
   .min(MIN_PASSWORD_LENGTH, 'Too short')
   ;
 
-export const SignInSchema = z.object({
+const SignInSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
 });
+
+export default SignInSchema;
 
 export type SignInCredentials = z.infer<typeof SignInSchema>;

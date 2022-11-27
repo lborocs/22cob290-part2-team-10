@@ -13,7 +13,7 @@ import EmailField from '~/components/EmailField';
 import PasswordField from '~/components/PasswordField';
 import LoadingButton from '~/components/LoadingButton';
 import SignInToast from '~/components/signin/SignInToast';
-import { SignInSchema } from '~/schemas/signin';
+import SignInSchema from '~/schemas/signin';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 import styles from '~/styles/SignIn.module.css';

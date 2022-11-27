@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import type { User } from 'next-auth';
 
 // import type { User } from '~/types';
-import { SignInSchema, type SignInCredentials } from '~/schemas/signin';
+import SignInSchema, { type SignInCredentials } from '~/schemas/signin';
 import { getUserInfoByEmail, isCorrectPassword } from '~/server/store/users';
 
 export enum ErrorReason {
