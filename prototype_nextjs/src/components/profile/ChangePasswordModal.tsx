@@ -107,6 +107,7 @@ export default function ChangePasswordModal({ show, onHide }: {
                 <Form
                   id="change-pw-form"
                   onSubmit={handleSubmit}
+                  noValidate
                 >
                   <EmailField
                     name="email"
