@@ -1,10 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Toast from 'react-bootstrap/Toast';
 import ToastContainer from 'react-bootstrap/ToastContainer';
 import axios from 'axios';
+import { Formik } from 'formik';
+import { withZodSchema } from 'formik-validator-zod';
+import { z } from 'zod';
 import { useStore } from 'zustand';
 
 import EmailField from '~/components/EmailField';
@@ -12,7 +15,7 @@ import LoadingButton from '~/components/LoadingButton';
 import PasswordField from '~/components/PasswordField';
 import RoundedRect from '~/components/RoundedRect';
 import { useUserStore } from '~/store/userStore';
-import { validatePassword } from '~/utils';
+import ChangePasswordSchema from '~/schemas/api/user/changePassword';
 import type { RequestSchema as ChangePwPayload, ResponseSchema as ChangePwResponse } from '~/pages/api/user/change-password';
 
 type ChangePwFormData = {
@@ -25,73 +28,33 @@ export default function ChangePasswordModal({ show, onHide }: {
   show: boolean
   onHide: () => void
 }) {
-  const [passwordFeedback, setPasswordFeedback] = useState<string>();
-  const [newFeedback, setNewFeedback] = useState<string>();
-  const [confirmFeedback, setConfirmFeedback] = useState<string>();
-
-  const [badForm, setBadForm] = useState(false);
-
-  const [changingPw, setChangingPw] = useState(false);
   const [pwChanged, setPwChanged] = useState(false);
+  const [changingPw, setChangingPw] = useState(false);
 
   const userStore = useUserStore();
   const email = useStore(userStore, (state) => state.user.email);
 
-  useEffect(() => {
-    setBadForm(passwordFeedback !== undefined
-      || newFeedback !== undefined
-      || confirmFeedback !== undefined
-    );
-  }, [passwordFeedback, newFeedback, confirmFeedback]);
+  const handleSubmit: React.ComponentProps<typeof Formik<ChangePwFormData>>['onSubmit']
+    = async (values, { setFieldError }) => {
+      const { currentPassword, newPassword } = values;
 
-  const changePassword = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+      // see pages/index#handleSubmit
+      document.querySelector<HTMLInputElement>(':focus')?.blur();
 
-    if (badForm) return;
+      const payload: ChangePwPayload = {
+        currentPassword,
+        newPassword,
+      };
 
-    const { currentPassword, newPassword, confirm } = Object.fromEntries(new FormData(e.currentTarget)) as ChangePwFormData;
+      const { data } = await axios.post<ChangePwResponse>('/api/user/change-password', payload);
 
-    let _badForm = false;
-
-    let pwError = validatePassword(currentPassword);
-    if (pwError) {
-      _badForm = true;
-      setPasswordFeedback(pwError);
-    }
-
-    pwError = validatePassword(newPassword);
-    if (pwError) {
-      _badForm = true;
-      setNewFeedback(pwError);
-    } else if (currentPassword === newPassword) {
-      _badForm = true;
-      setNewFeedback('Use a new password');
-    }
-
-    if (newPassword !== confirm) {
-      _badForm = true;
-      setConfirmFeedback('Passwords do not match');
-    }
-
-    setBadForm(_badForm);
-    if (_badForm) return;
-
-    setChangingPw(true);
-
-    const payload: ChangePwPayload = {
-      currentPassword,
-      newPassword,
+      if (data.success) {
+        setPwChanged(true);
+        onHide();
+      } else {
+        setFieldError('currentPassword', 'Incorrect password');
+      }
     };
-
-    const { data } = await axios.post<ChangePwResponse>('/api/user/change-password', payload);
-
-    if (data.success) {
-      setPwChanged(true);
-      onHide();
-    } else setPasswordFeedback('Incorrect password');
-
-    setChangingPw(false);
-  };
 
   return (
     <>
@@ -107,43 +70,93 @@ export default function ChangePasswordModal({ show, onHide }: {
         </Modal.Header>
 
         <Modal.Body>
-          <Form
-            id="change-pw-form"
-            onSubmit={changePassword}
+          <Formik
+            initialValues={{
+              currentPassword: '',
+              newPassword: '',
+              confirm: '',
+            }}
+            validate={withZodSchema(
+              ChangePasswordSchema
+                .extend({
+                  confirm: z.string(), // no need to validate
+                })
+                .refine(({ currentPassword, newPassword }) => currentPassword !== newPassword, {
+                  message: 'Use a new password',
+                  path: ['newPassword'],
+                })
+                .refine(({ newPassword, confirm }) => newPassword === confirm, {
+                  message: 'Passwords do not match',
+                  path: ['confirm'],
+                })
+            )}
+            onSubmit={handleSubmit}
           >
-            <EmailField
-              name="email"
-              defaultValue={email}
-              type="hidden"
-            />
-            <PasswordField
-              name="currentPassword"
-              controlId="currentPassword"
-              label="Current Password"
-              placeholder="Enter current password"
-              feedback={passwordFeedback}
-              setFeedback={setPasswordFeedback}
-              policyTooltip
-            />
-            <PasswordField
-              name="newPassword"
-              controlId="newPassword"
-              label="New Password"
-              placeholder="Enter new password"
-              autoComplete="new-password"
-              feedback={newFeedback}
-              setFeedback={setNewFeedback}
-            />
-            <PasswordField
-              name="confirm"
-              controlId="confirm"
-              label="Confirm Password"
-              placeholder="Enter new password again"
-              autoComplete="new-password"
-              feedback={confirmFeedback}
-              setFeedback={setConfirmFeedback}
-            />
-          </Form>
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              isSubmitting,
+            }) => {
+              setChangingPw(isSubmitting);
+
+              return (
+                <Form
+                  id="change-pw-form"
+                  onSubmit={handleSubmit}
+                >
+                  <EmailField
+                    name="email"
+                    controlId="email"
+                    defaultValue={email}
+                    type="hidden"
+                  />
+                  <PasswordField
+                    name="currentPassword"
+                    controlId="currentPassword"
+                    label="Current Password"
+                    placeholder="Enter current password"
+                    feedback={touched.currentPassword ? errors.currentPassword : undefined}
+                    value={values.currentPassword}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    isInvalid={touched.currentPassword && !!errors.currentPassword}
+                    feedbackTooltip
+                    policyTooltip
+                  />
+                  <PasswordField
+                    name="newPassword"
+                    controlId="newPassword"
+                    label="New Password"
+                    placeholder="Enter new password"
+                    autoComplete="new-password"
+                    feedback={touched.newPassword ? errors.newPassword : undefined}
+                    value={values.newPassword}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    isInvalid={touched.newPassword && !!errors.newPassword}
+                    feedbackTooltip
+                  />
+                  <PasswordField
+                    name="confirm"
+                    controlId="confirm"
+                    label="Confirm Password"
+                    placeholder="Enter new password again"
+                    autoComplete="new-password"
+                    feedback={touched.confirm ? errors.confirm : undefined}
+                    value={values.confirm}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    isInvalid={touched.confirm && !!errors.confirm}
+                    feedbackTooltip
+                  />
+                </Form>
+              );
+            }}
+          </Formik>
         </Modal.Body>
 
         <Modal.Footer>
