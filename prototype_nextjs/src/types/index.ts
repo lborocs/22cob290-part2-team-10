@@ -1,6 +1,8 @@
 // TODO: design db
 // TODO: include like manhours taken
 
+// TODO: add text-avatar colours to user
+
 // TODO: might have to refactor how roles work if they're project specific, which it looks like they are lol
 
 export enum Role {

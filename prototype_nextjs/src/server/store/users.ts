@@ -93,6 +93,8 @@ export async function getUserInfoByEmail(email: string): Promise<UserInfo | unde
   };
 }
 
+// TODO: update funcs to use id not email
+
 export async function isCorrectPassword(email: string, password: string): Promise<boolean | null> {
   const user = await getUserWhere((user) => user.email === email);
 
