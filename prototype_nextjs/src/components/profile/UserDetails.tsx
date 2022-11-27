@@ -35,30 +35,6 @@ export default function UserDetails() {
 
   const [changeStatus, setChangeStatus] = useState(ChangeStatus.NOT_CHANGED);
 
-  const changeDetails = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const formData = Object.fromEntries(new FormData(e.currentTarget)) as DetailsFormData;
-
-    setChangeStatus(ChangeStatus.CHANGING);
-
-    const payload: ChangeNamePayload = formData;
-
-    const { data } = await axios.post<ChangeNameResponse>('/api/user/change-name', payload);
-
-    if (data.success) {
-      setChangeStatus(ChangeStatus.SUCCEEDED);
-
-      const { firstName, lastName } = formData;
-
-      setFirstName(firstName);
-      setLastName(lastName);
-    } else {
-      console.log(data);
-      setChangeStatus(ChangeStatus.FAILED);
-    }
-  };
-
   // TODO: add a glow to firstName & lastName to show it's editable?
   // see https://stackoverflow.com/a/14822905
 
