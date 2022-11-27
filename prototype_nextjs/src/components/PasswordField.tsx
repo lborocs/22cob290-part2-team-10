@@ -34,6 +34,17 @@ function PolicyTooltip() {
   );
 }
 
+export interface PasswordFieldProps extends FormControlProps {
+  name: string
+  label?: string
+  controlId: string
+  autoComplete?: string
+  placeholder?: string
+  feedback?: React.ReactNode
+  feedbackTooltip?: boolean
+  policyTooltip?: boolean
+}
+
 export default forwardRef(function PasswordField({
   name,
   label = 'Password',
@@ -41,21 +52,10 @@ export default forwardRef(function PasswordField({
   autoComplete = 'current-password',
   placeholder = 'Enter password',
   feedback,
-  feedbackTooltip = true,
-  setFeedback,
+  feedbackTooltip = false,
   policyTooltip,
   ...props
-}: FormControlProps & {
-  name: string
-  label?: string
-  controlId: string
-  autoComplete?: string
-  placeholder?: string
-  feedback?: string
-  feedbackTooltip?: boolean
-  setFeedback?: ReturnType<typeof useState<string>>[1]
-  policyTooltip?: boolean
-}, ref: React.ForwardedRef<HTMLInputElement>) {
+}: PasswordFieldProps, ref: React.ForwardedRef<HTMLInputElement>) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -72,8 +72,6 @@ export default forwardRef(function PasswordField({
             name={name}
             autoComplete={autoComplete}
             placeholder={placeholder}
-            isInvalid={!!feedback}
-            onChange={() => setFeedback?.(undefined)}
             ref={ref}
             required
             {...props}

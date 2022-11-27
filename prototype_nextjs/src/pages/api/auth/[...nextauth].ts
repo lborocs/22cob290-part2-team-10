@@ -3,7 +3,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import axios from 'axios';
 
 import { Role } from '~/types';
-import type { ResponseSchema as LoginResponse } from '~/pages/api/user/login';
+import type { RequestSchema as LoginPayload, ResponseSchema as LoginResponse } from '~/pages/api/user/login';
 
 // TODO: extend User type to match what we return from /api/user/login
 
@@ -26,7 +26,7 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials, req) {
-        const payload = {
+        const payload: LoginPayload = {
           email: credentials!.email,
           password: credentials!.password,
         };
