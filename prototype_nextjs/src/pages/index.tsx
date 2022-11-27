@@ -47,7 +47,7 @@ export default function SignInPage() {
   const nextUrl = callbackUrl as string ?? '/home';
 
   const handleSubmit: React.ComponentProps<typeof Formik<SignInFormData>>['onSubmit']
-    = async ({ email, password }, { setFieldError, setStatus }) => {
+    = async ({ email, password }, { setFieldError }) => {
       const resp = (await signIn('credentials', {
         redirect: false,
         email,
@@ -112,20 +112,11 @@ export default function SignInPage() {
               handleBlur,
               handleSubmit,
               isSubmitting,
-              status,
-              setStatus,
             }) => (
               <Form
                 onSubmit={handleSubmit}
                 noValidate
               >
-                isSubmitting = {String(isSubmitting)}
-                <br />
-                errors = {JSON.stringify(errors)}
-                <br />
-                touched = {JSON.stringify(touched)}
-                <br />
-                status = {JSON.stringify(status)}
                 <EmailField
                   name="email"
                   controlId="email"
