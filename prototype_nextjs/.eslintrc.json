@@ -49,7 +49,6 @@
     "implicit-arrow-linebreak": "error",
     "no-duplicate-imports": "error",
     "import/first": "error",
-    "import/extensions": "error",
     "dot-notation": "error",
     "no-multi-assign": "error",
     "operator-linebreak": ["warn", "before"],
