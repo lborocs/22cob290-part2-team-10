@@ -72,10 +72,7 @@ export async function getUserInfo(id: string): Promise<UserInfo | undefined> {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { password, ...result } = user;
 
-  return {
-    name: `${user.fname} ${user.lname}`,
-    ...result,
-  };
+  return result;
 }
 
 export async function getUserInfoByEmail(email: string): Promise<UserInfo | undefined> {
@@ -87,10 +84,7 @@ export async function getUserInfoByEmail(email: string): Promise<UserInfo | unde
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { password, ...result } = user;
 
-  return {
-    name: `${user.fname} ${user.lname}`,
-    ...result,
-  };
+  return result;
 }
 
 export async function isCorrectPassword(id: string, password: string): Promise<boolean | null> {

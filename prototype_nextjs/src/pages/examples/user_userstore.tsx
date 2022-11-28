@@ -9,13 +9,14 @@ import { ssrGetUserInfo } from '~/server/utils';
 export default function ExamplePage() {
   const userStore = useUserStore();
   const email = useStore(userStore, (state) => state.user.email);
-  const name = useStore(userStore, (state) => state.user.name);
+  const fname = useStore(userStore, (state) => state.user.fname);
+  const lname = useStore(userStore, (state) => state.user.lname);
 
   return (
     <main>
       <div className="h2 mb-4">Using <code>userStore</code></div>
       <h1>Email: {email}</h1>
-      <span>Name: {name}</span>
+      <span>Name: {fname} {lname}</span>
     </main>
   );
 }

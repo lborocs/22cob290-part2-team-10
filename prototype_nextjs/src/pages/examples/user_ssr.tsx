@@ -10,13 +10,13 @@ export default function ExamplePage({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   if (!user) return null;
 
-  const { email, name } = user;
+  const { email, fname, lname } = user;
 
   return (
     <main>
       <div className="h2 mb-4">Using <code>user</code> prop</div>
       <h1>Email: {email}</h1>
-      <span>Name: {name}</span>
+      <span>Name: {fname} {lname}</span>
     </main>
   );
 }
