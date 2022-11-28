@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
 import axios from 'axios';
 
 import type { ProjectInfo } from '~/types';
@@ -9,15 +8,14 @@ import type { ResponseSchema as GetProjectResponse } from '~/pages/api/projects/
 
 import styles from '~/styles/ProjectsList.module.css';
 
+// TODO: search bar
+
 export default function ProjectsList() {
-  const { status } = useSession();
   const router = useRouter();
 
   const [projects, setProjects] = useState<ProjectInfo[]>([]);
 
   useEffect(() => {
-    if (status !== 'authenticated') return;
-
     const controller = new AbortController();
     const signal = controller.signal;
 
@@ -30,8 +28,6 @@ export default function ProjectsList() {
       controller.abort();
     };
   }, []);
-
-  if (status !== 'authenticated') return null;
 
   let route: string | undefined;
   if (router.pathname === '/projects/[id]') {
