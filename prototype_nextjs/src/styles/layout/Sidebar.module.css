@@ -24,3 +24,14 @@
     padding: 20px 0;
     /* border-bottom: 1px solid #47748b; */
 }
+
+/* default hide sidebar */
+@media (max-width: 768px) {
+    .sidebar {
+        margin-left: -250px;
+    }
+
+    .sidebar.hidden {
+        margin-left: 0;
+    }
+}
