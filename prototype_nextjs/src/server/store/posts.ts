@@ -22,6 +22,8 @@ function randomTimeMs(): number {
 
 const numPosts = 10;
 
+// TODO: use userId for author instead of email
+
 const posts: Post[] = range(1, numPosts).map((num) => ({
   id: num,
   author: 'alice@make-it-all.co.uk',
