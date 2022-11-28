@@ -35,3 +35,9 @@
         margin-left: 0;
     }
 }
+
+@media (prefers-reduced-motion) {
+    .sidebar {
+        transition: none;
+    }
+}
