@@ -27,7 +27,7 @@ export default async function handler(
   const safeParseResult = ChangeNameSchema.safeParse(req.body);
 
   if (!safeParseResult.success) {
-    res.status(200).json({
+    res.status(400).json({
       success: false,
       issues: safeParseResult.error.issues,
     } as ResponseSchema);

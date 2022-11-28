@@ -32,7 +32,7 @@ export default async function handler(
   const safeParseResult = SignInSchema.safeParse(req.body);
 
   if (!safeParseResult.success) {
-    res.status(200).json({
+    res.status(400).json({
       success: false,
       reason: ErrorReason.BAD_CREDENTIALS,
       issues: safeParseResult.error.issues,
