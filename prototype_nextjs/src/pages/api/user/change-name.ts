@@ -1,17 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { unstable_getServerSession } from 'next-auth/next';
-import { object, string, type InferType } from 'yup';
+import type { z } from 'zod';
 
+import ChangeNameSchema from '~/schemas/api/user/changeName';
 import type { UnauthorisedResponse } from '~/types';
-import { authOptions } from '~/pages/api/auth/[...nextauth]';
+import { authOptions, type SessionUser } from '~/pages/api/auth/[...nextauth]';
 import { changeName } from '~/server/store/users';
 
-const requestSchema = object({
-  firstName: string().trim().required(),
-  lastName: string().trim().required(),
-});
-
-export type RequestSchema = InferType<typeof requestSchema>;
+export type RequestSchema = z.infer<typeof ChangeNameSchema>;
 
 export type ResponseSchema = {
   success: boolean
@@ -28,22 +24,21 @@ export default async function handler(
     return;
   }
 
-  let content: ReturnType<typeof requestSchema.validateSync>;
-  try {
-    content = requestSchema.validateSync(req.body, { strict: true });
-  } catch (err) {
-    res.status(200).json({
+  const safeParseResult = ChangeNameSchema.safeParse(req.body);
+
+  if (!safeParseResult.success) {
+    res.status(400).json({
       success: false,
-      err,
+      issues: safeParseResult.error.issues,
     } as ResponseSchema);
     return;
   }
 
-  const { firstName, lastName } = content;
+  const { firstName, lastName } = safeParseResult.data;
 
-  const email = session.user.email!;
+  const userId = (session.user as SessionUser).id;
 
-  changeName(email, firstName, lastName);
+  changeName(userId, firstName, lastName);
 
   res.status(200).json({ success: true });
 }

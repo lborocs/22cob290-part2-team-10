@@ -93,17 +93,17 @@ export async function getUserInfoByEmail(email: string): Promise<UserInfo | unde
   };
 }
 
-export async function isCorrectPassword(email: string, password: string): Promise<boolean | null> {
-  const user = await getUserWhere((user) => user.email === email);
+export async function isCorrectPassword(id: string, password: string): Promise<boolean | null> {
+  const user = await getUserWhere((user) => user.id === id);
 
   if (!user) return null;
 
   return await bcrypt.compare(password, user.password);
 }
 
-export async function changePassword(email: string, newPassword: string): Promise<boolean> {
+export async function changePassword(id: string, newPassword: string): Promise<boolean> {
   // TODO: database
-  const user = await getUserWhere((user) => user.email === email);
+  const user = await getUserWhere((user) => user.id === id);
 
   if (!user) return false;
 
@@ -111,9 +111,9 @@ export async function changePassword(email: string, newPassword: string): Promis
   return true;
 }
 
-export async function changeName(email: string, firstName: string, lastName: string): Promise<void> {
+export async function changeName(id: string, firstName: string, lastName: string): Promise<void> {
   // TODO: database
-  const user = await getUserWhere((user) => user.email === email);
+  const user = await getUserWhere((user) => user.id === id);
 
   if (!user) return;
 

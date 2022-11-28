@@ -3,9 +3,9 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import axios from 'axios';
 
 import { Role } from '~/types';
-import type { ResponseSchema as LoginResponse } from '~/pages/api/user/login';
+import type { RequestSchema as SignInPayload, ResponseSchema as SignInResponse } from '~/pages/api/user/signIn';
 
-// TODO: extend User type to match what we return from /api/user/login
+// TODO: extend User type to match what we return from /api/user/signIn
 
 export interface SessionUser extends User {
   id: string
@@ -26,12 +26,12 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials, req) {
-        const payload = {
+        const payload: SignInPayload = {
           email: credentials!.email,
           password: credentials!.password,
         };
 
-        const { data } = await axios.post<LoginResponse>(`${process.env.NEXTAUTH_URL as string}/api/user/login`, payload);
+        const { data } = await axios.post<SignInResponse>(`${process.env.NEXTAUTH_URL as string}/api/user/signIn`, payload);
 
         if (data.success) return data.user;
         throw new Error(data.reason);

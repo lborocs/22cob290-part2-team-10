@@ -1,18 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { unstable_getServerSession } from 'next-auth/next';
-import { object, type InferType } from 'yup';
+import type { z } from 'zod';
 
+import ChangePasswordSchema from '~/schemas/api/user/changePassword';
 import type { UnauthorisedResponse } from '~/types';
-import { PASSWORD_SCHEMA } from '~/utils';
-import { authOptions } from '~/pages/api/auth/[...nextauth]';
+import { authOptions, type SessionUser } from '~/pages/api/auth/[...nextauth]';
 import { changePassword, isCorrectPassword } from '~/server/store/users';
 
-const requestSchema = object({
-  currentPassword: PASSWORD_SCHEMA.required(),
-  newPassword: PASSWORD_SCHEMA.required(),
-});
-
-export type RequestSchema = InferType<typeof requestSchema>;
+export type RequestSchema = z.infer<typeof ChangePasswordSchema>;
 
 export type ResponseSchema = {
   success: boolean
@@ -29,25 +24,26 @@ export default async function handler(
     return;
   }
 
-  try {
-    requestSchema.validateSync(req.body, { strict: true });
-  } catch (err) {
-    res.status(200).json({
+  const safeParseResult = ChangePasswordSchema.safeParse(req.body);
+
+  if (!safeParseResult.success) {
+    res.status(400).json({
       success: false,
-      err,
+      issues: safeParseResult.error.issues,
     } as ResponseSchema);
     return;
   }
 
-  const { currentPassword, newPassword } = req.body as RequestSchema;
+  const { currentPassword, newPassword } = safeParseResult.data;
 
-  const email = session.user.email!;
+  const userId = (session.user as SessionUser).id;
 
-  if (!await isCorrectPassword(email, currentPassword)) {
+  if (!await isCorrectPassword(userId, currentPassword)) {
     res.status(200).json({ success: false });
+    return;
   }
 
-  changePassword(email, newPassword);
+  changePassword(userId, newPassword);
 
   res.status(200).json({ success: true });
 }

@@ -214,6 +214,7 @@ Imports should be in the order ([example](prototype_nextjs/src/pages/profile.tsx
 - Our code
   - Components (e.g. `Layout` from `~/components/Layout`)
   - `~/store`
+  - `~/schemas`
   - `~/types`
   - `~/utils`
   - _Any other client-side things_
@@ -242,7 +243,7 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 
 | Page URL/Route                        | Owner | Status                | Completed             | Notes                                                                                                                                                              |
 |---------------------------------------|-------|-----------------------|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `/`                                   | Dara  | Complete              | <ul><li>[x] </li><ul> | Can make `/` display home instead and if user isn't logged in, redirect to `/login`?                                                                               |
+| `/`                                   | Dara  | Complete              | <ul><li>[x] </li><ul> | Can make `/` display home instead and if user isn't logged in, redirect to `/signin`?                                                                              |
 | `/home`                               |       | Templated             |                       |                                                                                                                                                                    |
 | `/projects`                           |       | Templated             |                       | Display all projects                                                                                                                                               |
 | `/projects/[id]`                      |       | Templated             |                       | A specific project, use `components/Task` and `components/KanbanBoard`                                                                                             |
@@ -257,7 +258,7 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 | `/dashboard`                          |       | Templated             |                       |                                                                                                                                                                    |
 | `/staff_assignment`                   |       |                       |                       | Dara thinks we should rename this URL                                                                                                                              |
 | `/profile`                            | Dara  | Functionally complete | <ul><li>[ ] </li><ul> |                                                                                                                                                                    |
-| `/signup`                             |       | Templated             |                       | Can merge signup and login?                                                                                                                                        |
+| `/signup`                             |       | Templated             |                       | Can merge signup and signin?                                                                                                                                       |
 
 ### Database
 
@@ -320,5 +321,7 @@ TODO: ERM diagram (could make tables entity property tables to help plan ERM dia
 | [Prisma](https://www.prisma.io/)                                        | -             | Database ORM                                |
 | [node.bcrypt.js](https://github.com/kelektiv/node.bcrypt.js)            | 5.1           | Hashing user passwords                      |
 | [react-markdown](https://github.com/remarkjs/react-markdown)?           | -             | Render markdown content in forum posts      |
-| [yup](https://github.com/jquense/yup)                                   | 0.32          | Object schema validation                    |
+| [Zod](https://zod.dev/)                                                 | 3.19          | Object schema validation                    |
+| [Formik](https://formik.org/)                                           | 2.2           | Form validation                             |
+| [formik-validator-zod](https://github.com/Glazy/formik-validator-zod)   | 1.0           | Zod adapter for Formik                      |
 | ...                                                                     |               |                                             |

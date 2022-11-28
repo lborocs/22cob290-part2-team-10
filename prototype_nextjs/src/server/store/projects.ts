@@ -49,6 +49,7 @@ export async function getProjectInfo(id: number): Promise<ProjectInfo | null> {
   return projects.find((project) => project.id === id) ?? null;
 }
 
+// TODO: change to user id
 export async function getAssignedProjects(email: string): Promise<ProjectInfo[]> {
   return projects.filter((project) => project.members.includes(email)
     || project.manager === email
@@ -56,6 +57,7 @@ export async function getAssignedProjects(email: string): Promise<ProjectInfo[]>
   );
 }
 
+// TODO: change to user id
 export async function getAssignedTasks(email: string, project: ProjectInfo): Promise<ProjectTasks> {
   const { tasks } = project;
 

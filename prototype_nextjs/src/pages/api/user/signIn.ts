@@ -1,9 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { User } from 'next-auth';
-import { object, string, type InferType } from 'yup';
 
+import SignInSchema, { type SignInCredentials } from '~/schemas/signin';
 // import type { User } from '~/types';
-import { PASSWORD_SCHEMA } from '~/utils';
 import { getUserInfoByEmail, isCorrectPassword } from '~/server/store/users';
 
 export enum ErrorReason {
@@ -12,12 +11,7 @@ export enum ErrorReason {
   BAD_CREDENTIALS = 'BAD_CREDENTIALS',
 }
 
-const requestSchema = object({
-  email: string().email().required(),
-  password: PASSWORD_SCHEMA.required(),
-});
-
-type RequestSchema = InferType<typeof requestSchema>;
+export type RequestSchema = SignInCredentials;
 
 type FailedResponse = {
   success: false
@@ -35,18 +29,18 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseSchema>,
 ) {
-  try {
-    requestSchema.validateSync(req.body, { strict: true });
-  } catch (err) {
-    res.status(200).json({
+  const safeParseResult = SignInSchema.safeParse(req.body);
+
+  if (!safeParseResult.success) {
+    res.status(400).json({
       success: false,
       reason: ErrorReason.BAD_CREDENTIALS,
-      err,
+      issues: safeParseResult.error.issues,
     } as ResponseSchema);
     return;
   }
 
-  const { email, password } = req.body as RequestSchema;
+  const { email, password } = safeParseResult.data;
 
   const userInfo = await getUserInfoByEmail(email);
 
@@ -58,7 +52,7 @@ export default async function handler(
     return;
   }
 
-  if (!await isCorrectPassword(email, password)) {
+  if (!await isCorrectPassword(userInfo.id, password)) {
     res.status(200).json({
       success: false,
       reason: ErrorReason.WRONG_PASSWORD,
