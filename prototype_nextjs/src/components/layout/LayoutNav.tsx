@@ -26,7 +26,7 @@ export default function LayoutNav() {
       <Link href="/projects" passHref legacyBehavior>
         <Nav.Link>Projects</Nav.Link>
       </Link>
-      {role === Role.MANAGER && (
+      {(role === Role.MANAGER || role === Role.TEAM_LEADER) && (
         <Link href="/dashboard" passHref legacyBehavior>
           <Nav.Link>Dashboard</Nav.Link>
         </Link>
