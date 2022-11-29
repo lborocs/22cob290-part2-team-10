@@ -20,16 +20,14 @@ export enum Role {
 // then we can use this
 export type User = {
   id: string // TODO: id might(probably?) be number
-  fname: string
-  lname: string
+  firstName: string
+  lastName: string
   email: string
   password: string
   role: Role
 };
 
-export type UserInfo = (Omit<User, 'password'> & {
-  name: string
-});
+export type UserInfo = Omit<User, 'password'>;
 
 // TODO: maybe return UserInfo instead of email? - that'll be solved by prisma
 export type ProjectInfo = {
