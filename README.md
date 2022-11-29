@@ -168,10 +168,9 @@ const email = useStore(userStore, (state) => state.user.email);
 - [Decent zustand youtube tutorial](https://youtu.be/sqTPGMipjHk)
 
 Note that we are not using zustand how it is _usually_ used and how it is used in the video.
-Instead, we are using it with [React context](https://github.com/pmndrs/zustand) to essentially
-use dependency injection - we inject the user in `_app.jsx`. We do this so we don't repeatedly
-set the user in each page: instead we just set the user once (for all pages requiring authorization)
-in `_app.jsx.
+
+We are using zustand in a way that is essentially dependency injection - we inject the user in `_app.jsx`. We do this
+so we don't repeatedly set the user in each page: instead we just set the user in one place - in `_app.jsx`.
 
 #### Layout/Sidebar
 
