@@ -25,6 +25,6 @@ export default async function handler(
   const url = process.env.NEXTAUTH_URL as string;
 
   res.status(200).json({
-    inviteUrl: `${url}/signup?token=${token}`,
+    inviteUrl: `${url}/signup?invite=${token}`,
   });
 }

@@ -38,7 +38,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   // should we verify token during SSR?
-  const token = context.query?.token as string | undefined ?? null;
+  const token = context.query?.invite as string | undefined ?? null;
 
   return {
     props: {
