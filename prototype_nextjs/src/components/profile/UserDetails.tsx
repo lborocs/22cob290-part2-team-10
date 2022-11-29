@@ -65,15 +65,13 @@ export default function UserDetails() {
       }
     };
 
-  const initialValues = {
-    firstName,
-    lastName,
-  };
-
   return (
     <>
       <Formik
-        initialValues={initialValues}
+        initialValues={{
+          firstName,
+          lastName,
+        }}
         validate={withZodSchema(ChangeNameSchema)}
         onSubmit={handleSubmit}
       >
@@ -85,6 +83,8 @@ export default function UserDetails() {
           handleBlur,
           handleSubmit,
           isSubmitting,
+          isValid,
+          dirty,
         }) => (
           <Form onSubmit={handleSubmit} noValidate>
             <Row>
@@ -148,21 +148,7 @@ export default function UserDetails() {
                   variant="success"
                   isLoading={isSubmitting}
                   loadingContent="Updating"
-                  disabled={(() => {
-                    // disable when:
-                    //  - no values have been modified (changing name wouldn't do anything because same name)
-                    //  - there are errors
-
-                    const modifiedKey
-                      = (Object.keys(initialValues) as Array<keyof typeof initialValues>)
-                        .find((key) => values[key] !== initialValues[key]);
-
-                    const aValueHasBeenModified = modifiedKey !== undefined;
-
-                    const noErrors = Object.keys(errors).length === 0;
-
-                    return !aValueHasBeenModified || !noErrors;
-                  })()}
+                  disabled={!dirty || !isValid}
                 >
                   Update profile
                 </LoadingButton>

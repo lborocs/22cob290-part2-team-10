@@ -117,6 +117,7 @@ export default function SignInPage() {
               handleBlur,
               handleSubmit,
               isSubmitting,
+              isValid,
             }) => (
               <Form
                 onSubmit={handleSubmit}
@@ -149,7 +150,7 @@ export default function SignInPage() {
                       variant="secondary"
                       type="submit"
                       isLoading={isSubmitting}
-                      disabled={Object.keys(errors).length > 0}
+                      disabled={!isValid}
                     >
                       Sign In
                     </LoadingButton>

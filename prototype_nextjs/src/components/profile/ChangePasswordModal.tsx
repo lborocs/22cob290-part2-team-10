@@ -30,6 +30,8 @@ export default function ChangePasswordModal({ show, onHide }: {
   const [pwChanged, setPwChanged] = useState(false);
   const [changingPw, setChangingPw] = useState(false);
 
+  const [isValid, setIsValid] = useState(false);
+
   const email = useUserStore((state) => state.user.email);
 
   const handleSubmit: React.ComponentProps<typeof Formik<ChangePwFormData>>['onSubmit']
@@ -98,8 +100,11 @@ export default function ChangePasswordModal({ show, onHide }: {
               handleBlur,
               handleSubmit,
               isSubmitting,
+              isValid,
+              dirty,
             }) => {
               setChangingPw(isSubmitting);
+              if (dirty) setIsValid(isValid);
 
               return (
                 <Form
@@ -169,6 +174,7 @@ export default function ChangePasswordModal({ show, onHide }: {
             size="sm"
             isLoading={changingPw}
             loadingContent="Changing"
+            disabled={!isValid}
           >
             Change
           </LoadingButton>
