@@ -9,13 +9,16 @@ export type ResponseSchema = { inviteUrl: string };
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<UnauthorisedResponse | ResponseSchema>,
+  res: NextApiResponse<ResponseSchema | UnauthorisedResponse | { error: string }>,
 ) {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method Not Allowed' });
+  }
+
   const session = await unstable_getServerSession(req, res, authOptions);
 
   if (!session || !session.user) {
-    res.status(401).json({ message: 'You must be logged in.' });
-    return;
+    return res.status(401).json({ message: 'You must be logged in.' });
   }
 
   const email = session.user.email!;

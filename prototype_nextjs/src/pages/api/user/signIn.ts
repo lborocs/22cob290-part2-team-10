@@ -26,8 +26,12 @@ export type ResponseSchema = FailedResponse | {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseSchema>,
+  res: NextApiResponse<ResponseSchema | { error: string }>,
 ) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method Not Allowed' });
+  }
+
   const safeParseResult = SignInSchema.safeParse(req.body);
 
   if (!safeParseResult.success) {
