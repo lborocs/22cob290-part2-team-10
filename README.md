@@ -94,6 +94,18 @@ Deploy to Vercel for development before using GCP?
 
 https://cloud.google.com/nodejs/getting-started/getting-started-on-compute-engine
 
+> Think we misunderstood roles.
+>
+> They're meant to be in teams? And a project is assigned to a team?
+>
+> A team has a manager, leader and >=1 team members?
+>
+> [Asked on forum](https://learn.lboro.ac.uk/mod/forum/discuss.php?d=369233),
+> awaiting response, will update this & google doc
+>
+> If they're meant to be teams, need to ask who assigns projects & employees to
+> teams - e.g. company-wide manager idk
+
 ### TODO (feedback from Part 1 presentation)
 
 - Forum
@@ -258,6 +270,12 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 | `/staff_assignment`                   |       |                       |                       | Dara thinks we should rename this URL                                                                                                                              |
 | `/profile`                            | Dara  | Functionally complete | <ul><li>[ ] </li><ul> |                                                                                                                                                                    |
 | `/signup`                             |       | Templated             |                       | Can merge signup and signin?                                                                                                                                       |
+
+> Note: the dashboard is meant to be available to managers & team leaders - it's meant to be a project
+> overview page
+>
+> So we need to split up the current `/dashboard` functionality to have another page like staff overview -
+> it could be combined with `/staff_assignment`
 
 ### Database
 
