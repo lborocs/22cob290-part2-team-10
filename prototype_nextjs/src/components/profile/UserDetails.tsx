@@ -22,7 +22,6 @@ type DetailsFormData = {
 
 enum ChangeStatus {
   NOT_CHANGED,
-  CHANGING,
   SUCCEEDED,
   FAILED,
 }
@@ -43,7 +42,7 @@ export default function UserDetails() {
   // see https://stackoverflow.com/a/14822905
 
   const handleSubmit: React.ComponentProps<typeof Formik<DetailsFormData>>['onSubmit']
-    = async (values) => {
+    = async (values, { resetForm }) => {
       // see pages/index#handleSubmit
       document.querySelector<HTMLInputElement>(':focus')?.blur();
 
@@ -58,19 +57,23 @@ export default function UserDetails() {
 
         setFirstName(firstName);
         setLastName(lastName);
+
+        resetForm({ values });
       } else { // shouldn't really happen
         console.log(data);
         setChangeStatus(ChangeStatus.FAILED);
       }
     };
 
+  const initialValues = {
+    firstName,
+    lastName,
+  };
+
   return (
     <>
       <Formik
-        initialValues={{
-          firstName,
-          lastName,
-        }}
+        initialValues={initialValues}
         validate={withZodSchema(ChangeNameSchema)}
         onSubmit={handleSubmit}
       >
@@ -143,11 +146,25 @@ export default function UserDetails() {
                 <LoadingButton
                   type="submit"
                   variant="success"
-                  // isLoading={changeStatus === ChangeStatus.CHANGING}
                   isLoading={isSubmitting}
-                  loadingContent="Saving"
+                  loadingContent="Updating"
+                  disabled={(() => {
+                    // disable when:
+                    //  - no values have been modified (changing name wouldn't do anything because same name)
+                    //  - there are errors
+
+                    const modifiedKey
+                      = (Object.keys(initialValues) as Array<keyof typeof initialValues>)
+                        .find((key) => values[key] !== initialValues[key]);
+
+                    const aValueHasBeenModified = modifiedKey !== undefined;
+
+                    const noErrors = Object.keys(errors).length === 0;
+
+                    return !aValueHasBeenModified || !noErrors;
+                  })()}
                 >
-                  Save
+                  Update profile
                 </LoadingButton>
               </div>
             </Row>
