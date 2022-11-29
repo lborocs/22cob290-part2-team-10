@@ -8,11 +8,10 @@ import ToastContainer from 'react-bootstrap/ToastContainer';
 import axios from 'axios';
 import { Formik } from 'formik';
 import { withZodSchema } from 'formik-validator-zod';
-import { useStore } from 'zustand';
 
 import LoadingButton from '~/components/LoadingButton';
 import RoundedRect from '~/components/RoundedRect';
-import { useUserStore } from '~/store/userStore';
+import useUserStore from '~/store/userStore';
 import ChangeNameSchema from '~/schemas/api/user/changeName';
 import type { RequestSchema as ChangeNamePayload, ResponseSchema as ChangeNameResponse } from '~/pages/api/user/change-name';
 
@@ -29,8 +28,7 @@ enum ChangeStatus {
 }
 
 export default function UserDetails() {
-  const userStore = useUserStore();
-  const { setFirstName, setLastName, firstName, lastName, email, role } = useStore(userStore, (state) => ({
+  const { setFirstName, setLastName, firstName, lastName, email, role } = useUserStore((state) => ({
     setFirstName: state.setFirstName,
     setLastName: state.setLastName,
     firstName: state.user.firstName,

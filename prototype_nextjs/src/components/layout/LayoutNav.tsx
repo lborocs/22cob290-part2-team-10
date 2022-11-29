@@ -1,18 +1,16 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Nav from 'react-bootstrap/Nav';
-import { useStore } from 'zustand';
 
 import TextAvatar from '~/components/TextAvatar';
-import { useUserStore } from '~/store/userStore';
+import useUserStore from '~/store/userStore';
 import { Role } from '~/types';
 
 export default function LayoutNav() {
   const router = useRouter();
   const route = router.pathname;
 
-  const userStore = useUserStore();
-  const role = useStore(userStore, (state) => state.user.role);
+  const role = useUserStore((state) => state.user.role);
 
   return (
     <Nav
