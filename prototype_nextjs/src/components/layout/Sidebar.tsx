@@ -4,10 +4,12 @@ import Image from 'next/image';
 import styles from '~/styles/layout/Sidebar.module.css';
 import makeItAllLogo from '~/../public/company-logo.png';
 
-export default function Sidebar({ show, content }: {
+export type SidebarProps = {
   show: boolean
   content: React.ReactNode
-}) {
+};
+
+export default function Sidebar({ show, content }: SidebarProps) {
   return (
     <aside className={`${styles.sidebar} ${show ? '' : styles.hidden}`} >
       <div className={styles['sidebar-header']}>

@@ -2,8 +2,8 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAlignJustify, faAlignLeft } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import Sidebar from '~/components/layout/Sidebar';
 import ProjectsList from '~/components/layout/sidebar/ProjectsList';
@@ -12,21 +12,26 @@ import styles from '~/styles/Layout.module.css';
 import LayoutNav from './layout/LayoutNav';
 
 // gives flexibility to have more shared sidebars (not just projects)
-type SidebarType = 'projects' | 'custom';
+type SidebarType = 'custom'
+  | 'projects';
 
-type DefaultSidebar = {
-  sidebarType: Exclude<SidebarType, 'custom'>
-  sidebarContent?: undefined
-};
-
-type CustomSidebar = {
-  sidebarType: 'custom'
-  sidebarContent: React.ReactNode
-};
-
-type LayoutProps = (DefaultSidebar | CustomSidebar) & {
+export type BaseLayoutProps = {
+  sidebarType: SidebarType
+  sidebarContent?: React.ReactNode
   children: React.ReactNode
 };
+
+interface DefaultSidebarLayout extends BaseLayoutProps {
+  sidebarType: Exclude<SidebarType, 'custom'>
+  sidebarContent?: undefined
+}
+
+interface CustomSidebarLayout extends BaseLayoutProps {
+  sidebarType: 'custom'
+  sidebarContent: React.ReactNode
+}
+
+export type LayoutProps = DefaultSidebarLayout | CustomSidebarLayout;
 
 export default function Layout({
   sidebarType,
@@ -39,8 +44,15 @@ export default function Layout({
     switch (sidebarType) {
       case 'custom':
         return sidebarContent;
-      default:
+      case 'projects':
         return <ProjectsList />;
+      default:
+        return (
+          <>
+            <strong>Invalid sidebar type</strong>
+            {sidebarContent}
+          </>
+        );
     }
   };
 

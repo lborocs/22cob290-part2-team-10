@@ -10,6 +10,9 @@ import styles from '~/styles/ProjectsList.module.css';
 
 // TODO: search bar
 
+// TODO: update styling
+// TODO: style scrollbar
+
 export default function ProjectsList() {
   const router = useRouter();
 

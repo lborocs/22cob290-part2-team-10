@@ -4,9 +4,11 @@ import ToastContainer from 'react-bootstrap/ToastContainer';
 
 import RoundedRect from '~/components/RoundedRect';
 
-export default function SignInToast({ showModal }: {
+export type SignInToastProps = {
   showModal: boolean
-}) {
+};
+
+export default function SignInToast({ showModal }: SignInToastProps) {
   const [show, setShow] = useState(showModal);
 
   return (

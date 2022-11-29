@@ -1,9 +1,11 @@
 import type { Task } from '~/types';
 
-// TODO: React Bootstrap Card
-export default function Task({ task }: {
+export type TaskProps = {
   task: Task
-}) {
+};
+
+// TODO: React Bootstrap Card
+export default function Task({ task }: TaskProps) {
   const { title, description, tags, assignee } = task;
   return (
     <div className="d-flex flex-column">

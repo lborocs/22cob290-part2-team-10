@@ -2,11 +2,11 @@ import { forwardRef } from 'react';
 import Button, { type ButtonProps } from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 
-type LoadingButtonProps = ButtonProps & {
+export interface LoadingButtonProps extends ButtonProps {
   isLoading: boolean
   loadingContent?: React.ReactNode
   children: React.ReactNode
-};
+}
 
 export default forwardRef(function LoadingButton({
   isLoading,
