@@ -1,15 +1,13 @@
 import type { GetServerSidePropsContext } from 'next';
 import { unstable_getServerSession } from 'next-auth/next';
-import { useStore } from 'zustand';
 
-import { useUserStore } from '~/store/userStore';
+import useUserStore from '~/store/userStore';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { ssrGetUserInfo } from '~/server/utils';
 
 export default function ExamplePage() {
-  const userStore = useUserStore();
-  const [email, firstName, lastName] = useStore(userStore,
-    (state) => [state.user.email, state.user.firstName, state.user.lastName]
+  const [email, firstName, lastName] = useUserStore(
+    ({ user }) => [user.email, user.firstName, user.lastName]
   );
 
   return (
@@ -42,4 +40,3 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   };
 }
-

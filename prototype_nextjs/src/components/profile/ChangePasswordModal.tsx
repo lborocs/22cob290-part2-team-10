@@ -8,13 +8,12 @@ import axios from 'axios';
 import { Formik } from 'formik';
 import { withZodSchema } from 'formik-validator-zod';
 import { z } from 'zod';
-import { useStore } from 'zustand';
 
 import EmailField from '~/components/EmailField';
 import LoadingButton from '~/components/LoadingButton';
 import PasswordField from '~/components/PasswordField';
 import RoundedRect from '~/components/RoundedRect';
-import { useUserStore } from '~/store/userStore';
+import useUserStore from '~/store/userStore';
 import ChangePasswordSchema from '~/schemas/api/user/changePassword';
 import type { RequestSchema as ChangePwPayload, ResponseSchema as ChangePwResponse } from '~/pages/api/user/change-password';
 
@@ -31,8 +30,7 @@ export default function ChangePasswordModal({ show, onHide }: {
   const [pwChanged, setPwChanged] = useState(false);
   const [changingPw, setChangingPw] = useState(false);
 
-  const userStore = useUserStore();
-  const email = useStore(userStore, (state) => state.user.email);
+  const email = useUserStore((state) => state.user.email);
 
   const handleSubmit: React.ComponentProps<typeof Formik<ChangePwFormData>>['onSubmit']
     = async (values, { setFieldError }) => {

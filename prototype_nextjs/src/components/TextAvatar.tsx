@@ -1,7 +1,6 @@
 import { forwardRef, useEffect } from 'react';
-import { useStore } from 'zustand';
 
-import { useUserStore } from '~/store/userStore';
+import useUserStore from '~/store/userStore';
 
 import styles from '~/styles/TextAvatar.module.css';
 
@@ -44,9 +43,8 @@ export default forwardRef(function LoadingButton({
   size = '40px',
   ...props
 }: TextAvatarProps, ref: React.ForwardedRef<HTMLButtonElement>) {
-  const userStore = useUserStore();
-  const firstInitial = useStore(userStore, (state) => state.user.firstName[0].toUpperCase());
-  const lastInitial = useStore(userStore, (state) => state.user.lastName[0].toUpperCase());
+  const firstInitial = useUserStore((state) => state.user.firstName[0].toUpperCase());
+  const lastInitial = useUserStore((state) => state.user.lastName[0].toUpperCase());
 
   useEffect(() => {
     const textAvatar = getTextAvatarFromStore();
