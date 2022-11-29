@@ -14,7 +14,7 @@ import LoadingButton from '~/components/LoadingButton';
 import PasswordField from '~/components/PasswordField';
 import RoundedRect from '~/components/RoundedRect';
 import useUserStore from '~/store/userStore';
-import ChangePasswordSchema from '~/schemas/api/user/changePassword';
+import ChangePasswordSchema from '~/schemas/user/changePassword';
 import type { RequestSchema as ChangePwPayload, ResponseSchema as ChangePwResponse } from '~/pages/api/user/change-password';
 
 type ChangePwFormData = {

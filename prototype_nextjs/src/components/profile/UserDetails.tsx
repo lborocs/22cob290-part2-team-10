@@ -12,7 +12,7 @@ import { withZodSchema } from 'formik-validator-zod';
 import LoadingButton from '~/components/LoadingButton';
 import RoundedRect from '~/components/RoundedRect';
 import useUserStore from '~/store/userStore';
-import ChangeNameSchema from '~/schemas/api/user/changeName';
+import ChangeNameSchema from '~/schemas/user/changeName';
 import type { RequestSchema as ChangeNamePayload, ResponseSchema as ChangeNameResponse } from '~/pages/api/user/change-name';
 
 type DetailsFormData = {

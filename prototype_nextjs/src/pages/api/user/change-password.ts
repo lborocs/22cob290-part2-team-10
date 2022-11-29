@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { unstable_getServerSession } from 'next-auth/next';
 import type { z } from 'zod';
 
-import ChangePasswordSchema from '~/schemas/api/user/changePassword';
+import ChangePasswordSchema from '~/schemas/user/changePassword';
 import type { UnauthorisedResponse } from '~/types';
 import { authOptions, type SessionUser } from '~/pages/api/auth/[...nextauth]';
 import { changePassword, isCorrectPassword } from '~/server/store/users';

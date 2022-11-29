@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { unstable_getServerSession } from 'next-auth/next';
 import type { z } from 'zod';
 
-import ChangeNameSchema from '~/schemas/api/user/changeName';
+import ChangeNameSchema from '~/schemas/user/changeName';
 import type { UnauthorisedResponse } from '~/types';
 import { authOptions, type SessionUser } from '~/pages/api/auth/[...nextauth]';
 import { changeName } from '~/server/store/users';

@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { User } from 'next-auth';
+import type { z } from 'zod';
 
-import SignInSchema, { type SignInCredentials } from '~/schemas/signin';
+import SignInSchema from '~/schemas/user/signIn';
 // import type { User } from '~/types';
 import { getUserInfoByEmail, isCorrectPassword } from '~/server/store/users';
 
@@ -11,7 +12,7 @@ export enum ErrorReason {
   BAD_CREDENTIALS = 'BAD_CREDENTIALS',
 }
 
-export type RequestSchema = SignInCredentials;
+export type RequestSchema = z.infer<typeof SignInSchema>;
 
 type FailedResponse = {
   success: false

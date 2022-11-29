@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+/* common schemas */
+
 export const MIN_PASSWORD_LENGTH = 12;
 export const MAX_PASSWORD_LENGTH = 64;
 
@@ -11,12 +13,12 @@ export const SPECIAL_SYMBOL_REGEX = /(.*\W)/;
 
 // formik-validator-zod will show the error in order: last-defined -> first-defined
 
-export const emailSchema = z.string()
+export const EmailSchema = z.string()
   .endsWith('@make-it-all.co.uk', 'Invalid Make-It-All email')
   .email('Not an email')
   ;
 
-export const passwordSchema = z.string()
+export const PasswordSchema = z.string()
   .regex(SPECIAL_SYMBOL_REGEX, 'No special symbol')
   .regex(NUMBER_REGEX, 'No number')
   .regex(UPPERCASE_REGEX, 'No uppercase letter')
@@ -25,11 +27,10 @@ export const passwordSchema = z.string()
   .min(MIN_PASSWORD_LENGTH, 'Too short')
   ;
 
-const SignInSchema = z.object({
-  email: emailSchema,
-  password: passwordSchema,
-});
-
-export default SignInSchema;
-
-export type SignInCredentials = z.infer<typeof SignInSchema>;
+// TODO: max length?
+// name regex: https://stackoverflow.com/a/36733683
+export function nameSchema(name: string) {
+  return z.string()
+    .regex(/^[a-z]+$/i, `${name} is alphabetic only`)
+    .min(1, `${name} is required`);
+}

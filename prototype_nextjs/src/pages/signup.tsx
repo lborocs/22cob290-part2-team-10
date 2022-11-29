@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 
 import Layout from '~/components/Layout';
+import SignUpSchema from '~/schemas/user/signup'; // TODO: use
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 // TODO: SignupPage

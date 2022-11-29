@@ -39,6 +39,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
 
+  // TODO: nextauth pages
   pages: {
     signIn: '/',
     error: '/auth/error', // Error code passed in query string as ?error=
