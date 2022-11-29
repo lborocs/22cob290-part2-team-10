@@ -30,8 +30,14 @@ enum ChangeStatus {
 
 export default function UserDetails() {
   const userStore = useUserStore();
-  const { setFirstName, setLastName, user } = useStore(userStore);
-  const { fname, lname, email, role } = user;
+  const { setFirstName, setLastName, firstName, lastName, email, role } = useStore(userStore, (state) => ({
+    setFirstName: state.setFirstName,
+    setLastName: state.setLastName,
+    firstName: state.user.firstName,
+    lastName: state.user.lastName,
+    email: state.user.email,
+    role: state.user.role,
+  }));
 
   const [changeStatus, setChangeStatus] = useState(ChangeStatus.NOT_CHANGED);
 
@@ -64,8 +70,8 @@ export default function UserDetails() {
     <>
       <Formik
         initialValues={{
-          firstName: fname,
-          lastName: lname,
+          firstName,
+          lastName,
         }}
         validate={withZodSchema(ChangeNameSchema)}
         onSubmit={handleSubmit}

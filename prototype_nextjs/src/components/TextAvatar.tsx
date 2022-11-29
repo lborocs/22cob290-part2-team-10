@@ -45,8 +45,8 @@ export default forwardRef(function LoadingButton({
   ...props
 }: TextAvatarProps, ref: React.ForwardedRef<HTMLButtonElement>) {
   const userStore = useUserStore();
-  const firstInitial = useStore(userStore, (state) => state.user.fname[0].toUpperCase());
-  const lastInitial = useStore(userStore, (state) => state.user.lname[0].toUpperCase());
+  const firstInitial = useStore(userStore, (state) => state.user.firstName[0].toUpperCase());
+  const lastInitial = useStore(userStore, (state) => state.user.lastName[0].toUpperCase());
 
   useEffect(() => {
     const textAvatar = getTextAvatarFromStore();

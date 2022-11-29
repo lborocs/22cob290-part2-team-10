@@ -20,9 +20,7 @@ type FailedResponse = {
 
 export type ResponseSchema = FailedResponse | {
   success: true
-  user: User & {
-    name: string
-  }
+  user: User
 };
 
 export default async function handler(
@@ -64,8 +62,8 @@ export default async function handler(
     success: true,
     user: {
       ...userInfo,
-      name: `${userInfo.fname} ${userInfo.lname}`,
-      image: 'WHAT IS IMAGE FOR?????????????????????????????',
+      name: `${userInfo.firstName} ${userInfo.lastName}`, // we could just return null
+      image: 'WHAT IS IMAGE FOR?????????????????????????????', // we could just return null
     },
-  } as any);
+  });
 }

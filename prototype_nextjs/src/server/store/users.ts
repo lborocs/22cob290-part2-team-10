@@ -14,40 +14,40 @@ const testPassword = hashPassword('TestPassword123!');
 const users: Promise<User[]> = (async () => [
   {
     id: '30',
-    fname: 'Alice',
-    lname: 'Jane',
+    firstName: 'Alice',
+    lastName: 'Jane',
     email: 'alice@make-it-all.co.uk',
     password: await testPassword,
     role: Role.TEAM_MEMBER,
   },
   {
     id: '90',
-    fname: 'Jane',
-    lname: 'Doe',
+    firstName: 'Jane',
+    lastName: 'Doe',
     email: 'member@make-it-all.co.uk',
     password: await testPassword,
     role: Role.TEAM_MEMBER,
   },
   {
     id: '32',
-    fname: 'Matt',
-    lname: 'Smith',
+    firstName: 'Matt',
+    lastName: 'Smith',
     email: 'leader@make-it-all.co.uk',
     password: await testPassword,
     role: Role.TEAM_LEADER,
   },
   {
     id: '67',
-    fname: 'John',
-    lname: 'Smith',
+    firstName: 'John',
+    lastName: 'Smith',
     email: 'manager@make-it-all.co.uk',
     password: await testPassword,
     role: Role.MANAGER,
   },
   {
     id: '2',
-    fname: 'Bob',
-    lname: 'Skee',
+    firstName: 'Bob',
+    lastName: 'Skee',
     email: 'left@make-it-all.co.uk',
     password: await testPassword,
     role: Role.LEFT_COMPANY,
@@ -111,6 +111,6 @@ export async function changeName(id: string, firstName: string, lastName: string
 
   if (!user) return;
 
-  user.fname = firstName;
-  user.lname = lastName;
+  user.firstName = firstName;
+  user.lastName = lastName;
 }

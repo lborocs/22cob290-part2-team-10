@@ -20,8 +20,8 @@ export enum Role {
 // then we can use this
 export type User = {
   id: string // TODO: id might(probably?) be number
-  fname: string
-  lname: string
+  firstName: string
+  lastName: string
   email: string
   password: string
   role: Role
