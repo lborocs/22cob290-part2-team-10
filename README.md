@@ -357,6 +357,7 @@ TODO: ERM diagram (could make tables entity property tables to help plan ERM dia
 | [Bootstrap](https://getbootstrap.com/)                                  | 5.2           | CSS Framework                                          |
 | [React Boostrap](https://react-bootstrap.github.io/)                    | 2.6           | Bootstrap React components                             |
 | [React Boostrap Icons](https://github.com/ismamz/react-bootstrap-icons) | 1.10          | Bootstrap Icons React components                       |
+| [react-hot-toast](https://react-hot-toast.com/)                         | 2.4           | Toasts                                                 |
 | [Axios](https://axios-http.com/)                                        | 1.2           | HTTP client (use instead of the `fetch` API)           |
 | [zustand](https://github.com/pmndrs/zustand)                            | 4.1           | State management                                       |
 | [Prisma](https://www.prisma.io/)                                        | -             | Database ORM                                           |
