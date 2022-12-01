@@ -22,9 +22,11 @@ export default function App({
     }));
   }
 
+  const noAuth = Component.noAuth;
+
   return (
     <SessionProvider session={session}>
-      {Component.noauth ? (
+      {noAuth ? (
         <Component {...pageProps} />
       ) : (
         <Auth>

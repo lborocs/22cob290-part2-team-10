@@ -48,4 +48,4 @@ export default function ExamplesPage() {
   );
 }
 
-ExamplesPage.noauth = true;
+ExamplesPage.noAuth = true;
