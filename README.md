@@ -16,6 +16,7 @@
 - [Part 2 Plan (Next.JS)](#part-2-plan-nextjs)
   - [TODO (feedback from Part 1 presentation)](#todo-feedback-from-part-1-presentation)
   - [TODO (not from feedback)](#todo-not-from-feedback)
+  - [Architecture](#architecture)
   - [How it works](#how-it-works-1)
   - [How we need to code](#how-we-need-to-code)
     - [Knowing who is logged in](#knowing-who-is-logged-in)
@@ -23,7 +24,8 @@
     - [Layout/Sidebar](#layoutsidebar)
       - [Examples](#examples)
     - [Code Style](#code-style)
-      - [Imports](#imports)
+      - [Absolute Imports](#absolute-imports)
+      - [Import Order](#import-order)
   - [Pages](#pages-1)
   - [Database](#database)
     - [Entities](#entities)
@@ -134,6 +136,12 @@ https://cloud.google.com/nodejs/getting-started/getting-started-on-compute-engin
 - [ ] Decide what goes in manager dashboard sidebar
   - Same as every other page? (list of projects)
 
+### Architecture
+
+TODO
+
+Next.JS...
+
 ### How it works
 
 - Using [NextAuth.js](https://next-auth.js.org/getting-started/client#usesession) which creates a session (with a JWT storing the user's info)
@@ -210,7 +218,23 @@ Need to wrap your page's content in a `Layout` component
   - **Make sure your editor/IDE has ESLint support enabled, e.g. VSCode has the ESLint extension**
   - This is important because we're being marked on the quality of our code
 
-##### Imports
+##### Absolute Imports
+
+**Always** use absolute imports. It has been setup in the `tsconfig` to use a custom
+[path](https://www.typescriptlang.org/tsconfig#paths) `~` with `/src` as the baseUrl.
+E.g. to import the default export of `/src/components/ExampleComponent.ts` from _anywhere_, you would use
+
+```ts
+import ExampleComponent from '~/src/components/ExampleComponent';
+```
+
+E.g. to import `/public/exampleImage.png`:
+
+```ts
+import ExampleImage from '~/../public/exampleImage.png';
+```
+
+##### Import Order
 
 Imports should be in the order ([example](prototype_nextjs/src/pages/profile.tsx)):
 
@@ -322,23 +346,24 @@ TODO: ERM diagram (could make tables entity property tables to help plan ERM dia
 
 ### Libraries
 
-| Name                                                                    | Minor Version | Purpose                                     |
-|-------------------------------------------------------------------------|---------------|---------------------------------------------|
-| [TypeScript](https://www.typescriptlang.org/)                           | 4.9           | Programming language                        |
-| [ESLint](https://eslint.org/)                                           | 8.28          | Static code analysis                        |
-| [React](https://reactjs.org/)                                           | 18.2          | UI library                                  |
-| [Next.Js](https://nextjs.org/)                                          | 13.0          | Full stack framework                        |
-| [NextAuth.js](https://next-auth.js.org/)                                | 4.17          | Authentication                              |
-| [sharp](https://nextjs.org/docs/messages/sharp-missing-in-production)   | 0.31          | Next.Js Image Optimization (not used by us) |
-| [Bootstrap](https://getbootstrap.com/)                                  | 5.2           | CSS Framework                               |
-| [React Boostrap](https://react-bootstrap.github.io/)                    | 2.6           | Bootstrap React components                  |
-| [React Boostrap Icons](https://github.com/ismamz/react-bootstrap-icons) | 1.10          | Bootstrap Icons React components            |
-| [Axios](https://axios-http.com/)                                        | 1.2           | HTTP client (use instead of the `fetch` API |
-| [zustand](https://github.com/pmndrs/zustand)                            | 4.1           | State management                            |
-| [Prisma](https://www.prisma.io/)                                        | -             | Database ORM                                |
-| [node.bcrypt.js](https://github.com/kelektiv/node.bcrypt.js)            | 5.1           | Hashing user passwords                      |
-| [react-markdown](https://github.com/remarkjs/react-markdown)?           | -             | Render markdown content in forum posts      |
-| [Zod](https://zod.dev/)                                                 | 3.19          | Object schema validation                    |
-| [Formik](https://formik.org/)                                           | 2.2           | Form validation                             |
-| [formik-validator-zod](https://github.com/Glazy/formik-validator-zod)   | 1.0           | Zod adapter for Formik                      |
-| ...                                                                     |               |                                             |
+| Name                                                                    | Minor Version | Purpose                                                |
+|-------------------------------------------------------------------------|---------------|--------------------------------------------------------|
+| [TypeScript](https://www.typescriptlang.org/)                           | 4.9           | Programming language                                   |
+| [ESLint](https://eslint.org/)                                           | 8.28          | Static code analysis                                   |
+| [React](https://reactjs.org/)                                           | 18.2          | UI library                                             |
+| [Next.Js](https://nextjs.org/)                                          | 13.0          | Full stack framework                                   |
+| [NextAuth.js](https://next-auth.js.org/)                                | 4.17          | Authentication                                         |
+| [sharp](https://nextjs.org/docs/messages/sharp-missing-in-production)   | 0.31          | Next.Js Image Optimization (not used explicitly by us) |
+| [Bootstrap](https://getbootstrap.com/)                                  | 5.2           | CSS Framework                                          |
+| [React Boostrap](https://react-bootstrap.github.io/)                    | 2.6           | Bootstrap React components                             |
+| [React Boostrap Icons](https://github.com/ismamz/react-bootstrap-icons) | 1.10          | Bootstrap Icons React components                       |
+| [Axios](https://axios-http.com/)                                        | 1.2           | HTTP client (use instead of the `fetch` API)           |
+| [zustand](https://github.com/pmndrs/zustand)                            | 4.1           | State management                                       |
+| [Prisma](https://www.prisma.io/)                                        | -             | Database ORM                                           |
+| [node.bcrypt.js](https://github.com/kelektiv/node.bcrypt.js)            | 5.1           | Hashing user passwords                                 |
+| [react-markdown](https://github.com/remarkjs/react-markdown)?           | -             | Render markdown content in forum posts                 |
+| [Zod](https://zod.dev/)                                                 | 3.19          | Object schema validation                               |
+| [Formik](https://formik.org/)                                           | 2.2           | Form validation                                        |
+| [formik-validator-zod](https://github.com/Glazy/formik-validator-zod)   | 1.0           | Zod adapter for Formik                                 |
+| [SWR](https://swr.vercel.app/)                                          | 4.18          | Client-side data fetching                              |
+| ...                                                                     |               |                                                        |
