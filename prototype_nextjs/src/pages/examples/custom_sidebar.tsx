@@ -1,19 +1,41 @@
 import type { GetServerSidePropsContext } from 'next';
 import { unstable_getServerSession } from 'next-auth/next';
+import create from 'zustand';
 
 import { SidebarType } from '~/components/Layout';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { ssrGetUserInfo } from '~/server/utils';
 
+type Store = {
+  name: string
+  setName: (name: string) => void
+};
+
+const useStore = create<Store>((set) => ({
+  name: 'Bob',
+  setName: (name) => set((state) => ({
+    name,
+  })),
+}));
+
 export default function ExamplePage() {
+  const { name, setName } = useStore();
+
   return (
     <main>
       <h1>Custom sidebar example</h1>
+      Enter a name:
+      <input
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
     </main>
   );
 }
 
 function Sidebar() {
+  const name = useStore((state) => state.name);
+
   return (
     <div>
       <span className="h3">Prem Table</span>
@@ -24,6 +46,10 @@ function Sidebar() {
         <li>{'Doesn\'t Matter'}</li>
         <li>{'Don\'t care'}</li>
       </ol>
+
+      <div className="mt-4">
+        name = {name}
+      </div>
     </div>
   );
 }
@@ -46,6 +72,4 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 }
 
 ExamplePage.sidebarType = SidebarType.CUSTOM;
-
-ExamplePage.sidebarContent = Sidebar;
-// ExamplePage.sidebarContent = <Sidebar />;
+ExamplePage.sidebarContent = <Sidebar />;
