@@ -1,16 +1,13 @@
-import { useState } from 'react';
 import Col from 'react-bootstrap/Col';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-import Toast from 'react-bootstrap/Toast';
-import ToastContainer from 'react-bootstrap/ToastContainer';
 import axios from 'axios';
 import { Formik } from 'formik';
 import { withZodSchema } from 'formik-validator-zod';
+import toast, { Toaster } from 'react-hot-toast';
 
 import LoadingButton from '~/components/LoadingButton';
-import RoundedRect from '~/components/RoundedRect';
 import useUserStore from '~/store/userStore';
 import ChangeNameSchema from '~/schemas/user/changeName';
 import type { RequestSchema as ChangeNamePayload, ResponseSchema as ChangeNameResponse } from '~/pages/api/user/change-name';
@@ -19,12 +16,6 @@ type DetailsFormData = {
   firstName: string
   lastName: string
 };
-
-enum ChangeStatus {
-  NOT_CHANGED,
-  SUCCEEDED,
-  FAILED,
-}
 
 export default function UserDetails() {
   const { setFirstName, setLastName, firstName, lastName, email, role } = useUserStore((state) => ({
@@ -35,8 +26,6 @@ export default function UserDetails() {
     email: state.user.email,
     role: state.user.role,
   }));
-
-  const [changeStatus, setChangeStatus] = useState(ChangeStatus.NOT_CHANGED);
 
   // TODO: add a glow to firstName & lastName to show it's editable?
   // see https://stackoverflow.com/a/14822905
@@ -51,17 +40,17 @@ export default function UserDetails() {
       const { data } = await axios.post<ChangeNameResponse>('/api/user/change-name', payload);
 
       if (data.success) {
-        setChangeStatus(ChangeStatus.SUCCEEDED);
-
         const { firstName, lastName } = values;
 
         setFirstName(firstName);
         setLastName(lastName);
 
         resetForm({ values });
-      } else { // shouldn't really happen
+
+        toast.success('Details updated.');
+      } else { // shouldn't happen
         console.log(data);
-        setChangeStatus(ChangeStatus.FAILED);
+        toast.error('Please try again.');
       }
     };
 
@@ -158,36 +147,9 @@ export default function UserDetails() {
         )}
       </Formik>
 
-      <ToastContainer className="p-3" position="bottom-end">
-        <Toast
-          show={changeStatus === ChangeStatus.SUCCEEDED}
-          onClose={() => setChangeStatus(ChangeStatus.NOT_CHANGED)}
-          autohide
-        >
-          <Toast.Header>
-            <RoundedRect fill="#198754" />
-            <strong className="me-auto">Success</strong>
-            <small>Now</small>
-          </Toast.Header>
-          <Toast.Body>
-            Details updated.
-          </Toast.Body>
-        </Toast>
-        <Toast
-          show={changeStatus === ChangeStatus.FAILED}
-          onClose={() => setChangeStatus(ChangeStatus.NOT_CHANGED)}
-          autohide
-        >
-          <Toast.Header>
-            <RoundedRect fill="#dc3545" />
-            <strong className="me-auto">Failed</strong>
-            <small>Now</small>
-          </Toast.Header>
-          <Toast.Body>
-            Please try again.
-          </Toast.Body>
-        </Toast>
-      </ToastContainer>
+      <Toaster
+        position="bottom-center"
+      />
     </>
   );
 }
