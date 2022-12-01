@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
@@ -12,28 +12,16 @@ import styles from '~/styles/Layout.module.css';
 import LayoutNav from './layout/LayoutNav';
 
 // gives flexibility to have more shared sidebars (not just projects)
-type SidebarType =
-  | 'custom'
-  | 'projects'
-  ;
+export enum SidebarType {
+  CUSTOM = 'custom',
+  PROJECTS = 'projects',
+}
 
-export type BaseLayoutProps = {
+export type LayoutProps = {
   sidebarType: SidebarType
-  sidebarContent?: React.ReactNode
+  sidebarContent?: React.ReactNode | React.ComponentType
   children: React.ReactNode
 };
-
-interface DefaultSidebarLayout extends BaseLayoutProps {
-  sidebarType: Exclude<SidebarType, 'custom'>
-  sidebarContent?: undefined
-}
-
-interface CustomSidebarLayout extends BaseLayoutProps {
-  sidebarType: 'custom'
-  sidebarContent: React.ReactNode
-}
-
-export type LayoutProps = DefaultSidebarLayout | CustomSidebarLayout;
 
 export default function Layout({
   sidebarType,
@@ -44,10 +32,16 @@ export default function Layout({
 
   const getSidebarContent = (): React.ReactNode => {
     switch (sidebarType) {
-      case 'custom':
-        return sidebarContent;
-      case 'projects':
+      case SidebarType.CUSTOM:
+        if (React.isValidElement(sidebarContent)) return sidebarContent;
+        else {
+          const SidebarContent = sidebarContent as React.ComponentType;
+          return <SidebarContent />;
+        }
+
+      case SidebarType.PROJECTS:
         return <ProjectsList />;
+
       default:
         return (
           <>
