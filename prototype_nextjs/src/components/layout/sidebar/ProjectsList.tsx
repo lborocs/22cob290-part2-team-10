@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import axios from 'axios';
+import useSWR from 'swr';
 
-import type { ProjectInfo } from '~/types';
-import type { ResponseSchema as GetProjectResponse } from '~/pages/api/projects/get-assigned-projects';
+import LoadingPage from '~/components/LoadingPage';
+import type { ResponseSchema as GetProjectsResponse } from '~/pages/api/projects/get-assigned-projects';
 
 import styles from '~/styles/ProjectsList.module.css';
 
@@ -13,24 +13,18 @@ import styles from '~/styles/ProjectsList.module.css';
 // TODO: update styling
 // TODO: style scrollbar
 
+const getAssignedProjects = async (url: string) => {
+  const { data } = await axios.get<GetProjectsResponse>(url);
+  return data;
+};
+
 export default function ProjectsList() {
   const router = useRouter();
 
-  const [projects, setProjects] = useState<ProjectInfo[]>([]);
+  const { data: projects, error } = useSWR('/api/projects/get-assigned-projects', getAssignedProjects);
 
-  useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
-
-    axios.get<GetProjectResponse>('/api/projects/get-assigned-projects', { signal })
-      .then(({ data }) => setProjects(data))
-      .catch((e) => console.error(e))
-      ;
-
-    return () => {
-      controller.abort();
-    };
-  }, []);
+  if (error) return null; // TODO: decide what to show on error
+  if (!projects) return <LoadingPage dark={false} />;
 
   let route: string | undefined;
   if (router.pathname === '/projects/[id]') {

@@ -23,6 +23,7 @@
 .sidebar-content {
     padding: 20px 0;
     /* border-bottom: 1px solid #47748b; */
+    height: 100%;
 }
 
 /* default hide sidebar */

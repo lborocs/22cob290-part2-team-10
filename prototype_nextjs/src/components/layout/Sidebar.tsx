@@ -9,6 +9,9 @@ export type SidebarProps = {
   content: React.ReactNode
 };
 
+// TODO: maintain showing sidebar state across pages
+// but idt that's possible without using Layout in _app
+
 export default function Sidebar({ show, content }: SidebarProps) {
   return (
     <aside className={`${styles.sidebar} ${show ? '' : styles.hidden}`} >
