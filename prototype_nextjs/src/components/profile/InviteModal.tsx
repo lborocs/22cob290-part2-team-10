@@ -29,7 +29,7 @@ export default function InviteEmployeeModal({ show, onHide }: {
     setCopyStatus(CopyStatus.NOT_COPIED);
   };
 
-  const fetchInviteUrl = (config: AxiosRequestConfig | undefined = undefined) => {
+  const fetchInviteUrl = (config?: AxiosRequestConfig) => {
     axios.get<InviteUrlResponse>('/api/user/get-invite-url', config)
       .then(({ data }) => setInviteUrl(data.inviteUrl))
       .catch((e) => console.error(e))
