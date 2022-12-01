@@ -2,6 +2,7 @@ import type { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 
+import type { PageSidebar } from '~/pages/_app';
 import { SidebarType } from '~/components/Layout';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { ssrGetUserInfo } from '~/server/utils';
@@ -34,4 +35,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   };
 }
 
-ExamplePage.sidebarType = SidebarType.PROJECTS;
+// we should just be able to do `ExamplePage.sidebar = { ... } satisfies PageSidebar`
+// but for some reason it gives error saying SidebarType isn't defined, idk why and cba
+
+const sidebar: PageSidebar = {
+  type: SidebarType.PROJECTS,
+};
+ExamplePage.sidebar = sidebar;

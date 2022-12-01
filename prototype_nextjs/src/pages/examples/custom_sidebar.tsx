@@ -2,6 +2,7 @@ import type { GetServerSidePropsContext } from 'next';
 import { unstable_getServerSession } from 'next-auth/next';
 import create from 'zustand';
 
+import type { PageSidebar } from '~/pages/_app';
 import { SidebarType } from '~/components/Layout';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { ssrGetUserInfo } from '~/server/utils';
@@ -13,9 +14,7 @@ type Store = {
 
 const useStore = create<Store>((set) => ({
   name: 'Bob',
-  setName: (name) => set((state) => ({
-    name,
-  })),
+  setName: (name) => set((state) => ({ name })),
 }));
 
 export default function ExamplePage() {
@@ -71,5 +70,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   };
 }
 
-ExamplePage.sidebarType = SidebarType.CUSTOM;
-ExamplePage.sidebarContent = <Sidebar />;
+const sidebar: PageSidebar = {
+  type: SidebarType.CUSTOM,
+  content: <Sidebar />,
+};
+ExamplePage.sidebar = sidebar;
