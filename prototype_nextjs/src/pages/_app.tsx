@@ -14,10 +14,28 @@ import '~/styles/globals.css';
 // https://fontawesome.com/v5/docs/web/use-with/react#getting-font-awesome-css-to-work
 config.autoAddCss = false;
 
+type BasePageSidebar = {
+  type: SidebarType
+  content?: React.ReactNode
+};
+
+interface CustomPageSidebar extends BasePageSidebar {
+  type: SidebarType.CUSTOM
+  content: React.ReactNode
+}
+
+interface DefaultPageSidebar extends BasePageSidebar {
+  type: Exclude<SidebarType, SidebarType.CUSTOM>
+  content?: undefined
+}
+
+export type PageSidebar = CustomPageSidebar | DefaultPageSidebar;
+
 type Page = {
   noAuth?: boolean
-  sidebarType?: SidebarType
-  sidebarContent?: React.ReactNode
+  // sidebarType?: SidebarType
+  // sidebarContent?: React.ReactNode
+  sidebar?: BasePageSidebar
 };
 
 interface MyAppProps extends AppProps {
@@ -35,7 +53,7 @@ export default function App({
     }));
   }
 
-  const { noAuth, sidebarType, sidebarContent } = Component;
+  const { noAuth, sidebar } = Component;
 
   return (
     <SessionProvider session={session}>
@@ -46,10 +64,10 @@ export default function App({
         <Component {...pageProps} />
       ) : (
         <Auth>
-          {sidebarType ? (
+          {sidebar ? (
             <Layout
-              sidebarType={sidebarType}
-              sidebarContent={sidebarContent}
+              sidebarType={sidebar.type}
+              sidebarContent={sidebar.content}
             >
               <Component {...pageProps} />
             </Layout>

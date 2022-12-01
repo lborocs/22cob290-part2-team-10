@@ -5,11 +5,11 @@ import Navbar from 'react-bootstrap/Navbar';
 import { faAlignJustify, faAlignLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import LayoutNav from '~/components/layout/LayoutNav';
 import Sidebar from '~/components/layout/Sidebar';
 import ProjectsList from '~/components/layout/sidebar/ProjectsList';
 
 import styles from '~/styles/Layout.module.css';
-import LayoutNav from './layout/LayoutNav';
 
 // gives flexibility to have more shared sidebars (not just projects)
 export enum SidebarType {
