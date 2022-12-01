@@ -12,11 +12,12 @@ export default forwardRef(function LoadingButton({
   isLoading,
   loadingContent,
   children,
+  disabled,
   ...props
 }: LoadingButtonProps, ref: React.ForwardedRef<HTMLButtonElement>) {
   return (
     <Button
-      disabled={props.disabled || isLoading}
+      disabled={disabled || isLoading}
       onClick={!isLoading ? props.onClick : undefined}
       ref={ref}
       {...props}
