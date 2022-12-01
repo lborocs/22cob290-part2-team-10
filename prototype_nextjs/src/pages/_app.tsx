@@ -1,4 +1,5 @@
 import type { AppProps } from 'next/app';
+import Head from 'next/head';
 import { SessionProvider, useSession } from 'next-auth/react';
 import { config } from '@fortawesome/fontawesome-svg-core';
 
@@ -13,25 +14,11 @@ import '~/styles/globals.css';
 // https://fontawesome.com/v5/docs/web/use-with/react#getting-font-awesome-css-to-work
 config.autoAddCss = false;
 
-type BasePage = {
+type Page = {
   noAuth?: boolean
   sidebarType?: SidebarType
   sidebarContent?: React.ReactNode
 };
-
-interface NoAuthPage extends BasePage {
-  noAuth: true
-  sidebarType: undefined
-  sidebarContent: undefined
-}
-
-interface LayoutedPage extends BasePage {
-  noAuth: undefined
-  sidebarType: SidebarType
-  sidebarContent: React.ReactNode
-}
-
-type Page = NoAuthPage | LayoutedPage;
 
 interface MyAppProps extends AppProps {
   Component: AppProps['Component'] & Page
@@ -52,16 +39,23 @@ export default function App({
 
   return (
     <SessionProvider session={session}>
+      <Head>
+        <title>Make-It-All</title>
+      </Head>
       {noAuth ? (
         <Component {...pageProps} />
       ) : (
         <Auth>
-          <Layout
-            sidebarType={sidebarType}
-            sidebarContent={sidebarContent}
-          >
+          {sidebarType ? (
+            <Layout
+              sidebarType={sidebarType}
+              sidebarContent={sidebarContent}
+            >
+              <Component {...pageProps} />
+            </Layout>
+          ) : (
             <Component {...pageProps} />
-          </Layout>
+          )}
         </Auth>
       )}
     </SessionProvider>
