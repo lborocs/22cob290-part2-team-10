@@ -19,7 +19,7 @@ export enum SidebarType {
 
 export type LayoutProps = {
   sidebarType: SidebarType
-  sidebarContent?: React.ReactNode | React.ComponentType
+  sidebarContent?: React.ReactNode
   children: React.ReactNode
 };
 
@@ -33,11 +33,7 @@ export default function Layout({
   const getSidebarContent = (): React.ReactNode => {
     switch (sidebarType) {
       case SidebarType.CUSTOM:
-        if (React.isValidElement(sidebarContent)) return sidebarContent;
-        else {
-          const SidebarContent = sidebarContent as React.ComponentType;
-          return <SidebarContent />;
-        }
+        return sidebarContent;
 
       case SidebarType.PROJECTS:
         return <ProjectsList />;
