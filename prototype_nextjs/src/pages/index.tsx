@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import type { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
@@ -8,11 +9,11 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { Formik } from 'formik';
 import { withZodSchema } from 'formik-validator-zod';
+import toast, { Toaster } from 'react-hot-toast';
 
 import EmailField from '~/components/EmailField';
 import PasswordField from '~/components/PasswordField';
 import LoadingButton from '~/components/LoadingButton';
-import SignInToast from '~/components/signin/SignInToast';
 import SignInSchema from '~/schemas/user/signIn';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
@@ -85,14 +86,30 @@ export default function SignInPage() {
       }
     };
 
+  useEffect(() => {
+    if (callbackUrl) {
+      toast.error((t) => (
+        <span onClick={() => toast.dismiss(t.id)}>
+          You need to sign in first.
+        </span>
+      ), {
+        id: 'needToSignIn',
+        duration: Infinity,
+      });
+    }
+  }, []);
+
   return (
     <>
       <Head>
         <title>Sign In - Make-It-All</title>
       </Head>
+      {callbackUrl ? (
+        <Toaster
+          position="top-center"
+        />
+      ) : null}
       <main className={`vh-100 d-flex align-items-center justify-content-center flex-column ${styles.main}`}>
-        {callbackUrl ? <SignInToast showModal={callbackUrl !== undefined} /> : null}
-
         <div>
           <Image
             src={makeItAllLogo}
