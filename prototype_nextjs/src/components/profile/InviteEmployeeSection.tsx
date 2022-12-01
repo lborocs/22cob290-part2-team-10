@@ -8,12 +8,12 @@ export default function InviteEmployeeSection() {
 
   return (
     <div>
-      <h3>Change Password</h3>
+      <h3>Invite Employee</h3>
       <Button
         variant="dark"
         onClick={() => setshowModal(true)}
       >
-        Change
+        Generate invite
       </Button>
 
       <InviteModal
