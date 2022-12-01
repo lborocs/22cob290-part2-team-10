@@ -12,8 +12,10 @@ import styles from '~/styles/Layout.module.css';
 import LayoutNav from './layout/LayoutNav';
 
 // gives flexibility to have more shared sidebars (not just projects)
-type SidebarType = 'custom'
-  | 'projects';
+type SidebarType =
+  | 'custom'
+  | 'projects'
+  ;
 
 export type BaseLayoutProps = {
   sidebarType: SidebarType

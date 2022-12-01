@@ -6,6 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
+import { Toaster } from 'react-hot-toast';
 
 import Layout from '~/components/Layout';
 import TextAvatarEditor from '~/components/profile/TextAvatarEditor';
@@ -22,6 +23,9 @@ export default function ProfilePage() {
       <Head>
         <title>Profile - Make-It-All</title>
       </Head>
+
+      <Toaster />
+
       <Layout sidebarType="projects">
         <main>
           <Container as="section">

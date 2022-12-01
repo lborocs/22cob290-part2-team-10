@@ -4,6 +4,10 @@
     background: var(--secondary-color);
     color: var(--sidebar-text);
     transition: all 0.3s;
+
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 .sidebar.hidden {
@@ -23,6 +27,7 @@
 .sidebar-content {
     padding: 20px 0;
     /* border-bottom: 1px solid #47748b; */
+    flex-grow: 1;
 }
 
 /* default hide sidebar */

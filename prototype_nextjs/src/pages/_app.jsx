@@ -40,7 +40,11 @@ function Auth({ children }) {
   const { status } = useSession({ required: true });
 
   if (status === 'loading') {
-    return <LoadingPage />;
+    return (
+      <div className="vh-100 vw-100">
+        <LoadingPage />
+      </div>
+    );
   }
 
   return children;

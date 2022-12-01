@@ -1,16 +1,13 @@
-import { useState } from 'react';
 import Col from 'react-bootstrap/Col';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-import Toast from 'react-bootstrap/Toast';
-import ToastContainer from 'react-bootstrap/ToastContainer';
 import axios from 'axios';
 import { Formik } from 'formik';
 import { withZodSchema } from 'formik-validator-zod';
+import toast from 'react-hot-toast';
 
-import LoadingButton from '~/components/LoadingButton';
-import RoundedRect from '~/components/RoundedRect';
 import useUserStore from '~/store/userStore';
 import ChangeNameSchema from '~/schemas/user/changeName';
 import type { RequestSchema as ChangeNamePayload, ResponseSchema as ChangeNameResponse } from '~/pages/api/user/change-name';
@@ -19,12 +16,6 @@ type DetailsFormData = {
   firstName: string
   lastName: string
 };
-
-enum ChangeStatus {
-  NOT_CHANGED,
-  SUCCEEDED,
-  FAILED,
-}
 
 export default function UserDetails() {
   const { setFirstName, setLastName, firstName, lastName, email, role } = useUserStore((state) => ({
@@ -36,8 +27,6 @@ export default function UserDetails() {
     role: state.user.role,
   }));
 
-  const [changeStatus, setChangeStatus] = useState(ChangeStatus.NOT_CHANGED);
-
   // TODO: add a glow to firstName & lastName to show it's editable?
   // see https://stackoverflow.com/a/14822905
 
@@ -48,160 +37,139 @@ export default function UserDetails() {
 
       const payload: ChangeNamePayload = values;
 
-      const { data } = await axios.post<ChangeNameResponse>('/api/user/change-name', payload);
+      const updateDetails = async () => {
+        const { data } = await axios.post<ChangeNameResponse>('/api/user/change-name', payload);
 
-      if (data.success) {
-        setChangeStatus(ChangeStatus.SUCCEEDED);
+        await new Promise((res) => setTimeout(res, 5000));
 
-        const { firstName, lastName } = values;
+        if (data.success) {
+          const { firstName, lastName } = values;
 
-        setFirstName(firstName);
-        setLastName(lastName);
+          setFirstName(firstName);
+          setLastName(lastName);
 
-        resetForm({ values });
-      } else { // shouldn't really happen
-        console.log(data);
-        setChangeStatus(ChangeStatus.FAILED);
-      }
+          resetForm({ values });
+        } else { // shouldn't happen
+          console.log(data);
+          throw new Error();
+        }
+      };
+
+      await toast.promise(updateDetails(), {
+        loading: 'Updating...',
+        error: 'Please try again.',
+        success: 'Details updated.',
+      }, {
+        position: 'bottom-center',
+      });
     };
 
-  const initialValues = {
-    firstName,
-    lastName,
-  };
-
   return (
-    <>
-      <Formik
-        initialValues={initialValues}
-        validate={withZodSchema(ChangeNameSchema)}
-        onSubmit={handleSubmit}
-      >
-        {({
-          values,
-          errors,
-          touched,
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          isSubmitting,
-        }) => (
-          <Form onSubmit={handleSubmit} noValidate>
-            <Row>
-              <Col md>
-                <FloatingLabel label="First name" className="mb-3" controlId="firstName">
-                  <Form.Control
-                    name="firstName"
-                    placeholder="Enter first name"
-                    value={values.firstName}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    isInvalid={touched.firstName && !!errors.firstName}
-                    required
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.firstName}
-                  </Form.Control.Feedback>
-                </FloatingLabel>
-              </Col>
-              <Col md>
-                <FloatingLabel label="Last name" className="mb-3" controlId="lastName">
-                  <Form.Control
-                    name="lastName"
-                    placeholder="Enter last name"
-                    value={values.lastName}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    isInvalid={touched.lastName && !!errors.lastName}
-                    required
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {errors.lastName}
-                  </Form.Control.Feedback>
-                </FloatingLabel>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <FloatingLabel label="Email" className="mb-3">
-                  <Form.Control
-                    value={email}
-                    readOnly
-                  />
-                </FloatingLabel>
-              </Col>
-            </Row>
-            <Row>
-              <Col>
-                <FloatingLabel label="Role" className="mb-3">
-                  <Form.Control
-                    value={role}
-                    readOnly
-                  />
-                </FloatingLabel>
-              </Col>
-            </Row>
-            <Row>
-              <div>
-                <LoadingButton
-                  type="submit"
-                  variant="success"
-                  isLoading={isSubmitting}
-                  loadingContent="Updating"
-                  disabled={(() => {
-                    // disable when:
-                    //  - no values have been modified (changing name wouldn't do anything because same name)
-                    //  - there are errors
-
-                    const modifiedKey
-                      = (Object.keys(initialValues) as Array<keyof typeof initialValues>)
-                        .find((key) => values[key] !== initialValues[key]);
-
-                    const aValueHasBeenModified = modifiedKey !== undefined;
-
-                    const noErrors = Object.keys(errors).length === 0;
-
-                    return !aValueHasBeenModified || !noErrors;
-                  })()}
-                >
-                  Update profile
-                </LoadingButton>
-              </div>
-            </Row>
-          </Form>
-        )}
-      </Formik>
-
-      <ToastContainer className="p-3" position="bottom-end">
-        <Toast
-          show={changeStatus === ChangeStatus.SUCCEEDED}
-          onClose={() => setChangeStatus(ChangeStatus.NOT_CHANGED)}
-          autohide
-        >
-          <Toast.Header>
-            <RoundedRect fill="#198754" />
-            <strong className="me-auto">Success</strong>
-            <small>Now</small>
-          </Toast.Header>
-          <Toast.Body>
-            Details updated.
-          </Toast.Body>
-        </Toast>
-        <Toast
-          show={changeStatus === ChangeStatus.FAILED}
-          onClose={() => setChangeStatus(ChangeStatus.NOT_CHANGED)}
-          autohide
-        >
-          <Toast.Header>
-            <RoundedRect fill="#dc3545" />
-            <strong className="me-auto">Failed</strong>
-            <small>Now</small>
-          </Toast.Header>
-          <Toast.Body>
-            Please try again.
-          </Toast.Body>
-        </Toast>
-      </ToastContainer>
-    </>
+    <Formik
+      initialValues={{
+        firstName,
+        lastName,
+      }}
+      validate={withZodSchema(ChangeNameSchema)}
+      onSubmit={handleSubmit}
+    >
+      {({
+        values,
+        errors,
+        touched,
+        handleChange,
+        handleBlur,
+        handleSubmit,
+        isValid,
+        dirty,
+      }) => (
+        <Form onSubmit={handleSubmit} noValidate>
+          <Row>
+            <Col md>
+              <FloatingLabel label="First name" className="mb-3" controlId="firstName">
+                <Form.Control
+                  name="firstName"
+                  placeholder="Enter first name"
+                  value={values.firstName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  isInvalid={touched.firstName && !!errors.firstName}
+                  required
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.firstName}
+                </Form.Control.Feedback>
+              </FloatingLabel>
+            </Col>
+            <Col md>
+              <FloatingLabel label="Last name" className="mb-3" controlId="lastName">
+                <Form.Control
+                  name="lastName"
+                  placeholder="Enter last name"
+                  value={values.lastName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  isInvalid={touched.lastName && !!errors.lastName}
+                  required
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.lastName}
+                </Form.Control.Feedback>
+              </FloatingLabel>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <FloatingLabel label="Email" className="mb-3">
+                <Form.Control
+                  value={email}
+                  readOnly
+                />
+              </FloatingLabel>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <FloatingLabel label="Role" className="mb-3">
+                <Form.Control
+                  value={role}
+                  readOnly
+                />
+              </FloatingLabel>
+            </Col>
+          </Row>
+          <Row>
+            <div>
+              <Button
+                type="submit"
+                variant="success"
+                disabled={!dirty || !isValid}
+              >
+                Update profile
+              </Button>
+            </div>
+          </Row>
+        </Form>
+      )}
+    </Formik>
   );
 }
+
+/*
+      // const { data } = await axios.post<ChangeNameResponse>('/api/user/change-name', payload);
+      // await new Promise((res) => setTimeout(res, 5000));
+
+      // if (data.success) {
+      //   const { firstName, lastName } = values;
+
+      //   setFirstName(firstName);
+      //   setLastName(lastName);
+
+      //   resetForm({ values });
+
+      //   toast.success('Details updated.');
+      // } else { // shouldn't happen
+      //   console.log(data);
+      //   toast.error('Please try again.');
+      // }
+*/
