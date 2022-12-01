@@ -5,7 +5,7 @@ import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
 import { Formik } from 'formik';
 import { withZodSchema } from 'formik-validator-zod';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { z } from 'zod';
 
 import EmailField from '~/components/EmailField';
@@ -47,7 +47,9 @@ export default function ChangePasswordSection() {
       const { data } = await axios.post<ChangePwResponse>('/api/user/change-password', payload);
 
       if (data.success) {
-        toast.success('Password changed.');
+        toast.success('Password changed.', {
+          position: 'bottom-center',
+        });
         onHide();
       } else {
         setFieldError('currentPassword', 'Incorrect password');
@@ -186,10 +188,6 @@ export default function ChangePasswordSection() {
           </LoadingButton>
         </Modal.Footer>
       </Modal>
-
-      <Toaster
-        position="bottom-center"
-      />
     </div>
   );
 }
