@@ -1,4 +1,5 @@
 import type { GetServerSidePropsContext } from 'next';
+import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 
 import useUserStore from '~/store/userStore';
@@ -12,7 +13,10 @@ export default function ExamplePage() {
 
   return (
     <main>
-      <div className="h2 mb-4">Using <code>userStore</code></div>
+      <Head>
+        <title>User Store - Examples</title>
+      </Head>
+      <div className="h2 mb-4">Using <code>useUserStore</code></div>
       <h1>Email: {email}</h1>
       <span>Name: {firstName} {lastName}</span>
     </main>

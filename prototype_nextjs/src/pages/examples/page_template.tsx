@@ -2,26 +2,22 @@ import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'nex
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 
-import Layout from '~/components/Layout';
+import { SidebarType } from '~/components/Layout';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { ssrGetUserInfo } from '~/server/utils';
 
-//! remove next line if you want props
+//! remove next line if you have any props
 // eslint-disable-next-line no-empty-pattern
-export default function Page({  }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Page({ }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
-    <>
+    <main>
       <Head>
-        <title>Page Template - Make-It-All</title>
+        <title>Page Template - Examples</title>
       </Head>
-      <Layout sidebarType="projects">
-        <main>
-          <h1>Page template</h1>
-          <span>~ok~</span>
-          <button>Example Button</button>
-        </main>
-      </Layout>
-    </>
+      <h1>Page template</h1>
+      <span>~ok~</span>
+      <button>Example Button</button>
+    </main>
   );
 }
 
@@ -41,3 +37,5 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   };
 }
+
+Page.sidebarType = SidebarType.PROJECTS;

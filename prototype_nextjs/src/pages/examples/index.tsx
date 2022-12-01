@@ -1,9 +1,14 @@
+import Head from 'next/head';
 import Link from 'next/link';
 import ListGroup from 'react-bootstrap/ListGroup';
 
 export default function ExamplesPage() {
   return (
     <main className="vh-100 d-flex align-items-center justify-content-center flex-column">
+      <Head>
+        <title>Examples</title>
+      </Head>
+
       <h1>Examples</h1>
       <small>{'Note: You need to be logged in (it\'ll redirect you)'}</small>
 
