@@ -69,7 +69,7 @@ Top-level PHP files acting as pages (using a custom `.htaccess` file to hide fil
 ### Pages
 
 | Page URL            | Owner      | Notes                                                                                |
-| ------------------- | ---------- | ------------------------------------------------------------------------------------ |
+|---------------------|------------|--------------------------------------------------------------------------------------|
 | `/`                 | Dara       | Can make `/` display home instead and if user isn't logged in, redirect to `/login`? |
 | `/home`             | Michael/Lu |                                                                                      |
 | `/projects`         | Michael/Lu | Displays a grid of assigned projects (only on updated version)                       |
@@ -166,7 +166,7 @@ Return your pages content as if it's a normal page, but add additional propertie
 To use our defined layout, you need to add additional property to the default export:
 
 | Prop                   | Type                                                     | Description                                  |
-| ---------------------- | -------------------------------------------------------- | -------------------------------------------- |
+|------------------------|----------------------------------------------------------|----------------------------------------------|
 | layout                 | `PageLayout`                                             | Basically `Layout`'s props                   |
 | layout.title           | `string?`                                                | Title to display in the centre of the navbar |
 | layout.sidebar         | `Sidebar`                                                |                                              |
@@ -285,7 +285,7 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 > Not sure about the forum pages that aren't yet templated
 
 | Page URL/Route                        | Owner | Status                | Completed             | Notes                                                                                                                                                              |
-| ------------------------------------- | ----- | --------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+|---------------------------------------|-------|-----------------------|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `/`                                   | Dara  | Complete              | <ul><li>[x] </li><ul> | Can make `/` display home instead and if user isn't logged in, redirect to `/signin`?                                                                              |
 | `/home`                               |       | Templated             |                       |                                                                                                                                                                    |
 | `/projects`                           |       | Templated             |                       | Display all projects                                                                                                                                               |
@@ -360,10 +360,8 @@ TODO: ERM diagram (could make tables entity property tables to help plan ERM dia
 
 ### Libraries
 
-<!-- TODO: add links to issues -->
-
 | Name                                                                    | Minor Version | Purpose                                                |
-| ----------------------------------------------------------------------- | ------------- | ------------------------------------------------------ |
+|-------------------------------------------------------------------------|---------------|--------------------------------------------------------|
 | [TypeScript](https://www.typescriptlang.org/)                           | 4.9           | Programming language                                   |
 | [ESLint](https://eslint.org/)                                           | 8.28          | Static code analysis                                   |
 | [React](https://reactjs.org/)                                           | 18.2          | UI library                                             |
@@ -376,15 +374,17 @@ TODO: ERM diagram (could make tables entity property tables to help plan ERM dia
 | [react-hot-toast](https://react-hot-toast.com/)                         | 2.4           | Toasts                                                 |
 | [Axios](https://axios-http.com/)                                        | 1.2           | HTTP client (use instead of the `fetch` API)           |
 | [zustand](https://github.com/pmndrs/zustand)                            | 4.1           | State management                                       |
-| [Prisma](https://www.prisma.io/)                                        | 4.7           | Database ORM                                           |
+| [Prisma](https://www.prisma.io/)                                        | 4.7           | Database ORM ([#12][iPrisma])                          |
 | [node.bcrypt.js](https://github.com/kelektiv/node.bcrypt.js)            | 5.1           | Hashing user passwords                                 |
 | [react-markdown](https://github.com/remarkjs/react-markdown)?           | -             | Render markdown content in forum posts                 |
-| [Zod](https://zod.dev/)                                                 | 3.19          | Object schema validation                               |
-| [Formik](https://formik.org/)                                           | 2.2           | Form validation                                        |
+| [Zod](https://zod.dev/)                                                 | 3.19          | Object schema validation ([#1][pFormikZod])            |
+| [Formik](https://formik.org/)                                           | 2.2           | Form validation ([#1][pFormikZod])                     |
 | [formik-validator-zod](https://github.com/Glazy/formik-validator-zod)   | 1.0           | Zod adapter for Formik                                 |
 | [SWR](https://swr.vercel.app/)                                          | 4.18          | Client-side data fetching                              |
-| [hashids](https://hashids.org/)                                         | 2.2           | Mask IDs in URLs ([#16][i16])                          |
+| [hashids](https://hashids.org/)                                         | 2.2           | Mask IDs in URLs ([#16][iHashids])                     |
 | ...                                                                     |               |                                                        |
 
 <!-- https://stackoverflow.com/a/42424860 -->
-[i16]: https://github.com/lborocs/22cob290-part2-team-10/issues/16
+[pFormikZod]: https://github.com/lborocs/22cob290-part2-team-10/pull/1
+[iPrisma]: https://github.com/lborocs/22cob290-part2-team-10/issues/12
+[iHashids]: https://github.com/lborocs/22cob290-part2-team-10/issues/16
