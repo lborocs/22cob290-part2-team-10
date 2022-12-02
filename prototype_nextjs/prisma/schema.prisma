@@ -13,11 +13,80 @@ datasource db {
   url      = "file:./dev.db"
 }
 
+// role?
 model User {
-  id    String @id @default(uuid())
-  email String @unique
+  id             String @id @default(uuid())
+  email          String @unique
+  hashedPassword String
+  name           String
 
   inviterId String?
   inviter   User?   @relation("Inviter", fields: [inviterId], references: [id])
   invited   User[]  @relation("Inviter")
+
+  avatar           TextAvatar?      @relation("TextAvatar")
+  managedProjects  Project[]        @relation("ProjectManager")
+  ledProjects      Project[]        @relation("ProjectLeader")
+  assignedProjects ProjectMembers[] @relation("ProjectMembers_member")
+}
+
+// TODO: user's todo list
+
+// TODO: not sure how to handle this
+model TextAvatar {
+  userId String @id
+  user   User   @relation("TextAvatar", fields: [userId], references: [id])
+
+  bg String @default("")
+  fg String @default("white")
+}
+
+model Project {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  managerId String
+  manager   User             @relation("ProjectManager", fields: [managerId], references: [id])
+  leaderId  String
+  leader    User             @relation("ProjectLeader", fields: [leaderId], references: [id])
+  members   ProjectMembers[] @relation("ProjectMembers_project")
+
+  tasks ProjectTask[] @relation("ProjectTasks")
+}
+
+model ProjectMembers {
+  projectId Int
+  project   Project @relation("ProjectMembers_project", fields: [projectId], references: [id])
+  memberId  String
+  member    User    @relation("ProjectMembers_member", fields: [memberId], references: [id])
+
+  @@id([projectId, memberId])
+}
+
+model ProjectTask {
+  id        Int     @id @default(autoincrement())
+  projectId Int
+  project   Project @relation("ProjectTasks", fields: [projectId], references: [id])
+
+  stage       String // enum
+  title       String
+  description String
+
+  tags        ProjectTaskTag[]  @relation("ProjectTaskTag")
+  projectTags ProjectTaskTags[]
+}
+
+model ProjectTaskTags {
+  id    Int           @id @default(autoincrement())
+  name  String
+  tasks ProjectTask[]
+}
+
+// TODO: decide which of above or this to use
+model ProjectTaskTag {
+  projectTaskId Int
+  projectTask   ProjectTask @relation("ProjectTaskTag", fields: [projectTaskId], references: [id])
+  tagName       String
+
+  @@id([projectTaskId, tagName])
 }
