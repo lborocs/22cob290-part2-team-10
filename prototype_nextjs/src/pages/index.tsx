@@ -185,7 +185,7 @@ export default function SignInPage() {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
 
-  // if logged in, redirect to home page
+  // if signed in, redirect to home page
   if (session && session.user) {
     const { callbackUrl } = context.query;
 

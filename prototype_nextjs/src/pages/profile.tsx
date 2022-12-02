@@ -64,7 +64,7 @@ export default function ProfilePage() {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
 
-  // not logged in, will be handled by _app
+  // not signed in, will be handled by _app
   // use auth's redirection because it provides callback URL
   if (!session || !session.user) {
     return { notFound: true };

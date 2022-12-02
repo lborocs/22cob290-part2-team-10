@@ -10,7 +10,7 @@ export default function ExamplesPage() {
       </Head>
 
       <h1>Examples</h1>
-      <small>{'Note: You need to be logged in (it\'ll redirect you)'}</small>
+      <small>{'Note: You need to be signed in (it\'ll redirect you)'}</small>
 
       <ListGroup as="ul">
         <ListGroup.Item as="li">

@@ -24,7 +24,7 @@ export default async function handler(
   const session = await unstable_getServerSession(req, res, authOptions);
 
   if (!session || !session.user) {
-    return res.status(401).json({ message: 'You must be logged in.' });
+    return res.status(401).json({ message: 'You must be signed in.' });
   }
 
   const safeParseResult = ChangeNameSchema.safeParse(req.body);
