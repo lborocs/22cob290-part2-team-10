@@ -40,8 +40,6 @@ export default function UserDetails() {
       const updateDetails = async () => {
         const { data } = await axios.post<ChangeNameResponse>('/api/user/change-name', payload);
 
-        await new Promise((res) => setTimeout(res, 5000));
-
         if (data.success) {
           const { firstName, lastName } = values;
 
