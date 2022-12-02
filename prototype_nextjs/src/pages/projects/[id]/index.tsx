@@ -3,6 +3,7 @@ import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'nex
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 
+import ErrorPage from '~/components/ErrorPage';
 import { SidebarType, type PageLayout } from '~/components/Layout';
 import KanbanBoard from '~/components/KanbanBoard';
 import { type ProjectInfo, Role } from '~/types';
@@ -12,6 +13,14 @@ import { getAssignedTasks, getProjectInfo } from '~/server/store/projects';
 
 // TODO: project page (Projects page from before)
 export default function ProjectPage({ projectInfo, tasks }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  if (!projectInfo) return (
+    <ErrorPage
+      title="Project does not exist."
+      buttonContent="Projects"
+      buttonUrl="/projects"
+    />
+  );
+
   const {
     name,
     manager,
@@ -50,15 +59,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   // no need to handle projectId being NaN because getProjectInfo should just return null if it's NaN
   const projectInfo = await getProjectInfo(parseInt(projectId));
 
-  // TODO?: should we show an error page instead or redirecting to `/projects` if the project doesn't exist?
-  if (!projectInfo) {
-    return {
-      redirect: {
-        destination: '/projects',
-        permanent: false,
-      },
-    };
-  }
+  if (!projectInfo) return {
+    props: {
+      session,
+      user,
+      projectInfo,
+    },
+  };
 
   // TODO: redirect/error page if this user isn't allowed to see this project
 

@@ -1,9 +1,9 @@
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
-import Error from 'next/error';
 import Head from 'next/head';
 import Link from 'next/link';
 import { unstable_getServerSession } from 'next-auth/next';
 
+import ErrorPage from '~/components/ErrorPage';
 import { SidebarType, type PageLayout } from '~/components/Layout';
 import ForumSidebar from '~/components/layout/sidebar/ForumSidebar';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
@@ -11,15 +11,14 @@ import { ssrGetUserInfo } from '~/server/utils';
 import { getPost } from '~/server/store/posts';
 
 // TODO: PostPage
-export default function PostPage({ post }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  if (!post) {
-    return (
-      <Error
-        statusCode={404}
-        title="Post does not exist"
-      />
-    );
-  }
+export default function PostPage({ user, post }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  if (!post) return (
+    <ErrorPage
+      title="Post does not exist"
+      buttonContent="Posts"
+      buttonUrl="/forum/posts"
+    />
+  );
 
   const {
     id,
@@ -29,6 +28,9 @@ export default function PostPage({ post }: InferGetServerSidePropsType<typeof ge
     content,
     topics,
   } = post;
+
+  // TODO: use ID instead
+  const userIsAuthor = user.email === author;
 
   const pageTitle = `${title} - Make-It-All`;
 
@@ -42,11 +44,13 @@ export default function PostPage({ post }: InferGetServerSidePropsType<typeof ge
       {/* TODO */}
       <h1>{title}</h1>
       <p>Posted: {date.toLocaleDateString()}</p>
-      <Link href={`/forum/posts/${id}/edit`}>
-        <button>
-          Edit
-        </button>
-      </Link>
+      {userIsAuthor && (
+        <Link href={`/forum/posts/${id}/edit`}>
+          <button>
+            Edit
+          </button>
+        </Link>
+      )}
     </main>
   );
 }
