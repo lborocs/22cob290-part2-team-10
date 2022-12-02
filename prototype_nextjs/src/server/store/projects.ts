@@ -10,6 +10,7 @@ const projects: ProjectInfo[] = range(1, numProjects).map((num) => ({
   leader: 'leader@make-it-all.co.uk',
   members: [
     'alice@make-it-all.co.uk',
+    'test@make-it-all.co.uk',
   ],
   tasks: {
     todo: [
@@ -39,12 +40,33 @@ const projects: ProjectInfo[] = range(1, numProjects).map((num) => ({
     completed: [
     ],
   },
-}));
+})).concat([
+  {
+    id: 30,
+    name: 'Alice should not see this',
+    manager: 'manager@make-it-all.co.uk',
+    leader: 'leader@make-it-all.co.uk',
+    members: [
+      'test@make-it-all.co.uk',
+    ],
+    tasks: {
+      todo: [
+      ],
+      in_progress: [
+      ],
+      code_review: [
+      ],
+      completed: [
+      ],
+    },
+  },
+])
 
 export async function getAllProjects(): Promise<ProjectInfo[]> {
   return [...projects];
 }
 
+// TODO: convert id to string? depends on prisma i guess
 export async function getProjectInfo(id: number): Promise<ProjectInfo | null> {
   return projects.find((project) => project.id === id) ?? null;
 }
@@ -70,4 +92,15 @@ export async function getAssignedTasks(email: string, project: ProjectInfo): Pro
   });
 
   return Object.fromEntries(assignedTasksEntries) as ProjectTasks;
+}
+
+// TODO: change to user id
+export async function userHasAccessToProject(email: string, projectId: number): Promise<boolean> {
+  const project = await getProjectInfo(projectId);
+
+  if (!project) return false;
+
+  return project.manager === email
+    || project.leader === email
+    || project.members.includes(email)
 }
