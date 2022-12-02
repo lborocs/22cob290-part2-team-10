@@ -42,10 +42,18 @@ const posts: Post[] = range(1, numPosts).map((num) => ({
   },
 ]);
 
+/**
+ * Returns all posts.
+ */
 export async function getAllPosts(): Promise<Post[]> {
   return posts;
 }
 
+/**
+ * Returns the post with the given `id`, or `null` is none exists.
+ *
+ * @param id
+ */
 export async function getPost(id: number): Promise<Post | null> {
   return posts.find((post) => post.id === id) ?? null;
 }

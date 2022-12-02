@@ -27,7 +27,7 @@ const projects: ProjectInfo[] = range(1, numProjects).map((num) => ({
     in_progress: [
       {
         title: 'In Progress',
-        description: 'Alice should see this',
+        description: 'Alice should ONLY see this',
         tags: ['tag1', 'tag2'],
         assignee: 'timothy',
         additional: [
@@ -62,16 +62,29 @@ const projects: ProjectInfo[] = range(1, numProjects).map((num) => ({
   },
 ])
 
+/**
+ * Returns all projects
+ */
 export async function getAllProjects(): Promise<ProjectInfo[]> {
-  return [...projects];
+  return projects;
 }
 
 // TODO: convert id to string? depends on prisma i guess
+/**
+ * Returns the project with the specified `id`, or `null` is none exists.
+ *
+ * @param id
+ */
 export async function getProjectInfo(id: number): Promise<ProjectInfo | null> {
   return projects.find((project) => project.id === id) ?? null;
 }
 
 // TODO: change to user id
+/**
+ * Returns the projects that the user with the provided `email` has been assigned to.
+ *
+ * @param email
+ */
 export async function getAssignedProjects(email: string): Promise<ProjectInfo[]> {
   return projects.filter((project) => project.members.includes(email)
     || project.manager === email
@@ -80,7 +93,16 @@ export async function getAssignedProjects(email: string): Promise<ProjectInfo[]>
 }
 
 // TODO: change to user id
-export async function getAssignedTasks(email: string, project: ProjectInfo): Promise<ProjectTasks> {
+/**
+ * Returns the tasks that the user with the provided `email` has can see in the project
+ * with the provided ID `projectId`
+ *
+ * @param email
+ * @param projectId
+ */
+export async function getAssignedTasks(email: string, projectId: number): Promise<ProjectTasks> {
+  const project = (await getProjectInfo(projectId))!;
+
   const { tasks } = project;
 
   const assignedTasksEntries = Object.entries(tasks).map(([taskType, tasks]) => {
@@ -95,6 +117,17 @@ export async function getAssignedTasks(email: string, project: ProjectInfo): Pro
 }
 
 // TODO: change to user id
+/**
+ * Returns `true` if the user with the provided `email` is one of:
+ * - the project manager
+ * - the project leader
+ * - a project member
+ *
+ * Otherwise `false`
+ *
+ * @param email
+ * @param projectId
+ */
 export async function userHasAccessToProject(email: string, projectId: number): Promise<boolean> {
   const project = await getProjectInfo(projectId);
 
