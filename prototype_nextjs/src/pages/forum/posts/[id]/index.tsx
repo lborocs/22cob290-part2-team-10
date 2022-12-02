@@ -1,11 +1,13 @@
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { unstable_getServerSession } from 'next-auth/next';
 
 import ErrorPage from '~/components/ErrorPage';
 import { SidebarType, type PageLayout } from '~/components/Layout';
 import ForumSidebar from '~/components/layout/sidebar/ForumSidebar';
+import hashids from '~/lib/hashids';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { ssrGetUserInfo } from '~/server/utils';
 import { getPost } from '~/server/store/posts';
@@ -19,6 +21,8 @@ export default function PostPage({ user, post }: InferGetServerSidePropsType<typ
       buttonUrl="/forum/posts"
     />
   );
+
+  const router = useRouter();
 
   const {
     id,
@@ -45,7 +49,7 @@ export default function PostPage({ user, post }: InferGetServerSidePropsType<typ
       <h1>{title}</h1>
       <p>Posted: {date.toLocaleDateString()}</p>
       {userIsAuthor && (
-        <Link href={`/forum/posts/${id}/edit`}>
+        <Link href={`${router.asPath}/edit`}>
           <button>
             Edit
           </button>
@@ -65,7 +69,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const user = await ssrGetUserInfo(session);
 
   const { id } = context.params!;
-  const post = await getPost(parseInt(id as string));
+  const decodedId = hashids.decode(id as string);
+
+  const postId = decodedId[0] as number;
+
+  const post = await getPost(postId);
 
   return {
     props: {

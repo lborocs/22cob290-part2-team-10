@@ -6,6 +6,7 @@ import { unstable_getServerSession } from 'next-auth/next';
 import ErrorPage from '~/components/ErrorPage';
 import { SidebarType, type PageLayout } from '~/components/Layout';
 import ForumSidebar from '~/components/layout/sidebar/ForumSidebar';
+import hashids from '~/lib/hashids';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { ssrGetUserInfo } from '~/server/utils';
 import { getPost } from '~/server/store/posts';
@@ -47,9 +48,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const user = await ssrGetUserInfo(session);
 
   const { id } = context.params!;
-  const post = await getPost(parseInt(id as string));
+  const decodedId = hashids.decode(id as string);
+
+  const postId = decodedId[0] as number;
+
+  const post = await getPost(postId);
 
   // only show this page is this user is the author
+  // TODO? or should we show error page?
   // TODO: use userId instead
   if (post?.author !== user.email) return {
     redirect: {

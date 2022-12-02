@@ -6,6 +6,7 @@ import { unstable_getServerSession } from 'next-auth/next';
 
 import { SidebarType, type PageLayout } from '~/components/Layout';
 import ForumSidebar from '~/components/layout/sidebar/ForumSidebar';
+import hashids from '~/lib/hashids';
 import type { Post } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { ssrGetUserInfo } from '~/server/utils';
@@ -45,7 +46,7 @@ function ForumPostPreview({ post }: { post: Post }) {
   } = post;
 
   return (
-    <Link href={`/forum/posts/${id}`}>
+    <Link href={`/forum/posts/${hashids.encode(id)}`}>
       <span className="h3">{title}</span>
     </Link>
   );
