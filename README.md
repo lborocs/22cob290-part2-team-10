@@ -26,6 +26,7 @@
       - [Absolute Imports](#absolute-imports)
       - [Import Order](#import-order)
   - [Pages](#pages-1)
+    - [Dynamic Routes](#dynamic-routes)
   - [Database](#database)
     - [Entities](#entities)
     - [User passwords](#user-passwords)
@@ -254,6 +255,7 @@ Imports should be in the order ([example](prototype_nextjs/src/pages/profile.tsx
 - [space]
 - Our code
   - `~/components` (e.g. `Layout` from `~/components/Layout`)
+  - `~/lib`
   - `~/store`
   - `~/schemas`
   - `~/types`
@@ -307,6 +309,12 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 > So we need to split up the current `/dashboard` functionality to have another page like staff overview -
 > it could be combined with `/staff_assignment`
 
+#### Dynamic Routes
+
+Use [hashids](https://hashids.org/) to mask IDs in URLs. Already done in:
+- `projects/[id]/*`
+- `/forum/posts/[id]/*`
+
 ### Database
 
 We will use [Prisma](https://github.com/prisma/prisma) as an ORM, so we have type safety + don't have to write SQL.
@@ -352,6 +360,8 @@ TODO: ERM diagram (could make tables entity property tables to help plan ERM dia
 
 ### Libraries
 
+<!-- TODO: add links to issues -->
+
 | Name                                                                    | Minor Version | Purpose                                                |
 |-------------------------------------------------------------------------|---------------|--------------------------------------------------------|
 | [TypeScript](https://www.typescriptlang.org/)                           | 4.9           | Programming language                                   |
@@ -373,4 +383,8 @@ TODO: ERM diagram (could make tables entity property tables to help plan ERM dia
 | [Formik](https://formik.org/)                                           | 2.2           | Form validation                                        |
 | [formik-validator-zod](https://github.com/Glazy/formik-validator-zod)   | 1.0           | Zod adapter for Formik                                 |
 | [SWR](https://swr.vercel.app/)                                          | 4.18          | Client-side data fetching                              |
+| [hashids](https://hashids.org/)                                         | 2.2           | Mask IDs in URLs ([#16][i16])                          |
 | ...                                                                     |               |                                                        |
+
+<!-- https://stackoverflow.com/a/42424860 -->
+[i16]: https://github.com/lborocs/22cob290-part2-team-10/issues/16
