@@ -44,6 +44,7 @@ export interface LayoutProps extends PageLayout {
   children: React.ReactNode
 }
 
+// TODO: center brand horizontally
 export default function Layout({
   title,
   sidebar,
@@ -98,10 +99,6 @@ export default function Layout({
 
               <Navbar.Brand>
                 {title}
-                {/*
-                  TODO: get rid of brand/have prop that is something like pageTitle
-                  TODO: center brand horizontally
-                */}
               </Navbar.Brand>
 
               <Navbar.Toggle

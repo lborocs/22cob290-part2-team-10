@@ -42,8 +42,15 @@ export default function ExamplesPage() {
           <section>
             <h2>Sidebar</h2>
             <ListGroup as="ol" numbered>
-              <ListGroup.Item as="li"><Link href="/examples/projects_sidebar">Project sidebar</Link></ListGroup.Item>
-              <ListGroup.Item as="li"><Link href="/examples/custom_sidebar">Custom sidebar</Link></ListGroup.Item>
+              <ListGroup.Item as="li">
+                <Link href="/examples/projects_sidebar">Projects sidebar</Link>
+              </ListGroup.Item>
+              <ListGroup.Item as="li">
+                <Link href="/examples/custom_sidebar">Custom sidebar</Link>
+              </ListGroup.Item>
+              <ListGroup.Item as="li">
+                <Link href="/examples/no_sidebar">No sidebar (with title)</Link>
+              </ListGroup.Item>
             </ListGroup>
           </section>
         </ListGroup.Item>

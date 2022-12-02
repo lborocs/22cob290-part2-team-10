@@ -2,7 +2,7 @@ import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'nex
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 
-import { SidebarType } from '~/components/Layout';
+import { SidebarType, type PageLayout } from '~/components/Layout';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { ssrGetUserInfo } from '~/server/utils';
 
@@ -14,6 +14,7 @@ export default function Page({ }: InferGetServerSidePropsType<typeof getServerSi
       <Head>
         <title>Page Template - Examples</title>
       </Head>
+
       <h1>Page template</h1>
       <span>~ok~</span>
       <button>Example Button</button>
@@ -38,4 +39,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   };
 }
 
-Page.sidebarType = SidebarType.PROJECTS;
+const layout: PageLayout = {
+  sidebar: {
+    type: SidebarType.PROJECTS,
+  },
+};
+Page.layout = layout;
