@@ -1,6 +1,5 @@
 # Team 10 Group Project <!-- omit in toc -->
 
-
 [![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-f4981d0f882b2a3f0472912d15f9806d57e124e0fc890972558857b51b24a6f9.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=9416931)
 
 ## Table of Contents <!-- omit in toc -->
@@ -165,20 +164,13 @@ Return your pages content as if it's a normal page, but add additional propertie
 
 To use our defined layout, you need to add additional property to the default export:
 
-| Prop                   | Type                                                     | Desc?                                        |
+| Prop                   | Type                                                     | Description                                  |
 |------------------------|----------------------------------------------------------|----------------------------------------------|
 | layout                 | `PageLayout`                                             | Basically `Layout`'s props                   |
 | layout.title           | `string?`                                                | Title to display in the centre of the navbar |
 | layout.sidebar         | `Sidebar`                                                |                                              |
 | layout.sidebar.type    | `SidebarType`                                            |                                              |
 | layout.sidebar.content | `ReactNode?` (only needed if `sidebarType` === `CUSTOM`) |                                              |
-
-See ex
-
-| Prop           | Type                                                        | How to get it                                                                                                   |
-|----------------|-------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
-| sidebarType    | [`SidebarType`](prototype_nextjs/src/components/Layout.tsx) | Use your brain                                                                                                  |
-| sidebarContent | `ReactNode` (only needed if `sidebarType` === `CUSTOM`)     | Create a custom component (see [custom sidebar example](prototype_nextjs/src/pages/examples/custom_sidebar.tsx) |
 
 - Most pages will have a `layout.sidebar.type` of `PROJECTS`
   - e.g. main forum page should be `CUSTOM`
@@ -254,15 +246,15 @@ Imports should be in the order ([example](prototype_nextjs/src/pages/profile.tsx
   - _Any other external libraries (e.g. `axios`)_
 - [space]
 - Our code
-  - Components (e.g. `Layout` from `~/components/Layout`)
+  - `~/components` (e.g. `Layout` from `~/components/Layout`)
   - `~/store`
   - `~/schemas`
   - `~/types`
   - `~/utils`
   - _Any other client-side things_
-  - `~/pages/api` **in order they're used in when thinking about a page's entire life cycle (SSR->client)**
+  - `~/pages/api` **in order that they're used in when thinking about a page's life cycle (SSR->client)**
     - e.g. `import { authOptions } from '~/pages/api/auth/[...nextauth]'` is always first because it used in the first line of `getServerSideProps`
-  - `~/server` **in order they're used in when thinking about a page's entire life cycle (SSR->client)**
+  - `~/server` **in order that they're used in when thinking about a page's life cycle (SSR->client)**
   - _Anything else_
 - [space]
 - Other
