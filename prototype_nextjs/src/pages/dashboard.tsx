@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { unstable_getServerSession } from 'next-auth/next';
 
 import { SidebarType, type PageLayout } from '~/components/Layout';
+import hashids from '~/lib/hashids';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { ssrGetUserInfo } from '~/server/utils';
 import { getAssignedProjects } from '~/server/store/projects';
@@ -22,7 +23,7 @@ export default function DashboardPage({ projects }: InferGetServerSidePropsType<
       <div>
         <ul>
           {projects.map((project, index) => (
-            <Link key={index} href={`/projects/${project.id}/overview`}>
+            <Link key={index} href={`/projects/${hashids.encode(project.id)}/overview`}>
               <li>
                 {project.name}
               </li>

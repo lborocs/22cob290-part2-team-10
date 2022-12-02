@@ -6,6 +6,7 @@ import { unstable_getServerSession } from 'next-auth/next';
 
 import { SidebarType, type PageLayout } from '~/components/Layout';
 import ForumSidebar from '~/components/layout/sidebar/ForumSidebar';
+import hashids from '~/lib/hashids';
 import type { Post } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { ssrGetUserInfo } from '~/server/utils';
@@ -19,13 +20,11 @@ export default function ForumPage({ posts }: InferGetServerSidePropsType<typeof 
         <title>Forum - Make-It-All</title>
       </Head>
       {/* TODO */}
-      <ul className="d-flex flex-column">
+      <div className="d-flex flex-column">
         {posts.map((post, index) => (
-          <li key={index}>
-            <ForumPostPreview post={post} />
-          </li>
+          <ForumPostPreview key={index} post={post} />
         ))}
-      </ul>
+      </div>
     </main>
   );
 }
@@ -45,9 +44,11 @@ function ForumPostPreview({ post }: { post: Post }) {
   } = post;
 
   return (
-    <Link href={`/forum/posts/${id}`}>
-      <span className="h3">{title}</span>
-    </Link>
+    <div className="mb-3">
+      <Link href={`/forum/posts/${hashids.encode(id)}`}>
+        <span className="h3">{title}</span>
+      </Link>
+    </div>
   );
 }
 

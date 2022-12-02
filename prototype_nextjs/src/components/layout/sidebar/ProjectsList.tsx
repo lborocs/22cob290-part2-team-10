@@ -4,6 +4,7 @@ import axios from 'axios';
 import useSWR from 'swr';
 
 import LoadingPage from '~/components/LoadingPage';
+import hashids from '~/lib/hashids';
 import type { ResponseSchema as GetProjectsResponse } from '~/pages/api/projects/get-assigned-projects';
 
 import styles from '~/styles/layout/sidebar/ProjectsList.module.css';
@@ -37,7 +38,7 @@ export default function ProjectsList() {
       <p className={styles.title}>Assigned Projects:</p>
       <div className={`list-unstyled ${styles['projects-list']}`}>
         {projects.map((project, index) => {
-          const url = `/projects/${project.id}`;
+          const url = `/projects/${hashids.encode(project.id)}`;
           const active = route === url;
 
           return (

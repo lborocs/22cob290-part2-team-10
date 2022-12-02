@@ -88,7 +88,7 @@ export default function SignInPage() {
 
   useEffect(() => {
     if (callbackUrl) {
-      toast.error((t) => (
+      const toastId = toast.error((t) => (
         <span onClick={() => toast.dismiss(t.id)}>
           You need to sign in first.
         </span>
@@ -96,6 +96,10 @@ export default function SignInPage() {
         id: 'needToSignIn',
         duration: Infinity,
       });
+
+      return () => {
+        toast.remove(toastId);
+      };
     }
   }, []);
 

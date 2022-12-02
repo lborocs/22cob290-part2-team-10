@@ -5,6 +5,7 @@ import { unstable_getServerSession } from 'next-auth/next';
 
 import ErrorPage from '~/components/ErrorPage';
 import { SidebarType, type PageLayout } from '~/components/Layout';
+import hashids from '~/lib/hashids';
 import { Role } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { ssrGetUserInfo } from '~/server/utils';
@@ -72,10 +73,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   const { id } = context.params!;
-  const projectId = id as string;
+  const decodedId = hashids.decode(id as string);
 
-  // no need to handle projectId being NaN because getProjectInfo should just return null if it's NaN
-  const projectInfo = await getProjectInfo(parseInt(projectId));
+  const projectId = decodedId[0] as number; // | undefined
+
+  // no need to handle projectId being undefined because because getProjectInfo should just return null
+  const projectInfo = await getProjectInfo(projectId);
 
   return {
     props: {
