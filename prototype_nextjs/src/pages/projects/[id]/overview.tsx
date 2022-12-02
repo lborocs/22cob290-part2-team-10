@@ -3,7 +3,7 @@ import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'nex
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 
-import Layout from '~/components/Layout';
+import { SidebarType, type PageLayout } from '~/components/Layout';
 import { Role } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { ssrGetUserInfo } from '~/server/utils';
@@ -18,26 +18,27 @@ export default function ProjectOverviewPage({ projectInfo }: InferGetServerSideP
     members,
   } = projectInfo;
 
-  const pageTitle = `${name} - Make-It-All`;
+  const pageTitle = `Overview ${name} - Make-It-All`;
 
   return (
-    <>
+    <main>
       <Head>
         <title>{pageTitle}</title>
       </Head>
-      <Layout sidebarType="projects">
-        <main>
-          <h1>{name}</h1>
-          <div className="d-flex flex-column">
-            <p>Manager: {manager}</p>
-            <p>Leader: {leader}</p>
-            <p>
-              Members: {members.map((member, index) => <span key={index}>{member}</span>)}
-            </p>
-          </div>
-        </main>
-      </Layout>
-    </>
+      <main>
+        <h1>{name}</h1>
+        <div className="d-flex flex-column">
+          <p>Manager: {manager}</p>
+          <p>Leader: {leader}</p>
+          <section>
+            <p>Members:</p>
+            {members.map((member, index) => (
+              <p key={index}>{member}</p>
+            ))}
+          </section>
+        </div>
+      </main>
+    </main>
   );
 }
 
@@ -85,3 +86,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   };
 }
+
+const layout: PageLayout = {
+  sidebar: {
+    type: SidebarType.PROJECTS,
+  },
+};
+ProjectOverviewPage.layout = layout;

@@ -3,10 +3,10 @@ import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'nex
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 
-import Layout from '~/components/Layout';
+import { SidebarType, type PageLayout } from '~/components/Layout';
 import KanbanBoard from '~/components/KanbanBoard';
-import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { type ProjectInfo, Role } from '~/types';
+import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { ssrGetUserInfo } from '~/server/utils';
 import { getAssignedTasks, getProjectInfo } from '~/server/store/projects';
 
@@ -22,19 +22,15 @@ export default function ProjectPage({ projectInfo, tasks }: InferGetServerSidePr
   const pageTitle = `${name} - Make-It-All`;
 
   return (
-    <>
+    <main>
       <Head>
         <title>{pageTitle}</title>
       </Head>
-      <Layout sidebarType="projects">
-        <main>
-          <h1>{name}</h1>
-          <KanbanBoard
-            tasks={tasks}
-          />
-        </main>
-      </Layout>
-    </>
+      <h1>{name}</h1>
+      <KanbanBoard
+        tasks={tasks}
+      />
+    </main>
   );
 }
 
@@ -80,3 +76,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   };
 }
+
+const layout: PageLayout = {
+  sidebar: {
+    type: SidebarType.PROJECTS,
+  },
+};
+ProjectPage.layout = layout;

@@ -2,24 +2,20 @@ import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'nex
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 
-import Layout from '~/components/Layout';
+import { SidebarType, type PageLayout } from '~/components/Layout';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { ssrGetUserInfo } from '~/server/utils';
 
 // TODO: ProjectsPage
-export default function ProjectsPage({  }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function ProjectsPage({ }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 
   return (
-    <>
+    <main>
       <Head>
         <title>Projects - Make-It-All</title>
       </Head>
-      <Layout sidebarType="projects">
-        <main>
-          {/* TODO */}
-        </main>
-      </Layout>
-    </>
+      {/* TODO */}
+    </main>
   );
 }
 
@@ -39,3 +35,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   };
 }
+
+const layout: PageLayout = {
+  sidebar: {
+    type: SidebarType.PROJECTS,
+  },
+};
+ProjectsPage.layout = layout;
