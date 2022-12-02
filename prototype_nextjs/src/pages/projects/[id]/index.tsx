@@ -54,10 +54,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { email } = user;
 
   const { id } = context.params!;
-  const projectId = id as string;
+  const projectId = parseInt(id as string);
 
   // no need to handle projectId being NaN because getProjectInfo should just return null if it's NaN
-  const projectInfo = await getProjectInfo(parseInt(projectId));
+  const projectInfo = await getProjectInfo(projectId);
 
   if (!projectInfo) return {
     props: {
@@ -71,7 +71,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   // only show the tasks that the user is allowed to see if they're a team member
   const tasks = user.role === Role.TEAM_MEMBER
-    ? await getAssignedTasks(email, projectInfo)
+    ? await getAssignedTasks(email, projectId)
     : projectInfo.tasks;
 
   return {
