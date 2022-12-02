@@ -3,6 +3,7 @@ import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'nex
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 
+import ErrorPage from '~/components/ErrorPage';
 import { SidebarType, type PageLayout } from '~/components/Layout';
 import { Role } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
@@ -11,6 +12,14 @@ import { getProjectInfo } from '~/server/store/projects';
 
 // TODO: ProjectOverviewPage
 export default function ProjectOverviewPage({ projectInfo }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  if (!projectInfo) return (
+    <ErrorPage
+      title="Project does not exist."
+      buttonContent="Projects"
+      buttonUrl="/projects"
+    />
+  );
+
   const {
     name,
     manager,
@@ -67,16 +76,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   // no need to handle projectId being NaN because getProjectInfo should just return null if it's NaN
   const projectInfo = await getProjectInfo(parseInt(projectId));
-
-  // TODO?: should we show an error page instead or redirecting to `/projects` if the project doesn't exist?
-  if (!projectInfo) {
-    return {
-      redirect: {
-        destination: '/projects',
-        permanent: false,
-      },
-    };
-  }
 
   return {
     props: {

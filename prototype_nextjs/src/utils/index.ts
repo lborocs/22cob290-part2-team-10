@@ -33,7 +33,7 @@ export function copyToClipboard(content: string): Promise<void> {
 /**
  * @param start The start number (inclusive)
  * @param end The end number (inclusive)
- * @returns list of numbers from `start` to `end`
+ * @returns List of numbers from `start` to `end`
  *
  * [Source](https://stackoverflow.com/a/38213213)
  */

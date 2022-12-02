@@ -31,12 +31,29 @@ const posts: Post[] = range(1, numPosts).map((num) => ({
   title: `Post ${num}`,
   content: `${num} squared = ${num * num}`,
   topics: range(1, num).map((n) => `Topic ${n}`),
-}));
+})).concat([
+  {
+    id: 70,
+    author: 'manager@make-it-all.co.uk',
+    datePosted: randomTimeMs(),
+    title: 'Only manager can edit this',
+    content: 'eeee',
+    topics: [],
+  },
+]);
 
+/**
+ * Returns all posts.
+ */
 export async function getAllPosts(): Promise<Post[]> {
   return posts;
 }
 
+/**
+ * Returns the post with the given `id`, or `null` is none exists.
+ *
+ * @param id
+ */
 export async function getPost(id: number): Promise<Post | null> {
   return posts.find((post) => post.id === id) ?? null;
 }

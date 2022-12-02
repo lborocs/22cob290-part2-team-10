@@ -19,9 +19,13 @@ export default function ForumPage({ posts }: InferGetServerSidePropsType<typeof 
         <title>Forum - Make-It-All</title>
       </Head>
       {/* TODO */}
-      {posts.map((post, index) => (
-        <ForumPostPreview key={index} post={post} />
-      ))}
+      <ul className="d-flex flex-column">
+        {posts.map((post, index) => (
+          <li key={index}>
+            <ForumPostPreview post={post} />
+          </li>
+        ))}
+      </ul>
     </main>
   );
 }

@@ -23,7 +23,7 @@ export default function SignupPage({ token }: InferGetServerSidePropsType<typeof
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
 
-  // if logged in, redirect to home page
+  // if signed in, redirect to home page
   if (session && session.user) {
     return {
       redirect: {

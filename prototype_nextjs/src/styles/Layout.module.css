@@ -29,4 +29,8 @@
     width: 100%;
     padding: 20px;
     min-height: 100vh;
+
+    /* pages can use flex-grow-1 to take rest of space */
+    display: flex;
+    flex-direction: column;
 }

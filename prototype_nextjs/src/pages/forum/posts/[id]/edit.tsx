@@ -3,6 +3,7 @@ import Error from 'next/error';
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 
+import ErrorPage from '~/components/ErrorPage';
 import { SidebarType, type PageLayout } from '~/components/Layout';
 import ForumSidebar from '~/components/layout/sidebar/ForumSidebar';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
@@ -11,14 +12,13 @@ import { getPost } from '~/server/store/posts';
 
 // TODO: EditPostPage
 export default function EditPostPage({ post }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  if (!post) {
-    return (
-      <Error
-        statusCode={404}
-        title="Post does not exist"
-      />
-    );
-  }
+  if (!post) return (
+    <ErrorPage
+      title="Post does not exist"
+      buttonContent="Back to posts"
+      buttonUrl="/forum/posts"
+    />
+  );
 
   const {
     title,
@@ -48,6 +48,15 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const { id } = context.params!;
   const post = await getPost(parseInt(id as string));
+
+  // only show this page is this user is the author
+  // TODO: use userId instead
+  if (post?.author !== user.email) return {
+    redirect: {
+      destination: `/forum/posts/${id}`,
+      permanent: false,
+    },
+  };
 
   return {
     props: {
