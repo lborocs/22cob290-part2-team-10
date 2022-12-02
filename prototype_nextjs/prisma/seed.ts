@@ -1,14 +1,22 @@
 import { PrismaClient, type Prisma } from '@prisma/client';
 
+// import { hashPassword } from '~/server/store/users';
+
+async function hashPassword(raw: string) {
+  return raw;
+}
+
 const prisma = new PrismaClient();
 
-const userData: Prisma.UserCreateInput[] = [
+const testPassword = hashPassword('TestPassword123!');
+
+const getUserData = async (): Promise<Prisma.UserCreateInput[]> => [
 ];
 
 async function main() {
   console.log('Start seeding ...');
 
-  for (const u of userData) {
+  for (const u of await getUserData()) {
     const user = await prisma.user.create({
       data: u,
     });
