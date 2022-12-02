@@ -19,10 +19,10 @@
   - [Architecture](#architecture)
   - [How it works](#how-it-works-1)
   - [How we need to code](#how-we-need-to-code)
-    - [Knowing who is logged in](#knowing-who-is-logged-in)
-    - [Client-side state management](#client-side-state-management)
     - [Layout/Sidebar](#layoutsidebar)
       - [Examples](#examples)
+    - [Knowing who is logged in](#knowing-who-is-logged-in)
+    - [Client-side state management](#client-side-state-management)
     - [Code Style](#code-style)
       - [Absolute Imports](#absolute-imports)
       - [Import Order](#import-order)
@@ -148,16 +148,49 @@ Next.JS...
 
 ### How we need to code
 
+- For pages, you can copy and paste from [page_template](prototype_nextjs/src/pages/examples/page_template.tsx)
+  - Already done for the pages available in navbar (`home`, `forum`, etc.)
+  - For the pages already templated, you can do whatever you want with the actual component
 - Use API routes to update database (e.g. for things like adding task)
 - Use [SSR](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props) to get info for page (e.g. getting a user's todo list)
   - See [example](prototype_nextjs/src/pages/examples/user_ssr.tsx) for how to get user during SSR
   - Don't make API route for getting data that is gotten during SSR
   - Access `/server/store` functions directly instead
     - Make them all `async` because database operations will be `async`
-- You can copy and paste from [page_template](prototype_nextjs/src/pages/examples/page_template.tsx)
-  - Already done for the pages available in navbar (`home`, `forum`, etc.)
 - Run locally and see all examples at [`http://localhost:3000/examples`](http://localhost:3000/examples)
 
+#### Layout/Sidebar
+
+Return your pages content as if it's a normal page, but add additional properties to the
+
+To use our defined layout, you need to add additional property to the default export:
+
+| Prop                   | Type                                                     | Desc?                                        |
+|------------------------|----------------------------------------------------------|----------------------------------------------|
+| layout                 | `PageLayout`                                             | Basically `Layout`'s props                   |
+| layout.title           | `string?`                                                | Title to display in the centre of the navbar |
+| layout.sidebar         | `Sidebar`                                                |                                              |
+| layout.sidebar.type    | `SidebarType`                                            |                                              |
+| layout.sidebar.content | `ReactNode?` (only needed if `sidebarType` === `CUSTOM`) |                                              |
+
+See ex
+
+| Prop           | Type                                                        | How to get it                                                                                                   |
+|----------------|-------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
+| sidebarType    | [`SidebarType`](prototype_nextjs/src/components/Layout.tsx) | Use your brain                                                                                                  |
+| sidebarContent | `ReactNode` (only needed if `sidebarType` === `CUSTOM`)     | Create a custom component (see [custom sidebar example](prototype_nextjs/src/pages/examples/custom_sidebar.tsx) |
+
+- Most pages will have a `layout.sidebar.type` of `PROJECTS`
+  - e.g. main forum page should be `CUSTOM`
+    - The different forum pages will probably have different sidebar content
+
+If this is unclear, see examples:
+
+##### Examples
+
+- [Sidebar that lists the user's assigned projects](prototype_nextjs/src/pages/examples/projects_sidebar.tsx)
+- [Custom sidebar](prototype_nextjs/src/pages/examples/custom_sidebar.tsx)
+- [No sidebar](prototype_nextjs/src/pages/examples/no_sidebar.tsx)
 
 #### Knowing who is logged in
 
@@ -165,21 +198,15 @@ There are two ways to know who is logged in:
 1. Reading the `user` prop passed to the page component by `getServerSideProps` ([example](prototype_nextjs/src/pages/examples/user_ssr.tsx))
 2. Reading `state.user` from the client-side store `store/userStore` (see next section) ([example](prototype_nextjs/src/pages/examples/user_userstore.tsx))
 
-Strongly recommend using number 2 because you'll know if anything about the user changes (e.g. their name) while they're on your page
-and the type is not null, whereas the type of the `user` prop is nullable (because the user might not be logged in, but in reality
-they will always be logged in on your page) and handling that in TypeScript will be annoying.
+Strongly recommend using number 2 because you'll know if anything about the user changes (e.g. their name) while they're on your page.
 
-Example of using `userStore`:
+Example of using `useUserStore`:
 
 ```tsx
-import { useStore } from 'zustand';
+import useUserStore from '~/store/userStore';
 
-import { useUserStore } from '~/store/userStore';
-
-// use inside a component
-const userStore = useUserStore();
 // the component will re-render whenever `email` changes
-const email = useStore(userStore, (state) => state.user.email);
+const email = useUserStore((state) => state.user.email);
 ```
 
 #### Client-side state management
@@ -190,27 +217,7 @@ const email = useStore(userStore, (state) => state.user.email);
 Note that we are not using zustand how it is _usually_ used and how it is used in the video.
 
 We are using zustand in a way that is essentially dependency injection - we inject the user in `_app.jsx`. We do this
-so we don't repeatedly set the user in each page: instead we just set the user in one place - in `_app.jsx`.
-
-#### Layout/Sidebar
-
-Need to wrap your page's content in a `Layout` component
-
-| Prop           | Type                                                  | How to get it                                                                                                   |
-|----------------|-------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
-| sidebarType    | 'project' &#124; 'custom'                             | Use your brain                                                                                                  |
-| sidebarContent | `ReactNode` (only needed if `sidebarType` === custom) | Create a custom component (see [custom sidebar example](prototype_nextjs/src/pages/examples/custom_sidebar.tsx) |
-| user           | `UserInfo` (server/store/users)                       | Get from SSR                                                                                                    |
-
-- Most pages will have a `sidebarType` of `project`
-  - e.g. main forum page should be `custom`
-    - The different forum pages will probably have different sidebar content
-
-##### Examples
-
-- [Sidebar that lists the user's assigned projects](prototype_nextjs/src/pages/examples/projects_sidebar.tsx)
-- [Custom sidebar](prototype_nextjs/src/pages/examples/custom_sidebar.tsx)
-
+so that we don't repeatedly set the user in each page: instead we just set the user in one place - in `_app.jsx`.
 
 #### Code Style
 
