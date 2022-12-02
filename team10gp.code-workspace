@@ -6,6 +6,11 @@
 	],
 	"settings": {
 		"typescript.tsdk": "prototype_nextjs\\node_modules\\typescript\\lib",
+
+		"eslint.workingDirectories": [
+			"prototype_nextjs",
+		],
+
 		"editor.formatOnSave": false,
 		"[javascript]": {
 			"editor.formatOnSave": true,
