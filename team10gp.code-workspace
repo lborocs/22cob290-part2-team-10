@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "prototype_nextjs"
+		},
+		{
+			"path": "prototype"
+		},
+		{
+			"path": "docs"
+		}
+	],
+	"settings": {
+		"typescript.tsdk": "prototype_nextjs\\node_modules\\typescript\\lib",
+		"editor.formatOnSave": true
+	}
+}
