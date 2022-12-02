@@ -8,7 +8,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { Toaster } from 'react-hot-toast';
 
-import Layout from '~/components/Layout';
+import { SidebarType, type PageLayout } from '~/components/Layout';
 import TextAvatarEditor from '~/components/profile/TextAvatarEditor';
 import UserDetails from '~/components/profile/UserDetails';
 import ChangePasswordSection from '~/components/profile/ChangePasswordSection';
@@ -16,52 +16,48 @@ import InviteEmployeeSection from '~/components/profile/InviteEmployeeSection';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { ssrGetUserInfo } from '~/server/utils';
 
+// TODO: theme switcher
 export default function ProfilePage() {
-  // TODO: theme switcher
   return (
-    <>
+    <main>
       <Head>
         <title>Profile - Make-It-All</title>
       </Head>
 
       <Toaster />
 
-      <Layout sidebarType="projects">
-        <main>
-          <Container as="section">
-            <Row>
-              <Col sm="auto" className="d-flex justify-content-center pb-4 pe-md-4">
-                <TextAvatarEditor />
-              </Col>
-              <Col>
-                <UserDetails />
-              </Col>
-            </Row>
-          </Container>
+      <Container as="section">
+        <Row>
+          <Col sm="auto" className="d-flex justify-content-center pb-4 pe-md-4">
+            <TextAvatarEditor />
+          </Col>
+          <Col>
+            <UserDetails />
+          </Col>
+        </Row>
+      </Container>
 
-          <br />
-          <br />
+      <br />
+      <br />
 
-          <section>
-            <Row>
-              <Col>
-                <ChangePasswordSection />
-              </Col>
-              <Col>
-                <InviteEmployeeSection />
-              </Col>
-            </Row>
-          </section>
+      <section>
+        <Row>
+          <Col>
+            <ChangePasswordSection />
+          </Col>
+          <Col>
+            <InviteEmployeeSection />
+          </Col>
+        </Row>
+      </section>
 
-          <br />
-          <br />
+      <br />
+      <br />
 
-          <Button variant="danger" onClick={() => signOut({ callbackUrl: '/' })}>
-            Sign Out
-          </Button>
-        </main>
-      </Layout>
-    </>
+      <Button variant="danger" onClick={() => signOut({ callbackUrl: '/' })}>
+        Sign Out
+      </Button>
+    </main>
   );
 }
 
@@ -83,3 +79,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   };
 }
+
+const layout: PageLayout = {
+  sidebar: {
+    type: SidebarType.PROJECTS,
+  },
+};
+ProfilePage.layout = layout;

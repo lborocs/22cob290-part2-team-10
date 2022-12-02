@@ -5,54 +5,67 @@ import Navbar from 'react-bootstrap/Navbar';
 import { faAlignJustify, faAlignLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import LayoutNav from '~/components/layout/LayoutNav';
 import Sidebar from '~/components/layout/Sidebar';
 import ProjectsList from '~/components/layout/sidebar/ProjectsList';
 
 import styles from '~/styles/Layout.module.css';
-import LayoutNav from './layout/LayoutNav';
 
 // gives flexibility to have more shared sidebars (not just projects)
-type SidebarType =
-  | 'custom'
-  | 'projects'
-  ;
+export enum SidebarType {
+  NONE = 'none',
+  CUSTOM = 'custom',
+  PROJECTS = 'projects',
+}
 
-export type BaseLayoutProps = {
-  sidebarType: SidebarType
-  sidebarContent?: React.ReactNode
-  children: React.ReactNode
+type BaseSidebar = {
+  type: SidebarType
+  content?: React.ReactNode
 };
 
-interface DefaultSidebarLayout extends BaseLayoutProps {
-  sidebarType: Exclude<SidebarType, 'custom'>
-  sidebarContent?: undefined
+interface CustomSidebar extends BaseSidebar {
+  type: SidebarType.CUSTOM
+  content: React.ReactNode
 }
 
-interface CustomSidebarLayout extends BaseLayoutProps {
-  sidebarType: 'custom'
-  sidebarContent: React.ReactNode
+interface DefaultSidebar extends BaseSidebar {
+  type: Exclude<SidebarType, SidebarType.CUSTOM>
+  content?: undefined
 }
 
-export type LayoutProps = DefaultSidebarLayout | CustomSidebarLayout;
+type Sidebar = CustomSidebar | DefaultSidebar;
 
+export type PageLayout = {
+  title?: string
+  sidebar: Sidebar
+};
+
+export interface LayoutProps extends PageLayout {
+  children: React.ReactNode
+}
+
+// TODO: center brand horizontally
 export default function Layout({
-  sidebarType,
-  sidebarContent,
+  title,
+  sidebar,
   children,
 }: LayoutProps) {
-  const [showSidebar, setShowSidebar] = useState(true);
+  const noSidebar = sidebar.type === SidebarType.NONE;
+  const [showSidebar, setShowSidebar] = useState(true && !noSidebar);
 
   const getSidebarContent = (): React.ReactNode => {
-    switch (sidebarType) {
-      case 'custom':
-        return sidebarContent;
-      case 'projects':
+    switch (sidebar.type) {
+      case SidebarType.CUSTOM:
+        return sidebar.content;
+
+      case SidebarType.PROJECTS:
         return <ProjectsList />;
+
       default:
         return (
           <>
             <strong>Invalid sidebar type</strong>
-            {sidebarContent}
+            {sidebar.content}
           </>
         );
     }
@@ -60,29 +73,32 @@ export default function Layout({
 
   return (
     <div className={styles.wrapper}>
-      <Sidebar
-        show={showSidebar}
-        content={getSidebarContent()}
-      />
+      {!noSidebar && (
+        <Sidebar
+          show={showSidebar}
+          content={getSidebarContent()}
+        />
+      )}
 
       <div className={styles.content}>
         <header>
           <Navbar expand="lg" className={styles.navbar}>
             <Container fluid>
-              <Button
-                onClick={() => setShowSidebar((show) => !show)}
-                className={styles['sidebar-toggle-btn']}
-              >
-                <FontAwesomeIcon icon={faAlignLeft} />
-                {' '}
-                <span className="d-none d-md-inline">Toggle Sidebar</span>
-              </Button>
+              <div>
+                {!noSidebar && (
+                  <Button
+                    onClick={() => setShowSidebar((show) => !show)}
+                    className={styles['sidebar-toggle-btn']}
+                  >
+                    <FontAwesomeIcon icon={faAlignLeft} />
+                    {' '}
+                    <span className="d-none d-md-inline">Toggle Sidebar</span>
+                  </Button>
+                )}
+              </div>
 
               <Navbar.Brand>
-                {/*
-                  TODO: get rid of brand/have prop that is something like pageTitle
-                  TODO: center brand horizontally
-                */}
+                {title}
               </Navbar.Brand>
 
               <Navbar.Toggle

@@ -1,17 +1,19 @@
 import type { GetServerSidePropsContext } from 'next';
+import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 
-import Layout from '~/components/Layout';
+import { SidebarType, type PageLayout } from '~/components/Layout';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { ssrGetUserInfo } from '~/server/utils';
 
 export default function ExamplePage() {
   return (
-    <Layout sidebarType="projects">
-      <main>
-        <h1>Assigned projects sidebar example</h1>
-      </main>
-    </Layout>
+    <main>
+      <Head>
+        <title>Projects Sidebar - Examples</title>
+      </Head>
+      <h1>Assigned projects sidebar example</h1>
+    </main>
   );
 }
 
@@ -31,3 +33,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   };
 }
+
+// we should just be able to do `ExamplePage.layout = { ... } satisfies PageLayout`
+// but for some reason it gives error saying SidebarType isn't defined, idk why and cba
+
+const layout: PageLayout = {
+  sidebar: {
+    type: SidebarType.PROJECTS,
+  },
+};
+ExamplePage.layout = layout;

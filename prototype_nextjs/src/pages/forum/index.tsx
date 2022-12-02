@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { unstable_getServerSession } from 'next-auth/next';
 
-import Layout from '~/components/Layout';
+import { SidebarType, type PageLayout } from '~/components/Layout';
 import ForumSidebar from '~/components/layout/sidebar/ForumSidebar';
 import type { Post } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
@@ -14,32 +14,23 @@ import { getAllPosts } from '~/server/store/posts';
 // TODO: ForumPage
 export default function ForumPage({ posts }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
-    <>
+    <main>
       <Head>
         <title>Forum - Make-It-All</title>
       </Head>
-      <Layout
-        sidebarType="custom"
-        sidebarContent={
-          <ForumSidebar />
-        }
-      >
-        <main>
-          {/* TODO */}
-          {posts.map((post, index) => (
-            <ForumPost key={index} post={post} />
-          ))}
-        </main>
-      </Layout>
-    </>
+      {/* TODO */}
+      {posts.map((post, index) => (
+        <ForumPostPreview key={index} post={post} />
+      ))}
+    </main>
   );
 }
 
-// Dara recommends using something like Luxon (https://github.com/moment/luxon) to display how long ago a post was made
-// and when they hover over it, have a tooltip saying the actual date & time
+// Dara recommends using something like Luxon (https://github.com/moment/luxon) to display how long ago a post was made (relative)
+// and when they hover over it, have a tooltip saying the actual date & time (absolute)
 
-// TODO
-function ForumPost({ post }: { post: Post }) {
+// TODO: implement & move to components/forum
+function ForumPostPreview({ post }: { post: Post }) {
   const {
     id,
     author,
@@ -75,3 +66,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   };
 }
+
+const layout: PageLayout = {
+  sidebar: {
+    type: SidebarType.CUSTOM,
+    content: <ForumSidebar />,
+  },
+};
+ForumPage.layout = layout;

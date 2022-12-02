@@ -6,7 +6,7 @@ import useSWR from 'swr';
 import LoadingPage from '~/components/LoadingPage';
 import type { ResponseSchema as GetProjectsResponse } from '~/pages/api/projects/get-assigned-projects';
 
-import styles from '~/styles/ProjectsList.module.css';
+import styles from '~/styles/layout/sidebar/ProjectsList.module.css';
 
 // TODO: search bar
 
@@ -44,7 +44,7 @@ export default function ProjectsList() {
             <li key={index}>
               <Link
                 href={url}
-                className={`nav-link ${styles['project-link']} ${active ? styles.active : ''}`}
+                className={`${styles['project-link']} ${active ? styles.active : ''}`}
               >
                 {project.name}
               </Link>

@@ -200,4 +200,4 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return { props: {} };
 }
 
-SignInPage.noauth = true;
+SignInPage.noAuth = true;

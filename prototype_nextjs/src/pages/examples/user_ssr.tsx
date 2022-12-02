@@ -1,4 +1,5 @@
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
@@ -12,6 +13,9 @@ export default function ExamplePage({
 
   return (
     <main>
+      <Head>
+        <title>User SSR - Examples</title>
+      </Head>
       <div className="h2 mb-4">Using <code>user</code> prop</div>
       <h1>Email: {email}</h1>
       <span>Name: {firstName} {lastName}</span>

@@ -1,54 +1,19 @@
 import type { GetServerSidePropsContext } from 'next';
+import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
-import create from 'zustand';
 
 import { SidebarType, type PageLayout } from '~/components/Layout';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { ssrGetUserInfo } from '~/server/utils';
 
-type Store = {
-  name: string
-  setName: (name: string) => void
-};
-
-const useStore = create<Store>((set) => ({
-  name: 'Bob',
-  setName: (name) => set((state) => ({ name })),
-}));
-
 export default function ExamplePage() {
-  const { name, setName } = useStore();
-
   return (
     <main>
-      <h1>Custom sidebar example</h1>
-      Enter a name:
-      <input
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
+      <Head>
+        <title>No Sidebar - Examples</title>
+      </Head>
+      <h1>No sidebar example</h1>
     </main>
-  );
-}
-
-function Sidebar() {
-  const name = useStore((state) => state.name);
-
-  return (
-    <div>
-      <span className="h3">Prem Table</span>
-      <ol>
-        <li>Arsenal</li>
-        <li>Man City</li>
-        <li>???</li>
-        <li>{'Doesn\'t Matter'}</li>
-        <li>{'Don\'t care'}</li>
-      </ol>
-
-      <div className="mt-4">
-        name = {name}
-      </div>
-    </div>
   );
 }
 
@@ -73,9 +38,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 // but for some reason it gives error saying SidebarType isn't defined, idk why and cba
 
 const layout: PageLayout = {
+  title: 'Look no sidebar!',
   sidebar: {
-    type: SidebarType.CUSTOM,
-    content: <Sidebar />,
+    type: SidebarType.NONE,
   },
 };
 ExamplePage.layout = layout;

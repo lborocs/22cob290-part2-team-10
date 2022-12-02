@@ -43,4 +43,4 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   };
 }
 
-SignupPage.noauth = true;
+SignupPage.noAuth = true;
