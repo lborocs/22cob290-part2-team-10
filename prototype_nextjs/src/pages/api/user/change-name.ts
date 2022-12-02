@@ -41,7 +41,7 @@ export default async function handler(
 
   const userId = (session.user as SessionUser).id;
 
-  changeName(userId, firstName, lastName);
+  await changeName(userId, firstName, lastName);
 
   res.status(200).json({ success: true });
 }

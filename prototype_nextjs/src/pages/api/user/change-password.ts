@@ -46,7 +46,7 @@ export default async function handler(
     return;
   }
 
-  changePassword(userId, newPassword);
+  await changePassword(userId, newPassword);
 
   res.status(200).json({ success: true });
 }
