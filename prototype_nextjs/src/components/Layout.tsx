@@ -13,27 +13,49 @@ import styles from '~/styles/Layout.module.css';
 
 // gives flexibility to have more shared sidebars (not just projects)
 export enum SidebarType {
+  NONE = 'none',
   CUSTOM = 'custom',
   PROJECTS = 'projects',
 }
 
-export type LayoutProps = {
-  sidebarType: SidebarType
-  sidebarContent?: React.ReactNode
-  children: React.ReactNode
+type BaseSidebar = {
+  type: SidebarType
+  content?: React.ReactNode
 };
 
+interface CustomSidebar extends BaseSidebar {
+  type: SidebarType.CUSTOM
+  content: React.ReactNode
+}
+
+interface DefaultSidebar extends BaseSidebar {
+  type: Exclude<SidebarType, SidebarType.CUSTOM>
+  content?: undefined
+}
+
+type Sidebar = CustomSidebar | DefaultSidebar;
+
+export type PageLayout = {
+  title?: string
+  sidebar: Sidebar
+};
+
+export interface LayoutProps extends PageLayout {
+  children: React.ReactNode
+}
+
 export default function Layout({
-  sidebarType,
-  sidebarContent,
+  title,
+  sidebar,
   children,
 }: LayoutProps) {
-  const [showSidebar, setShowSidebar] = useState(true);
+  const noSidebar = sidebar.type === SidebarType.NONE;
+  const [showSidebar, setShowSidebar] = useState(true && !noSidebar);
 
   const getSidebarContent = (): React.ReactNode => {
-    switch (sidebarType) {
+    switch (sidebar.type) {
       case SidebarType.CUSTOM:
-        return sidebarContent;
+        return sidebar.content;
 
       case SidebarType.PROJECTS:
         return <ProjectsList />;
@@ -42,7 +64,7 @@ export default function Layout({
         return (
           <>
             <strong>Invalid sidebar type</strong>
-            {sidebarContent}
+            {sidebar.content}
           </>
         );
     }
@@ -50,25 +72,32 @@ export default function Layout({
 
   return (
     <div className={styles.wrapper}>
-      <Sidebar
-        show={showSidebar}
-        content={getSidebarContent()}
-      />
+      {!noSidebar && (
+        <Sidebar
+          show={showSidebar}
+          content={getSidebarContent()}
+        />
+      )}
 
       <div className={styles.content}>
         <header>
           <Navbar expand="lg" className={styles.navbar}>
             <Container fluid>
-              <Button
-                onClick={() => setShowSidebar((show) => !show)}
-                className={styles['sidebar-toggle-btn']}
-              >
-                <FontAwesomeIcon icon={faAlignLeft} />
-                {' '}
-                <span className="d-none d-md-inline">Toggle Sidebar</span>
-              </Button>
+              <div>
+                {!noSidebar && (
+                  <Button
+                    onClick={() => setShowSidebar((show) => !show)}
+                    className={styles['sidebar-toggle-btn']}
+                  >
+                    <FontAwesomeIcon icon={faAlignLeft} />
+                    {' '}
+                    <span className="d-none d-md-inline">Toggle Sidebar</span>
+                  </Button>
+                )}
+              </div>
 
               <Navbar.Brand>
+                {title}
                 {/*
                   TODO: get rid of brand/have prop that is something like pageTitle
                   TODO: center brand horizontally

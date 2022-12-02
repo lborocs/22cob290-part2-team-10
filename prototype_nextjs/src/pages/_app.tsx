@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { SessionProvider, useSession } from 'next-auth/react';
 import { config } from '@fortawesome/fontawesome-svg-core';
 
-import Layout, { type SidebarType } from '~/components/Layout';
+import Layout, { type PageLayout } from '~/components/Layout';
 import LoadingPage from '~/components/LoadingPage';
 import useUserStore from '~/store/userStore';
 
@@ -14,33 +14,17 @@ import '~/styles/globals.css';
 // https://fontawesome.com/v5/docs/web/use-with/react#getting-font-awesome-css-to-work
 config.autoAddCss = false;
 
-type BasePageSidebar = {
-  type: SidebarType
-  content?: React.ReactNode
-};
-
-interface CustomPageSidebar extends BasePageSidebar {
-  type: SidebarType.CUSTOM
-  content: React.ReactNode
-}
-
-interface DefaultPageSidebar extends BasePageSidebar {
-  type: Exclude<SidebarType, SidebarType.CUSTOM>
-  content?: undefined
-}
-
-export type PageSidebar = CustomPageSidebar | DefaultPageSidebar;
-
 type Page = {
   noAuth?: boolean
-  // sidebarType?: SidebarType
-  // sidebarContent?: React.ReactNode
-  sidebar?: BasePageSidebar
+  layout?: PageLayout
 };
 
 interface MyAppProps extends AppProps {
   Component: AppProps['Component'] & Page
 }
+
+// TODO: fix that styles imported globally here have precedence over module imported css in components/pages
+// is a NextJS bug so not much we can do apart from find a workaround
 
 export default function App({
   Component,
@@ -53,7 +37,7 @@ export default function App({
     }));
   }
 
-  const { noAuth, sidebar } = Component;
+  const { noAuth, layout } = Component;
 
   return (
     <SessionProvider session={session}>
@@ -64,11 +48,8 @@ export default function App({
         <Component {...pageProps} />
       ) : (
         <Auth>
-          {sidebar ? (
-            <Layout
-              sidebarType={sidebar.type}
-              sidebarContent={sidebar.content}
-            >
+          {layout ? (
+            <Layout {...layout}>
               <Component {...pageProps} />
             </Layout>
           ) : (
