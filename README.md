@@ -190,23 +190,30 @@ There are two ways to know who is logged in:
 1. Reading the `user` prop passed to the page component by `getServerSideProps` ([example](prototype_nextjs/src/pages/examples/user_ssr.tsx))
 2. Reading `state.user` from the client-side store `store/userStore` (see next section) ([example](prototype_nextjs/src/pages/examples/user_userstore.tsx))
 
-Strongly recommend using number 2 because you'll know if anything about the user changes (e.g. their name) while they're on your page.
+If on a page:
+- using number 2 because you'll know if anything about the user changes (e.g. their name) while they're on your page,
+but that is quite unlikely to happen
 
-Example of using `useUserStore`:
+If on a page:
+- if anything about the user can change while on your page (e.g. changing name), use number 1.
+- else, prefer using number 2 but it's ntd
+
+In a component:
+- use number 2 because it won't be able to access `user` from `getServerSideProps` without passing it as a prop from the page
+
+Example of using `useUserStore` (number 2):
 
 ```tsx
 import useUserStore from '~/store/userStore';
 
-// the component will re-render whenever `email` changes
-const email = useUserStore((state) => state.user.email);
+// the component will re-render whenever `firstName` changes
+const firstName = useUserStore((state) => state.user.firstName);
 ```
 
 #### Client-side state management
 
 - Using [zustand](https://github.com/pmndrs/zustand)
 - [Decent zustand youtube tutorial](https://youtu.be/sqTPGMipjHk)
-
-Note that we are not using zustand how it is _usually_ used and how it is used in the video.
 
 We are using zustand in a way that is essentially dependency injection - we inject the user in `_app.jsx`. We do this
 so that we don't repeatedly set the user in each page: instead we just set the user in one place - in `_app.jsx`.
