@@ -14,6 +14,8 @@ import { getPost } from '~/server/store/posts';
 
 // TODO: PostPage
 export default function PostPage({ user, post }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const router = useRouter();
+
   if (!post) return (
     <ErrorPage
       title="Post does not exist"
@@ -21,8 +23,6 @@ export default function PostPage({ user, post }: InferGetServerSidePropsType<typ
       buttonUrl="/forum/posts"
     />
   );
-
-  const router = useRouter();
 
   const {
     id,

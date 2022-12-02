@@ -59,7 +59,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   // TODO: use userId instead
   if (post?.author !== user.email) return {
     redirect: {
-      destination: `/forum/posts/${id}`,
+      destination: `/forum/posts/${id as string}`,
       permanent: false,
     },
   };

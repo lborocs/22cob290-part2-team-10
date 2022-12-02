@@ -60,7 +60,7 @@ const projects: ProjectInfo[] = range(1, numProjects).map((num) => ({
       ],
     },
   },
-])
+]);
 
 /**
  * Returns all projects
@@ -135,5 +135,5 @@ export async function userHasAccessToProject(email: string, projectId: number): 
 
   return project.manager === email
     || project.leader === email
-    || project.members.includes(email)
+    || project.members.includes(email);
 }
