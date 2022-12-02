@@ -69,7 +69,7 @@ Top-level PHP files acting as pages (using a custom `.htaccess` file to hide fil
 ### Pages
 
 | Page URL            | Owner      | Notes                                                                                |
-|---------------------|------------|--------------------------------------------------------------------------------------|
+| ------------------- | ---------- | ------------------------------------------------------------------------------------ |
 | `/`                 | Dara       | Can make `/` display home instead and if user isn't logged in, redirect to `/login`? |
 | `/home`             | Michael/Lu |                                                                                      |
 | `/projects`         | Michael/Lu | Displays a grid of assigned projects (only on updated version)                       |
@@ -166,7 +166,7 @@ Return your pages content as if it's a normal page, but add additional propertie
 To use our defined layout, you need to add additional property to the default export:
 
 | Prop                   | Type                                                     | Description                                  |
-|------------------------|----------------------------------------------------------|----------------------------------------------|
+| ---------------------- | -------------------------------------------------------- | -------------------------------------------- |
 | layout                 | `PageLayout`                                             | Basically `Layout`'s props                   |
 | layout.title           | `string?`                                                | Title to display in the centre of the navbar |
 | layout.sidebar         | `Sidebar`                                                |                                              |
@@ -285,7 +285,7 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 > Not sure about the forum pages that aren't yet templated
 
 | Page URL/Route                        | Owner | Status                | Completed             | Notes                                                                                                                                                              |
-|---------------------------------------|-------|-----------------------|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------------------------------- | ----- | --------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `/`                                   | Dara  | Complete              | <ul><li>[x] </li><ul> | Can make `/` display home instead and if user isn't logged in, redirect to `/signin`?                                                                              |
 | `/home`                               |       | Templated             |                       |                                                                                                                                                                    |
 | `/projects`                           |       | Templated             |                       | Display all projects                                                                                                                                               |
@@ -322,7 +322,7 @@ Prisma also has nice features such as
 [auto-joins](https://www.prisma.io/docs/concepts/components/prisma-client/relation-queries#nested-reads).
 
 Dara thinks it'd be better to use `/server/store` as like an interface rather than directly accessing the Prisma Client,
-but will discuss later when designing database
+but will discuss later when designing database.
 
 #### Entities
 
@@ -363,7 +363,7 @@ TODO: ERM diagram (could make tables entity property tables to help plan ERM dia
 <!-- TODO: add links to issues -->
 
 | Name                                                                    | Minor Version | Purpose                                                |
-|-------------------------------------------------------------------------|---------------|--------------------------------------------------------|
+| ----------------------------------------------------------------------- | ------------- | ------------------------------------------------------ |
 | [TypeScript](https://www.typescriptlang.org/)                           | 4.9           | Programming language                                   |
 | [ESLint](https://eslint.org/)                                           | 8.28          | Static code analysis                                   |
 | [React](https://reactjs.org/)                                           | 18.2          | UI library                                             |
