@@ -86,7 +86,7 @@ export default function InviteEmployeeSection() {
         centered
       >
         <Modal.Header closeButton>
-          <Modal.Title>Invite URL</Modal.Title>
+          <Modal.Title>Invite URL (valid for 7 days)</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
