@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */ // TODO: remove once this is done
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
-import Head from 'next/head';
 import Error from 'next/error';
+import Head from 'next/head';
+import Link from 'next/link';
 import { unstable_getServerSession } from 'next-auth/next';
 
-import Layout from '~/components/Layout';
+import { SidebarType, type PageLayout } from '~/components/Layout';
 import ForumSidebar from '~/components/layout/sidebar/ForumSidebar';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { ssrGetUserInfo } from '~/server/utils';
@@ -35,26 +35,21 @@ export default function PostPage({ post }: InferGetServerSidePropsType<typeof ge
   const date = new Date(datePosted);
 
   return (
-    <>
+    <main>
       <Head>
         <title>{pageTitle}</title>
       </Head>
-      <Layout
-        sidebarType="custom"
-        sidebarContent={
-          <ForumSidebar />
-        }
-      >
-        <main>
-          {/* TODO */}
-          <h1>{title}</h1>
-          Date posted: {date.toUTCString()}
-        </main>
-      </Layout>
-    </>
+      {/* TODO */}
+      <h1>{title}</h1>
+      <p>Posted: {date.toLocaleDateString()}</p>
+      <Link href={`/forum/posts/${id}/edit`}>
+        <button>
+          Edit
+        </button>
+      </Link>
+    </main>
   );
 }
-
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
@@ -76,3 +71,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   };
 }
+
+const layout: PageLayout = {
+  sidebar: {
+    type: SidebarType.CUSTOM,
+    content: <ForumSidebar />,
+  },
+};
+PostPage.layout = layout;
