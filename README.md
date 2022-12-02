@@ -376,7 +376,7 @@ TODO: ERM diagram (could make tables entity property tables to help plan ERM dia
 | [react-hot-toast](https://react-hot-toast.com/)                         | 2.4           | Toasts                                                 |
 | [Axios](https://axios-http.com/)                                        | 1.2           | HTTP client (use instead of the `fetch` API)           |
 | [zustand](https://github.com/pmndrs/zustand)                            | 4.1           | State management                                       |
-| [Prisma](https://www.prisma.io/)                                        | -             | Database ORM                                           |
+| [Prisma](https://www.prisma.io/)                                        | 4.7           | Database ORM                                           |
 | [node.bcrypt.js](https://github.com/kelektiv/node.bcrypt.js)            | 5.1           | Hashing user passwords                                 |
 | [react-markdown](https://github.com/remarkjs/react-markdown)?           | -             | Render markdown content in forum posts                 |
 | [Zod](https://zod.dev/)                                                 | 3.19          | Object schema validation                               |
