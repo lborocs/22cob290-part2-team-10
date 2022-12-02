@@ -1,13 +1,7 @@
 {
 	"folders": [
 		{
-			"path": "prototype_nextjs"
-		},
-		{
-			"path": "prototype"
-		},
-		{
-			"path": "docs"
+			"path": "."
 		}
 	],
 	"settings": {
