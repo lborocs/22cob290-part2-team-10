@@ -14,6 +14,7 @@ export const getDefaultTextAvatar = () => ({
   'avatar-fg': '#ffffff',
 });
 
+// TODO: use database
 // localStorage acting as our store
 export function getTextAvatarFromStore(): TextAvatar {
   const textAvatarJson = localStorage.getItem('textAvatar');
@@ -43,8 +44,12 @@ export default forwardRef(function LoadingButton({
   size = '40px',
   ...props
 }: TextAvatarProps, ref: React.ForwardedRef<HTMLButtonElement>) {
-  const firstInitial = useUserStore((state) => state.user.firstName[0].toUpperCase());
-  const lastInitial = useUserStore((state) => state.user.lastName[0].toUpperCase());
+  const username = useUserStore((state) => state.user.name);
+
+  // only show first 3 names
+  // split by whitespace: https://stackoverflow.com/a/10346754
+  const names = username.split(/[ ]+/, 3);
+  const initials = names.map((name) => name[0].toLocaleUpperCase());
 
   useEffect(() => {
     const textAvatar = getTextAvatarFromStore();
@@ -68,7 +73,7 @@ export default forwardRef(function LoadingButton({
       ref={ref}
       {...passedProps}
     >
-      {firstInitial}{lastInitial}
+      {initials.join('')}
     </span>
   );
 });
