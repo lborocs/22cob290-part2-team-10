@@ -3,10 +3,8 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import axios from 'axios';
 
 import prisma from '~/lib/prisma';
+import type { SessionUser } from '~/types';
 import type { RequestSchema as SignInPayload, ResponseSchema as SignInResponse } from '~/pages/api/user/signIn';
-import type { SessionUser } from '~/server/types';
-
-// TODO: extend User type to match what we return from /api/user/signIn
 
 export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
@@ -72,8 +70,6 @@ export const authOptions: NextAuthOptions = {
     },
 
     async jwt({ token, user, account }) {
-      // const user = _user as any; // should be from LoginResponse
-
       if (user && account) {
         // modify token...
         token.uid = user.id;
