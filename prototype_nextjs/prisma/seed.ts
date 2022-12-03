@@ -35,6 +35,18 @@ const getUserData = async (): Promise<Prisma.UserCreateInput[]> => [
       },
     },
   },
+  {
+    email: 'left@make-it-all.co.uk',
+    hashedPassword: await testPassword,
+    name: 'Left The Company',
+    avatar: { create: {} },
+    inviter: {
+      connect: {
+        email: 'admin@make-it-all.co.uk',
+      },
+    },
+    leftCompany: true,
+  },
 ];
 
 async function main() {
@@ -51,7 +63,7 @@ async function main() {
         },
       },
     });
-    console.log(`Created user with id: ${user.id}, invited by email ${String(user.inviter?.email)}`);
+    console.log(`Created user with id: ${user.id} (name: ${user.name}), invited by email: ${user.inviter?.email}`);
   }
 
   console.log('Seeding finished.');
