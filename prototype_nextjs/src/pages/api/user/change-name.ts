@@ -2,10 +2,10 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { unstable_getServerSession } from 'next-auth/next';
 import type { z } from 'zod';
 
+import prisma from '~/lib/prisma';
 import ChangeNameSchema from '~/schemas/user/changeName';
-import type { UnauthorisedResponse } from '~/types';
-import { authOptions, type SessionUser } from '~/pages/api/auth/[...nextauth]';
-import { changeName } from '~/server/store/users';
+import type { UnauthorisedResponse, SessionUser } from '~/types';
+import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 export type RequestSchema = z.infer<typeof ChangeNameSchema>;
 
@@ -37,11 +37,19 @@ export default async function handler(
     return;
   }
 
-  const { firstName, lastName } = safeParseResult.data;
+  const { name } = safeParseResult.data;
 
   const userId = (session.user as SessionUser).id;
 
-  await changeName(userId, firstName, lastName);
+  // TODO: update session/cookie
+  await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      name,
+    },
+  });
 
   res.status(200).json({ success: true });
 }

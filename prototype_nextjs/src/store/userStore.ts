@@ -1,16 +1,16 @@
 import create from 'zustand';
 
-import type { ExposedUser } from '~/types';
+import type { SessionUser } from '~/types';
 
 // add any other mutators - we don't want setUser
 export type UserStore = {
-  user: ExposedUser
+  user: SessionUser
   setName: (name: string) => void
 };
 
 // when the store is used, `user` should NEVER be null because it is set in `_app`
 const useUserStore = create<UserStore>((set) => ({
-  user: null as unknown as ExposedUser,
+  user: null as unknown as SessionUser,
   setName: (name: string) => set((state) => ({
     user: {
       ...state.user,

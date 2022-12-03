@@ -4,7 +4,7 @@ import type { z } from 'zod';
 import prisma from '~/lib/prisma';
 import { isCorrectPassword } from '~/lib/user';
 import SignInSchema from '~/schemas/user/signIn';
-import type { SessionUser } from '~/server/types';
+import type { SessionUser } from '~/types';
 
 export enum ErrorReason {
   WRONG_PASSWORD = 'WRONG_PASSWORD',

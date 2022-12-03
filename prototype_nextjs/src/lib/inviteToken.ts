@@ -4,7 +4,6 @@
 
 let count = 0;
 
-
 /**
  * Returns a JWT token that is to be used as as invite token
  *

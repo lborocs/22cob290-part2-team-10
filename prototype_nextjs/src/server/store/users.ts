@@ -5,12 +5,12 @@ import { Role, type User, type UserInfo } from '~/types';
 const saltRounds = 10; // DO NOT INCREASE, 20 rounds takes ~1 min
 
 /**
- * Hashes the given password using bcrypt.
+ * Hashes the provided password using bcrypt.
  *
  * @param raw
  * @returns The hashed password
  */
-async function hashPassword(raw: string): Promise<string> {
+export async function hashPassword(raw: string): Promise<string> {
   return await bcrypt.hash(raw, saltRounds);
 }
 
@@ -73,7 +73,7 @@ export async function getAllUsers(): Promise<User[]> {
 }
 
 /**
- * Returns the user with the given `id`, or `null` is none exists.
+ * Returns the user with the provided `id`, or `null` is none exists.
  *
  * @param id
  */
@@ -90,7 +90,7 @@ export async function getUserInfo(id: string): Promise<UserInfo | undefined> {
 }
 
 /**
- * Returns the user with the given `email`, or `null` is none exists.
+ * Returns the user with the provided `email`, or `null` is none exists.
  *
  * @param email
  */

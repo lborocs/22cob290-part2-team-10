@@ -1,12 +1,13 @@
-import type { User } from '@prisma/client';
+import type { User } from 'next-auth';
 
-export type ExposedUser = Omit<User, 'hashedPassword' | 'inviterId'>;
-
-// inspired by https://www.prisma.io/docs/concepts/components/prisma-client/computed-fields
-export function computeExposedUser(user: User): ExposedUser {
-  const { hashedPassword, inviterId, ...exposedUser } = user;
-  return exposedUser;
+export interface SessionUser extends User {
+  id: string
+  name: string
+  email: string
+  image: null
 }
+
+// https://www.prisma.io/docs/concepts/components/prisma-client/computed-fields
 
 // ---------------------------------
 

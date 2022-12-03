@@ -42,6 +42,7 @@ export const PasswordSchema = z.string()
 
 // TODO: max length?
 // name regex: https://stackoverflow.com/a/36733683
+// TODO: allow spaces between but none at end nor start
 export function nameSchema(name: string) {
   return z.string()
     .regex(/^[a-z]+$/i, `${name} is alphabetic only`)

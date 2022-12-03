@@ -3,9 +3,9 @@ import { unstable_getServerSession } from 'next-auth/next';
 import type { z } from 'zod';
 
 import ChangePasswordSchema from '~/schemas/user/changePassword';
-import type { UnauthorisedResponse } from '~/types';
-import { authOptions, type SessionUser } from '~/pages/api/auth/[...nextauth]';
-import { changePassword, isCorrectPassword } from '~/server/store/users';
+import type { UnauthorisedResponse, SessionUser } from '~/types';
+import { authOptions } from '~/pages/api/auth/[...nextauth]';
+// import { changePassword, isCorrectPassword } from '~/server/store/users';
 
 export type RequestSchema = z.infer<typeof ChangePasswordSchema>;
 
