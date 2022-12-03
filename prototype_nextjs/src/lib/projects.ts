@@ -1,5 +1,7 @@
 import type { Prisma } from '@prisma/client';
 
+import { ProjectRole } from '~/types';
+
 // TODO
 export async function getProjectTasks() {
 
@@ -38,13 +40,19 @@ type ProjectTeam = {
   }[]
 };
 
-export function userHasAccessToProject(userId: string, project: ProjectTeam): boolean {
+export function getUserRoleInProject(userId: string, project: ProjectTeam): ProjectRole | null {
   const managerId = project.manager.id;
   const leaderId = project.leader.id;
 
-  const memberIds = project.members.map((projectMember: any) => projectMember.memberId);
+  const memberIds = project.members.map((projectMember) => projectMember.memberId);
 
-  return managerId === userId
-    || leaderId === userId
-    || memberIds.includes(userId);
+  if (userId === managerId) return ProjectRole.MANAGER;
+  else if (userId === leaderId) return ProjectRole.LEADER;
+  else if (memberIds.includes(userId)) return ProjectRole.MEMBER;
+
+  return null;
+}
+
+export function userHasAccessToProject(userId: string, project: ProjectTeam): boolean {
+  return getUserRoleInProject(userId, project) !== null;
 }
