@@ -1,15 +1,12 @@
-import NextAuth, { type NextAuthOptions, type User } from 'next-auth';
+import NextAuth, { type NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import axios from 'axios';
 
-import { Role } from '~/types';
+import prisma from '~/lib/prisma';
 import type { RequestSchema as SignInPayload, ResponseSchema as SignInResponse } from '~/pages/api/user/signIn';
+import type { SessionUser } from '~/server/types';
 
 // TODO: extend User type to match what we return from /api/user/signIn
-
-export interface SessionUser extends User {
-  id: string
-}
 
 export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
@@ -31,7 +28,7 @@ export const authOptions: NextAuthOptions = {
           password: credentials!.password,
         };
 
-        const { data } = await axios.post<SignInResponse>(`${process.env.NEXTAUTH_URL as string}/api/user/signIn`, payload);
+        const { data } = await axios.post<SignInResponse>(`${process.env.NEXTAUTH_URL}/api/user/signIn`, payload);
 
         if (data.success) return data.user;
         throw new Error(data.reason);
@@ -48,7 +45,16 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     async signIn({ user, account }) {
-      const isAllowedToSignIn = (<any>user).role !== Role.LEFT_COMPANY;
+      const { leftCompany } = await prisma.user.findUniqueOrThrow({
+        where: {
+          id: user.id,
+        },
+        select: {
+          leftCompany: true,
+        },
+      });
+
+      const isAllowedToSignIn = !leftCompany;
 
       if (isAllowedToSignIn) return true;
 

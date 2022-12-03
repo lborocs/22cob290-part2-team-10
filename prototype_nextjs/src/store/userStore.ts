@@ -1,31 +1,20 @@
 import create from 'zustand';
 
-import type { UserInfo } from '~/types';
-
-// using zustand with React context: https://github.com/pmndrs/zustand#react-context
+import type { ExposedUser } from '~/types';
 
 // add any other mutators - we don't want setUser
-type UserStore = {
-  user: UserInfo
-  setFirstName: (firstName: string) => void
-  setLastName: (lastName: string) => void
+export type UserStore = {
+  user: ExposedUser
+  setName: (name: string) => void
 };
 
-export type UserStoreState = UserStore;
-
 // when the store is used, `user` should NEVER be null because it is set in `_app`
-const useUserStore = create<UserStoreState>((set) => ({
-  user: null as unknown as UserInfo,
-  setFirstName: (firstName: string) => set((state) => ({
+const useUserStore = create<UserStore>((set) => ({
+  user: null as unknown as ExposedUser,
+  setName: (name: string) => set((state) => ({
     user: {
       ...state.user,
-      firstName,
-    },
-  })),
-  setLastName: (lastName: string) => set((state) => ({
-    user: {
-      ...state.user,
-      lastName,
+      name,
     },
   })),
 }));

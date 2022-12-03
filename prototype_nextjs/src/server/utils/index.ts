@@ -1,8 +1,8 @@
 import type { Session } from 'next-auth';
 
-import type { UserInfo } from '~/types';
-import type { SessionUser } from '~/pages/api/auth/[...nextauth]';
-import { getUserInfo } from '~/server/store/users';
+import prisma from '~/lib/prisma';
+import { type ExposedUser, computeExposedUser } from '~/types';
+import type { SessionUser } from '~/server/types';
 
 /**
  * Helper function to get details about the signed in user
@@ -10,8 +10,14 @@ import { getUserInfo } from '~/server/store/users';
  * @param session session returned from `unstable_getServerSession`
  * @returns the signed-in user
  */
-export async function ssrGetUserInfo(session: Session): Promise<UserInfo> {
+export async function ssrGetUserInfo(session: Session): Promise<ExposedUser> {
   const sUser = session.user as SessionUser;
 
-  return (await getUserInfo(sUser.id))!;
+  const user = await prisma.user.findUniqueOrThrow({
+    where: {
+      id: sUser.id,
+    },
+  });
+
+  return computeExposedUser(user);
 }

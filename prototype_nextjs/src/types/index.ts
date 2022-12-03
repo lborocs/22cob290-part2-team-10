@@ -1,10 +1,14 @@
-// TODO: design db
+import type { User } from '@prisma/client';
 
-// TODO: include like manhours taken
+export type ExposedUser = Omit<User, 'hashedPassword' | 'inviterId'>;
 
-// TODO: add text-avatar colours to user
+// inspired by https://www.prisma.io/docs/concepts/components/prisma-client/computed-fields
+export function computeExposedUser(user: User): ExposedUser {
+  const { hashedPassword, inviterId, ...exposedUser } = user;
+  return exposedUser;
+}
 
-// TODO: might have to refactor how roles work if they're project specific, which it looks like they are lol
+// ---------------------------------
 
 export enum Role {
   MANAGER = 'MANAGER',
@@ -12,22 +16,6 @@ export enum Role {
   TEAM_MEMBER = 'TEAM_MEMBER',
   LEFT_COMPANY = 'LEFT_COMPANY',
 }
-
-// TOOD: implement user ID & use it to getUserInfo instead of email
-
-// TODO: finalise user entity and think of a good name for this
-// (User bad name cos clash with next-auth)
-// then we can use this
-export type User = {
-  id: string // TODO: id might(probably?) be number
-  firstName: string
-  lastName: string
-  email: string
-  password: string
-  role: Role
-};
-
-export type UserInfo = Omit<User, 'password'>;
 
 // TODO: maybe return UserInfo instead of email? - that'll be solved by prisma
 export type ProjectInfo = {
