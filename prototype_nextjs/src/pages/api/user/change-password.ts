@@ -2,10 +2,11 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { unstable_getServerSession } from 'next-auth/next';
 import type { z } from 'zod';
 
+import prisma from '~/lib/prisma';
+import { isCorrectPassword, hashPassword } from '~/lib/user';
 import ChangePasswordSchema from '~/schemas/user/changePassword';
 import type { UnauthorisedResponse, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-// import { changePassword, isCorrectPassword } from '~/server/store/users';
 
 export type RequestSchema = z.infer<typeof ChangePasswordSchema>;
 
@@ -30,23 +31,40 @@ export default async function handler(
   const safeParseResult = ChangePasswordSchema.safeParse(req.body);
 
   if (!safeParseResult.success) {
-    res.status(400).json({
+    return res.status(400).json({
       success: false,
       issues: safeParseResult.error.issues,
     } as ResponseSchema);
-    return;
   }
 
   const { currentPassword, newPassword } = safeParseResult.data;
 
   const userId = (session.user as SessionUser).id;
 
-  if (!await isCorrectPassword(userId, currentPassword)) {
-    res.status(200).json({ success: false });
-    return;
+  const { id, hashedPassword } = await prisma.user.findUniqueOrThrow({
+    where: {
+      id: userId,
+    },
+    select: {
+      id: true,
+      hashedPassword: true,
+    },
+  });
+
+  if (!await isCorrectPassword(currentPassword, hashedPassword)) {
+    return res.status(200).json({
+      success: false,
+    });
   }
 
-  await changePassword(userId, newPassword);
+  await prisma.user.update({
+    where: {
+      id,
+    },
+    data: {
+      hashedPassword: await hashPassword(newPassword),
+    },
+  });
 
   res.status(200).json({ success: true });
 }
