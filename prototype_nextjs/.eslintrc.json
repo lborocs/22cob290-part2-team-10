@@ -113,11 +113,7 @@
         "@typescript-eslint/no-unsafe-member-access": "off",
         "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/no-unused-vars": ["warn", { "args": "none" }],
-        "@typescript-eslint/restrict-template-expressions": ["warn", {
-          "allowNumber": true,
-          "allowBoolean": true,
-          "allowNullish": true
-        }]
+        "@typescript-eslint/restrict-template-expressions": "off"
       }
     }
   ]
