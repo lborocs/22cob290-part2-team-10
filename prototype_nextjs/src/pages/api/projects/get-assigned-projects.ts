@@ -1,11 +1,27 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { unstable_getServerSession } from 'next-auth/next';
 
-import type { UnauthorisedResponse } from '~/types';
+import prisma from '~/lib/prisma';
+import type { UnauthorisedResponse, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import { getAssignedProjects } from '~/server/store/projects';
 
-export type ResponseSchema = Awaited<ReturnType<typeof getAssignedProjects>>;
+function getProjects(userId: string) {
+  return prisma.project.findMany({
+    where: {
+      members: {
+        some: {
+          memberId: userId,
+        },
+      },
+    },
+    select: {
+      id: true,
+      name: true,
+    },
+  });
+}
+
+export type ResponseSchema = Awaited<ReturnType<typeof getProjects>>;
 
 export default async function handler(
   req: NextApiRequest,
@@ -21,9 +37,9 @@ export default async function handler(
     return res.status(401).json({ message: 'You must be signed in.' });
   }
 
-  const email = session.user.email!;
+  const userId = (session.user as SessionUser).id;
 
-  const projects = await getAssignedProjects(email);
+  const projects = await getProjects(userId);
 
   res.status(200).json(projects);
 }
