@@ -5,20 +5,33 @@ import prisma from '~/lib/prisma';
 import type { UnauthorisedResponse, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
-function getProjects(userId: string) {
-  return prisma.project.findMany({
+// TODO: return this user's role? (computed value)
+async function getProjects(userId: string) {
+  const projects = await prisma.project.findMany({
     where: {
-      members: {
-        some: {
-          memberId: userId,
+      OR: [
+        {
+          managerId: userId,
         },
-      },
+        {
+          leaderId: userId,
+        },
+        {
+          members: {
+            some: {
+              memberId: userId,
+            },
+          },
+        },
+      ],
     },
     select: {
       id: true,
       name: true,
     },
   });
+
+  return projects;
 }
 
 export type ResponseSchema = Awaited<ReturnType<typeof getProjects>>;
