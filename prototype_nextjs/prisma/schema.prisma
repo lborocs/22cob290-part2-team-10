@@ -13,6 +13,9 @@ datasource db {
   url      = "file:./dev.db"
 }
 
+// TODO: consider (discuss) using `username` instead of email, which will be the portion before @ in their email
+// unique and never changing, like email
+
 // role?
 model User {
   id             String  @id @default(uuid())
@@ -28,11 +31,12 @@ model User {
   avatarBg String @default("#e2ba39")
   avatarFg String @default("white")
 
-  managedProjects  Project[]        @relation("ProjectManager")
-  ledProjects      Project[]        @relation("ProjectLeader")
-  assignedProjects ProjectMembers[] @relation("ProjectMembers_member")
+  managedProjects  Project[]                   @relation("ProjectManager")
+  ledProjects      Project[]                   @relation("ProjectLeader")
+  assignedProjects ProjectMembers[]            @relation("ProjectMembers_member")
   // tasks from ALL projects
-  tasks            ProjectTask[]    @relation("ProjectTaskAssignee")
+  tasks            ProjectTask[]               @relation("ProjectTaskAssignee")
+  permittedTasks   ProjectTaskPermittedUsers[] @relation("ProjectTaskPermittedUsers_user")
 }
 
 // TODO: user's todo list
@@ -51,6 +55,7 @@ model Project {
   tasks ProjectTask[] @relation("ProjectTasks")
 }
 
+// many-many relationship table
 model ProjectMembers {
   projectId Int
   project   Project @relation("ProjectMembers_project", fields: [projectId], references: [id])
@@ -70,7 +75,18 @@ model ProjectTask {
   description String
   tags        ProjectTaskTag[]
   assigneeId  String
-  assignee    User             @relation("ProjectTaskAssignee", fields: [assigneeId], references: [id])
+  assignee    User                        @relation("ProjectTaskAssignee", fields: [assigneeId], references: [id])
+  permitted   ProjectTaskPermittedUsers[] @relation("ProjectTaskPermittedUsers_task")
+}
+
+// many-many relationship table
+model ProjectTaskPermittedUsers {
+  taskId Int
+  task   ProjectTask @relation("ProjectTaskPermittedUsers_task", fields: [taskId], references: [id])
+  userId String
+  user   User        @relation("ProjectTaskPermittedUsers_user", fields: [userId], references: [id])
+
+  @@id([taskId, userId])
 }
 
 model ProjectTaskTag {
