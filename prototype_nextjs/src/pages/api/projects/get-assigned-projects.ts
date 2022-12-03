@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { unstable_getServerSession } from 'next-auth/next';
 
 import prisma from '~/lib/prisma';
+import { whereUserHasAccessToProject } from '~/lib/projects';
 import type { UnauthorisedResponse, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
@@ -9,21 +10,7 @@ import { authOptions } from '~/pages/api/auth/[...nextauth]';
 async function getProjects(userId: string) {
   const projects = await prisma.project.findMany({
     where: {
-      OR: [
-        {
-          managerId: userId,
-        },
-        {
-          leaderId: userId,
-        },
-        {
-          members: {
-            some: {
-              memberId: userId,
-            },
-          },
-        },
-      ],
+      ...whereUserHasAccessToProject(userId),
     },
     select: {
       id: true,
