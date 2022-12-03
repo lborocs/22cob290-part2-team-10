@@ -1,10 +1,6 @@
 import { PrismaClient, type Prisma } from '@prisma/client';
 
-// import { hashPassword } from '~/server/store/users';
-
-async function hashPassword(raw: string) {
-  return raw;
-}
+import { hashPassword } from '../src/lib/user';
 
 const prisma = new PrismaClient();
 
@@ -55,7 +51,7 @@ async function main() {
         },
       },
     });
-    console.log(`Created user with id: ${user.id}, invited by email ${user.inviter?.email ?? 'null'}`);
+    console.log(`Created user with id: ${user.id}, invited by email ${String(user.inviter?.email)}`);
   }
 
   console.log('Seeding finished.');
