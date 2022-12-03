@@ -20,6 +20,25 @@ const getUserData = async (): Promise<Prisma.UserCreateInput[]> => [
     name: 'Admin',
   },
   {
+    email: 'manager@make-it-all.co.uk',
+    hashedPassword: await testPassword,
+    name: 'Project Manager',
+    inviter: adminInvite,
+  },
+  {
+    email: 'leader@make-it-all.co.uk',
+    hashedPassword: await testPassword,
+    name: 'Project Leader',
+    inviter: adminInvite,
+  },
+  {
+    email: 'left@make-it-all.co.uk',
+    hashedPassword: await testPassword,
+    name: 'Left The Company',
+    inviter: adminInvite,
+    leftCompany: true,
+  },
+  {
     email: 'alice@make-it-all.co.uk',
     hashedPassword: await testPassword,
     name: 'Alice Jones',
@@ -32,23 +51,10 @@ const getUserData = async (): Promise<Prisma.UserCreateInput[]> => [
     inviter: adminInvite,
   },
   {
-    email: 'manager@make-it-all.co.uk',
+    email: 'john@make-it-all.co.uk',
     hashedPassword: await testPassword,
-    name: 'Manager',
+    name: 'John Smith',
     inviter: adminInvite,
-  },
-  {
-    email: 'leader@make-it-all.co.uk',
-    hashedPassword: await testPassword,
-    name: 'Leader',
-    inviter: adminInvite,
-  },
-  {
-    email: 'left@make-it-all.co.uk',
-    hashedPassword: await testPassword,
-    name: 'Left The Company',
-    inviter: adminInvite,
-    leftCompany: true,
   },
 ];
 
@@ -83,31 +89,11 @@ const projectData: Prisma.ProjectCreateInput[] = range(1, 10).map<Prisma.Project
     ],
   },
   tasks: {
-    create: [
-      {
-        title: 'Task uno',
-        description: 'Example description',
-        stage: 'TODO',
-        assignee: {
-          connect: {
-            email: 'alice@make-it-all.co.uk',
-          },
-        },
-      },
-    ],
+    create: [],
   },
-  // tasks: {
-  //   create: [
-  //     {
-  //       title: 'O',
-  //       stage: '',
-  //       description: '',
-  //     },
-  //   ],
-  // },
 })).concat([
   {
-    name: 'Alice should not see this',
+    name: 'Alice SHOULD NOT see this',
     leader: {
       connect: {
         email: 'manager@make-it-all.co.uk',
@@ -132,6 +118,101 @@ const projectData: Prisma.ProjectCreateInput[] = range(1, 10).map<Prisma.Project
   },
 ]);
 
+const taskData: Prisma.ProjectTaskCreateInput[] = [
+  {
+    project: {
+      connect: {
+        id: 1,
+      },
+    },
+    title: 'Alice\'s Task',
+    description: 'desc',
+    stage: 'TODO',
+    tags: {
+      create: {
+        name: 'TestTag',
+      },
+    },
+    assignee: {
+      connect: {
+        email: 'alice@make-it-all.co.uk',
+      },
+    },
+  },
+  {
+    project: {
+      connect: {
+        id: 1,
+      },
+    },
+    title: 'Manager\'s Task',
+    description: 'Alice SHOULD see this',
+    stage: 'COMPLETED',
+    tags: {
+      connectOrCreate: [
+        {
+          where: {
+            name: 'TestTag',
+          },
+          create: {
+            name: 'This should NOT appear because this should evaluating to connecting to TestTag',
+          },
+        },
+      ],
+    },
+    assignee: {
+      connect: {
+        email: 'manager@make-it-all.co.uk',
+      },
+    },
+    permitted: {
+      create: [
+        {
+          user: {
+            connect: {
+              email: 'alice@make-it-all.co.uk',
+            },
+          },
+        },
+        {
+          user: {
+            connect: {
+              email: 'john@make-it-all.co.uk',
+            },
+          },
+        },
+      ],
+    },
+  },
+  {
+    project: {
+      connect: {
+        id: 1,
+      },
+    },
+    title: 'Jane\'s Task',
+    description: 'Alice SHOULD NOT see this',
+    stage: 'IN_PROGRESS',
+    tags: {
+      connectOrCreate: [
+        {
+          where: {
+            name: 'This tag should appear',
+          },
+          create: {
+            name: 'This tag should appear',
+          },
+        },
+      ],
+    },
+    assignee: {
+      connect: {
+        email: 'jane@make-it-all.co.uk',
+      },
+    },
+  },
+];
+
 async function main() {
   console.log('Start seeding ...');
 
@@ -154,6 +235,39 @@ async function main() {
       data: p,
     });
     console.log(`Created project with id: ${project.id} (name: ${project.name})`);
+  }
+
+  for (const t of taskData) {
+    const projectTask = await prisma.projectTask.create({
+      data: t,
+      include: {
+        project: {
+          select: {
+            name: true,
+          },
+        },
+        assignee: {
+          select: {
+            email: true,
+          },
+        },
+        permitted: {
+          select: {
+            user: {
+              select: {
+                email: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    const permittedEmails = projectTask.permitted.map(({ user }) => user.email);
+
+    console.log(
+      `Created task with id: ${projectTask.id}, under project named: ${projectTask.project.name}, `
+      + `assigned to user: ${projectTask.assignee.email}. Permitted emails: ${JSON.stringify(permittedEmails)}`
+    );
   }
 
   console.log('Seeding finished.');
