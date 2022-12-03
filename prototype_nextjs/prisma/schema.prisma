@@ -71,22 +71,10 @@ model ProjectTask {
   stage       String // enum
   title       String
   description String
-
-  tags        ProjectTaskTag[]  @relation("ProjectTaskTag")
-  projectTags ProjectTaskTags[]
+  tags        ProjectTaskTag[]
 }
 
-model ProjectTaskTags {
-  id    Int           @id @default(autoincrement())
-  name  String
-  tasks ProjectTask[]
-}
-
-// TODO: decide which of above or this to use
 model ProjectTaskTag {
-  projectTaskId Int
-  projectTask   ProjectTask @relation("ProjectTaskTag", fields: [projectTaskId], references: [id])
-  tagName       String
-
-  @@id([projectTaskId, tagName])
+  name  String        @id
+  tasks ProjectTask[]
 }
