@@ -1,20 +1,34 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */ // TODO: remove once this is done
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
+import type { Prisma } from '@prisma/client';
 
+import hashids from '~/lib/hashids';
+import prisma from '~/lib/prisma';
+import { getUserRoleInProject, userHasAccessToProject } from '~/lib/projects';
 import ErrorPage from '~/components/ErrorPage';
 import { SidebarType, type PageLayout } from '~/components/Layout';
 import KanbanBoard from '~/components/KanbanBoard';
-import hashids from '~/lib/hashids';
-import { type ProjectInfo, Role } from '~/types';
+import {
+  type SessionUser,
+  type ProjectTasks,
+  ProjectRole,
+  TaskStage,
+  computeAssignedToMe,
+} from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import { ssrGetUserInfo } from '~/server/utils';
-import { getAssignedTasks, getProjectInfo } from '~/server/store/projects';
 
 // TODO: project page (Projects page from before)
-export default function ProjectPage({ projectInfo, tasks }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  if (!projectInfo) return (
+export default function ProjectPage({ noAccess, project, role, tasks }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  if (noAccess) return (
+    <ErrorPage
+      title="You do not have access to this project."
+      buttonContent="Projects"
+      buttonUrl="/projects"
+    />
+  );
+
+  if (!project) return (
     <ErrorPage
       title="Project does not exist."
       buttonContent="Projects"
@@ -26,8 +40,7 @@ export default function ProjectPage({ projectInfo, tasks }: InferGetServerSidePr
     name,
     manager,
     leader,
-    members,
-  } = projectInfo;
+  } = project;
 
   const pageTitle = `${name} - Make-It-All`;
 
@@ -36,12 +49,48 @@ export default function ProjectPage({ projectInfo, tasks }: InferGetServerSidePr
       <Head>
         <title>{pageTitle}</title>
       </Head>
-      <h1>{name}</h1>
+      <div>
+        <h1>{name}</h1>
+        <h2>Manager name: {manager.name}</h2>
+        <h2>Leader name: {leader.name}</h2>
+      </div>
       <KanbanBoard
+        // TODO: use `role`
         tasks={tasks}
       />
     </main>
   );
+}
+
+const includeProjectTaskInfo = {
+  assignee: {
+    select: {
+      id: true,
+      name: true,
+    },
+  },
+  tags: {
+    select: {
+      name: true,
+    },
+  },
+} satisfies Prisma.ProjectTaskInclude;
+
+function toProjectTasks(
+  projectTasks: ProjectTasks[keyof ProjectTasks]
+): ProjectTasks {
+  const taskAcc: ProjectTasks = {
+    [TaskStage.TODO]: [],
+    [TaskStage.IN_PROGRESS]: [],
+    [TaskStage.CODE_REVIEW]: [],
+    [TaskStage.COMPLETED]: [],
+  };
+
+  return projectTasks.reduce((acc, task) => {
+    acc[task.stage as TaskStage].push(task);
+
+    return acc;
+  }, taskAcc);
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -51,38 +100,119 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { notFound: true };
   }
 
-  const user = await ssrGetUserInfo(session);
-  const { email } = user;
+  const user = session.user as SessionUser;
 
   const { id } = context.params!;
   const decodedId = hashids.decode(id as string);
 
-  const projectId = decodedId[0] as number; // | undefined
+  const projectId = decodedId[0] as number | undefined;
 
-  // no need to handle projectId being undefined because because getProjectInfo should just return null
-  const projectInfo = await getProjectInfo(projectId);
+  // no need to handle projectId being undefined because because should just return null
+  const project = await prisma.project.findUnique({
+    where: {
+      id: projectId,
+    },
+    include: {
+      manager: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      leader: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      members: {
+        select: {
+          memberId: true,
+        },
+      },
+    },
+  });
 
-  if (!projectInfo) return {
+  if (!project) return {
     props: {
       session,
       user,
-      projectInfo,
+      project: null,
     },
   };
 
-  // TODO: redirect/error page if this user isn't allowed to see this project
+  if (!userHasAccessToProject(user.id, project)) return {
+    props: {
+      session,
+      user,
+      noAccess: true,
+    },
+  };
 
-  // only show the tasks that the user is allowed to see if they're a team member
-  const tasks = user.role === Role.TEAM_MEMBER
-    ? await getAssignedTasks(email, projectId)
-    : projectInfo.tasks;
+  const role = getUserRoleInProject(user.id, project)!;
+
+  const canSeeAllTasks = role === ProjectRole.MANAGER || role == ProjectRole.LEADER;
+
+  let tasks: ProjectTasks[keyof ProjectTasks];
+
+  if (canSeeAllTasks) {
+    const result = await prisma.project.findUniqueOrThrow({
+      where: {
+        id: projectId,
+      },
+      select: {
+        tasks: {
+          include: {
+            ...includeProjectTaskInfo,
+          },
+        },
+      },
+    });
+    tasks = result.tasks.map((task) => computeAssignedToMe(task, user.id));
+  } else {
+    const result = await prisma.user.findUniqueOrThrow({
+      where: {
+        id: user.id,
+      },
+      select: {
+        tasks: {
+          where: {
+            projectId,
+          },
+          include: {
+            ...includeProjectTaskInfo,
+          },
+        },
+        permittedTasks: {
+          where: {
+            task: {
+              projectId,
+            },
+          },
+          select: {
+            task: {
+              include: {
+                ...includeProjectTaskInfo,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const assignedTasks = result.tasks;
+    const permittedTasks = result.permittedTasks.map(({ task }) => task);
+
+    tasks = assignedTasks.concat(permittedTasks).map((task) => computeAssignedToMe(task, user.id));
+  }
 
   return {
     props: {
       session,
       user,
-      projectInfo: projectInfo as Omit<ProjectInfo, 'tasks'>,
-      tasks,
+      project,
+      role,
+      tasks: toProjectTasks(tasks),
     },
   };
 }

@@ -1,21 +1,29 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */ // TODO: remove once this is done
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 
+import hashids from '~/lib/hashids';
+import prisma from '~/lib/prisma';
+import { getUserRoleInProject } from '~/lib/projects';
 import ErrorPage from '~/components/ErrorPage';
 import { SidebarType, type PageLayout } from '~/components/Layout';
-import hashids from '~/lib/hashids';
-import { Role } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import { ssrGetUserInfo } from '~/server/utils';
-import { getProjectInfo } from '~/server/store/projects';
+import { type SessionUser, ProjectRole } from '~/types';
 
 // TODO: ProjectOverviewPage
-export default function ProjectOverviewPage({ projectInfo }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  if (!projectInfo) return (
+export default function ProjectOverviewPage({ project, role }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  if (!project) return (
     <ErrorPage
       title="Project does not exist."
+      buttonContent="Home"
+      buttonUrl="/home"
+    />
+  );
+
+  // only managers can see the project overview
+  if (role !== ProjectRole.MANAGER) return (
+    <ErrorPage
+      title="You do not have access to this page."
       buttonContent="Projects"
       buttonUrl="/projects"
     />
@@ -26,7 +34,7 @@ export default function ProjectOverviewPage({ projectInfo }: InferGetServerSideP
     manager,
     leader,
     members,
-  } = projectInfo;
+  } = project;
 
   const pageTitle = `Overview ${name} - Make-It-All`;
 
@@ -38,12 +46,12 @@ export default function ProjectOverviewPage({ projectInfo }: InferGetServerSideP
       <main>
         <h1>{name}</h1>
         <div className="d-flex flex-column">
-          <p>Manager: {manager}</p>
-          <p>Leader: {leader}</p>
+          <p>Manager: {manager.name}</p>
+          <p>Leader: {leader.name}</p>
           <section>
             <p>Members:</p>
-            {members.map((member, index) => (
-              <p key={index}>{member}</p>
+            {members.map(({ member }, index) => (
+              <p key={index}>{member.id}</p>
             ))}
           </section>
         </div>
@@ -59,32 +67,60 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { notFound: true };
   }
 
-  const user = await ssrGetUserInfo(session);
-
-  // only managers can see the project overview
-  // TODO?: should we show an error page saying they aren't authorised to see this page?
-  if (user.role !== Role.MANAGER) {
-    return {
-      redirect: {
-        destination: '/home',
-        permanent: false,
-      },
-    };
-  }
+  const user = session.user as SessionUser;
 
   const { id } = context.params!;
   const decodedId = hashids.decode(id as string);
 
-  const projectId = decodedId[0] as number; // | undefined
+  const projectId = decodedId[0] as number | undefined;
 
-  // no need to handle projectId being undefined because because getProjectInfo should just return null
-  const projectInfo = await getProjectInfo(projectId);
+  const project = await prisma.project.findUnique({
+    where: {
+      id: projectId,
+    },
+    include: {
+      manager: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      leader: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      members: {
+        select: {
+          memberId: true,
+          member: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!project) return {
+    props: {
+      session,
+      user,
+      project: null,
+    },
+  };
+
+  const role = getUserRoleInProject(user.id, project);
 
   return {
     props: {
       session,
       user,
-      projectInfo,
+      project,
+      role,
     },
   };
 }
