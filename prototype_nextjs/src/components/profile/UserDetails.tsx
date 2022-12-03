@@ -13,18 +13,14 @@ import ChangeNameSchema from '~/schemas/user/changeName';
 import type { RequestSchema as ChangeNamePayload, ResponseSchema as ChangeNameResponse } from '~/pages/api/user/change-name';
 
 type DetailsFormData = {
-  firstName: string
-  lastName: string
+  name: string
 };
 
 export default function UserDetails() {
-  const { setFirstName, setLastName, firstName, lastName, email, role } = useUserStore((state) => ({
-    setFirstName: state.setFirstName,
-    setLastName: state.setLastName,
-    firstName: state.user.firstName,
-    lastName: state.user.lastName,
+  const { setName, name, email } = useUserStore((state) => ({
+    setName: state.setName,
+    name: state.user.name,
     email: state.user.email,
-    role: state.user.role,
   }));
 
   // TODO: add a glow to firstName & lastName to show it's editable?
@@ -41,10 +37,9 @@ export default function UserDetails() {
         const { data } = await axios.post<ChangeNameResponse>('/api/user/change-name', payload);
 
         if (data.success) {
-          const { firstName, lastName } = values;
+          const { name } = values;
 
-          setFirstName(firstName);
-          setLastName(lastName);
+          setName(name);
 
           resetForm({ values });
         } else { // shouldn't happen
@@ -65,8 +60,7 @@ export default function UserDetails() {
   return (
     <Formik
       initialValues={{
-        firstName,
-        lastName,
+        name,
       }}
       validate={withZodSchema(ChangeNameSchema)}
       onSubmit={handleSubmit}
@@ -83,6 +77,24 @@ export default function UserDetails() {
       }) => (
         <Form onSubmit={handleSubmit} noValidate>
           <Row>
+            <Col md>
+              <FloatingLabel label="Name" className="mb-3" controlId="name">
+                <Form.Control
+                  name="name"
+                  placeholder="Enter Name"
+                  value={values.name}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  isInvalid={touched.name && !!errors.name}
+                  required
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.name}
+                </Form.Control.Feedback>
+              </FloatingLabel>
+            </Col>
+          </Row>
+          {/* <Row>
             <Col md>
               <FloatingLabel label="First name" className="mb-3" controlId="firstName">
                 <Form.Control
@@ -115,22 +127,12 @@ export default function UserDetails() {
                 </Form.Control.Feedback>
               </FloatingLabel>
             </Col>
-          </Row>
+          </Row> */}
           <Row>
             <Col>
               <FloatingLabel label="Email" className="mb-3">
                 <Form.Control
                   value={email}
-                  readOnly
-                />
-              </FloatingLabel>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <FloatingLabel label="Role" className="mb-3">
-                <Form.Control
-                  value={role}
                   readOnly
                 />
               </FloatingLabel>
@@ -152,22 +154,3 @@ export default function UserDetails() {
     </Formik>
   );
 }
-
-/*
-      // const { data } = await axios.post<ChangeNameResponse>('/api/user/change-name', payload);
-      // await new Promise((res) => setTimeout(res, 5000));
-
-      // if (data.success) {
-      //   const { firstName, lastName } = values;
-
-      //   setFirstName(firstName);
-      //   setLastName(lastName);
-
-      //   resetForm({ values });
-
-      //   toast.success('Details updated.');
-      // } else { // shouldn't happen
-      //   console.log(data);
-      //   toast.error('Please try again.');
-      // }
-*/
