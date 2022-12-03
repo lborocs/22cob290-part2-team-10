@@ -7,72 +7,52 @@ const prisma = new PrismaClient();
 
 const testPassword = hashPassword('TestPassword123!');
 
+const adminInvite: Prisma.UserCreateNestedOneWithoutInvitedInput = {
+  connect: {
+    email: 'admin@make-it-all.co.uk',
+  },
+};
+
 const getUserData = async (): Promise<Prisma.UserCreateInput[]> => [
   {
     email: 'admin@make-it-all.co.uk',
     hashedPassword: await testPassword,
     name: 'Admin',
-    avatar: { create: {} },
   },
   {
     email: 'alice@make-it-all.co.uk',
     hashedPassword: await testPassword,
     name: 'Alice Jones',
-    avatar: { create: {} },
-    inviter: {
-      connect: {
-        email: 'admin@make-it-all.co.uk',
-      },
-    },
+    inviter: adminInvite,
   },
   {
     email: 'jane@make-it-all.co.uk',
     hashedPassword: await testPassword,
     name: 'Jane Doe',
-    avatar: { create: {} },
-    inviter: {
-      connect: {
-        email: 'admin@make-it-all.co.uk',
-      },
-    },
+    inviter: adminInvite,
   },
   {
     email: 'manager@make-it-all.co.uk',
     hashedPassword: await testPassword,
     name: 'Manager',
-    avatar: { create: {} },
-    inviter: {
-      connect: {
-        email: 'admin@make-it-all.co.uk',
-      },
-    },
+    inviter: adminInvite,
   },
   {
     email: 'leader@make-it-all.co.uk',
     hashedPassword: await testPassword,
     name: 'Leader',
-    avatar: { create: {} },
-    inviter: {
-      connect: {
-        email: 'admin@make-it-all.co.uk',
-      },
-    },
+    inviter: adminInvite,
   },
   {
     email: 'left@make-it-all.co.uk',
     hashedPassword: await testPassword,
     name: 'Left The Company',
-    avatar: { create: {} },
-    inviter: {
-      connect: {
-        email: 'admin@make-it-all.co.uk',
-      },
-    },
+    inviter: adminInvite,
     leftCompany: true,
   },
 ];
 
-const projectData = range(1, 10).map<Prisma.ProjectCreateInput>((num) => ({
+const projectData: Prisma.ProjectCreateInput[] = range(1, 10).map<Prisma.ProjectCreateInput>((num) => ({
   name: `Project ${num}`,
   leader: {
     connect: {
@@ -102,8 +82,55 @@ const projectData = range(1, 10).map<Prisma.ProjectCreateInput>((num) => ({
       },
     ],
   },
-}));
-
+  tasks: {
+    create: [
+      {
+        title: 'Task uno',
+        description: 'Example description',
+        stage: 'TODO',
+        assignee: {
+          connect: {
+            email: 'alice@make-it-all.co.uk',
+          },
+        },
+      },
+    ],
+  },
+  // tasks: {
+  //   create: [
+  //     {
+  //       title: 'O',
+  //       stage: '',
+  //       description: '',
+  //     },
+  //   ],
+  // },
+})).concat([
+  {
+    name: 'Alice should not see this',
+    leader: {
+      connect: {
+        email: 'manager@make-it-all.co.uk',
+      },
+    },
+    manager: {
+      connect: {
+        email: 'leader@make-it-all.co.uk',
+      },
+    },
+    members: {
+      create: [
+        {
+          member: {
+            connect: {
+              email: 'jane@make-it-all.co.uk',
+            },
+          },
+        },
+      ],
+    },
+  },
+]);
 
 async function main() {
   console.log('Start seeding ...');

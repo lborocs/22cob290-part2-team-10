@@ -25,22 +25,17 @@ model User {
   inviter   User?   @relation("Inviter", fields: [inviterId], references: [id])
   invited   User[]  @relation("Inviter")
 
-  avatar           TextAvatar?      @relation("TextAvatar")
+  avatarBg String @default("#e2ba39")
+  avatarFg String @default("white")
+
   managedProjects  Project[]        @relation("ProjectManager")
   ledProjects      Project[]        @relation("ProjectLeader")
   assignedProjects ProjectMembers[] @relation("ProjectMembers_member")
+  // tasks from ALL projects
+  tasks            ProjectTask[]    @relation("ProjectTaskAssignee")
 }
 
 // TODO: user's todo list
-
-// TODO: not sure how to handle this
-model TextAvatar {
-  userId String @id
-  user   User   @relation("TextAvatar", fields: [userId], references: [id])
-
-  bg String @default("")
-  fg String @default("white")
-}
 
 model Project {
   id   Int    @id @default(autoincrement())
@@ -52,6 +47,7 @@ model Project {
   leader    User             @relation("ProjectLeader", fields: [leaderId], references: [id])
   members   ProjectMembers[] @relation("ProjectMembers_project")
 
+  // TODO: split tasks into TodoTask etc.?
   tasks ProjectTask[] @relation("ProjectTasks")
 }
 
@@ -73,6 +69,8 @@ model ProjectTask {
   title       String
   description String
   tags        ProjectTaskTag[]
+  assigneeId  String
+  assignee    User             @relation("ProjectTaskAssignee", fields: [assigneeId], references: [id])
 }
 
 model ProjectTaskTag {
