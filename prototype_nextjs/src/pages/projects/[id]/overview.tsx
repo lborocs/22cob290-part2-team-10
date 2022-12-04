@@ -1,6 +1,7 @@
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
+import type { Prisma } from '@prisma/client';
 
 import hashids from '~/lib/hashids';
 import prisma from '~/lib/prisma';
@@ -20,8 +21,8 @@ export default function ProjectOverviewPage({ project, role }: InferGetServerSid
     />
   );
 
-  // only managers can see the project overview
-  if (role !== ProjectRole.MANAGER) return (
+  // only managers & leaders can see the project overview
+  if (role !== ProjectRole.MANAGER && role !== ProjectRole.LEADER) return (
     <ErrorPage
       title="You do not have access to this page."
       buttonContent="Projects"
@@ -46,14 +47,34 @@ export default function ProjectOverviewPage({ project, role }: InferGetServerSid
       <main>
         <h1>{name}</h1>
         <div className="d-flex flex-column">
-          <p>Manager: {manager.name}</p>
-          <p>Leader: {leader.name}</p>
-          <section>
-            <p>Members:</p>
-            {members.map(({ member }, index) => (
-              <p key={index}>{member.id}</p>
-            ))}
-          </section>
+          <p>Number of members: {project._count.members}</p>
+          <p>Total project tasks: {project._count.tasks}</p>
+
+          <details open>
+            <summary><span className="h3">Manager</span></summary>
+            <p>Name: {manager.name}</p>
+            <p># of tasks: {manager.tasks.length}</p>
+          </details>
+
+          <details open>
+            <summary><span className="h3">Leader</span></summary>
+            <p>Name: {leader.name}</p>
+            <p># of tasks: {leader.tasks.length}</p>
+          </details>
+
+          <details open>
+            <summary><span className="h3">Members</span></summary>
+            <ul>
+              {members.map(({ member }, index) => (
+                <li key={index}>
+                  <div>
+                    <p>Name: {member.name}</p>
+                    <p># of tasks: {member.tasks.length}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </details>
         </div>
       </main>
     </main>
@@ -74,21 +95,40 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const projectId = decodedId[0] as number | undefined;
 
+  const numberOfTasks = {
+    where: {
+      projectId,
+    },
+    select: {
+      id: true,
+    },
+  } satisfies Prisma.ProjectTaskFindManyArgs;
+
+  // TODO: how many tasks a user is CURRENTLY working on (might have to be another query)
+  // and also total number of tasks (so we can do like `completed tasks: 5/30`)
+
   const project = await prisma.project.findUnique({
     where: {
       id: projectId,
     },
-    include: {
+    select: {
+      name: true,
       manager: {
         select: {
           id: true,
           name: true,
+          tasks: {
+            ...numberOfTasks,
+          },
         },
       },
       leader: {
         select: {
           id: true,
           name: true,
+          tasks: {
+            ...numberOfTasks,
+          },
         },
       },
       members: {
@@ -96,10 +136,18 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
           memberId: true,
           member: {
             select: {
-              id: true,
               name: true,
+              tasks: {
+                ...numberOfTasks,
+              },
             },
           },
+        },
+      },
+      _count: {
+        select: {
+          members: true,
+          tasks: true,
         },
       },
     },
