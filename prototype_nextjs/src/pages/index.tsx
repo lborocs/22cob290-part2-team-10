@@ -40,6 +40,10 @@ type SignInFormData = {
   password: string
 };
 
+// TODO?: remove specific login feedback? (WRONG_PASSWORD etc.)
+// because "We would like suitable aspects of data protection considered so the sys‐
+// tem cannot be exploited to target specific individual" - spec letter
+
 export default function SignInPage() {
   const router = useRouter();
 

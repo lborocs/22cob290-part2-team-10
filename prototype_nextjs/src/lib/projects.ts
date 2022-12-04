@@ -30,7 +30,6 @@ export function whereUserHasAccessToProject(userId: string): Prisma.ProjectWhere
 type ProjectTeam = {
   manager: {
     id: string
-    name: string
   }
   leader: {
     id: string
@@ -46,8 +45,8 @@ export function getUserRoleInProject(userId: string, project: ProjectTeam): Proj
 
   const memberIds = project.members.map((projectMember) => projectMember.memberId);
 
-  if (userId === managerId) return ProjectRole.MANAGER;
-  else if (userId === leaderId) return ProjectRole.LEADER;
+  if (managerId === userId) return ProjectRole.MANAGER;
+  else if (leaderId === userId) return ProjectRole.LEADER;
   else if (memberIds.includes(userId)) return ProjectRole.MEMBER;
 
   return null;

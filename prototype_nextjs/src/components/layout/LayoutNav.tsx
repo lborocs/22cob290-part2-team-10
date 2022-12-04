@@ -3,14 +3,12 @@ import { useRouter } from 'next/router';
 import Nav from 'react-bootstrap/Nav';
 
 import TextAvatar from '~/components/TextAvatar';
-import useUserStore from '~/store/userStore';
-import { Role } from '~/types';
+
+// TODO: dashboard might depend on it user role is company-wide project manager
 
 export default function LayoutNav() {
   const router = useRouter();
   const route = router.pathname;
-
-  const role = useUserStore((state) => state.user.role);
 
   return (
     <Nav
@@ -26,11 +24,14 @@ export default function LayoutNav() {
       <Link href="/projects" passHref legacyBehavior>
         <Nav.Link>Projects</Nav.Link>
       </Link>
-      {(role === Role.MANAGER || role === Role.TEAM_LEADER) && (
+      {/* {(role === Role.MANAGER || role === Role.TEAM_LEADER) && (
         <Link href="/dashboard" passHref legacyBehavior>
           <Nav.Link>Dashboard</Nav.Link>
         </Link>
-      )}
+      )} */}
+      <Link href="/dashboard" passHref legacyBehavior>
+        <Nav.Link>Dashboard</Nav.Link>
+      </Link>
       <Link href="/profile" passHref legacyBehavior>
         <Nav.Link><Profile /></Nav.Link>
       </Link>
