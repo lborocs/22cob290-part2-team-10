@@ -5,7 +5,7 @@ import { range } from '../src/utils';
 
 const prisma = new PrismaClient();
 
-const testPassword = hashPassword('TestPassword123!');
+const testPassword = hashPassword.bind(null, 'TestPassword123!');
 
 const adminInvite: Prisma.UserCreateNestedOneWithoutInvitedInput = {
   connect: {
@@ -16,43 +16,43 @@ const adminInvite: Prisma.UserCreateNestedOneWithoutInvitedInput = {
 const getUserData = async (): Promise<Prisma.UserCreateInput[]> => [
   {
     email: 'admin@make-it-all.co.uk',
-    hashedPassword: await testPassword,
+    hashedPassword: await testPassword(),
     name: 'Admin',
   },
   {
     email: 'manager@make-it-all.co.uk',
-    hashedPassword: await testPassword,
+    hashedPassword: await testPassword(),
     name: 'Project Manager',
     inviter: adminInvite,
   },
   {
     email: 'leader@make-it-all.co.uk',
-    hashedPassword: await testPassword,
+    hashedPassword: await testPassword(),
     name: 'Project Leader',
     inviter: adminInvite,
   },
   {
     email: 'left@make-it-all.co.uk',
-    hashedPassword: await testPassword,
+    hashedPassword: await testPassword(),
     name: 'Left The Company',
     inviter: adminInvite,
     leftCompany: true, // should not be allowed to sign in
   },
   {
     email: 'alice@make-it-all.co.uk',
-    hashedPassword: await testPassword,
+    hashedPassword: await testPassword(),
     name: 'Alice Felicity Henry', // text avatar should be AFH
     inviter: adminInvite,
   },
   {
     email: 'jane@make-it-all.co.uk',
-    hashedPassword: await testPassword,
+    hashedPassword: await testPassword(),
     name: 'Jane Doe Doherty Tate', // text avatar should be JDD
     inviter: adminInvite,
   },
   {
     email: 'john@make-it-all.co.uk',
-    hashedPassword: await testPassword,
+    hashedPassword: await testPassword(),
     name: 'John Smith',
     inviter: adminInvite,
   },
