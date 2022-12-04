@@ -22,12 +22,15 @@ datasource db {
 // - estimatedDuration for task
 // - deadline for project/task?
 
-// TODO: (need to clarify with client):
+// TODO: (need to clarify with client) (waiting for reply):
 // - post editors
 // - post lastEdited
 // - post lastEditor
+// - post contentHistory? [1-many]
+//   - content String
+//   - dateChanged DateTime
 
-// TODO?: model team, waiting on response from stakeholders
+// TODO?: model team, waiting for response from stakeholders
 
 // company-wide role?
 model User {
