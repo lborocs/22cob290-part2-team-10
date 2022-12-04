@@ -17,6 +17,16 @@ datasource db {
 // it's unique and never changing, like email
 // ^ probably not right
 
+// TODO: things like (can clarify with client?):
+// - manHours for project
+// - estimatedDuration for task
+// - deadline for project/task?
+
+// TODO: (need to clarify with client):
+// - post editors
+// - post lastEdited
+// - post lastEditor
+
 // TODO?: model team, waiting on response from stakeholders
 
 // company-wide role?
