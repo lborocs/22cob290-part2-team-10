@@ -27,10 +27,10 @@ export default function ProjectsList() {
   if (error) return null; // TODO: decide what to show on error
   if (!projects) return <LoadingPage dark={false} />;
 
-  let route: string | undefined;
-  if (router.pathname === '/projects/[id]') {
+  let currentProjectUrl: string | undefined;
+  if (router.pathname.startsWith('/projects/[id]')) {
     const { id } = router.query;
-    route = `/projects/${id as string}`;
+    currentProjectUrl = `/projects/${id as string}`;
   }
 
   return (
@@ -39,7 +39,7 @@ export default function ProjectsList() {
       <div className={`list-unstyled ${styles['projects-list']}`}>
         {projects.map((project, index) => {
           const url = `/projects/${hashids.encode(project.id)}`;
-          const active = route === url;
+          const active = currentProjectUrl === url;
 
           return (
             <li key={index}>
