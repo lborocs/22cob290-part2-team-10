@@ -134,6 +134,26 @@ const projectData: Prisma.ProjectCreateInput[] = range(1, 10).map<Prisma.Project
       ],
     },
   },
+  {
+    name: 'VERYYYYYYYYYYYYYYYYYYYYYYYYYYYYY LONGGGGGGGGGGGGGGGGGGGGGGGGGGGG NAME',
+    manager: {
+      connect: {
+        email: 'manager@make-it-all.co.uk',
+      },
+    },
+    leader: {
+      connect: {
+        email: 'leader@make-it-all.co.uk',
+      },
+    },
+    members: {
+      connect: [
+        {
+          email: 'alice@make-it-all.co.uk',
+        },
+      ],
+    },
+  },
 ]);
 
 const taskData: Prisma.ProjectTaskCreateInput[] = [

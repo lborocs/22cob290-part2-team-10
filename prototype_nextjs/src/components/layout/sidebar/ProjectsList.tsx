@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import FormControl from 'react-bootstrap/FormControl';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Tooltip from 'react-bootstrap/Tooltip';
 import axios from 'axios';
 import useSWR from 'swr';
 
@@ -59,14 +61,27 @@ export default function ProjectsList() {
           const url = `/projects/${hashids.encode(project.id)}`;
           const active = currentProjectUrl === url;
 
+          const nameIsTooLong = project.name.length > 20;
+
           return (
             <li key={index}>
-              <Link
-                href={url}
-                className={`${styles['project-link']} ${active ? styles.active : ''}`}
+              <OverlayTrigger
+                placement="right"
+                overlay={nameIsTooLong ? (
+                  <Tooltip>
+                    {project.name}
+                  </Tooltip>
+                ) : (
+                  <></>
+                )}
               >
-                {project.name}
-              </Link>
+                <Link
+                  href={url}
+                  className={`${styles['project-link']} ${active ? styles.active : ''}`}
+                >
+                  {project.name}
+                </Link>
+              </OverlayTrigger>
             </li>
           );
         })}
