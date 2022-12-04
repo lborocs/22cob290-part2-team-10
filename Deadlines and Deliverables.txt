@@ -7,12 +7,12 @@ Deliverables:
   Book slot week before
 
 3 Reports
-	R1 - Listing of client's Requirements. Team's Understanding of requirements. 
+	R1 - Listing of client's Requirements. Team's Understanding of requirements.
 		Cover page detailing the contribution of each team member
 	Deadline - 4pm Monday 7th November (week 6)
-	
-	R2 - Individual report. Web-PA used for this part. Assessment of the way the group 
-		carried out the task and what contribution each member of the group made to each 
+
+	R2 - Individual report. Web-PA used for this part. Assessment of the way the group
+		carried out the task and what contribution each member of the group made to each
 		aspect of the work. Used to enable individual marks to be awarded
 	Deadline - 4pm Friday 11th November (week 6)
-	 
+
