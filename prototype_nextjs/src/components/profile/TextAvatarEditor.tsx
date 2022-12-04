@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import CloseButton from 'react-bootstrap/CloseButton';
 import Form from 'react-bootstrap/Form';
@@ -6,6 +6,7 @@ import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import { Formik } from 'formik';
 import toast from 'react-hot-toast';
+import useSWR from 'swr';
 
 import {
   type TextAvatar,
@@ -27,6 +28,13 @@ export default function TextAvatarEditor() {
 
   const [isSaving, setIsSaving] = useState(false);
 
+  // using SWR like useEffect(..., [])
+  useSWR('defaultTextAvatar', async () => {
+    const textAvatar = await getTextAvatarFromStore();
+
+    setDefaultTextAvatar(textAvatar);
+  });
+
   // system default as in what they had before changing any settings
   const resetToSystemDefault = () => {
     // TODO update formik values
@@ -39,16 +47,6 @@ export default function TextAvatarEditor() {
     updateTextAvatarCss(defaultTextAvatar);
     onHide();
   };
-
-  useEffect(() => {
-    async function getDefault() {
-      const textAvatar = await getTextAvatarFromStore();
-
-      setDefaultTextAvatar(textAvatar);
-    }
-
-    getDefault();
-  }, []);
 
   const onHide = () => setShowModal(false);
 

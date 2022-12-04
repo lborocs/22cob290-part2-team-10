@@ -1,4 +1,5 @@
-import { forwardRef, useEffect } from 'react';
+import { forwardRef } from 'react';
+import useSWR from 'swr';
 
 import { getTextAvatarFromStore, updateTextAvatarCss } from '~/lib/textAvatar';
 import useUserStore from '~/store/userStore';
@@ -20,14 +21,12 @@ export default forwardRef(function LoadingButton({
   const names = username.split(/[ ]+/, 3);
   const initials = names.map((name) => name[0].toLocaleUpperCase());
 
-  useEffect(() => {
-    async function setTextAvatar() {
-      const textAvatar = await getTextAvatarFromStore();
-      updateTextAvatarCss(textAvatar);
-    }
+  // using SWR like useEffect(..., [])
+  useSWR('textAvatar', async () => {
+    const textAvatar = await getTextAvatarFromStore();
 
-    setTextAvatar();
-  }, []);
+    updateTextAvatarCss(textAvatar);
+  });
 
   const {
     className,
