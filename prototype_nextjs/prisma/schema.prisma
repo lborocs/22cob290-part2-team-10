@@ -16,6 +16,8 @@ datasource db {
 // TODO: consider (discuss) using `username` instead of email, which will be the portion before @ in their email
 // it's unique and never changing, like email
 
+// TODO?: team? waiting on response from stakeholders
+
 // company-wide role?
 model User {
   id             String  @id @default(uuid())
@@ -69,6 +71,8 @@ model ProjectMembers {
   memberId  String
   member    User    @relation("ProjectMembers_member", fields: [memberId], references: [id])
 
+  // could put user role in this? (only if explicit many-many relation)
+
   @@id([projectId, memberId])
 }
 
@@ -111,6 +115,7 @@ model Post {
   title      String
   summary    String
   content    String
+  upvotes    Int         @default(0)
   topics     PostTopic[]
 }
 

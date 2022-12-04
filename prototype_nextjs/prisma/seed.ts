@@ -281,6 +281,7 @@ const postData: Prisma.PostCreateInput[] = [
     summary: 'posted sometime between 1/1/22 and today',
     datePosted: new Date(randomTimeMs()),
     content: 'Well, sometimes you just gotta do what you gotta do',
+    upvotes: 2000,
     topics: {
       connectOrCreate: [
         {
