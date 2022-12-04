@@ -27,6 +27,7 @@ export default function ForumPostPreview({ post }: ForumPostPreviewProps) {
     title,
     summary,
     topics,
+    upvotes,
   } = post;
 
   const date = new Date(datePosted);
@@ -42,6 +43,7 @@ export default function ForumPostPreview({ post }: ForumPostPreviewProps) {
           <span className="me-1" key={index}>{topic.name}</span>
         ))}
       </span>
+      <p className="mb-0">Votes: {upvotes}</p>
       <p className="mb-0">Author: {author.name}</p>
       <p className="mb-0"><small>Summary: {summary}</small></p>
       <p className="mb-0">Posted: {date.toLocaleDateString()}</p>

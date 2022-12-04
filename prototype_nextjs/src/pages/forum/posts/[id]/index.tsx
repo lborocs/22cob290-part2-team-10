@@ -31,6 +31,7 @@ export default function PostPage({ post, authoredByMe }: InferGetServerSideProps
     summary,
     content,
     topics,
+    upvotes,
   } = post;
 
   const pageTitle = `${title} - Make-It-All`;
@@ -46,6 +47,10 @@ export default function PostPage({ post, authoredByMe }: InferGetServerSideProps
       {/* TODO */}
       <div className="d-flex justify-content-between">
         <h1>{title}</h1>
+
+        <div>
+          Votes: {upvotes}
+        </div>
 
         <div>
           {authoredByMe && (

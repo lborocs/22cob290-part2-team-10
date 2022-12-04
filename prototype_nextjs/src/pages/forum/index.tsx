@@ -12,6 +12,7 @@ import { authOptions } from '~/pages/api/auth/[...nextauth]';
 // TODO: ForumPage
 export default function ForumPage({ posts }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   // TODO: top10voted?
+  // TODO: option to list the posts only by this user (can be a different page)
 
   return (
     <main>
