@@ -15,6 +15,7 @@ datasource db {
 
 // TODO: consider (discuss) using `username` instead of email, which will be the portion before @ in their email
 // it's unique and never changing, like email
+// ^ probably not right
 
 // TODO?: team? waiting on response from stakeholders
 
@@ -32,13 +33,12 @@ model User {
   avatarFg       String  @default("white") @map("avatar_fg")
 
   // projects
-  managedProjects  Project[]        @relation("ProjectManager")
-  ledProjects      Project[]        @relation("ProjectLeader")
-  assignedProjects ProjectMembers[] @relation("ProjectMembers_member")
-
+  managedProjects  Project[]     @relation("ProjectManager")
+  ledProjects      Project[]     @relation("ProjectLeader")
+  assignedProjects Project[]     @relation("ProjectMembers")
   // tasks from ALL projects
-  tasks          ProjectTask[]               @relation("ProjectTaskAssignee")
-  permittedTasks ProjectTaskPermittedUsers[] @relation("ProjectTaskPermittedUsers_user")
+  tasks            ProjectTask[] @relation("ProjectTaskAssignee")
+  permittedTasks   ProjectTask[] @relation("ProjectTaskPermitted")
 
   // forum
   Post Post[] @relation("Post")
@@ -51,53 +51,27 @@ model User {
 // ------------------------------------------
 
 model Project {
-  id   Int    @id @default(autoincrement())
-  name String
-
-  managerId String           @map("manager_id")
-  manager   User             @relation("ProjectManager", fields: [managerId], references: [id])
-  leaderId  String           @map("leader_id")
-  leader    User             @relation("ProjectLeader", fields: [leaderId], references: [id])
-  members   ProjectMembers[] @relation("ProjectMembers_project")
-
-  tasks ProjectTask[] @relation("ProjectTasks")
-}
-
-// many-many relationship table
-// TODO!: test having this table be implicit (like ProjectTaskTag)
-model ProjectMembers {
-  projectId Int     @map("project_id")
-  project   Project @relation("ProjectMembers_project", fields: [projectId], references: [id])
-  memberId  String  @map("member_id")
-  member    User    @relation("ProjectMembers_member", fields: [memberId], references: [id])
-
-  // could put user role in this? (only if explicit many-many relation)
-
-  @@id([projectId, memberId])
+  id        Int           @id @default(autoincrement())
+  name      String
+  managerId String        @map("manager_id")
+  manager   User          @relation("ProjectManager", fields: [managerId], references: [id])
+  leaderId  String        @map("leader_id")
+  leader    User          @relation("ProjectLeader", fields: [leaderId], references: [id])
+  members   User[]        @relation("ProjectMembers")
+  tasks     ProjectTask[] @relation("ProjectTasks")
 }
 
 model ProjectTask {
-  id          Int                         @id @default(autoincrement())
+  id          Int              @id @default(autoincrement())
   projectId   Int
-  project     Project                     @relation("ProjectTasks", fields: [projectId], references: [id])
+  project     Project          @relation("ProjectTasks", fields: [projectId], references: [id])
   stage       String // enum
   title       String
   description String
   tags        ProjectTaskTag[]
   assigneeId  String
-  assignee    User                        @relation("ProjectTaskAssignee", fields: [assigneeId], references: [id])
-  permitted   ProjectTaskPermittedUsers[] @relation("ProjectTaskPermittedUsers_task")
-}
-
-// many-many relationship table
-// TODO!: test having this table be implicit (like ProjectTaskTag)
-model ProjectTaskPermittedUsers {
-  taskId Int         @map("task_id")
-  task   ProjectTask @relation("ProjectTaskPermittedUsers_task", fields: [taskId], references: [id])
-  userId String      @map("user_id")
-  user   User        @relation("ProjectTaskPermittedUsers_user", fields: [userId], references: [id])
-
-  @@id([taskId, userId])
+  assignee    User             @relation("ProjectTaskAssignee", fields: [assigneeId], references: [id])
+  permitted   User[]           @relation("ProjectTaskPermitted")
 }
 
 model ProjectTaskTag {

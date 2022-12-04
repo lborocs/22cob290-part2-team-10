@@ -5,7 +5,7 @@ import type { Prisma } from '@prisma/client';
 
 import hashids from '~/lib/hashids';
 import prisma from '~/lib/prisma';
-import { getUserRoleInProject, userHasAccessToProject } from '~/lib/projects';
+import { getUserRoleInProject, userHasAccessToProject, toProjectTasks } from '~/lib/projects';
 import ErrorPage from '~/components/ErrorPage';
 import { SidebarType, type PageLayout } from '~/components/Layout';
 import KanbanBoard from '~/components/projects/KanbanBoard';
@@ -13,7 +13,6 @@ import {
   type SessionUser,
   type ProjectTasks,
   ProjectRole,
-  TaskStage,
   computeAssignedToMe,
 } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
@@ -76,23 +75,6 @@ const includeProjectTaskInfo = {
   },
 } satisfies Prisma.ProjectTaskInclude;
 
-function toProjectTasks(
-  projectTasks: ProjectTasks[keyof ProjectTasks]
-): ProjectTasks {
-  const taskAcc: ProjectTasks = {
-    [TaskStage.TODO]: [],
-    [TaskStage.IN_PROGRESS]: [],
-    [TaskStage.CODE_REVIEW]: [],
-    [TaskStage.COMPLETED]: [],
-  };
-
-  return projectTasks.reduce((acc, task) => {
-    acc[task.stage as TaskStage].push(task);
-
-    return acc;
-  }, taskAcc);
-}
-
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
 
@@ -127,7 +109,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       },
       members: {
         select: {
-          memberId: true,
+          id: true,
         },
       },
     },
@@ -185,23 +167,17 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         },
         permittedTasks: {
           where: {
-            task: {
-              projectId,
-            },
+            projectId,
           },
-          select: {
-            task: {
-              include: {
-                ...includeProjectTaskInfo,
-              },
-            },
+          include: {
+            ...includeProjectTaskInfo,
           },
         },
       },
     });
 
     const assignedTasks = result.tasks;
-    const permittedTasks = result.permittedTasks.map(({ task }) => task);
+    const permittedTasks = result.permittedTasks;
 
     tasks = assignedTasks.concat(permittedTasks).map((task) => computeAssignedToMe(task, user.id));
   }

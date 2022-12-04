@@ -1,5 +1,6 @@
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { unstable_getServerSession } from 'next-auth/next';
 import type { Prisma } from '@prisma/client';
 
@@ -13,6 +14,8 @@ import { type SessionUser, ProjectRole } from '~/types';
 
 // TODO: ProjectOverviewPage
 export default function ProjectOverviewPage({ project, role }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const router = useRouter();
+
   if (!project) return (
     <ErrorPage
       title="Project does not exist."
@@ -25,8 +28,8 @@ export default function ProjectOverviewPage({ project, role }: InferGetServerSid
   if (role !== ProjectRole.MANAGER && role !== ProjectRole.LEADER) return (
     <ErrorPage
       title="You do not have access to this page."
-      buttonContent="Projects"
-      buttonUrl="/projects"
+      buttonContent="Project"
+      buttonUrl={router.asPath.slice(0, -9)} // remove /overview
     />
   );
 
@@ -65,7 +68,7 @@ export default function ProjectOverviewPage({ project, role }: InferGetServerSid
           <details open>
             <summary><span className="h3">Members</span></summary>
             <ul>
-              {members.map(({ member }, index) => (
+              {members.map((member, index) => (
                 <li key={index}>
                   <div>
                     <p>Name: {member.name}</p>
@@ -104,7 +107,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   } satisfies Prisma.ProjectTaskFindManyArgs;
 
-  // TODO: how many tasks a user is CURRENTLY working on (might have to be another query)
+  // TODO: how many tasks a user (team members) is CURRENTLY working on (might have to be another query)
   // and also total number of tasks (so we can do like `completed tasks: 5/30`)
 
   const project = await prisma.project.findUnique({
@@ -133,14 +136,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       },
       members: {
         select: {
-          memberId: true,
-          member: {
-            select: {
-              name: true,
-              tasks: {
-                ...numberOfTasks,
-              },
-            },
+          id: true,
+          name: true,
+          tasks: {
+            ...numberOfTasks,
           },
         },
       },
@@ -160,8 +159,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       project: null,
     },
   };
-
-  // TODO: unwrap members
 
   const role = getUserRoleInProject(user.id, project);
 

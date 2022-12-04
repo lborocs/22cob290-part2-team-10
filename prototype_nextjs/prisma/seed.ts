@@ -101,27 +101,19 @@ const projectData: Prisma.ProjectCreateInput[] = range(1, 10).map<Prisma.Project
     },
   },
   members: {
-    create: [
+    connect: [
       {
-        member: {
-          connect: {
-            email: 'alice@make-it-all.co.uk',
-          },
-        },
+        email: 'alice@make-it-all.co.uk',
       },
       {
-        member: {
-          connect: {
-            email: 'jane@make-it-all.co.uk',
-          },
-        },
+        email: 'jane@make-it-all.co.uk',
       },
     ],
   },
   tasks: {
     create: [],
   },
-})).concat([
+}) satisfies Prisma.ProjectCreateInput).concat([
   {
     name: 'Alice SHOULD NOT see this',
     manager: {
@@ -135,13 +127,9 @@ const projectData: Prisma.ProjectCreateInput[] = range(1, 10).map<Prisma.Project
       },
     },
     members: {
-      create: [
+      connect: [
         {
-          member: {
-            connect: {
-              email: 'jane@make-it-all.co.uk',
-            },
-          },
+          email: 'jane@make-it-all.co.uk',
         },
       ],
     },
@@ -196,20 +184,12 @@ const taskData: Prisma.ProjectTaskCreateInput[] = [
       },
     },
     permitted: {
-      create: [
+      connect: [
         {
-          user: {
-            connect: {
-              email: 'alice@make-it-all.co.uk',
-            },
-          },
+          email: 'alice@make-it-all.co.uk',
         },
         {
-          user: {
-            connect: {
-              email: 'john@make-it-all.co.uk',
-            },
-          },
+          email: 'john@make-it-all.co.uk',
         },
       ],
     },
@@ -338,6 +318,8 @@ const postData: Prisma.PostCreateInput[] = [
 async function main() {
   console.log('Start seeding ...');
 
+  // users
+
   for (const u of await getUserData()) {
     const user = await prisma.user.create({
       data: u,
@@ -381,20 +363,15 @@ async function main() {
         },
         permitted: {
           select: {
-            user: {
-              select: {
-                email: true,
-              },
-            },
+            email: true,
           },
         },
       },
     });
-    const permittedEmails = projectTask.permitted.map(({ user }) => user.email);
 
     console.log(
       `Created task with id: ${projectTask.id}, under project named: ${projectTask.project.name}, `
-      + `assigned to user: ${projectTask.assignee.email}. Permitted emails: ${JSON.stringify(permittedEmails)}`
+      + `assigned to user: ${projectTask.assignee.email}. Permitted emails: ${JSON.stringify(projectTask.permitted)}`
     );
   }
 
