@@ -161,6 +161,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   };
 
+  // TODO: unwrap members
+
   const role = getUserRoleInProject(user.id, project);
 
   return {

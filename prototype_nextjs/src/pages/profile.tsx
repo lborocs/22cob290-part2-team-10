@@ -72,6 +72,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const user = session.user as SessionUser;
 
+  // TODO: show inviter?
+
   return {
     props: {
       session,
