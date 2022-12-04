@@ -375,7 +375,7 @@ TODO: user's personal todo list
 | Name        | Type            | Default           | Relation           | Description                                                                           |
 |-------------|-----------------|-------------------|--------------------|---------------------------------------------------------------------------------------|
 | id          | `Int`           | `autoincrement()` |                    |                                                                                       |
-| projectId   | `Int`           |                   | Project            |                                                                                       |
+| projectId   | `Int`           |                   | `Project`          |                                                                                       |
 | stage       | `String` (enum) |                   |                    |                                                                                       |
 | title       | `String`        |                   |                    |                                                                                       |
 | description | `String`        |                   |                    |                                                                                       |
@@ -393,7 +393,7 @@ TODO: user's personal todo list
 | Name       | Type            | Default           | Relation      | Description                     |
 |------------|-----------------|-------------------|---------------|---------------------------------|
 | id         | `Int`           | `autoincrement()` |               |                                 |
-| authorId   | `String` (UUID) |                   | User          |                                 |
+| authorId   | `String` (UUID) |                   | `User`        |                                 |
 | datePosted | `DateTime`      | `now()`           |               |                                 |
 | title      | `String`        |                   |               |                                 |
 | summary    | `String`        |                   |               |                                 |
