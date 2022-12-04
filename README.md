@@ -30,6 +30,7 @@
   - [Database](#database)
     - [Entities](#entities)
     - [User passwords](#user-passwords)
+    - [Using in development](#using-in-development)
   - [Libraries](#libraries-1)
 <!-- TOC -->
 
@@ -96,7 +97,7 @@ Deploy to Vercel for development before using GCP?
 
 https://cloud.google.com/nodejs/getting-started/getting-started-on-compute-engine
 
-> Think we misunderstood roles.
+> Think we misunderstood roles:
 >
 > They're meant to be in teams? And a project is assigned to a team?
 >
@@ -107,6 +108,17 @@ https://cloud.google.com/nodejs/getting-started/getting-started-on-compute-engin
 >
 > If they're meant to be teams, need to ask who assigns projects & employees to
 > teams - e.g. company-wide manager idk
+>
+> Or maybe the only company-wide roles are `MANAGER` and `USER`
+> Then each project has a manager, leader (`USER`) and members (`USER`s)
+
+> Think we also misunderstood the dashboard:
+>
+> "There should also be a manager’s dashboard so that the managers or team lead‐
+> ers can keep track of the progression of the project they are responsible for."
+>
+> The dashboard is for _each_ project, and is more akin to the project overview that we were doing
+>
 
 ### TODO (feedback from Part 1 presentation)
 
@@ -155,8 +167,6 @@ Next.JS...
 - Use [SSR](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props) to get info for page (e.g. getting a user's todo list)
   - See [example](prototype_nextjs/src/pages/examples/user_ssr.tsx) for how to get user during SSR
   - Don't make API route for getting data that is gotten during SSR
-  - Access `/server/store` functions directly instead
-    - Make them all `async` because database operations will be `async`
 - Run locally and see all examples at [`http://localhost:3000/examples`](http://localhost:3000/examples)
 
 #### Layout/Sidebar
@@ -254,15 +264,14 @@ Imports should be in the order ([example](prototype_nextjs/src/pages/profile.tsx
   - _Any other external libraries (e.g. `axios`)_
 - [space]
 - Our code
-  - `~/components` (e.g. `Layout` from `~/components/Layout`)
   - `~/lib`
+  - `~/components` (e.g. `Layout` from `~/components/Layout`)
   - `~/store`
   - `~/schemas`
   - `~/types`
   - `~/utils`
   - _Any other client-side things_
-  - `~/pages/api` **in order that they're used in when thinking about a page's life cycle (SSR->client)**
-    - e.g. `import { authOptions } from '~/pages/api/auth/[...nextauth]'` is always first because it used in the first line of `getServerSideProps`
+  - `~/pages/api`
   - `~/server` **in order that they're used in when thinking about a page's life cycle (SSR->client)**
   - _Anything else_
 - [space]
@@ -321,9 +330,6 @@ We will use [Prisma](https://github.com/prisma/prisma) as an ORM, so we have typ
 Prisma also has nice features such as
 [auto-joins](https://www.prisma.io/docs/concepts/components/prisma-client/relation-queries#nested-reads).
 
-Dara thinks it'd be better to use `/server/store` as like an interface rather than directly accessing the Prisma Client,
-but will discuss later when designing database.
-
 #### Entities
 
 All will have unique IDs? (autoincrement/cuid/uuid)
@@ -358,31 +364,44 @@ TODO: ERM diagram (could make tables entity property tables to help plan ERM dia
 >   - manager could reset the password of any employee they want (could abuse it)
 >     - we should ask client about this?
 
+#### Using in development
+
+When running for the first time, run the following commands:
+
+[source](https://github.com/prisma/prisma-examples/tree/latest/typescript/rest-nextjs-api-routes)
+
+```shell
+npx prisma migrate dev --name init
+```
+
+This will create a local SQLite database (`prototype_nextjs/prisma/dev.db`) and apply our schema to it.
+
 ### Libraries
 
-| Name                                                                    | Minor Version | Purpose                                                |
-|-------------------------------------------------------------------------|---------------|--------------------------------------------------------|
-| [TypeScript](https://www.typescriptlang.org/)                           | 4.9           | Programming language                                   |
-| [ESLint](https://eslint.org/)                                           | 8.28          | Static code analysis                                   |
-| [React](https://reactjs.org/)                                           | 18.2          | UI library                                             |
-| [Next.Js](https://nextjs.org/)                                          | 13.0          | Full stack framework                                   |
-| [NextAuth.js](https://next-auth.js.org/)                                | 4.17          | Authentication                                         |
-| [sharp](https://nextjs.org/docs/messages/sharp-missing-in-production)   | 0.31          | Next.Js Image Optimization (not used explicitly by us) |
-| [Bootstrap](https://getbootstrap.com/)                                  | 5.2           | CSS Framework                                          |
-| [React Boostrap](https://react-bootstrap.github.io/)                    | 2.6           | Bootstrap React components                             |
-| [React Boostrap Icons](https://github.com/ismamz/react-bootstrap-icons) | 1.10          | Bootstrap Icons React components                       |
-| [react-hot-toast](https://react-hot-toast.com/)                         | 2.4           | Toasts                                                 |
-| [Axios](https://axios-http.com/)                                        | 1.2           | HTTP client (use instead of the `fetch` API)           |
-| [zustand](https://github.com/pmndrs/zustand)                            | 4.1           | State management                                       |
-| [Prisma](https://www.prisma.io/)                                        | 4.7           | Database ORM ([#12][iPrisma])                          |
-| [node.bcrypt.js](https://github.com/kelektiv/node.bcrypt.js)            | 5.1           | Hashing user passwords                                 |
-| [react-markdown](https://github.com/remarkjs/react-markdown)?           | -             | Render markdown content in forum posts                 |
-| [Zod](https://zod.dev/)                                                 | 3.19          | Object schema validation ([#1][pFormikZod])            |
-| [Formik](https://formik.org/)                                           | 2.2           | Form validation ([#1][pFormikZod])                     |
-| [formik-validator-zod](https://github.com/Glazy/formik-validator-zod)   | 1.0           | Zod adapter for Formik                                 |
-| [SWR](https://swr.vercel.app/)                                          | 4.18          | Client-side data fetching                              |
-| [hashids](https://hashids.org/)                                         | 2.2           | Mask IDs in URLs ([#16][iHashids])                     |
-| ...                                                                     |               |                                                        |
+| Name                                                                    | Minor Version | Purpose                                                                                      |
+|-------------------------------------------------------------------------|---------------|----------------------------------------------------------------------------------------------|
+| [TypeScript](https://www.typescriptlang.org/)                           | 4.9           | Programming language                                                                         |
+| [ESLint](https://eslint.org/)                                           | 8.28          | Static code analysis                                                                         |
+| [React](https://reactjs.org/)                                           | 18.2          | UI library                                                                                   |
+| [Next.Js](https://nextjs.org/)                                          | 13.0          | Full stack framework                                                                         |
+| [NextAuth.js](https://next-auth.js.org/)                                | 4.17          | Authentication                                                                               |
+| [sharp](https://nextjs.org/docs/messages/sharp-missing-in-production)   | 0.31          | Next.Js Image Optimization (not used explicitly by us)                                       |
+| [Bootstrap](https://getbootstrap.com/)                                  | 5.2           | CSS Framework                                                                                |
+| [React Boostrap](https://react-bootstrap.github.io/)                    | 2.6           | Bootstrap React components                                                                   |
+| [React Boostrap Icons](https://github.com/ismamz/react-bootstrap-icons) | 1.10          | Bootstrap Icons React components                                                             |
+| [react-hot-toast](https://react-hot-toast.com/)                         | 2.4           | Toasts                                                                                       |
+| [Axios](https://axios-http.com/)                                        | 1.2           | HTTP client (use instead of the `fetch` API)                                                 |
+| [zustand](https://github.com/pmndrs/zustand)                            | 4.1           | State management                                                                             |
+| [Prisma](https://www.prisma.io/)                                        | 4.7           | Database ORM ([#12][iPrisma])                                                                |
+| [ts-node]                                                               | 10.9          | Run code to [seed Prisma database](https://www.prisma.io/docs/guides/database/seed-database) |
+| [node.bcrypt.js](https://github.com/kelektiv/node.bcrypt.js)            | 5.1           | Hashing user passwords                                                                       |
+| [react-markdown](https://github.com/remarkjs/react-markdown)?           | -             | Render markdown content in forum posts                                                       |
+| [Zod](https://zod.dev/)                                                 | 3.19          | Object schema validation ([#1][pFormikZod])                                                  |
+| [Formik](https://formik.org/)                                           | 2.2           | Form validation ([#1][pFormikZod])                                                           |
+| [formik-validator-zod](https://github.com/Glazy/formik-validator-zod)   | 1.0           | Zod adapter for Formik                                                                       |
+| [SWR](https://swr.vercel.app/)                                          | 4.18          | Client-side data fetching                                                                    |
+| [hashids](https://hashids.org/)                                         | 2.2           | Mask IDs in URLs ([#16][iHashids])                                                           |
+| ...                                                                     |               |                                                                                              |
 
 <!-- https://stackoverflow.com/a/42424860 -->
 [pFormikZod]: https://github.com/lborocs/22cob290-part2-team-10/pull/1
