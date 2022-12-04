@@ -15,7 +15,7 @@ enum CopyStatus {
   SUCCEEDED,
 }
 
-// TODO?: use SWR to fetch invite url ?
+// TODO: use SWR to fetch invite url
 export default function InviteEmployeeSection() {
   const [showModal, setShowModal] = useState(false);
 

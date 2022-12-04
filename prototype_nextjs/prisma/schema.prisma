@@ -17,7 +17,7 @@ datasource db {
 // it's unique and never changing, like email
 // ^ probably not right
 
-// TODO?: team? waiting on response from stakeholders
+// TODO?: model team, waiting on response from stakeholders
 
 // company-wide role?
 model User {
