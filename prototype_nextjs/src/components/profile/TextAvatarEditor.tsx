@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import CloseButton from 'react-bootstrap/CloseButton';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
-import { Formik } from 'formik';
+import { Formik, type FormikProps } from 'formik';
 import toast from 'react-hot-toast';
 import useSWR from 'swr';
 
@@ -26,7 +26,12 @@ export default function TextAvatarEditor() {
   // default as in default values for the form (what is currently set in store)
   const [defaultTextAvatar, setDefaultTextAvatar] = useState<TextAvatar>(null as unknown as TextAvatar);
 
+  // can't use formikRef.current.isSubmitting because this component wouldn't re-render on submit (only the form would)
+  // so the LoadingButton doesn't enter it's loading state - it won't visually change
+  // but by setting isSaving in the Formik render function, this component will re-render on submit
   const [isSaving, setIsSaving] = useState(false);
+
+  const formikRef = useRef<FormikProps<TextAvatar>>(null);
 
   // using SWR like useEffect(..., [])
   useSWR('defaultTextAvatar', async () => {
@@ -37,9 +42,10 @@ export default function TextAvatarEditor() {
 
   // system default as in what they had before changing any settings
   const resetToSystemDefault = () => {
-    // TODO update formik values
-
     const systemDefault = getDefaultTextAvatar();
+
+    formikRef.current!.setValues(systemDefault);
+
     updateTextAvatarCss(systemDefault);
   };
 
@@ -51,11 +57,12 @@ export default function TextAvatarEditor() {
   const onHide = () => setShowModal(false);
 
   const handleSubmit: React.ComponentProps<typeof Formik<TextAvatar>>['onSubmit']
-    = async (values) => {
-      updateTextAvatarCss(values);
+    = async (values, { resetForm }) => {
       const success = await updateTextAvatarStore(values);
 
       if (success) {
+        setDefaultTextAvatar(values);
+
         toast.success('Saved.', {
           position: 'bottom-center',
         });
@@ -65,6 +72,9 @@ export default function TextAvatarEditor() {
           position: 'bottom-center',
         });
       }
+
+      resetForm({ values });
+      updateTextAvatarCss(values);
     };
 
   return (
@@ -105,6 +115,7 @@ export default function TextAvatarEditor() {
             validate={(values) => { // basically onChange
               updateTextAvatarCss(values);
             }}
+            innerRef={formikRef}
             enableReinitialize
           >
             {({
@@ -114,9 +125,7 @@ export default function TextAvatarEditor() {
               handleSubmit,
               handleReset,
               isSubmitting,
-              setValues,
             }) => {
-              // TODO use setValues for resetToSystemDefault
               setIsSaving(isSubmitting);
 
               return (
