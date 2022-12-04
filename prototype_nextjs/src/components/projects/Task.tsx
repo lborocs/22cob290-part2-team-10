@@ -1,5 +1,4 @@
 import type { ProjectTask } from '@prisma/client';
-// import type { ProjectTaskWithTagsAndAssignee } from '~/types';
 
 export type TaskProps = {
   task: ProjectTask & {
@@ -15,8 +14,8 @@ export type TaskProps = {
 
 // TODO: React Bootstrap Card
 export default function Task({ task }: TaskProps) {
-
   const { title, description, tags, assignee, assignedToMe } = task;
+
   return (
     <div className="d-flex flex-column">
       <h1>{title}</h1>

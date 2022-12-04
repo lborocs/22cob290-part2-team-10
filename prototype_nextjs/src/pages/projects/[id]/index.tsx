@@ -8,7 +8,7 @@ import prisma from '~/lib/prisma';
 import { getUserRoleInProject, userHasAccessToProject } from '~/lib/projects';
 import ErrorPage from '~/components/ErrorPage';
 import { SidebarType, type PageLayout } from '~/components/Layout';
-import KanbanBoard from '~/components/KanbanBoard';
+import KanbanBoard from '~/components/projects/KanbanBoard';
 import {
   type SessionUser,
   type ProjectTasks,

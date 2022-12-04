@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */ // TODO: remove once this is done
-import TaskComponent from '~/components/Task';
+import TaskComponent from '~/components/projects/Task';
 import type { ProjectTasks } from '~/types';
 
 export type KanbanBoardProps = {
