@@ -4,68 +4,74 @@ import CloseButton from 'react-bootstrap/CloseButton';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
+import { Formik } from 'formik';
+import toast from 'react-hot-toast';
 
 import {
   type TextAvatar,
   getDefaultTextAvatar,
-  getTextAvatarFromCss,
   getTextAvatarFromStore,
-  updateTextAvatarCss,
   updateTextAvatarStore,
+  updateTextAvatarCss,
 } from '~/lib/textAvatar';
 import TextAvatarComponent from '~/components/TextAvatar';
+import LoadingButton from '~/components/LoadingButton';
 
 import styles from '~/styles/profile/TextAvatarSection.module.css';
 
-// TODO: loading state, maybe use formik?
 export default function TextAvatarEditor() {
   const [showModal, setShowModal] = useState(false);
 
-  const [bg, setBg] = useState('');
-  const [fg, setFg] = useState('');
-
-  // default as in default values for the form (what is currently set in store - localStorage)
+  // default as in default values for the form (what is currently set in store)
   const [defaultTextAvatar, setDefaultTextAvatar] = useState<TextAvatar>(null as unknown as TextAvatar);
 
-  const onColorChange = (e: React.ChangeEvent<any>) => {
-    const inputElem: HTMLInputElement = e.target;
+  const [isSaving, setIsSaving] = useState(false);
 
-    const { id, value: colour } = inputElem;
-
-    document.documentElement.style.setProperty(`--${id}`, colour);
-  };
-
-  // default as in what they had before changing any settings
+  // system default as in what they had before changing any settings
   const resetToSystemDefault = () => {
+    // TODO update formik values
+
     const systemDefault = getDefaultTextAvatar();
-
     updateTextAvatarCss(systemDefault);
-
-    setBg(systemDefault['avatar-bg']);
-    setFg(systemDefault['avatar-fg']);
   };
 
-  const cancelAndClose = async () => {
-    updateTextAvatarCss(await getTextAvatarFromStore());
+  const cancelAndClose = () => {
+    updateTextAvatarCss(defaultTextAvatar);
     onHide();
   };
 
   useEffect(() => {
-    if (showModal) {
-      // get textAvatar from CSS instead of from store because TextAvatar would have already updated CSS
-      const textAvatar = getTextAvatarFromCss();
-
-      setBg(textAvatar['avatar-bg']);
-      setFg(textAvatar['avatar-fg']);
+    async function getDefault() {
+      const textAvatar = await getTextAvatarFromStore();
 
       setDefaultTextAvatar(textAvatar);
     }
-  }, [showModal]);
+
+    getDefault();
+  }, []);
 
   const onHide = () => setShowModal(false);
 
+  const handleSubmit: React.ComponentProps<typeof Formik<TextAvatar>>['onSubmit']
+    = async (values) => {
+      updateTextAvatarCss(values);
+      const success = await updateTextAvatarStore(values);
+
+      if (success) {
+        toast.success('Saved.', {
+          position: 'bottom-center',
+        });
+        onHide();
+      } else {
+        toast.error('Please try again', {
+          position: 'bottom-center',
+        });
+      }
+    };
+
   return (
     <div>
+      {/* TODO: on hover show like a pencil to signify that it's editable */}
       <TextAvatarComponent
         className={styles['text-avatar']}
         size="120px"
@@ -90,48 +96,61 @@ export default function TextAvatarEditor() {
         </Modal.Header>
 
         <Modal.Body>
-          <Form
-            id="text-avatar-form"
-            onSubmit={async (e) => {
-              e.preventDefault();
-              // for some reason, the form's values are the default :/
-              const newTextAvatar = getTextAvatarFromCss();
-
-              updateTextAvatarCss(newTextAvatar);
-              // TODO check result of:
-              await updateTextAvatarStore(newTextAvatar);
+          <Formik
+            initialValues={{
+              ...defaultTextAvatar,
             }}
-            onReset={(e) => {
-              setBg(defaultTextAvatar['avatar-bg']);
-              setFg(defaultTextAvatar['avatar-fg']);
+            onSubmit={handleSubmit}
+            onReset={() => {
               updateTextAvatarCss(defaultTextAvatar);
             }}
+            validate={(values) => { // basically onChange
+              updateTextAvatarCss(values);
+            }}
+            enableReinitialize
           >
-            <Form.Group as={Row} controlId="avatar-bg">
-              <Form.Label column>Background colour</Form.Label>
-              <Form.Control
-                type="color"
-                name="avatar-bg"
-                value={bg}
-                onChange={(e) => {
-                  setBg(e.target.value);
-                  onColorChange(e);
-                }}
-              />
-            </Form.Group>
-            <Form.Group as={Row} className="mt-1" controlId="avatar-fg">
-              <Form.Label column>Text colour</Form.Label>
-              <Form.Control
-                type="color"
-                name="avatar-fg"
-                value={fg}
-                onChange={(e) => {
-                  setFg(e.target.value);
-                  onColorChange(e);
-                }}
-              />
-            </Form.Group>
-          </Form>
+            {({
+              values,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              handleReset,
+              isSubmitting,
+              setValues,
+            }) => {
+              // TODO use setValues for resetToSystemDefault
+              setIsSaving(isSubmitting);
+
+              return (
+                <Form
+                  id="text-avatar-form"
+                  onSubmit={handleSubmit}
+                  onReset={handleReset}
+                >
+                  <Form.Group as={Row} controlId="avatar-bg">
+                    <Form.Label column>Background colour</Form.Label>
+                    <Form.Control
+                      type="color"
+                      name="avatar-bg"
+                      value={values['avatar-bg']}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    />
+                  </Form.Group>
+                  <Form.Group as={Row} className="mt-1" controlId="avatar-fg">
+                    <Form.Label column>Text colour</Form.Label>
+                    <Form.Control
+                      type="color"
+                      name="avatar-fg"
+                      value={values['avatar-fg']}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    />
+                  </Form.Group>
+                </Form>
+              );
+            }}
+          </Formik>
         </Modal.Body>
 
         <Modal.Footer>
@@ -157,15 +176,16 @@ export default function TextAvatarEditor() {
           >
             Reset
           </Button>
-          <Button
+          <LoadingButton
             type="submit"
             form="text-avatar-form"
             variant="primary"
             size="sm"
-            onClick={onHide}
+            isLoading={isSaving}
+            loadingContent="Saving"
           >
             Save
-          </Button>
+          </LoadingButton>
         </Modal.Footer>
       </Modal>
     </div>
