@@ -211,6 +211,33 @@ const taskData: Prisma.ProjectTaskCreateInput[] = [
       },
     },
   },
+  {
+    project: {
+      connect: {
+        id: 2,
+      },
+    },
+    title: 'Project 2 Task',
+    description: 'Alice should only have 1 task in project 1',
+    stage: 'IN_PROGRESS',
+    tags: {
+      connectOrCreate: [
+        {
+          where: {
+            name: 'TestTag',
+          },
+          create: {
+            name: 'TestTag',
+          },
+        },
+      ],
+    },
+    assignee: {
+      connect: {
+        email: 'alice@make-it-all.co.uk',
+      },
+    },
+  },
 ];
 
 async function main() {
