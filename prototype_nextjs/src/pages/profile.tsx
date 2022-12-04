@@ -13,8 +13,8 @@ import TextAvatarEditor from '~/components/profile/TextAvatarEditor';
 import UserDetails from '~/components/profile/UserDetails';
 import ChangePasswordSection from '~/components/profile/ChangePasswordSection';
 import InviteEmployeeSection from '~/components/profile/InviteEmployeeSection';
+import type { SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import { ssrGetUserInfo } from '~/server/utils';
 
 // TODO: theme switcher
 export default function ProfilePage() {
@@ -70,7 +70,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { notFound: true };
   }
 
-  const user = await ssrGetUserInfo(session);
+  const user = session.user as SessionUser;
 
   return {
     props: {

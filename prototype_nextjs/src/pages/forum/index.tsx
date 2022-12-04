@@ -4,12 +4,11 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { unstable_getServerSession } from 'next-auth/next';
 
+import hashids from '~/lib/hashids';
 import { SidebarType, type PageLayout } from '~/components/Layout';
 import ForumSidebar from '~/components/layout/sidebar/ForumSidebar';
-import hashids from '~/lib/hashids';
-import type { Post } from '~/types';
+import type { SessionUser, Post } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import { ssrGetUserInfo } from '~/server/utils';
 import { getAllPosts } from '~/server/store/posts';
 
 // TODO: ForumPage
@@ -59,7 +58,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { notFound: true };
   }
 
-  const user = await ssrGetUserInfo(session);
+  const user = session.user as SessionUser;
 
   const posts = await getAllPosts();
 

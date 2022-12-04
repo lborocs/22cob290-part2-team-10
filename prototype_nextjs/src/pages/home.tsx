@@ -2,9 +2,10 @@ import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'nex
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 
+import prisma from '~/lib/prisma';
 import { SidebarType, type PageLayout } from '~/components/Layout';
+import type { SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import { ssrGetUserInfo } from '~/server/utils';
 
 // TODO: HomePage
 export default function HomePage({ }: InferGetServerSidePropsType<typeof getServerSideProps>) {
@@ -26,7 +27,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { notFound: true };
   }
 
-  const user = await ssrGetUserInfo(session);
+  const user = session.user as SessionUser;
+
+  // TODO: get their todo list from prisma
 
   return {
     props: {
