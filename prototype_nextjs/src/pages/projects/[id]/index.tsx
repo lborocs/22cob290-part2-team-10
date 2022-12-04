@@ -5,16 +5,11 @@ import type { Prisma } from '@prisma/client';
 
 import hashids from '~/lib/hashids';
 import prisma from '~/lib/prisma';
-import { getUserRoleInProject, userHasAccessToProject, toProjectTasks } from '~/lib/projects';
+import { userHasAccessToProject, getUserRoleInProject, computeAssignedToMe, toProjectTasks } from '~/lib/projects';
 import ErrorPage from '~/components/ErrorPage';
 import { SidebarType, type PageLayout } from '~/components/Layout';
 import KanbanBoard from '~/components/projects/KanbanBoard';
-import {
-  type SessionUser,
-  type ProjectTasks,
-  ProjectRole,
-  computeAssignedToMe,
-} from '~/types';
+import { type SessionUser, type ProjectTaskInfo, ProjectRole } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 // TODO: project page (Projects page from before)
@@ -135,7 +130,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const canSeeAllTasks = role === ProjectRole.MANAGER || role == ProjectRole.LEADER;
 
-  let tasks: ProjectTasks[keyof ProjectTasks];
+  let tasks: ProjectTaskInfo[];
 
   if (canSeeAllTasks) {
     const result = await prisma.project.findUniqueOrThrow({
@@ -150,7 +145,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         },
       },
     });
-    tasks = result.tasks.map((task) => computeAssignedToMe(task, user.id));
+    tasks = result.tasks;
   } else {
     const result = await prisma.user.findUniqueOrThrow({
       where: {
@@ -179,7 +174,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     const assignedTasks = result.tasks;
     const permittedTasks = result.permittedTasks;
 
-    tasks = assignedTasks.concat(permittedTasks).map((task) => computeAssignedToMe(task, user.id));
+    tasks = assignedTasks.concat(permittedTasks);
   }
 
   return {
@@ -188,7 +183,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       user,
       project,
       role,
-      tasks: toProjectTasks(tasks),
+      tasks: toProjectTasks(tasks.map((task) => computeAssignedToMe(task, user.id))),
     },
   };
 }

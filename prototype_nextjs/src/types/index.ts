@@ -1,5 +1,5 @@
 import type { User } from 'next-auth';
-import type { ProjectTask } from '@prisma/client';
+import type { Prisma, ProjectTask } from '@prisma/client';
 
 export interface SessionUser extends User {
   id: string
@@ -26,37 +26,26 @@ export enum TaskStage {
   COMPLETED = 'COMPLETED',
 }
 
-export type ProjectTaskInfo = WithAssignedToMe<(ProjectTask & {
-  assignee: {
-    name: string
+export type ProjectTaskInfo = Prisma.ProjectTaskGetPayload<{
+  include: {
+    assignee: {
+      select: {
+        id: true,
+        name: true,
+      },
+    },
+    tags: {
+      select: {
+        name: true,
+      },
+    },
   }
-  tags: {
-    name: string
-  }[]
-})>;
+}>;
 
-// https://www.prisma.io/docs/concepts/components/prisma-client/computed-fields
-type HasAssignee = {
-  assignee: {
-    id: string
-  }
-};
-
-type WithAssignedToMe<T> = T & {
+export type WithAssignedToMe<T> = T & {
   assignedToMe: boolean
 };
 
-// TODO: move to lib/projects?
-export function computeAssignedToMe<Task extends HasAssignee>(
-  task: Task,
-  userId: string
-): WithAssignedToMe<Task> {
-  return {
-    ...task,
-    assignedToMe: task.assignee.id === userId,
-  };
-}
-
 export type ProjectTasks = {
-  [k in TaskStage]: ProjectTaskInfo[]
+  [k in TaskStage]: WithAssignedToMe<ProjectTaskInfo>[]
 };

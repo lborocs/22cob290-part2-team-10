@@ -23,7 +23,7 @@ export default function UserDetails() {
     email: state.user.email,
   }));
 
-  // TODO: add a glow to firstName & lastName to show it's editable?
+  // TODO: add a glow to name to show it's editable?
   // see https://stackoverflow.com/a/14822905
 
   const handleSubmit: React.ComponentProps<typeof Formik<DetailsFormData>>['onSubmit']
@@ -94,40 +94,6 @@ export default function UserDetails() {
               </FloatingLabel>
             </Col>
           </Row>
-          {/* <Row>
-            <Col md>
-              <FloatingLabel label="First name" className="mb-3" controlId="firstName">
-                <Form.Control
-                  name="firstName"
-                  placeholder="Enter first name"
-                  value={values.firstName}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  isInvalid={touched.firstName && !!errors.firstName}
-                  required
-                />
-                <Form.Control.Feedback type="invalid">
-                  {errors.firstName}
-                </Form.Control.Feedback>
-              </FloatingLabel>
-            </Col>
-            <Col md>
-              <FloatingLabel label="Last name" className="mb-3" controlId="lastName">
-                <Form.Control
-                  name="lastName"
-                  placeholder="Enter last name"
-                  value={values.lastName}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  isInvalid={touched.lastName && !!errors.lastName}
-                  required
-                />
-                <Form.Control.Feedback type="invalid">
-                  {errors.lastName}
-                </Form.Control.Feedback>
-              </FloatingLabel>
-            </Col>
-          </Row> */}
           <Row>
             <Col>
               <FloatingLabel label="Email" className="mb-3">

@@ -6,7 +6,6 @@ import { whereUserHasAccessToProject } from '~/lib/projects';
 import type { UnauthorisedResponse, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
-// TODO: return this user's role? (computed value)
 async function getProjects(userId: string) {
   const projects = await prisma.project.findMany({
     where: {

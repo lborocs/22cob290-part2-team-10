@@ -67,7 +67,7 @@ export default async function handler(
     reason: ErrorReason.WRONG_PASSWORD,
   });
 
-  return res.status(200).json({
+  res.status(200).json({
     success: true,
     user: {
       id: user.id,

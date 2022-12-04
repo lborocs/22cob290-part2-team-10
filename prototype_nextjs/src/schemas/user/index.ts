@@ -40,11 +40,11 @@ export const PasswordSchema = z.string()
   .min(MIN_PASSWORD_LENGTH, 'Too short')
   ;
 
-// TODO: max length?
 // name regex: https://stackoverflow.com/a/36733683
 // TODO: allow spaces between but none at end nor start
-export function nameSchema(name: string) {
+// https://stackoverflow.com/a/38935454
+export function nameSchema() {
   return z.string()
-    .regex(/^[a-z]+$/i, `${name} is alphabetic only`)
-    .min(1, `${name} is required`);
+    .regex(/^[a-z]+$/i, 'Name is alphabetic only')
+    .min(1, 'Name is required');
 }

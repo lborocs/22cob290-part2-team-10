@@ -4,7 +4,7 @@ import Nav from 'react-bootstrap/Nav';
 
 import TextAvatar from '~/components/TextAvatar';
 
-// TODO: dashboard might depend on it user role is company-wide project manager
+// TODO: dashboard might depend on if user role is company-wide project manager
 
 export default function LayoutNav() {
   const router = useRouter();

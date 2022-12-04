@@ -1,17 +1,26 @@
 import Link from 'next/link';
-import type { Post } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 
 import hashids from '~/lib/hashids';
 
-export type ForumPostPreviewProps = {
-  post: Omit<Post, 'datePosted'> & {
-    datePosted: number
+type PostInfo = Prisma.PostGetPayload<{
+  include: {
     author: {
-      name: string
-    }
+      select: {
+        name: true,
+      }
+    },
     topics: {
-      name: string
-    }[]
+      select: {
+        name: true
+      }
+    },
+  }
+}>;
+
+export type ForumPostPreviewProps = {
+  post: Omit<PostInfo, 'datePosted'> & {
+    datePosted: number
   }
 };
 

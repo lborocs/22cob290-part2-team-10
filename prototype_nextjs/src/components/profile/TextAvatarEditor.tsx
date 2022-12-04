@@ -62,7 +62,7 @@ export default function TextAvatarEditor() {
           position: 'bottom-center',
         });
         onHide();
-      } else {
+      } else { // shouldn't happen
         toast.error('Please try again', {
           position: 'bottom-center',
         });
