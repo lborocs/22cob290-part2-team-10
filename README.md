@@ -326,18 +326,76 @@ Use [hashids](https://hashids.org/) to mask IDs in URLs. Already done in:
 
 ### Database
 
-We will use [Prisma](https://github.com/prisma/prisma) as an ORM, so we have type safety + don't have to write SQL.
+We are using [Prisma](https://github.com/prisma/prisma) as an ORM, so we have type safety + don't have to write SQL.
 Prisma also has nice features such as
-[auto-joins](https://www.prisma.io/docs/concepts/components/prisma-client/relation-queries#nested-reads).
+[auto-joins](https://www.prisma.io/docs/concepts/components/prisma-client/relation-queries#nested-reads)
+and
+[implicit many-to-many relations](https://www.prisma.io/docs/guides/database/troubleshooting-orm/help-articles/working-with-many-to-many-relations#implicit-relations).
 
 #### Entities
 
-All will have unique IDs? (autoincrement/cuid/uuid)
+All have unique IDs (autoincrement/uuid)
 
-- User
-- Project
-- Project Task
-- Post
+<details>
+<summary>User</summary>
+
+| Name           | Type            | Default | Relation | Description                          |
+|----------------|-----------------|---------|----------|--------------------------------------|
+| id             | `String` (UUID) | uuid()  |          |                                      |
+| email          | `String`        |         |          |                                      |
+| hashedPassword | `String`        |         |          |                                      |
+| name           | `String`        |         |          |                                      |
+| leftCompany    | `boolean`       | false   |          |                                      |
+| inviterId      | `String` (UUID) | null    | `User`   | The ID of the user that invited them |
+| avatarBg       | `String`        | #e2ba39 |          |                                      |
+| avatarFg       | `String`        | white   |          |                                      |
+
+</details>
+
+<details>
+<summary>Project</summary>
+
+| Name           | Type            | Default | Relation | Description                          |
+|----------------|-----------------|---------|----------|--------------------------------------|
+|                |                 |         |          |                                      |
+|                |                 |         |          |                                      |
+|                |                 |         |          |                                      |
+|                |                 |         |          |                                      |
+|                |                 |         |          |                                      |
+|                |                 |         |          |                                      |
+|                |                 |         |          |                                      |
+
+</details>
+
+<details>
+<summary>Project Task</summary>
+
+| Name           | Type            | Default | Relation | Description                          |
+|----------------|-----------------|---------|----------|--------------------------------------|
+|                |                 |         |          |                                      |
+|                |                 |         |          |                                      |
+|                |                 |         |          |                                      |
+|                |                 |         |          |                                      |
+|                |                 |         |          |                                      |
+|                |                 |         |          |                                      |
+|                |                 |         |          |                                      |
+
+</details>
+
+<details>
+<summary>Post</summary>
+
+| Name           | Type            | Default | Relation | Description                          |
+|----------------|-----------------|---------|----------|--------------------------------------|
+|                |                 |         |          |                                      |
+|                |                 |         |          |                                      |
+|                |                 |         |          |                                      |
+|                |                 |         |          |                                      |
+|                |                 |         |          |                                      |
+|                |                 |         |          |                                      |
+|                |                 |         |          |                                      |
+
+</details>
 
 TODO: ERM diagram (could make tables entity property tables to help plan ERM diagram)
 
@@ -366,12 +424,12 @@ TODO: ERM diagram (could make tables entity property tables to help plan ERM dia
 
 #### Using in development
 
-When running for the first time, run the following commands:
+When running for the first time, run the following commands (in `prototype_nextjs`):
 
 [source](https://github.com/prisma/prisma-examples/tree/latest/typescript/rest-nextjs-api-routes)
 
 ```shell
-npx prisma migrate dev --name init
+npx prisma migrate dev
 ```
 
 This will create a local SQLite database (`prototype_nextjs/prisma/dev.db`) and apply our schema to it.
@@ -392,7 +450,7 @@ This will create a local SQLite database (`prototype_nextjs/prisma/dev.db`) and 
 | [react-hot-toast](https://react-hot-toast.com/)                         | 2.4           | Toasts                                                                                       |
 | [Axios](https://axios-http.com/)                                        | 1.2           | HTTP client (use instead of the `fetch` API)                                                 |
 | [zustand](https://github.com/pmndrs/zustand)                            | 4.1           | State management                                                                             |
-| [Prisma](https://www.prisma.io/)                                        | 4.7           | Database ORM ([#12][iPrisma])                                                                |
+| [Prisma](https://www.prisma.io/)                                        | 4.7           | Database ORM ([#13][pPrisma])                                                                |
 | [ts-node]                                                               | 10.9          | Run code to [seed Prisma database](https://www.prisma.io/docs/guides/database/seed-database) |
 | [node.bcrypt.js](https://github.com/kelektiv/node.bcrypt.js)            | 5.1           | Hashing user passwords                                                                       |
 | [react-markdown](https://github.com/remarkjs/react-markdown)?           | -             | Render markdown content in forum posts                                                       |
@@ -405,5 +463,5 @@ This will create a local SQLite database (`prototype_nextjs/prisma/dev.db`) and 
 
 <!-- https://stackoverflow.com/a/42424860 -->
 [pFormikZod]: https://github.com/lborocs/22cob290-part2-team-10/pull/1
-[iPrisma]: https://github.com/lborocs/22cob290-part2-team-10/issues/12
+[pPrisma]: https://github.com/lborocs/22cob290-part2-team-10/pull/13
 [iHashids]: https://github.com/lborocs/22cob290-part2-team-10/issues/16
