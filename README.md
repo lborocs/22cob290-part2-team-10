@@ -138,7 +138,7 @@ https://cloud.google.com/nodejs/getting-started/getting-started-on-compute-engin
     - Assign team leader
     - More info when adding project
       - How many hours for project etc.
-- Searchbar for projects in sidebar
+- [x] Searchbar for projects in sidebar
 
 ### TODO (not from feedback)
 
