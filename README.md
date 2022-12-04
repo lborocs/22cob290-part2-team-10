@@ -334,70 +334,79 @@ and
 
 #### Entities
 
-All have unique IDs (autoincrement/uuid)
+All have unique IDs (`autoincrement`/`uuid`)
 
 <details>
 <summary>User</summary>
 
-| Name           | Type            | Default | Relation | Description                          |
-|----------------|-----------------|---------|----------|--------------------------------------|
-| id             | `String` (UUID) | uuid()  |          |                                      |
-| email          | `String`        |         |          |                                      |
-| hashedPassword | `String`        |         |          |                                      |
-| name           | `String`        |         |          |                                      |
-| leftCompany    | `boolean`       | false   |          |                                      |
-| inviterId      | `String` (UUID) | null    | `User`   | The ID of the user that invited them |
-| avatarBg       | `String`        | #e2ba39 |          |                                      |
-| avatarFg       | `String`        | white   |          |                                      |
+| Name             | Type             | Default   | Relation        | Description                          |
+|------------------|------------------|-----------|-----------------|--------------------------------------|
+| id               | `String` (UUID)  | `uuid()`  |                 |                                      |
+| email            | `String`         |           |                 |                                      |
+| hashedPassword   | `String`         |           |                 |                                      |
+| name             | `String`         |           |                 |                                      |
+| leftCompany      | `boolean`        | `false`   |                 |                                      |
+| inviterId        | `String?` (UUID) |           | `User`          | The ID of the user that invited them |
+| avatarBg         | `String`         | `#e2ba39` |                 |                                      |
+| avatarFg         | `String`         | `#ffffff` |                 |                                      |
+| assignedProjects | -                |           | `Project[]`     | Implicit many-to-many relation       |
+| permittedTasks   | -                |           | `ProjectTask[]` | Implicit many-to-many relation       |
 
 </details>
+
+TODO: user's personal todo list
 
 <details>
 <summary>Project</summary>
 
-| Name           | Type            | Default | Relation | Description                          |
-|----------------|-----------------|---------|----------|--------------------------------------|
-|                |                 |         |          |                                      |
-|                |                 |         |          |                                      |
-|                |                 |         |          |                                      |
-|                |                 |         |          |                                      |
-|                |                 |         |          |                                      |
-|                |                 |         |          |                                      |
-|                |                 |         |          |                                      |
+
+| Name      | Type            | Default           | Relation | Description                    |
+|-----------|-----------------|-------------------|----------|--------------------------------|
+| id        | `Int`           | `autoincrement()` |          |                                |
+| name      | `String`        |                   |          |                                |
+| managerId | `String` (UUID) |                   | `User`   |                                |
+| leaderId  | `String` (UUID) |                   | `User`   |                                |
+| members   | -               |                   | `User[]` | Implicit many-to-many relation |
 
 </details>
 
 <details>
 <summary>Project Task</summary>
 
-| Name           | Type            | Default | Relation | Description                          |
-|----------------|-----------------|---------|----------|--------------------------------------|
-|                |                 |         |          |                                      |
-|                |                 |         |          |                                      |
-|                |                 |         |          |                                      |
-|                |                 |         |          |                                      |
-|                |                 |         |          |                                      |
-|                |                 |         |          |                                      |
-|                |                 |         |          |                                      |
+| Name        | Type            | Default           | Relation           | Description                    |
+|-------------|-----------------|-------------------|--------------------|--------------------------------|
+| id          | `Int`           | `autoincrement()` |                    |                                |
+| projectId   | `Int`           |                   | Project            |                                |
+| stage       | `String` (enum) |                   |                    |                                |
+| title       | `String`        |                   |                    |                                |
+| description | `String`        |                   |                    |                                |
+| tags        | -               |                   | `ProjectTaskTag[]` | Implicit many-to-many relation |
+| assigneeId  | `String` (UUID) |                   |                    |                                |
+| permitted   | -               |                   | `User[]`           | Implicit many-to-many relation |
+
+- `ProjectTaskTag` is just `{ name: string }`
 
 </details>
 
 <details>
 <summary>Post</summary>
 
-| Name           | Type            | Default | Relation | Description                          |
-|----------------|-----------------|---------|----------|--------------------------------------|
-|                |                 |         |          |                                      |
-|                |                 |         |          |                                      |
-|                |                 |         |          |                                      |
-|                |                 |         |          |                                      |
-|                |                 |         |          |                                      |
-|                |                 |         |          |                                      |
-|                |                 |         |          |                                      |
+| Name       | Type            | Default           | Relation      | Description                    |
+|------------|-----------------|-------------------|---------------|--------------------------------|
+| id         | `Int`           | `autoincrement()` |               |                                |
+| authorId   | `String` (UUID) |                   | User          |                                |
+| datePosted | `DateTime`      | `now()`           |               |                                |
+| title      | `String`        |                   |               |                                |
+| summary    | `String`        |                   |               |                                |
+| content    | `String`        |                   |               |                                |
+| upvotes    | `Int`           | `0`               |               |                                |
+| topics     | -               |                   | `PostTopic[]` | Implicit many-to-many relation |
+
+- `PostTopic` is just `{ name: string }`
 
 </details>
 
-TODO: ERM diagram (could make tables entity property tables to help plan ERM diagram)
+TODO: ERM diagram?
 
 #### User passwords
 
@@ -432,7 +441,10 @@ When running for the first time, run the following commands (in `prototype_nextj
 npx prisma migrate dev
 ```
 
-This will create a local SQLite database (`prototype_nextjs/prisma/dev.db`) and apply our schema to it.
+This will create a local SQLite database (`prototype_nextjs/prisma/dev.db`), apply our schema to it and
+[populate it with data](https://www.prisma.io/docs/guides/database/seed-database)
+from the
+[seed](prototype_nextjs/prisma/seed.ts).
 
 ### Libraries
 
@@ -450,7 +462,7 @@ This will create a local SQLite database (`prototype_nextjs/prisma/dev.db`) and 
 | [react-hot-toast](https://react-hot-toast.com/)                         | 2.4           | Toasts                                                                                       |
 | [Axios](https://axios-http.com/)                                        | 1.2           | HTTP client (use instead of the `fetch` API)                                                 |
 | [zustand](https://github.com/pmndrs/zustand)                            | 4.1           | State management                                                                             |
-| [Prisma](https://www.prisma.io/)                                        | 4.7           | Database ORM ([#13][pPrisma])                                                                |
+| [Prisma](https://www.prisma.io/)                                        | 4.7           | Database ORM ([#12][iPrisma])                                                                |
 | [ts-node]                                                               | 10.9          | Run code to [seed Prisma database](https://www.prisma.io/docs/guides/database/seed-database) |
 | [node.bcrypt.js](https://github.com/kelektiv/node.bcrypt.js)            | 5.1           | Hashing user passwords                                                                       |
 | [react-markdown](https://github.com/remarkjs/react-markdown)?           | -             | Render markdown content in forum posts                                                       |
@@ -463,5 +475,5 @@ This will create a local SQLite database (`prototype_nextjs/prisma/dev.db`) and 
 
 <!-- https://stackoverflow.com/a/42424860 -->
 [pFormikZod]: https://github.com/lborocs/22cob290-part2-team-10/pull/1
-[pPrisma]: https://github.com/lborocs/22cob290-part2-team-10/pull/13
+[iPrisma]: https://github.com/lborocs/22cob290-part2-team-10/pull/12
 [iHashids]: https://github.com/lborocs/22cob290-part2-team-10/issues/16
