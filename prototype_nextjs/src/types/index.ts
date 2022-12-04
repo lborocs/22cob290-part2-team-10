@@ -8,6 +8,10 @@ export interface SessionUser extends User {
   image: null
 }
 
+export type UnauthorisedResponse = {
+  message: string;
+};
+
 // might have to change to TeamRole?
 export enum ProjectRole {
   MANAGER,
@@ -42,6 +46,7 @@ type WithAssignedToMe<T> = T & {
   assignedToMe: boolean
 };
 
+// TODO: move to lib/projects?
 export function computeAssignedToMe<Task extends HasAssignee>(
   task: Task,
   userId: string
@@ -54,44 +59,4 @@ export function computeAssignedToMe<Task extends HasAssignee>(
 
 export type ProjectTasks = {
   [k in TaskStage]: ProjectTaskInfo[]
-};
-
-// ---------------------------------
-
-export enum Role {
-  MANAGER = 'MANAGER',
-  TEAM_LEADER = 'TEAM_LEADER',
-  TEAM_MEMBER = 'TEAM_MEMBER',
-  LEFT_COMPANY = 'LEFT_COMPANY',
-}
-
-// TODO: maybe return UserInfo instead of email? - that'll be solved by prisma
-export type ProjectInfo = {
-  id: number
-  name: string
-  manager: string
-  leader: string
-  members: string[]
-  tasks: ProjectTasks
-};
-
-export type Task = {
-  title: string
-  description: string
-  tags: string[]
-  assignee: string
-  additional: string[] // TODO: rename (its basicalyl the ppl that can also see the task)
-};
-
-export type Post = {
-  id: number
-  author: string
-  datePosted: number
-  title: string
-  content: string
-  topics: string[]
-};
-
-export type UnauthorisedResponse = {
-  message: string;
 };
