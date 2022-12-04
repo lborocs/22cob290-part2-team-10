@@ -1,5 +1,5 @@
 import type { User } from 'next-auth';
-import type { Prisma, ProjectTask } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 
 export interface SessionUser extends User {
   id: string
@@ -34,11 +34,7 @@ export type ProjectTaskInfo = Prisma.ProjectTaskGetPayload<{
         name: true,
       },
     },
-    tags: {
-      select: {
-        name: true,
-      },
-    },
+    tags: true,
   }
 }>;
 

@@ -1,24 +1,7 @@
-import type { Prisma } from '@prisma/client';
-
-import type { WithAssignedToMe } from '~/types';
-
-type TaskWithInfo = Prisma.ProjectTaskGetPayload<{
-  include: {
-    assignee: {
-      select: {
-        name: true
-      }
-    };
-    tags: {
-      select: {
-        name: true
-      }
-    }
-  }
-}>;
+import type { ProjectTaskInfo, WithAssignedToMe } from '~/types';
 
 export type TaskProps = {
-  task: WithAssignedToMe<TaskWithInfo>
+  task: WithAssignedToMe<ProjectTaskInfo>
 };
 
 // TODO: React Bootstrap Card
