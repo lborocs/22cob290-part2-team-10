@@ -36,18 +36,18 @@ const getUserData = async (): Promise<Prisma.UserCreateInput[]> => [
     hashedPassword: await testPassword,
     name: 'Left The Company',
     inviter: adminInvite,
-    leftCompany: true,
+    leftCompany: true, // should not be allowed to sign in
   },
   {
     email: 'alice@make-it-all.co.uk',
     hashedPassword: await testPassword,
-    name: 'Alice Jones',
+    name: 'Alice Felicity Henry', // text avatar should be AFH
     inviter: adminInvite,
   },
   {
     email: 'jane@make-it-all.co.uk',
     hashedPassword: await testPassword,
-    name: 'Jane Doe',
+    name: 'Jane Doe Doherty Tate', // text avatar should be JDD
     inviter: adminInvite,
   },
   {
