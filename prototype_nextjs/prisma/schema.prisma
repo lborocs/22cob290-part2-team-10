@@ -22,14 +22,14 @@ datasource db {
 model User {
   id             String  @id @default(uuid())
   email          String  @unique
-  hashedPassword String
+  hashedPassword String  @map("hashed_password")
   name           String
-  leftCompany    Boolean @default(false)
-  inviterId      String?
+  leftCompany    Boolean @default(false) @map("left_company")
+  inviterId      String? @map("inviter_id")
   inviter        User?   @relation("Inviter", fields: [inviterId], references: [id])
   invited        User[]  @relation("Inviter")
-  avatarBg       String  @default("#e2ba39")
-  avatarFg       String  @default("white")
+  avatarBg       String  @default("#e2ba39") @map("avatar_bg")
+  avatarFg       String  @default("white") @map("avatar_fg")
 
   // projects
   managedProjects  Project[]        @relation("ProjectManager")
@@ -54,9 +54,9 @@ model Project {
   id   Int    @id @default(autoincrement())
   name String
 
-  managerId String
+  managerId String           @map("manager_id")
   manager   User             @relation("ProjectManager", fields: [managerId], references: [id])
-  leaderId  String
+  leaderId  String           @map("leader_id")
   leader    User             @relation("ProjectLeader", fields: [leaderId], references: [id])
   members   ProjectMembers[] @relation("ProjectMembers_project")
 
@@ -66,9 +66,9 @@ model Project {
 // many-many relationship table
 // TODO!: test having this table be implicit (like ProjectTaskTag)
 model ProjectMembers {
-  projectId Int
+  projectId Int     @map("project_id")
   project   Project @relation("ProjectMembers_project", fields: [projectId], references: [id])
-  memberId  String
+  memberId  String  @map("member_id")
   member    User    @relation("ProjectMembers_member", fields: [memberId], references: [id])
 
   // could put user role in this? (only if explicit many-many relation)
@@ -92,9 +92,9 @@ model ProjectTask {
 // many-many relationship table
 // TODO!: test having this table be implicit (like ProjectTaskTag)
 model ProjectTaskPermittedUsers {
-  taskId Int
+  taskId Int         @map("task_id")
   task   ProjectTask @relation("ProjectTaskPermittedUsers_task", fields: [taskId], references: [id])
-  userId String
+  userId String      @map("user_id")
   user   User        @relation("ProjectTaskPermittedUsers_user", fields: [userId], references: [id])
 
   @@id([taskId, userId])
@@ -109,9 +109,9 @@ model ProjectTaskTag {
 
 model Post {
   id         Int         @id @default(autoincrement())
-  authorId   String
+  authorId   String      @map("author_id")
   author     User        @relation("Post", fields: [authorId], references: [id])
-  datePosted DateTime    @default(now())
+  datePosted DateTime    @default(now()) @map("date_posted")
   title      String
   summary    String
   content    String
