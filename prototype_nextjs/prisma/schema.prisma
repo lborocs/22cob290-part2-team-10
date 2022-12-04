@@ -30,7 +30,7 @@ model User {
   inviter        User?   @relation("Invite", fields: [inviterId], references: [id])
   invited        User[]  @relation("Invite")
   avatarBg       String  @default("#e2ba39") @map("avatar_bg")
-  avatarFg       String  @default("white") @map("avatar_fg")
+  avatarFg       String  @default("#ffffff") @map("avatar_fg")
 
   // projects
   managedProjects  Project[]     @relation("ProjectManager")
