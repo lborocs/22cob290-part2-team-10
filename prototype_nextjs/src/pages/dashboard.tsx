@@ -3,14 +3,20 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { unstable_getServerSession } from 'next-auth/next';
 
-import { SidebarType, type PageLayout } from '~/components/Layout';
 import hashids from '~/lib/hashids';
+import prisma from '~/lib/prisma';
+import { SidebarType, type PageLayout } from '~/components/Layout';
+import type { SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import { ssrGetUserInfo } from '~/server/utils';
-import { getAssignedProjects } from '~/server/store/projects';
+
+/*
+"There should also be a manager’s dashboard so that the managers or team lead‐
+ers can keep track of the progression of the project they are responsible for."
+- spec letter
+*/
 
 // TODO: DashboardPage
-export default function DashboardPage({ projects }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function DashboardPage({ managedProjects }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 
   return (
     <main>
@@ -18,11 +24,11 @@ export default function DashboardPage({ projects }: InferGetServerSidePropsType<
         <title>Dashboard - Make-It-All</title>
       </Head>
       {/* TODO */}
-      <h1>Manager/team leader dashboard</h1>
+      <h1>Manager dashboard</h1>
 
       <div>
         <ul>
-          {projects.map((project, index) => (
+          {managedProjects.map((project, index) => (
             <Link key={index} href={`/projects/${hashids.encode(project.id)}/overview`}>
               <li>
                 {project.name}
@@ -48,16 +54,23 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { notFound: true };
   }
 
-  const user = await ssrGetUserInfo(session);
+  const user = session.user as SessionUser;
 
-  // TODO: create new func getManagedProjects or something like that
-  const projects = await getAssignedProjects(user.email);
+  const managedProjects = await prisma.project.findMany({
+    where: {
+      managerId: user.id,
+    },
+    select: {
+      id: true,
+      name: true,
+    },
+  });
 
   return {
     props: {
       session,
       user,
-      projects,
+      managedProjects,
     },
   };
 }
