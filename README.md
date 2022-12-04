@@ -339,18 +339,18 @@ All have unique IDs (`autoincrement`/`uuid`)
 <details>
 <summary>User</summary>
 
-| Name             | Type             | Default   | Relation        | Description                          |
-|------------------|------------------|-----------|-----------------|--------------------------------------|
-| id               | `String` (UUID)  | `uuid()`  |                 |                                      |
-| email            | `String`         |           |                 |                                      |
-| hashedPassword   | `String`         |           |                 |                                      |
-| name             | `String`         |           |                 |                                      |
-| leftCompany      | `boolean`        | `false`   |                 |                                      |
-| inviterId        | `String?` (UUID) |           | `User`          | The ID of the user that invited them |
-| avatarBg         | `String`         | `#e2ba39` |                 |                                      |
-| avatarFg         | `String`         | `#ffffff` |                 |                                      |
-| assignedProjects | -                |           | `Project[]`     | Implicit many-to-many relation       |
-| permittedTasks   | -                |           | `ProjectTask[]` | Implicit many-to-many relation       |
+| Name             | Type             | Default   | Relation        | Description                                                                        |
+|------------------|------------------|-----------|-----------------|------------------------------------------------------------------------------------|
+| id               | `String` (UUID)  | `uuid()`  |                 |                                                                                    |
+| email            | `String`         |           |                 |                                                                                    |
+| hashedPassword   | `String`         |           |                 |                                                                                    |
+| name             | `String`         |           |                 |                                                                                    |
+| leftCompany      | `boolean`        | `false`   |                 |                                                                                    |
+| inviterId        | `String?` (UUID) |           | `User`          | The ID of the user that invited them.                                              |
+| avatarBg         | `String`         | `#e2ba39` |                 |                                                                                    |
+| avatarFg         | `String`         | `#ffffff` |                 |                                                                                    |
+| assignedProjects | -                |           | `Project[]`     | Implicit many-to-many relation. The projects where the user is just a team member. |
+| permittedTasks   | -                |           | `ProjectTask[]` | Implicit many-to-many relation.                                                    |
 
 </details>
 
@@ -359,30 +359,29 @@ TODO: user's personal todo list
 <details>
 <summary>Project</summary>
 
-
-| Name      | Type            | Default           | Relation | Description                    |
-|-----------|-----------------|-------------------|----------|--------------------------------|
-| id        | `Int`           | `autoincrement()` |          |                                |
-| name      | `String`        |                   |          |                                |
-| managerId | `String` (UUID) |                   | `User`   |                                |
-| leaderId  | `String` (UUID) |                   | `User`   |                                |
-| members   | -               |                   | `User[]` | Implicit many-to-many relation |
+| Name      | Type            | Default           | Relation | Description                     |
+|-----------|-----------------|-------------------|----------|---------------------------------|
+| id        | `Int`           | `autoincrement()` |          |                                 |
+| name      | `String`        |                   |          |                                 |
+| managerId | `String` (UUID) |                   | `User`   |                                 |
+| leaderId  | `String` (UUID) |                   | `User`   |                                 |
+| members   | -               |                   | `User[]` | Implicit many-to-many relation. |
 
 </details>
 
 <details>
 <summary>Project Task</summary>
 
-| Name        | Type            | Default           | Relation           | Description                    |
-|-------------|-----------------|-------------------|--------------------|--------------------------------|
-| id          | `Int`           | `autoincrement()` |                    |                                |
-| projectId   | `Int`           |                   | Project            |                                |
-| stage       | `String` (enum) |                   |                    |                                |
-| title       | `String`        |                   |                    |                                |
-| description | `String`        |                   |                    |                                |
-| tags        | -               |                   | `ProjectTaskTag[]` | Implicit many-to-many relation |
-| assigneeId  | `String` (UUID) |                   |                    |                                |
-| permitted   | -               |                   | `User[]`           | Implicit many-to-many relation |
+| Name        | Type            | Default           | Relation           | Description                                                                           |
+|-------------|-----------------|-------------------|--------------------|---------------------------------------------------------------------------------------|
+| id          | `Int`           | `autoincrement()` |                    |                                                                                       |
+| projectId   | `Int`           |                   | Project            |                                                                                       |
+| stage       | `String` (enum) |                   |                    |                                                                                       |
+| title       | `String`        |                   |                    |                                                                                       |
+| description | `String`        |                   |                    |                                                                                       |
+| tags        | -               |                   | `ProjectTaskTag[]` | Implicit many-to-many relation.                                                       |
+| assigneeId  | `String` (UUID) |                   |                    |                                                                                       |
+| permitted   | -               |                   | `User[]`           | Implicit many-to-many relation. The team member that are permitted to view this task. |
 
 - `ProjectTaskTag` is just `{ name: string }`
 
@@ -391,16 +390,16 @@ TODO: user's personal todo list
 <details>
 <summary>Post</summary>
 
-| Name       | Type            | Default           | Relation      | Description                    |
-|------------|-----------------|-------------------|---------------|--------------------------------|
-| id         | `Int`           | `autoincrement()` |               |                                |
-| authorId   | `String` (UUID) |                   | User          |                                |
-| datePosted | `DateTime`      | `now()`           |               |                                |
-| title      | `String`        |                   |               |                                |
-| summary    | `String`        |                   |               |                                |
-| content    | `String`        |                   |               |                                |
-| upvotes    | `Int`           | `0`               |               |                                |
-| topics     | -               |                   | `PostTopic[]` | Implicit many-to-many relation |
+| Name       | Type            | Default           | Relation      | Description                     |
+|------------|-----------------|-------------------|---------------|---------------------------------|
+| id         | `Int`           | `autoincrement()` |               |                                 |
+| authorId   | `String` (UUID) |                   | User          |                                 |
+| datePosted | `DateTime`      | `now()`           |               |                                 |
+| title      | `String`        |                   |               |                                 |
+| summary    | `String`        |                   |               |                                 |
+| content    | `String`        |                   |               |                                 |
+| upvotes    | `Int`           | `0`               |               |                                 |
+| topics     | -               |                   | `PostTopic[]` | Implicit many-to-many relation. |
 
 - `PostTopic` is just `{ name: string }`
 
