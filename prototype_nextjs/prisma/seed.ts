@@ -318,82 +318,83 @@ const postData: Prisma.PostCreateInput[] = [
 async function main() {
   console.log('Start seeding ...');
 
-  // users
+  await prisma.$transaction(async () => {
+    // users
 
-  for (const u of await getUserData()) {
-    const user = await prisma.user.create({
-      data: u,
-      include: {
-        inviter: {
-          select: {
-            email: true,
+    for (const u of await getUserData()) {
+      const user = await prisma.user.create({
+        data: u,
+        include: {
+          inviter: {
+            select: {
+              email: true,
+            },
           },
         },
-      },
-    });
-    console.log(`Created user with id: ${user.id} (name: ${user.name}), invited by email: ${user.inviter?.email}`);
-  }
+      });
 
-  console.log();
+      console.log(`Created user with id: ${user.id} (name: ${user.name}), invited by email: ${user.inviter?.email}`);
+    }
 
-  // projects
+    console.log();
+    // projects
 
-  for (const p of projectData) {
-    const project = await prisma.project.create({
-      data: p,
-    });
-    console.log(`Created project with id: ${project.id} (name: ${project.name})`);
-  }
+    for (const p of projectData) {
+      const project = await prisma.project.create({
+        data: p,
+      });
 
-  console.log();
+      console.log(`Created project with id: ${project.id} (name: ${project.name})`);
+    }
 
-  for (const t of taskData) {
-    const projectTask = await prisma.projectTask.create({
-      data: t,
-      include: {
-        project: {
-          select: {
-            name: true,
+    console.log();
+
+    for (const t of taskData) {
+      const projectTask = await prisma.projectTask.create({
+        data: t,
+        include: {
+          project: {
+            select: {
+              name: true,
+            },
+          },
+          assignee: {
+            select: {
+              email: true,
+            },
+          },
+          permitted: {
+            select: {
+              email: true,
+            },
           },
         },
-        assignee: {
-          select: {
-            email: true,
+      });
+
+      console.log(
+        `Created task with id: ${projectTask.id}, under project named: ${projectTask.project.name}, `
+        + `assigned to user: ${projectTask.assignee.email}. Permitted emails: ${JSON.stringify(projectTask.permitted)}`
+      );
+    }
+
+    console.log();
+    // forum
+
+    for (const p of postData) {
+      const post = await prisma.post.create({
+        data: p,
+        include: {
+          author: {
+            select: {
+              name: true,
+            },
           },
         },
-        permitted: {
-          select: {
-            email: true,
-          },
-        },
-      },
-    });
+      });
 
-    console.log(
-      `Created task with id: ${projectTask.id}, under project named: ${projectTask.project.name}, `
-      + `assigned to user: ${projectTask.assignee.email}. Permitted emails: ${JSON.stringify(projectTask.permitted)}`
-    );
-  }
-
-  console.log();
-
-  // forum
-
-  for (const p of postData) {
-    const post = await prisma.post.create({
-      data: p,
-      include: {
-        author: {
-          select: {
-            name: true,
-          },
-        },
-      },
-    });
-    console.log(`Created post with id: ${post.id} (title: ${post.title}), authored by name: ${post.author.name}`);
-  }
-
-  console.log();
+      console.log(`Created post with id: ${post.id} (title: ${post.title}), authored by name: ${post.author.name}`);
+    }
+  });
 
   console.log('Seeding finished.');
 }

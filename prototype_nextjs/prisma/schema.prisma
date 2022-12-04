@@ -27,8 +27,8 @@ model User {
   name           String
   leftCompany    Boolean @default(false) @map("left_company")
   inviterId      String? @map("inviter_id")
-  inviter        User?   @relation("Inviter", fields: [inviterId], references: [id])
-  invited        User[]  @relation("Inviter")
+  inviter        User?   @relation("Invite", fields: [inviterId], references: [id])
+  invited        User[]  @relation("Invite")
   avatarBg       String  @default("#e2ba39") @map("avatar_bg")
   avatarFg       String  @default("white") @map("avatar_fg")
 
