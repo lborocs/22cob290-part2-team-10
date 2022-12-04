@@ -1,20 +1,23 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import CloseButton from 'react-bootstrap/CloseButton';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 
-import TextAvatarComponent, {
+import {
   type TextAvatar,
   getDefaultTextAvatar,
+  getTextAvatarFromCss,
   getTextAvatarFromStore,
   updateTextAvatarCss,
   updateTextAvatarStore,
-} from '~/components/TextAvatar';
+} from '~/lib/textAvatar';
+import TextAvatarComponent from '~/components/TextAvatar';
 
 import styles from '~/styles/profile/TextAvatarSection.module.css';
 
+// TODO: loading state, maybe use formik?
 export default function TextAvatarEditor() {
   const [showModal, setShowModal] = useState(false);
 
@@ -24,14 +27,10 @@ export default function TextAvatarEditor() {
   // default as in default values for the form (what is currently set in store - localStorage)
   const [defaultTextAvatar, setDefaultTextAvatar] = useState<TextAvatar>(null as unknown as TextAvatar);
 
-  const formRef = useRef<HTMLFormElement>(null);
-
-  const getTextAvatarFromForm = () => Object.fromEntries(new FormData(formRef.current!)) as TextAvatar;
-
   const onColorChange = (e: React.ChangeEvent<any>) => {
-    const input: HTMLInputElement = e.target;
+    const inputElem: HTMLInputElement = e.target;
 
-    const { id, value: colour } = input;
+    const { id, value: colour } = inputElem;
 
     document.documentElement.style.setProperty(`--${id}`, colour);
   };
@@ -46,15 +45,21 @@ export default function TextAvatarEditor() {
     setFg(systemDefault['avatar-fg']);
   };
 
-  const cancel = () => updateTextAvatarCss(getTextAvatarFromStore());
+  const cancelAndClose = async () => {
+    updateTextAvatarCss(await getTextAvatarFromStore());
+    onHide();
+  };
 
   useEffect(() => {
-    const textAvatar = getTextAvatarFromStore();
+    if (showModal) {
+      // get textAvatar from CSS instead of from store because TextAvatar would have already updated CSS
+      const textAvatar = getTextAvatarFromCss();
 
-    setBg(textAvatar['avatar-bg']);
-    setFg(textAvatar['avatar-fg']);
+      setBg(textAvatar['avatar-bg']);
+      setFg(textAvatar['avatar-fg']);
 
-    setDefaultTextAvatar(textAvatar);
+      setDefaultTextAvatar(textAvatar);
+    }
   }, [showModal]);
 
   const onHide = () => setShowModal(false);
@@ -80,28 +85,27 @@ export default function TextAvatarEditor() {
         <Modal.Header>
           <Modal.Title>Avatar</Modal.Title>
           <CloseButton
-            onClick={() => {
-              cancel();
-              onHide();
-            }}
+            onClick={cancelAndClose}
           />
         </Modal.Header>
 
         <Modal.Body>
           <Form
             id="text-avatar-form"
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
               e.preventDefault();
-              const newTextAvatar = getTextAvatarFromForm();
+              // for some reason, the form's values are the default :/
+              const newTextAvatar = getTextAvatarFromCss();
+
               updateTextAvatarCss(newTextAvatar);
-              updateTextAvatarStore(newTextAvatar);
+              // TODO check result of:
+              await updateTextAvatarStore(newTextAvatar);
             }}
             onReset={(e) => {
               setBg(defaultTextAvatar['avatar-bg']);
               setFg(defaultTextAvatar['avatar-fg']);
               updateTextAvatarCss(defaultTextAvatar);
             }}
-            ref={formRef}
           >
             <Form.Group as={Row} controlId="avatar-bg">
               <Form.Label column>Background colour</Form.Label>
@@ -134,10 +138,7 @@ export default function TextAvatarEditor() {
           <Button
             variant="secondary"
             size="sm"
-            onClick={() => {
-              cancel();
-              onHide();
-            }}
+            onClick={cancelAndClose}
           >
             Close
           </Button>
