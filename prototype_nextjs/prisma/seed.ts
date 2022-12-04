@@ -60,12 +60,12 @@ const getUserData = async (): Promise<Prisma.UserCreateInput[]> => [
 
 const projectData: Prisma.ProjectCreateInput[] = range(1, 10).map<Prisma.ProjectCreateInput>((num) => ({
   name: `Project ${num}`,
-  leader: {
+  manager: {
     connect: {
       email: 'manager@make-it-all.co.uk',
     },
   },
-  manager: {
+  leader: {
     connect: {
       email: 'leader@make-it-all.co.uk',
     },
@@ -94,12 +94,12 @@ const projectData: Prisma.ProjectCreateInput[] = range(1, 10).map<Prisma.Project
 })).concat([
   {
     name: 'Alice SHOULD NOT see this',
-    leader: {
+    manager: {
       connect: {
         email: 'manager@make-it-all.co.uk',
       },
     },
-    manager: {
+    leader: {
       connect: {
         email: 'leader@make-it-all.co.uk',
       },
