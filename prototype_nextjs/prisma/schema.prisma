@@ -14,32 +14,39 @@ datasource db {
 }
 
 // TODO: consider (discuss) using `username` instead of email, which will be the portion before @ in their email
-// unique and never changing, like email
+// it's unique and never changing, like email
 
-// role?
+// company-wide role?
 model User {
   id             String  @id @default(uuid())
   email          String  @unique
   hashedPassword String
   name           String
   leftCompany    Boolean @default(false)
+  inviterId      String?
+  inviter        User?   @relation("Inviter", fields: [inviterId], references: [id])
+  invited        User[]  @relation("Inviter")
+  avatarBg       String  @default("#e2ba39")
+  avatarFg       String  @default("white")
 
-  inviterId String?
-  inviter   User?   @relation("Inviter", fields: [inviterId], references: [id])
-  invited   User[]  @relation("Inviter")
+  // projects
+  managedProjects  Project[]        @relation("ProjectManager")
+  ledProjects      Project[]        @relation("ProjectLeader")
+  assignedProjects ProjectMembers[] @relation("ProjectMembers_member")
 
-  avatarBg String @default("#e2ba39")
-  avatarFg String @default("white")
-
-  managedProjects  Project[]                   @relation("ProjectManager")
-  ledProjects      Project[]                   @relation("ProjectLeader")
-  assignedProjects ProjectMembers[]            @relation("ProjectMembers_member")
   // tasks from ALL projects
-  tasks            ProjectTask[]               @relation("ProjectTaskAssignee")
-  permittedTasks   ProjectTaskPermittedUsers[] @relation("ProjectTaskPermittedUsers_user")
+  tasks          ProjectTask[]               @relation("ProjectTaskAssignee")
+  permittedTasks ProjectTaskPermittedUsers[] @relation("ProjectTaskPermittedUsers_user")
+
+  // forum
+  Post Post[] @relation("Post")
 }
 
+// ------------------------------------------
+
 // TODO: user's todo list
+
+// ------------------------------------------
 
 model Project {
   id   Int    @id @default(autoincrement())
@@ -51,11 +58,11 @@ model Project {
   leader    User             @relation("ProjectLeader", fields: [leaderId], references: [id])
   members   ProjectMembers[] @relation("ProjectMembers_project")
 
-  // TODO: split tasks into TodoTask etc.?
   tasks ProjectTask[] @relation("ProjectTasks")
 }
 
 // many-many relationship table
+// TODO!: test having this table be implicit (like ProjectTaskTag)
 model ProjectMembers {
   projectId Int
   project   Project @relation("ProjectMembers_project", fields: [projectId], references: [id])
@@ -66,10 +73,9 @@ model ProjectMembers {
 }
 
 model ProjectTask {
-  id        Int     @id @default(autoincrement())
-  projectId Int
-  project   Project @relation("ProjectTasks", fields: [projectId], references: [id])
-
+  id          Int                         @id @default(autoincrement())
+  projectId   Int
+  project     Project                     @relation("ProjectTasks", fields: [projectId], references: [id])
   stage       String // enum
   title       String
   description String
@@ -80,6 +86,7 @@ model ProjectTask {
 }
 
 // many-many relationship table
+// TODO!: test having this table be implicit (like ProjectTaskTag)
 model ProjectTaskPermittedUsers {
   taskId Int
   task   ProjectTask @relation("ProjectTaskPermittedUsers_task", fields: [taskId], references: [id])
@@ -92,4 +99,22 @@ model ProjectTaskPermittedUsers {
 model ProjectTaskTag {
   name  String        @id
   tasks ProjectTask[]
+}
+
+// ------------------------------------------
+
+model Post {
+  id         Int         @id @default(autoincrement())
+  authorId   String
+  author     User        @relation("Post", fields: [authorId], references: [id])
+  datePosted DateTime    @default(now())
+  title      String
+  summary    String
+  content    String
+  topics     PostTopic[]
+}
+
+model PostTopic {
+  name  String @id
+  posts Post[]
 }
