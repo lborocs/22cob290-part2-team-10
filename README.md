@@ -462,7 +462,7 @@ from the
 | [Axios](https://axios-http.com/)                                        | 1.2           | HTTP client (use instead of the `fetch` API)                                                 |
 | [zustand](https://github.com/pmndrs/zustand)                            | 4.1           | State management                                                                             |
 | [Prisma](https://www.prisma.io/)                                        | 4.7           | Database ORM ([#12][iPrisma])                                                                |
-| [ts-node]                                                               | 10.9          | Run code to [seed Prisma database](https://www.prisma.io/docs/guides/database/seed-database) |
+| [ts-node](https://typestrong.org/ts-node/)                              | 10.9          | Run code to [seed Prisma database](https://www.prisma.io/docs/guides/database/seed-database) |
 | [node.bcrypt.js](https://github.com/kelektiv/node.bcrypt.js)            | 5.1           | Hashing user passwords                                                                       |
 | [react-markdown](https://github.com/remarkjs/react-markdown)?           | -             | Render markdown content in forum posts                                                       |
 | [Zod](https://zod.dev/)                                                 | 3.19          | Object schema validation ([#1][pFormikZod])                                                  |
