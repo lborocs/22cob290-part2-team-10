@@ -1,9 +1,39 @@
 import { PrismaClient, type Prisma } from '@prisma/client';
 
 import { hashPassword } from '../src/lib/user';
-import { range } from '../src/utils';
 
 const prisma = new PrismaClient();
+
+
+/**
+ * @param start The start number (inclusive)
+ * @param end The end number (inclusive)
+ * @returns List of numbers from `start` to `end`
+ *
+ * [Source](https://stackoverflow.com/a/38213213)
+ */
+function range(start: number, end: number): number[] {
+  return [...Array(end).keys()].map((i) => i + start);
+}
+
+/**
+ * Generate a random date between today and the start of 2022.
+ *
+ * Example:
+ * ```ts
+ * const randomDate = new Date(randomTimeMs());
+ * ```
+ *
+ * [Source](https://stackoverflow.com/a/9035732)
+ */
+function randomTimeMs(): number {
+  const start = new Date(2022, 1, 1).getTime();
+  const end = Date.now();
+
+  const diff = end - start;
+
+  return start + (Math.random() * diff);
+}
 
 const testPassword = hashPassword.bind(null, 'TestPassword123!');
 
@@ -240,6 +270,70 @@ const taskData: Prisma.ProjectTaskCreateInput[] = [
   },
 ];
 
+const postData: Prisma.PostCreateInput[] = [
+  {
+    author: {
+      connect: {
+        email: 'alice@make-it-all.co.uk',
+      },
+    },
+    title: 'Alice made this post!',
+    summary: 'posted sometime between 1/1/22 and today',
+    datePosted: new Date(randomTimeMs()),
+    content: 'Well, sometimes you just gotta do what you gotta do',
+    topics: {
+      connectOrCreate: [
+        {
+          where: {
+            name: 'Topic1',
+          },
+          create: {
+            name: 'Topic1',
+          },
+        },
+        {
+          where: {
+            name: 'Topic2',
+          },
+          create: {
+            name: 'Topic2',
+          },
+        },
+      ],
+    },
+  },
+  {
+    author: {
+      connect: {
+        email: 'john@make-it-all.co.uk',
+      },
+    },
+    title: 'A post by John',
+    summary: 'john\'s post, posted today*',
+    content: 'Oh hello there!\n* the day db was seeded',
+    topics: {
+      connectOrCreate: [
+        {
+          where: {
+            name: 'Topic1',
+          },
+          create: {
+            name: 'Topic1',
+          },
+        },
+        {
+          where: {
+            name: 'Topic3',
+          },
+          create: {
+            name: 'Topic3',
+          },
+        },
+      ],
+    },
+  },
+];
+
 async function main() {
   console.log('Start seeding ...');
 
@@ -257,12 +351,18 @@ async function main() {
     console.log(`Created user with id: ${user.id} (name: ${user.name}), invited by email: ${user.inviter?.email}`);
   }
 
+  console.log();
+
+  // projects
+
   for (const p of projectData) {
     const project = await prisma.project.create({
       data: p,
     });
     console.log(`Created project with id: ${project.id} (name: ${project.name})`);
   }
+
+  console.log();
 
   for (const t of taskData) {
     const projectTask = await prisma.projectTask.create({
@@ -296,6 +396,26 @@ async function main() {
       + `assigned to user: ${projectTask.assignee.email}. Permitted emails: ${JSON.stringify(permittedEmails)}`
     );
   }
+
+  console.log();
+
+  // forum
+
+  for (const p of postData) {
+    const post = await prisma.post.create({
+      data: p,
+      include: {
+        author: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+    console.log(`Created post with id: ${post.id} (title: ${post.title}), authored by name: ${post.author.name}`);
+  }
+
+  console.log();
 
   console.log('Seeding finished.');
 }
