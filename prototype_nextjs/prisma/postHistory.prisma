@@ -37,7 +37,7 @@ model User {
   permittedTasks   ProjectTask[] @relation("ProjectTaskPermitted")
 
   // forum
-  posts             Post[]        @relation("Post")
+  posts             Post[]        @relation("PostAuthor")
   editedPostHistory PostHistory[] @relation("PostEditor")
 }
 
@@ -81,7 +81,7 @@ model ProjectTaskTag {
 model Post {
   id              Int           @id @default(autoincrement())
   authorId        String
-  author          User          @relation("Post", fields: [authorId], references: [id])
+  author          User          @relation("PostAuthor", fields: [authorId], references: [id])
   datePosted      DateTime      @default(now())
   title           String
   summary         String
