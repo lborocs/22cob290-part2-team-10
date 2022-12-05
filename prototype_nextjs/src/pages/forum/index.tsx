@@ -39,6 +39,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const user = session.user as SessionUser;
 
   const result = await prisma.post.findMany({
+    orderBy: {
+      datePosted: 'desc',
+    },
     include: {
       author: {
         select: {
