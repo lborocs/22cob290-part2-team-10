@@ -54,7 +54,7 @@ model User {
   permittedTasks   ProjectTask[] @relation("ProjectTaskPermitted")
 
   // forum
-  Post Post[] @relation("Post")
+  posts Post[] @relation("Post")
 }
 
 // ------------------------------------------
