@@ -61,7 +61,7 @@ export default function ProjectsList() {
           const url = `/projects/${hashids.encode(project.id)}`;
           const active = currentProjectUrl === url;
 
-          const nameIsTooLong = project.name.length > 20;
+          const nameIsTooLong = project.name.length > 18;
 
           return (
             <li key={index}>
