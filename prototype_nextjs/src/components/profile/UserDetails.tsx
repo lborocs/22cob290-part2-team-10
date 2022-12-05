@@ -28,7 +28,7 @@ export default function UserDetails() {
   // see https://stackoverflow.com/a/14822905
 
   const handleSubmit: React.ComponentProps<typeof Formik<DetailsFormData>>['onSubmit']
-    = async (values, { resetForm }) => {
+    = async (values, { setFieldError, resetForm }) => {
       // see pages/index#handleSubmit
       document.querySelector<HTMLInputElement>(':focus')?.blur();
 
@@ -40,10 +40,6 @@ export default function UserDetails() {
         if (data.success) {
           const { name } = values;
 
-          setName(name);
-
-          resetForm({ values });
-
           /**
            * Workaround to update the user's name in the cookie/session stored on the client when they
            *  change their name.
@@ -53,10 +49,20 @@ export default function UserDetails() {
            *
            * @see [...nextauth].ts
            */
-          await signIn('credentials', {
+          const resp = (await signIn('credentials', {
             refetchUser: true,
             redirect: false,
-          });
+          }))!;
+
+          if (!resp.ok) { // shouldn't happen
+            setFieldError('name', '');
+            console.error(resp.error);
+            throw new Error(resp.error);
+          }
+
+          setName(name);
+
+          resetForm({ values });
         } else { // shouldn't happen
           console.error(data);
           throw new Error();
@@ -100,7 +106,7 @@ export default function UserDetails() {
                   value={values.name}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  isInvalid={touched.name && !!errors.name}
+                  isInvalid={touched.name && errors.name !== undefined}
                   required
                 />
                 <Form.Control.Feedback type="invalid">
