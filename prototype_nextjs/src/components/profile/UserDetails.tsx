@@ -1,3 +1,4 @@
+import { signIn } from 'next-auth/react';
 import Col from 'react-bootstrap/Col';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
@@ -42,8 +43,22 @@ export default function UserDetails() {
           setName(name);
 
           resetForm({ values });
+
+          /**
+           * Workaround to update the user's name in the cookie/session stored on the client when they
+           *  change their name.
+           *
+           * Without this: when changing pages, their old name will still be displayed until they sign out
+           *  and sign back in
+           *
+           * @see [...nextauth].ts
+           */
+          await signIn('credentials', {
+            refetchUser: true,
+            redirect: false,
+          });
         } else { // shouldn't happen
-          console.log(data);
+          console.error(data);
           throw new Error();
         }
       };

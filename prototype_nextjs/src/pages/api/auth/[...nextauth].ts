@@ -5,6 +5,7 @@ import axios from 'axios';
 import prisma from '~/lib/prisma';
 import type { SessionUser } from '~/types';
 import type { RequestSchema as SignInPayload, ResponseSchema as SignInResponse } from '~/pages/api/user/signIn';
+import type { ResponseSchema as GetUserFromSessionResponse } from '~/pages/api/user/get-user-from-session';
 
 export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
@@ -19,9 +20,31 @@ export const authOptions: NextAuthOptions = {
       credentials: {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
-        changeName: {},
+        refetchUser: {},
       },
       async authorize(credentials, req) {
+        /**
+         * Workaround to update the user's details in the cookie/session stored on the client. Need
+         *  a workaround because Next-Auth doesn't currently support doing mutating the cookie/session.
+         *
+         * Works by basically re-signing them in (getting their info from database again), but instead
+         *  of using their email & password, it uses the session to know who is signed in.
+         *  - We can't use their email & password because their password isn't stored in plain text and
+         *   it's inconvenient to ask them to re-enter it.
+         *
+         * After "signing in", next-auth's signIn flow will re-set the cookie/session stored on the client.
+         */
+        if (credentials!.refetchUser) {
+          const { data } = await axios.get<GetUserFromSessionResponse>(
+            `${process.env.NEXTAUTH_URL}/api/user/get-user-from-session`, {
+            headers: {
+              // because we're making the request from the server, we basically pretend to be the user making the request
+              cookie: req.headers!.cookie,
+            },
+          });
+          return data.user;
+        }
+
         const payload: SignInPayload = {
           email: credentials!.email,
           password: credentials!.password,
