@@ -120,6 +120,8 @@ export default function UserDetails() {
               <FloatingLabel label="Email" className="mb-3">
                 <Form.Control
                   value={email}
+                  title="email"
+                  placeholder="Email"
                   readOnly
                 />
               </FloatingLabel>
