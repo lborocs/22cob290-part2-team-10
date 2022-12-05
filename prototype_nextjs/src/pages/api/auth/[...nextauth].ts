@@ -19,6 +19,7 @@ export const authOptions: NextAuthOptions = {
       credentials: {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
+        changeName: {},
       },
       async authorize(credentials, req) {
         const payload: SignInPayload = {
@@ -29,16 +30,14 @@ export const authOptions: NextAuthOptions = {
         const { data } = await axios.post<SignInResponse>(`${process.env.NEXTAUTH_URL}/api/user/signIn`, payload);
 
         if (data.success) return data.user;
-        throw new Error(data.reason);
+        // throw new Error(data.reason);
+        return null;
       },
     }),
   ],
 
-  // TODO: nextauth pages
   pages: {
     signIn: '/',
-    error: '/auth/error', // Error code passed in query string as ?error=
-    newUser: '/auth/new-user', // New users will be directed here on first sign in (leave the property out if not of interest)
   },
 
   callbacks: {

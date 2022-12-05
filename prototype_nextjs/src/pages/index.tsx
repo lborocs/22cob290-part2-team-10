@@ -20,29 +20,10 @@ import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import styles from '~/styles/SignIn.module.css';
 import makeItAllLogo from '~/../public/make_it_all.png';
 
-/*
- * Identical to /api/user/signIn#ErrorReason, but importing that will give error because the api
- * imports /lib/user which imports `bcrypt`
- *
- * I believe that causes the page to try to import bcrypt on the client which is an obvious nono
- *
- * The error:
- * `Module not found: Can't resolve 'fs'`
- */
-enum ErrorReason {
-  WRONG_PASSWORD = 'WRONG_PASSWORD',
-  DOESNT_EXIST = 'DOESNT_EXIST',
-  BAD_CREDENTIALS = 'BAD_CREDENTIALS',
-}
-
 type SignInFormData = {
   email: string
   password: string
 };
-
-// TODO!: remove specific login feedback? (WRONG_PASSWORD etc.)
-// because "We would like suitable aspects of data protection considered so the sys‐
-// tem cannot be exploited to target specific individual" - spec letter
 
 export default function SignInPage() {
   const router = useRouter();
@@ -65,15 +46,15 @@ export default function SignInPage() {
         callbackUrl: nextUrl,
       }))!;
 
+      // unspecific signin feedback because spec letter says:
+      // "We would like suitable aspects of data protection considered so the sys‐
+      // tem cannot be exploited to target specific individual"
       if (resp.error) {
-        const errorReason = resp.error;
-        switch (errorReason) {
-          case ErrorReason.DOESNT_EXIST:
-            setFieldError('email', 'You do not have an account');
-            break;
-
-          case ErrorReason.WRONG_PASSWORD:
-            setFieldError('password', 'Incorrect password');
+        // https://next-auth.js.org/configuration/pages#error-codes
+        switch (resp.error) {
+          case 'CredentialsSignin': // failed signin
+            setFieldError('email', 'Invalid credentials');
+            setFieldError('password', 'Invalid credentials');
             break;
 
           case 'AccessDenied': // left the company
@@ -82,30 +63,27 @@ export default function SignInPage() {
 
           default: // shouldn't happen
             console.error(resp);
-            setFieldError('email', errorReason);
-            setFieldError('password', errorReason);
+            setFieldError('email', resp.error);
+            setFieldError('password', resp.error);
         }
       } else {
+        toast.dismiss();
         router.push(resp.url!);
       }
     };
 
   useEffect(() => {
     if (callbackUrl) {
-      const toastId = toast.error((t) => (
-        <span onClick={() => toast.dismiss(t.id)}>
+      toast.error((t) => (
+        <span onClick={() => toast.dismiss(t.id)} style={{ cursor: 'pointer' }}>
           You need to sign in first.
         </span>
       ), {
         id: 'needToSignIn',
         duration: Infinity,
       });
-
-      return () => {
-        toast.remove(toastId);
-      };
     }
-  }, []);
+  }, [callbackUrl]);
 
   return (
     <>
