@@ -53,6 +53,8 @@ export default function SignInPage() {
         // https://next-auth.js.org/configuration/pages#error-codes
         switch (resp.error) {
           case 'CredentialsSignin': // failed signin
+            // TODO?!: because providing unspecific signin feedback, maybe show a toast instead?
+            // and only have the glow on the fields - no tooltip
             setFieldError('email', 'Invalid credentials');
             setFieldError('password', 'Invalid credentials');
             break;
@@ -107,7 +109,7 @@ export default function SignInPage() {
           <Formik
             initialValues={{
               email: 'alice@make-it-all.co.uk',
-              password: 'TestPassword123',
+              password: 'TestPassword123!',
             }}
             validate={withZodSchema(SignInSchema)}
             onSubmit={handleSubmit}
