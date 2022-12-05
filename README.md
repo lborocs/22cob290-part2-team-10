@@ -118,7 +118,6 @@ https://cloud.google.com/nodejs/getting-started/getting-started-on-compute-engin
 > ers can keep track of the progression of the project they are responsible for."
 >
 > The dashboard is for _each_ project, and is more akin to the project overview that we were doing
->
 
 ### TODO (feedback from Part 1 presentation)
 
@@ -202,10 +201,6 @@ There are two ways to know who is logged in:
 2. Reading `state.user` from the client-side store `store/userStore` (see next section) ([example](prototype_nextjs/src/pages/examples/user_userstore.tsx))
 
 If on a page:
-- using number 2 because you'll know if anything about the user changes (e.g. their name) while they're on your page,
-but that is quite unlikely to happen
-
-If on a page:
 - if anything about the user can change while on your page (e.g. changing name), use number 1.
 - else, prefer using number 2 but it's ntd
 
@@ -217,8 +212,14 @@ Example of using `useUserStore` (number 2):
 ```tsx
 import useUserStore from '~/store/userStore';
 
-// the component will re-render whenever `firstName` changes
-const firstName = useUserStore((state) => state.user.firstName);
+export default function ExamplePage() {
+  // the component will re-render whenever `name` changes
+  const name = useUserStore((state) => state.user.name);
+
+  return (
+    <div>Your name is: {name}</div>
+  );
+}
 ```
 
 #### Client-side state management
@@ -351,6 +352,7 @@ All have unique IDs (`autoincrement`/`uuid`)
 | avatarFg         | `String`         | `#ffffff` |                 |                                                                                    |
 | assignedProjects | -                |           | `Project[]`     | Implicit many-to-many relation. The projects where the user is just a team member. |
 | permittedTasks   | -                |           | `ProjectTask[]` | Implicit many-to-many relation.                                                    |
+| posts            | -                |           | `Post`          | Implicit many-to-many relation.                                                    |
 
 </details>
 
