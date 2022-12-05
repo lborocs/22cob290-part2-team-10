@@ -12,7 +12,7 @@ export type ErrorResponse = {
   error: string
 };
 
-// might have to change to TeamRole?
+// TODO: might have to change to TeamRole?
 export enum ProjectRole {
   MANAGER,
   LEADER,
