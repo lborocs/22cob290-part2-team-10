@@ -8,8 +8,8 @@ export interface SessionUser extends User {
   image: null
 }
 
-export type UnauthorisedResponse = {
-  message: string;
+export type ErrorResponse = {
+  error: string
 };
 
 // might have to change to TeamRole?

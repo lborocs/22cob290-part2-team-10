@@ -40,9 +40,9 @@ export default function InviteEmployeeSection() {
     try {
       await copyToClipboard(inviteUrl);
       setCopyStatus(CopyStatus.SUCCEEDED);
-    } catch (e) {
+    } catch (e: any) {
       setCopyStatus(CopyStatus.FAILED);
-      setCopyFailedFeedback(e as string);
+      setCopyFailedFeedback(String(e));
     }
   };
 

@@ -3,7 +3,7 @@ import { unstable_getServerSession } from 'next-auth/next';
 
 import prisma from '~/lib/prisma';
 import { whereUserHasAccessToProject } from '~/lib/projects';
-import type { UnauthorisedResponse, SessionUser } from '~/types';
+import type { ErrorResponse, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 async function getProjects(userId: string) {
@@ -24,7 +24,7 @@ export type ResponseSchema = Awaited<ReturnType<typeof getProjects>>;
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseSchema | UnauthorisedResponse | { error: string }>,
+  res: NextApiResponse<ResponseSchema | ErrorResponse>,
 ) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method Not Allowed' });
@@ -33,7 +33,7 @@ export default async function handler(
   const session = await unstable_getServerSession(req, res, authOptions);
 
   if (!session || !session.user) {
-    return res.status(401).json({ message: 'You must be signed in.' });
+    return res.status(401).json({ error: 'You must be signed in.' });
   }
 
   const userId = (session.user as SessionUser).id;

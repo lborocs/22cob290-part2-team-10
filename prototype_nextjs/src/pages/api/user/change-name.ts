@@ -4,7 +4,7 @@ import type { z } from 'zod';
 
 import prisma from '~/lib/prisma';
 import ChangeNameSchema from '~/schemas/user/changeName';
-import type { UnauthorisedResponse, SessionUser } from '~/types';
+import type { ErrorResponse, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 export type RequestSchema = z.infer<typeof ChangeNameSchema>;
@@ -15,7 +15,7 @@ export type ResponseSchema = {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseSchema | UnauthorisedResponse | { error: string }>,
+  res: NextApiResponse<ResponseSchema | ErrorResponse>,
 ) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
@@ -24,7 +24,7 @@ export default async function handler(
   const session = await unstable_getServerSession(req, res, authOptions);
 
   if (!session || !session.user) {
-    return res.status(401).json({ message: 'You must be signed in.' });
+    return res.status(401).json({ error: 'You must be signed in.' });
   }
 
   const safeParseResult = ChangeNameSchema.safeParse(req.body);

@@ -13,26 +13,9 @@ datasource db {
   url      = "file:./dev.db"
 }
 
-// TODO: consider (discuss) using `username` instead of email, which will be the portion before @ in their email
-// it's unique and never changing, like email
-// ^ probably not right
+// Example model including post history:
+//  - current post state is Post.history[ORDER BY dateEdited DESC][0]
 
-// TODO: things like (can clarify with client?):
-// - manHours for project
-// - estimatedDuration for task
-// - deadline for project/task?
-
-// TODO: (need to clarify with client) (waiting for reply):
-// - post editors
-// - post lastEdited
-// - post lastEditor
-// - post contentHistory? [1-many]
-//   - content String
-//   - dateChanged DateTime
-
-// TODO?: model team, waiting for response from stakeholders
-
-// company-wide role?
 model User {
   id             String  @id @default(uuid())
   email          String  @unique
@@ -54,7 +37,8 @@ model User {
   permittedTasks   ProjectTask[] @relation("ProjectTaskPermitted")
 
   // forum
-  posts Post[] @relation("Post")
+  posts             Post[]        @relation("PostAuthor")
+  editedPostHistory PostHistory[] @relation("PostEditor")
 }
 
 // ------------------------------------------
@@ -95,15 +79,27 @@ model ProjectTaskTag {
 // ------------------------------------------
 
 model Post {
-  id         Int         @id @default(autoincrement())
-  authorId   String
-  author     User        @relation("Post", fields: [authorId], references: [id])
-  datePosted DateTime    @default(now())
-  title      String
-  summary    String
+  id              Int           @id @default(autoincrement())
+  authorId        String
+  author          User          @relation("PostAuthor", fields: [authorId], references: [id])
+  datePosted      DateTime      @default(now())
+  title           String
+  summary         String
+  originalContent String
+  upvotes         Int           @default(0)
+  topics          PostTopic[]
+  history         PostHistory[]
+}
+
+// many-to-many relationship table representing User <-> Post
+model PostHistory {
+  postId   Int    @id
+  post     Post   @relation(fields: [postId], references: [id])
+  editorId String
+  editor   User   @relation("PostEditor", fields: [editorId], references: [id])
+
+  dateEdited DateTime @default(now())
   content    String
-  upvotes    Int         @default(0)
-  topics     PostTopic[]
 }
 
 model PostTopic {
