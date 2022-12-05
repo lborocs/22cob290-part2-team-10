@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import { faAlignJustify, faAlignLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -36,7 +35,7 @@ interface DefaultSidebar extends BaseSidebar {
 type Sidebar = CustomSidebar | DefaultSidebar;
 
 export type PageLayout = {
-  title?: string
+  title?: React.ReactNode
   sidebar: Sidebar
 };
 
@@ -73,7 +72,7 @@ export default function Layout({
 
   return (
     <div className={styles.wrapper}>
-      {!noSidebar && (
+      {(
         <Sidebar
           show={showSidebar}
           content={getSidebarContent()}
@@ -83,38 +82,57 @@ export default function Layout({
       <div className={styles.content}>
         <header>
           <Navbar expand="lg" className={styles.navbar}>
-            <Container fluid>
+            <div className="w-100 d-flex flex-row flex-nowrap position-relative">
+              {/* left */}
               <div>
-                {!noSidebar && (
+                {(
                   <Button
                     onClick={() => setShowSidebar((show) => !show)}
                     className={styles['sidebar-toggle-btn']}
                   >
                     <FontAwesomeIcon icon={faAlignLeft} />
                     {' '}
-                    <span className="d-none d-md-inline">Toggle Sidebar</span>
+                    <span className="d-none d-lg-inline">Toggle Sidebar</span>
                   </Button>
                 )}
               </div>
 
-              <Navbar.Brand>
-                {title}
-              </Navbar.Brand>
+              {/*
+                middle
+                 - stacked on top using `position-absolute` & centered using `justify-content-center`
+                 - `pointer-events: none` so navbar items are still clickable
+                  - `auto` on inner div in case provided title has clickable things
+              */}
+              <div
+                className="position-absolute w-100 h-100"
+                style={{ pointerEvents: 'none' }}
+              >
+                <div
+                  className="d-flex align-items-center justify-content-center"
+                  style={{ pointerEvents: 'auto' }}
+                >
+                  {title}
+                </div>
+              </div>
 
               <Navbar.Toggle
                 aria-controls="nav"
                 as={Button}
                 variant="dark"
-                className="d-lg-none"
-                bsPrefix="_" // hacky way to not have default toggle style
+                className="d-lg-none ms-auto"
+                bsPrefix="_" // hacky way to not have default toggle style. Can't use undefined so using _
               >
                 <FontAwesomeIcon icon={faAlignJustify} />
               </Navbar.Toggle>
 
-              <Navbar.Collapse id="nav" className="justify-content-end">
+              {/* right */}
+              <Navbar.Collapse
+                id="nav"
+                className="justify-content-end"
+              >
                 <LayoutNav />
               </Navbar.Collapse>
-            </Container>
+            </div>
           </Navbar>
         </header>
 

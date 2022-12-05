@@ -38,7 +38,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 // but for some reason it gives error saying SidebarType isn't defined, idk why and cba
 
 const layout: PageLayout = {
-  title: 'Look no sidebar!',
+  title: <h1>Look no sidebar!</h1>,
   sidebar: {
     type: SidebarType.NONE,
   },
