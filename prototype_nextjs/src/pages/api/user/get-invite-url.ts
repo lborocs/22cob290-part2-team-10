@@ -2,14 +2,14 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { unstable_getServerSession } from 'next-auth/next';
 
 import { getInviteToken } from '~/lib/inviteToken';
-import type { UnauthorisedResponse } from '~/types';
+import type { ErrorResponse } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 export type ResponseSchema = { inviteUrl: string };
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseSchema | UnauthorisedResponse | { error: string }>,
+  res: NextApiResponse<ResponseSchema | ErrorResponse>,
 ) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method Not Allowed' });
@@ -18,7 +18,7 @@ export default async function handler(
   const session = await unstable_getServerSession(req, res, authOptions);
 
   if (!session || !session.user) {
-    return res.status(401).json({ message: 'You must be signed in.' });
+    return res.status(401).json({ error: 'You must be signed in.' });
   }
 
   const email = session.user.email!;
