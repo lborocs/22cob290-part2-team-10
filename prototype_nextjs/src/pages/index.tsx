@@ -53,10 +53,9 @@ export default function SignInPage() {
         // https://next-auth.js.org/configuration/pages#error-codes
         switch (resp.error) {
           case 'CredentialsSignin': // failed signin
-            // TODO?!: because providing unspecific signin feedback, maybe show a toast instead?
-            // and only have the glow on the fields - no tooltip
-            setFieldError('email', 'Invalid credentials');
-            setFieldError('password', 'Invalid credentials');
+            toast.error('Could not sign in, please check your credentials');
+            setFieldError('email', '');
+            setFieldError('password', '');
             break;
 
           case 'AccessDenied': // left the company
@@ -92,11 +91,11 @@ export default function SignInPage() {
       <Head>
         <title>Sign In - Make-It-All</title>
       </Head>
-      {callbackUrl ? (
-        <Toaster
-          position="top-center"
-        />
-      ) : null}
+
+      <Toaster
+        position="top-center"
+      />
+
       <main className={`vh-100 d-flex align-items-center justify-content-center flex-column ${styles.main}`}>
         <div>
           <Image
@@ -135,8 +134,7 @@ export default function SignInPage() {
                   value={values.email}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  isInvalid={touched.email && !!errors.email}
-                  feedbackTooltip
+                  isInvalid={touched.email && errors.email !== undefined}
                 />
                 <PasswordField
                   name="password"
@@ -145,8 +143,7 @@ export default function SignInPage() {
                   value={values.password}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  isInvalid={touched.password && !!errors.password}
-                  feedbackTooltip
+                  isInvalid={touched.password && errors.password !== undefined}
                   policyTooltip
                 />
                 <Form.Group as={Row}>
