@@ -3,8 +3,8 @@ import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 
 import { SidebarType, type PageLayout } from '~/components/Layout';
+import type { SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import { ssrGetUserInfo } from '~/server/utils';
 
 export default function ExamplePage() {
   return (
@@ -24,7 +24,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { notFound: true };
   }
 
-  const user = await ssrGetUserInfo(session);
+  const user = session.user as SessionUser;
 
   return {
     props: {

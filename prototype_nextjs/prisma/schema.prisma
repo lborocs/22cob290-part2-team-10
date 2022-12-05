@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// sqlite doesn't support enums :/
+datasource db {
+  // provider = "mysql"
+  // url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// TODO: consider (discuss) using `username` instead of email, which will be the portion before @ in their email
+// it's unique and never changing, like email
+// ^ probably not right
+
+// TODO: things like (can clarify with client?):
+// - manHours for project
+// - estimatedDuration for task
+// - deadline for project/task?
+
+// TODO: (need to clarify with client) (waiting for reply):
+// - post editors
+// - post lastEdited
+// - post lastEditor
+// - post contentHistory? [1-many]
+//   - content String
+//   - dateChanged DateTime
+
+// TODO?: model team, waiting for response from stakeholders
+
+// company-wide role?
+model User {
+  id             String  @id @default(uuid())
+  email          String  @unique
+  hashedPassword String
+  name           String
+  leftCompany    Boolean @default(false)
+  inviterId      String?
+  inviter        User?   @relation("Invite", fields: [inviterId], references: [id])
+  invited        User[]  @relation("Invite")
+  avatarBg       String  @default("#e2ba39")
+  avatarFg       String  @default("#ffffff")
+
+  // projects
+  managedProjects  Project[]     @relation("ProjectManager")
+  ledProjects      Project[]     @relation("ProjectLeader")
+  assignedProjects Project[]     @relation("ProjectMembers")
+  // tasks from ALL projects
+  tasks            ProjectTask[] @relation("ProjectTaskAssignee")
+  permittedTasks   ProjectTask[] @relation("ProjectTaskPermitted")
+
+  // forum
+  Post Post[] @relation("Post")
+}
+
+// ------------------------------------------
+
+// TODO: user's todo list
+
+// ------------------------------------------
+
+model Project {
+  id        Int           @id @default(autoincrement())
+  name      String
+  managerId String
+  manager   User          @relation("ProjectManager", fields: [managerId], references: [id])
+  leaderId  String
+  leader    User          @relation("ProjectLeader", fields: [leaderId], references: [id])
+  members   User[]        @relation("ProjectMembers")
+  tasks     ProjectTask[] @relation("ProjectTasks")
+}
+
+model ProjectTask {
+  id          Int              @id @default(autoincrement())
+  projectId   Int
+  project     Project          @relation("ProjectTasks", fields: [projectId], references: [id])
+  stage       String // enum
+  title       String
+  description String
+  tags        ProjectTaskTag[]
+  assigneeId  String
+  assignee    User             @relation("ProjectTaskAssignee", fields: [assigneeId], references: [id])
+  permitted   User[]           @relation("ProjectTaskPermitted")
+}
+
+model ProjectTaskTag {
+  name  String        @id
+  tasks ProjectTask[]
+}
+
+// ------------------------------------------
+
+model Post {
+  id         Int         @id @default(autoincrement())
+  authorId   String
+  author     User        @relation("Post", fields: [authorId], references: [id])
+  datePosted DateTime    @default(now())
+  title      String
+  summary    String
+  content    String
+  upvotes    Int         @default(0)
+  topics     PostTopic[]
+}
+
+model PostTopic {
+  name  String @id
+  posts Post[]
+}

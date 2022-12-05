@@ -8,7 +8,6 @@ import { withZodSchema } from 'formik-validator-zod';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
 
-import EmailField from '~/components/EmailField';
 import LoadingButton from '~/components/LoadingButton';
 import PasswordField from '~/components/PasswordField';
 import useUserStore from '~/store/userStore';
@@ -111,6 +110,7 @@ export default function ChangePasswordSection() {
               isValid,
               dirty,
             }) => {
+              // FIXME?: not meant to be using useState things here, but it works so idk what to do
               setChangingPw(isSubmitting);
               if (dirty) setIsValid(isValid);
 
@@ -120,11 +120,11 @@ export default function ChangePasswordSection() {
                   onSubmit={handleSubmit}
                   noValidate
                 >
-                  <EmailField
-                    name="email"
-                    controlId="email"
-                    defaultValue={email}
+                  <input
                     type="hidden"
+                    autoComplete="username"
+                    name="email"
+                    defaultValue={email}
                   />
                   <PasswordField
                     name="currentPassword"

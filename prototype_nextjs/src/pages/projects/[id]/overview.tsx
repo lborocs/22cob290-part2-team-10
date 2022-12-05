@@ -1,23 +1,35 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */ // TODO: remove once this is done
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { unstable_getServerSession } from 'next-auth/next';
+import type { Prisma } from '@prisma/client';
 
+import hashids from '~/lib/hashids';
+import prisma from '~/lib/prisma';
+import { getUserRoleInProject } from '~/lib/projects';
 import ErrorPage from '~/components/ErrorPage';
 import { SidebarType, type PageLayout } from '~/components/Layout';
-import hashids from '~/lib/hashids';
-import { Role } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import { ssrGetUserInfo } from '~/server/utils';
-import { getProjectInfo } from '~/server/store/projects';
+import { type SessionUser, ProjectRole } from '~/types';
 
 // TODO: ProjectOverviewPage
-export default function ProjectOverviewPage({ projectInfo }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  if (!projectInfo) return (
+export default function ProjectOverviewPage({ project, role }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const router = useRouter();
+
+  if (!project) return (
     <ErrorPage
       title="Project does not exist."
-      buttonContent="Projects"
-      buttonUrl="/projects"
+      buttonContent="Home"
+      buttonUrl="/home"
+    />
+  );
+
+  // only managers & leaders can see the project overview
+  if (role !== ProjectRole.MANAGER && role !== ProjectRole.LEADER) return (
+    <ErrorPage
+      title="You do not have access to this page."
+      buttonContent="Project"
+      buttonUrl={router.asPath.slice(0, -9)} // remove /overview
     />
   );
 
@@ -26,7 +38,7 @@ export default function ProjectOverviewPage({ projectInfo }: InferGetServerSideP
     manager,
     leader,
     members,
-  } = projectInfo;
+  } = project;
 
   const pageTitle = `Overview ${name} - Make-It-All`;
 
@@ -38,14 +50,34 @@ export default function ProjectOverviewPage({ projectInfo }: InferGetServerSideP
       <main>
         <h1>{name}</h1>
         <div className="d-flex flex-column">
-          <p>Manager: {manager}</p>
-          <p>Leader: {leader}</p>
-          <section>
-            <p>Members:</p>
-            {members.map((member, index) => (
-              <p key={index}>{member}</p>
-            ))}
-          </section>
+          <p>Number of members: {project._count.members}</p>
+          <p>Total project tasks: {project._count.tasks}</p>
+
+          <details open>
+            <summary><span className="h3">Manager</span></summary>
+            <p>Name: {manager.name}</p>
+            <p># of tasks: {manager.tasks.length}</p>
+          </details>
+
+          <details open>
+            <summary><span className="h3">Leader</span></summary>
+            <p>Name: {leader.name}</p>
+            <p># of tasks: {leader.tasks.length}</p>
+          </details>
+
+          <details open>
+            <summary><span className="h3">Members</span></summary>
+            <ul>
+              {members.map((member, index) => (
+                <li key={index}>
+                  <div>
+                    <p>Name: {member.name}</p>
+                    <p># of tasks: {member.tasks.length}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </details>
         </div>
       </main>
     </main>
@@ -59,32 +91,83 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { notFound: true };
   }
 
-  const user = await ssrGetUserInfo(session);
-
-  // only managers can see the project overview
-  // TODO?: should we show an error page saying they aren't authorised to see this page?
-  if (user.role !== Role.MANAGER) {
-    return {
-      redirect: {
-        destination: '/home',
-        permanent: false,
-      },
-    };
-  }
+  const user = session.user as SessionUser;
 
   const { id } = context.params!;
   const decodedId = hashids.decode(id as string);
 
-  const projectId = decodedId[0] as number; // | undefined
+  const projectId = decodedId[0] as number | undefined;
 
-  // no need to handle projectId being undefined because because getProjectInfo should just return null
-  const projectInfo = await getProjectInfo(projectId);
+  const numberOfTasks = {
+    where: {
+      projectId,
+    },
+    select: {
+      id: true,
+    },
+  } satisfies Prisma.ProjectTaskFindManyArgs;
+
+  // TODO: how many tasks a user (team members) is CURRENTLY working on (might have to be another query)
+  // and also total number of tasks (so we can do like `completed tasks: 5/30`)
+
+  const project = await prisma.project.findUnique({
+    where: {
+      id: projectId,
+    },
+    select: {
+      name: true,
+      manager: {
+        select: {
+          id: true,
+          name: true,
+          tasks: {
+            ...numberOfTasks,
+          },
+        },
+      },
+      leader: {
+        select: {
+          id: true,
+          name: true,
+          tasks: {
+            ...numberOfTasks,
+          },
+        },
+      },
+      members: {
+        select: {
+          id: true,
+          name: true,
+          tasks: {
+            ...numberOfTasks,
+          },
+        },
+      },
+      _count: {
+        select: {
+          members: true,
+          tasks: true,
+        },
+      },
+    },
+  });
+
+  if (!project) return {
+    props: {
+      session,
+      user,
+      project: null,
+    },
+  };
+
+  const role = getUserRoleInProject(user.id, project);
 
   return {
     props: {
       session,
       user,
-      projectInfo,
+      project,
+      role,
     },
   };
 }

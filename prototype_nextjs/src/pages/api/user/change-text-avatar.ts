@@ -3,11 +3,11 @@ import { unstable_getServerSession } from 'next-auth/next';
 import type { z } from 'zod';
 
 import prisma from '~/lib/prisma';
-import ChangeNameSchema from '~/schemas/user/changeName';
+import TextAvatarSchema from '~/schemas/user/textAvatar';
 import type { UnauthorisedResponse, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
-export type RequestSchema = z.infer<typeof ChangeNameSchema>;
+export type RequestSchema = z.infer<typeof TextAvatarSchema>;
 
 export type ResponseSchema = {
   success: boolean
@@ -27,7 +27,7 @@ export default async function handler(
     return res.status(401).json({ message: 'You must be signed in.' });
   }
 
-  const safeParseResult = ChangeNameSchema.safeParse(req.body);
+  const safeParseResult = TextAvatarSchema.safeParse(req.body);
 
   if (!safeParseResult.success) {
     res.status(400).json({
@@ -37,7 +37,7 @@ export default async function handler(
     return;
   }
 
-  const { name } = safeParseResult.data;
+  const { 'avatar-bg': avatarBg, 'avatar-fg': avatarFg } = safeParseResult.data;
 
   const userId = (session.user as SessionUser).id;
 
@@ -46,7 +46,8 @@ export default async function handler(
       id: userId,
     },
     data: {
-      name,
+      avatarBg,
+      avatarFg,
     },
   });
 

@@ -1,3 +1,4 @@
+import { signIn } from 'next-auth/react';
 import Col from 'react-bootstrap/Col';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
@@ -13,25 +14,21 @@ import ChangeNameSchema from '~/schemas/user/changeName';
 import type { RequestSchema as ChangeNamePayload, ResponseSchema as ChangeNameResponse } from '~/pages/api/user/change-name';
 
 type DetailsFormData = {
-  firstName: string
-  lastName: string
+  name: string
 };
 
 export default function UserDetails() {
-  const { setFirstName, setLastName, firstName, lastName, email, role } = useUserStore((state) => ({
-    setFirstName: state.setFirstName,
-    setLastName: state.setLastName,
-    firstName: state.user.firstName,
-    lastName: state.user.lastName,
+  const { setName, name, email } = useUserStore((state) => ({
+    setName: state.setName,
+    name: state.user.name,
     email: state.user.email,
-    role: state.user.role,
   }));
 
-  // TODO: add a glow to firstName & lastName to show it's editable?
+  // TODO: add a glow to name to show it's editable?
   // see https://stackoverflow.com/a/14822905
 
   const handleSubmit: React.ComponentProps<typeof Formik<DetailsFormData>>['onSubmit']
-    = async (values, { resetForm }) => {
+    = async (values, { setFieldError, resetForm }) => {
       // see pages/index#handleSubmit
       document.querySelector<HTMLInputElement>(':focus')?.blur();
 
@@ -41,14 +38,33 @@ export default function UserDetails() {
         const { data } = await axios.post<ChangeNameResponse>('/api/user/change-name', payload);
 
         if (data.success) {
-          const { firstName, lastName } = values;
+          const { name } = values;
 
-          setFirstName(firstName);
-          setLastName(lastName);
+          /**
+           * Workaround to update the user's name in the cookie/session stored on the client when they
+           *  change their name.
+           *
+           * Without this: when changing pages, their old name will still be displayed until they sign out
+           *  and sign back in
+           *
+           * @see [...nextauth].ts
+           */
+          const resp = (await signIn('credentials', {
+            refetchUser: true,
+            redirect: false,
+          }))!;
+
+          if (!resp.ok) { // shouldn't happen
+            setFieldError('name', '');
+            console.error(resp.error);
+            throw new Error(resp.error);
+          }
+
+          setName(name);
 
           resetForm({ values });
         } else { // shouldn't happen
-          console.log(data);
+          console.error(data);
           throw new Error();
         }
       };
@@ -65,8 +81,7 @@ export default function UserDetails() {
   return (
     <Formik
       initialValues={{
-        firstName,
-        lastName,
+        name,
       }}
       validate={withZodSchema(ChangeNameSchema)}
       onSubmit={handleSubmit}
@@ -84,34 +99,18 @@ export default function UserDetails() {
         <Form onSubmit={handleSubmit} noValidate>
           <Row>
             <Col md>
-              <FloatingLabel label="First name" className="mb-3" controlId="firstName">
+              <FloatingLabel label="Name" className="mb-3" controlId="name">
                 <Form.Control
-                  name="firstName"
-                  placeholder="Enter first name"
-                  value={values.firstName}
+                  name="name"
+                  placeholder="Enter Name"
+                  value={values.name}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  isInvalid={touched.firstName && !!errors.firstName}
+                  isInvalid={touched.name && errors.name !== undefined}
                   required
                 />
                 <Form.Control.Feedback type="invalid">
-                  {errors.firstName}
-                </Form.Control.Feedback>
-              </FloatingLabel>
-            </Col>
-            <Col md>
-              <FloatingLabel label="Last name" className="mb-3" controlId="lastName">
-                <Form.Control
-                  name="lastName"
-                  placeholder="Enter last name"
-                  value={values.lastName}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  isInvalid={touched.lastName && !!errors.lastName}
-                  required
-                />
-                <Form.Control.Feedback type="invalid">
-                  {errors.lastName}
+                  {errors.name}
                 </Form.Control.Feedback>
               </FloatingLabel>
             </Col>
@@ -121,16 +120,6 @@ export default function UserDetails() {
               <FloatingLabel label="Email" className="mb-3">
                 <Form.Control
                   value={email}
-                  readOnly
-                />
-              </FloatingLabel>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <FloatingLabel label="Role" className="mb-3">
-                <Form.Control
-                  value={role}
                   readOnly
                 />
               </FloatingLabel>
@@ -152,22 +141,3 @@ export default function UserDetails() {
     </Formik>
   );
 }
-
-/*
-      // const { data } = await axios.post<ChangeNameResponse>('/api/user/change-name', payload);
-      // await new Promise((res) => setTimeout(res, 5000));
-
-      // if (data.success) {
-      //   const { firstName, lastName } = values;
-
-      //   setFirstName(firstName);
-      //   setLastName(lastName);
-
-      //   resetForm({ values });
-
-      //   toast.success('Details updated.');
-      // } else { // shouldn't happen
-      //   console.log(data);
-      //   toast.error('Please try again.');
-      // }
-*/

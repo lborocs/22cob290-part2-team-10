@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import type { User } from 'next-auth';
 import type { z } from 'zod';
 
+import prisma from '~/lib/prisma';
+import { isCorrectPassword } from '~/lib/user';
 import SignInSchema from '~/schemas/user/signIn';
-// import type { User } from '~/types';
-import { getUserInfoByEmail, isCorrectPassword } from '~/server/store/users';
+import type { SessionUser } from '~/types';
 
 export enum ErrorReason {
   WRONG_PASSWORD = 'WRONG_PASSWORD',
@@ -21,7 +21,7 @@ type FailedResponse = {
 
 export type ResponseSchema = FailedResponse | {
   success: true
-  user: User
+  user: SessionUser
 };
 
 export default async function handler(
@@ -45,30 +45,35 @@ export default async function handler(
 
   const { email, password } = safeParseResult.data;
 
-  const userInfo = await getUserInfoByEmail(email);
+  const user = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      hashedPassword: true,
+    },
+  });
 
-  if (!userInfo) {
-    res.status(200).json({
-      success: false,
-      reason: ErrorReason.DOESNT_EXIST,
-    });
-    return;
-  }
+  if (!user) return res.status(200).json({
+    success: false,
+    reason: ErrorReason.DOESNT_EXIST,
+  });
 
-  if (!await isCorrectPassword(userInfo.id, password)) {
-    res.status(200).json({
-      success: false,
-      reason: ErrorReason.WRONG_PASSWORD,
-    });
-    return;
-  }
+  if (!await isCorrectPassword(password, user.hashedPassword)) return res.status(200).json({
+    success: false,
+    reason: ErrorReason.WRONG_PASSWORD,
+  });
 
   res.status(200).json({
     success: true,
     user: {
-      ...userInfo,
-      name: `${userInfo.firstName} ${userInfo.lastName}`, // we could just return null
-      image: 'WHAT IS IMAGE FOR?????????????????????????????', // we could just return null
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      image: null,
     },
   });
 }

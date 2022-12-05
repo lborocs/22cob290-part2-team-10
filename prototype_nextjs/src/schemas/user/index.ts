@@ -1,5 +1,5 @@
 /**
- * Common schemas
+ * Common schemas relating to users
  */
 import { z } from 'zod';
 
@@ -40,10 +40,9 @@ export const PasswordSchema = z.string()
   .min(MIN_PASSWORD_LENGTH, 'Too short')
   ;
 
-// TODO: max length?
-// name regex: https://stackoverflow.com/a/36733683
-export function nameSchema(name: string) {
+// no trailing & leading spaces regex: https://stackoverflow.com/a/38935454
+export function nameSchema() {
   return z.string()
-    .regex(/^[a-z]+$/i, `${name} is alphabetic only`)
-    .min(1, `${name} is required`);
+    .regex(/^(?! )[a-z ]*(?<! )$/i, 'Invalid name')
+    .min(1, 'Name is required');
 }

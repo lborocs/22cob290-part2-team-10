@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { unstable_getServerSession } from 'next-auth/next';
 
+import { getInviteToken } from '~/lib/inviteToken';
 import type { UnauthorisedResponse } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import { getInviteToken } from '~/server/inviteToken';
 
 export type ResponseSchema = { inviteUrl: string };
 

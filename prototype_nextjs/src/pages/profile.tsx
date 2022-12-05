@@ -1,4 +1,4 @@
-import type { GetServerSidePropsContext } from 'next';
+import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 import { signOut } from 'next-auth/react';
@@ -8,16 +8,17 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { Toaster } from 'react-hot-toast';
 
+import prisma from '~/lib/prisma';
 import { SidebarType, type PageLayout } from '~/components/Layout';
 import TextAvatarEditor from '~/components/profile/TextAvatarEditor';
 import UserDetails from '~/components/profile/UserDetails';
 import ChangePasswordSection from '~/components/profile/ChangePasswordSection';
 import InviteEmployeeSection from '~/components/profile/InviteEmployeeSection';
+import type { SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import { ssrGetUserInfo } from '~/server/utils';
 
 // TODO: theme switcher
-export default function ProfilePage() {
+export default function ProfilePage({ inviter }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <main>
       <Head>
@@ -32,6 +33,9 @@ export default function ProfilePage() {
             <TextAvatarEditor />
           </Col>
           <Col>
+            {inviter && (
+              <small>Invited by: {inviter.name} ({inviter.email})</small>
+            )}
             <UserDetails />
           </Col>
         </Row>
@@ -70,12 +74,27 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { notFound: true };
   }
 
-  const user = await ssrGetUserInfo(session);
+  const user = session.user as SessionUser;
+
+  const { inviter } = await prisma.user.findUniqueOrThrow({
+    where: {
+      id: user.id,
+    },
+    select: {
+      inviter: {
+        select: {
+          email: true,
+          name: true,
+        },
+      },
+    },
+  });
 
   return {
     props: {
       session,
       user,
+      inviter,
     },
   };
 }

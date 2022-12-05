@@ -1,15 +1,11 @@
-import NextAuth, { type NextAuthOptions, type User } from 'next-auth';
+import NextAuth, { type NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import axios from 'axios';
 
-import { Role } from '~/types';
+import prisma from '~/lib/prisma';
+import type { SessionUser } from '~/types';
 import type { RequestSchema as SignInPayload, ResponseSchema as SignInResponse } from '~/pages/api/user/signIn';
-
-// TODO: extend User type to match what we return from /api/user/signIn
-
-export interface SessionUser extends User {
-  id: string
-}
+import type { ResponseSchema as GetUserFromSessionResponse } from '~/pages/api/user/get-user-from-session';
 
 export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
@@ -24,31 +20,61 @@ export const authOptions: NextAuthOptions = {
       credentials: {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
+        refetchUser: {},
       },
       async authorize(credentials, req) {
+        /**
+         * Workaround to update the user's details in the cookie/session stored on the client. Need
+         *  a workaround because Next-Auth doesn't currently support doing mutating the cookie/session.
+         *
+         * Works by basically re-signing them in (getting their info from database again), but instead
+         *  of using their email & password, it uses the session to know who is signed in.
+         *  - We can't use their email & password because their password isn't stored in plain text and
+         *   it's inconvenient to ask them to re-enter it.
+         *
+         * After "signing in", next-auth's signIn flow will re-set the cookie/session stored on the client.
+         */
+        if (credentials!.refetchUser) {
+          const { data } = await axios.get<GetUserFromSessionResponse>(
+            `${process.env.NEXTAUTH_URL}/api/user/get-user-from-session`, {
+            headers: {
+              // because we're making the request from the server, we basically pretend to be the user making the request
+              cookie: req.headers!.cookie,
+            },
+          });
+          return data.user;
+        }
+
         const payload: SignInPayload = {
           email: credentials!.email,
           password: credentials!.password,
         };
 
-        const { data } = await axios.post<SignInResponse>(`${process.env.NEXTAUTH_URL as string}/api/user/signIn`, payload);
+        const { data } = await axios.post<SignInResponse>(`${process.env.NEXTAUTH_URL}/api/user/signIn`, payload);
 
         if (data.success) return data.user;
-        throw new Error(data.reason);
+        // throw new Error(data.reason);
+        return null;
       },
     }),
   ],
 
-  // TODO: nextauth pages
   pages: {
     signIn: '/',
-    error: '/auth/error', // Error code passed in query string as ?error=
-    newUser: '/auth/new-user', // New users will be directed here on first sign in (leave the property out if not of interest)
   },
 
   callbacks: {
     async signIn({ user, account }) {
-      const isAllowedToSignIn = (<any>user).role !== Role.LEFT_COMPANY;
+      const { leftCompany } = await prisma.user.findUniqueOrThrow({
+        where: {
+          id: user.id,
+        },
+        select: {
+          leftCompany: true,
+        },
+      });
+
+      const isAllowedToSignIn = !leftCompany;
 
       if (isAllowedToSignIn) return true;
 
@@ -66,8 +92,6 @@ export const authOptions: NextAuthOptions = {
     },
 
     async jwt({ token, user, account }) {
-      // const user = _user as any; // should be from LoginResponse
-
       if (user && account) {
         // modify token...
         token.uid = user.id;

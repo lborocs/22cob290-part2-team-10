@@ -1,66 +1,85 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import CloseButton from 'react-bootstrap/CloseButton';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
+import { Formik, type FormikProps } from 'formik';
+import toast from 'react-hot-toast';
+import useSWR from 'swr';
 
-import TextAvatarComponent, {
+import {
   type TextAvatar,
   getDefaultTextAvatar,
   getTextAvatarFromStore,
-  updateTextAvatarCss,
   updateTextAvatarStore,
-} from '~/components/TextAvatar';
+  updateTextAvatarCss,
+} from '~/lib/textAvatar';
+import TextAvatarComponent from '~/components/TextAvatar';
+import LoadingButton from '~/components/LoadingButton';
 
 import styles from '~/styles/profile/TextAvatarSection.module.css';
 
 export default function TextAvatarEditor() {
   const [showModal, setShowModal] = useState(false);
 
-  const [bg, setBg] = useState('');
-  const [fg, setFg] = useState('');
-
-  // default as in default values for the form (what is currently set in store - localStorage)
+  // default as in default values for the form (what is currently set in store)
   const [defaultTextAvatar, setDefaultTextAvatar] = useState<TextAvatar>(null as unknown as TextAvatar);
 
-  const formRef = useRef<HTMLFormElement>(null);
+  // can't use formikRef.current.isSubmitting because this component wouldn't re-render on submit (only the form would)
+  // so the LoadingButton doesn't enter it's loading state - it won't visually change
+  // but by setting isSaving in the Formik render function, this component will re-render on submit
+  const [isSaving, setIsSaving] = useState(false);
 
-  const getTextAvatarFromForm = () => Object.fromEntries(new FormData(formRef.current!)) as TextAvatar;
+  const formikRef = useRef<FormikProps<TextAvatar>>(null);
 
-  const onColorChange = (e: React.ChangeEvent<any>) => {
-    const input: HTMLInputElement = e.target;
+  // using SWR like useEffect(..., [])
+  useSWR('defaultTextAvatar', async () => {
+    const textAvatar = await getTextAvatarFromStore();
 
-    const { id, value: colour } = input;
+    setDefaultTextAvatar(textAvatar);
+  });
 
-    document.documentElement.style.setProperty(`--${id}`, colour);
-  };
-
-  // default as in what they had before changing any settings
+  // system default as in what they had before changing any settings
   const resetToSystemDefault = () => {
     const systemDefault = getDefaultTextAvatar();
 
-    updateTextAvatarCss(systemDefault);
+    formikRef.current!.setValues(systemDefault);
 
-    setBg(systemDefault['avatar-bg']);
-    setFg(systemDefault['avatar-fg']);
+    updateTextAvatarCss(systemDefault);
   };
 
-  const cancel = () => updateTextAvatarCss(getTextAvatarFromStore());
-
-  useEffect(() => {
-    const textAvatar = getTextAvatarFromStore();
-
-    setBg(textAvatar['avatar-bg']);
-    setFg(textAvatar['avatar-fg']);
-
-    setDefaultTextAvatar(textAvatar);
-  }, [showModal]);
+  const cancelAndClose = () => {
+    updateTextAvatarCss(defaultTextAvatar);
+    onHide();
+  };
 
   const onHide = () => setShowModal(false);
 
+  const handleSubmit: React.ComponentProps<typeof Formik<TextAvatar>>['onSubmit']
+    = async (values, { resetForm }) => {
+      const success = await updateTextAvatarStore(values);
+
+      if (success) {
+        setDefaultTextAvatar(values);
+
+        toast.success('Saved.', {
+          position: 'bottom-center',
+        });
+        onHide();
+      } else { // shouldn't happen
+        toast.error('Please try again', {
+          position: 'bottom-center',
+        });
+      }
+
+      resetForm({ values });
+      updateTextAvatarCss(values);
+    };
+
   return (
     <div>
+      {/* TODO: on hover show like a pencil to signify that it's editable */}
       <TextAvatarComponent
         className={styles['text-avatar']}
         size="120px"
@@ -80,64 +99,72 @@ export default function TextAvatarEditor() {
         <Modal.Header>
           <Modal.Title>Avatar</Modal.Title>
           <CloseButton
-            onClick={() => {
-              cancel();
-              onHide();
-            }}
+            onClick={cancelAndClose}
           />
         </Modal.Header>
 
         <Modal.Body>
-          <Form
-            id="text-avatar-form"
-            onSubmit={(e) => {
-              e.preventDefault();
-              const newTextAvatar = getTextAvatarFromForm();
-              updateTextAvatarCss(newTextAvatar);
-              updateTextAvatarStore(newTextAvatar);
+          <Formik
+            initialValues={{
+              ...defaultTextAvatar,
             }}
-            onReset={(e) => {
-              setBg(defaultTextAvatar['avatar-bg']);
-              setFg(defaultTextAvatar['avatar-fg']);
+            onSubmit={handleSubmit}
+            onReset={() => {
               updateTextAvatarCss(defaultTextAvatar);
             }}
-            ref={formRef}
+            validate={(values) => { // basically onChange
+              updateTextAvatarCss(values);
+            }}
+            innerRef={formikRef}
+            enableReinitialize
           >
-            <Form.Group as={Row} controlId="avatar-bg">
-              <Form.Label column>Background colour</Form.Label>
-              <Form.Control
-                type="color"
-                name="avatar-bg"
-                value={bg}
-                onChange={(e) => {
-                  setBg(e.target.value);
-                  onColorChange(e);
-                }}
-              />
-            </Form.Group>
-            <Form.Group as={Row} className="mt-1" controlId="avatar-fg">
-              <Form.Label column>Text colour</Form.Label>
-              <Form.Control
-                type="color"
-                name="avatar-fg"
-                value={fg}
-                onChange={(e) => {
-                  setFg(e.target.value);
-                  onColorChange(e);
-                }}
-              />
-            </Form.Group>
-          </Form>
+            {({
+              values,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              handleReset,
+              isSubmitting,
+            }) => {
+              setIsSaving(isSubmitting);
+
+              return (
+                <Form
+                  id="text-avatar-form"
+                  onSubmit={handleSubmit}
+                  onReset={handleReset}
+                >
+                  <Form.Group as={Row} controlId="avatar-bg">
+                    <Form.Label column>Background colour</Form.Label>
+                    <Form.Control
+                      type="color"
+                      name="avatar-bg"
+                      value={values['avatar-bg']}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    />
+                  </Form.Group>
+                  <Form.Group as={Row} className="mt-1" controlId="avatar-fg">
+                    <Form.Label column>Text colour</Form.Label>
+                    <Form.Control
+                      type="color"
+                      name="avatar-fg"
+                      value={values['avatar-fg']}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    />
+                  </Form.Group>
+                </Form>
+              );
+            }}
+          </Formik>
         </Modal.Body>
 
         <Modal.Footer>
           <Button
             variant="secondary"
             size="sm"
-            onClick={() => {
-              cancel();
-              onHide();
-            }}
+            onClick={cancelAndClose}
           >
             Close
           </Button>
@@ -156,15 +183,16 @@ export default function TextAvatarEditor() {
           >
             Reset
           </Button>
-          <Button
+          <LoadingButton
             type="submit"
             form="text-avatar-form"
             variant="primary"
             size="sm"
-            onClick={onHide}
+            isLoading={isSaving}
+            loadingContent="Saving"
           >
             Save
-          </Button>
+          </LoadingButton>
         </Modal.Footer>
       </Modal>
     </div>

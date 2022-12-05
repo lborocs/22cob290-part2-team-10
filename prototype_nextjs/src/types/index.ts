@@ -1,69 +1,47 @@
-// TODO: design db
+import type { User } from 'next-auth';
+import type { Prisma } from '@prisma/client';
 
-// TODO: include like manhours taken
-
-// TODO: add text-avatar colours to user
-
-// TODO: might have to refactor how roles work if they're project specific, which it looks like they are lol
-
-export enum Role {
-  MANAGER = 'MANAGER',
-  TEAM_LEADER = 'TEAM_LEADER',
-  TEAM_MEMBER = 'TEAM_MEMBER',
-  LEFT_COMPANY = 'LEFT_COMPANY',
-}
-
-// TOOD: implement user ID & use it to getUserInfo instead of email
-
-// TODO: finalise user entity and think of a good name for this
-// (User bad name cos clash with next-auth)
-// then we can use this
-export type User = {
-  id: string // TODO: id might(probably?) be number
-  firstName: string
-  lastName: string
-  email: string
-  password: string
-  role: Role
-};
-
-export type UserInfo = Omit<User, 'password'>;
-
-// TODO: maybe return UserInfo instead of email? - that'll be solved by prisma
-export type ProjectInfo = {
-  id: number
+export interface SessionUser extends User {
+  id: string
   name: string
-  manager: string
-  leader: string
-  members: string[]
-  tasks: ProjectTasks
-};
-
-// additional type to make it easier to only show the tasks assigned to a certain user
-export type ProjectTasks = {
-  todo: Task[]
-  in_progress: Task[]
-  code_review: Task[]
-  completed: Task[]
-};
-
-export type Task = {
-  title: string
-  description: string
-  tags: string[]
-  assignee: string
-  additional: string[] // TODO: rename (its basicalyl the ppl that can also see the task)
-};
-
-export type Post = {
-  id: number
-  author: string
-  datePosted: number
-  title: string
-  content: string
-  topics: string[]
-};
+  email: string
+  image: null
+}
 
 export type UnauthorisedResponse = {
   message: string;
+};
+
+// might have to change to TeamRole?
+export enum ProjectRole {
+  MANAGER,
+  LEADER,
+  MEMBER,
+}
+
+export enum TaskStage {
+  TODO = 'TODO',
+  IN_PROGRESS = 'IN_PROGRESS',
+  CODE_REVIEW = 'CODE_REVIEW',
+  COMPLETED = 'COMPLETED',
+}
+
+export type ProjectTaskInfo = Prisma.ProjectTaskGetPayload<{
+  include: {
+    assignee: {
+      select: {
+        id: true,
+        name: true,
+      },
+    },
+    tags: true,
+  }
+}>;
+
+export type WithAssignedToMe<T> = T & {
+  assignedToMe: boolean
+};
+
+export type ProjectTasks = {
+  [k in TaskStage]: WithAssignedToMe<ProjectTaskInfo>[]
 };

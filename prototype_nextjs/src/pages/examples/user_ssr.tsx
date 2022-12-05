@@ -2,14 +2,14 @@ import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'nex
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 
+import type { SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import { ssrGetUserInfo } from '~/server/utils';
 
 export default function ExamplePage({
   user,
   /* the rest of your props */
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const { email, firstName, lastName } = user;
+  const { email, name } = user;
 
   return (
     <main>
@@ -18,7 +18,7 @@ export default function ExamplePage({
       </Head>
       <div className="h2 mb-4">Using <code>user</code> prop</div>
       <h1>Email: {email}</h1>
-      <span>Name: {firstName} {lastName}</span>
+      <span>Name: {name}</span>
     </main>
   );
 }
@@ -32,7 +32,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { notFound: true };
   }
 
-  const user = await ssrGetUserInfo(session);
+  const user = session.user as SessionUser;
 
   /* get whatever data you want to pass to component as a prop */
 

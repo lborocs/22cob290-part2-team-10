@@ -3,21 +3,17 @@ import { unstable_getServerSession } from 'next-auth/next';
 import type { z } from 'zod';
 
 import prisma from '~/lib/prisma';
-import ChangeNameSchema from '~/schemas/user/changeName';
+import type TextAvatarSchema from '~/schemas/user/textAvatar';
 import type { UnauthorisedResponse, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
-export type RequestSchema = z.infer<typeof ChangeNameSchema>;
-
-export type ResponseSchema = {
-  success: boolean
-};
+export type ResponseSchema = z.infer<typeof TextAvatarSchema>;
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseSchema | UnauthorisedResponse | { error: string }>,
 ) {
-  if (req.method !== 'POST') {
+  if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
@@ -27,28 +23,20 @@ export default async function handler(
     return res.status(401).json({ message: 'You must be signed in.' });
   }
 
-  const safeParseResult = ChangeNameSchema.safeParse(req.body);
-
-  if (!safeParseResult.success) {
-    res.status(400).json({
-      success: false,
-      issues: safeParseResult.error.issues,
-    } as ResponseSchema);
-    return;
-  }
-
-  const { name } = safeParseResult.data;
-
   const userId = (session.user as SessionUser).id;
 
-  await prisma.user.update({
+  const result = await prisma.user.findUniqueOrThrow({
     where: {
       id: userId,
     },
-    data: {
-      name,
+    select: {
+      avatarBg: true,
+      avatarFg: true,
     },
   });
 
-  res.status(200).json({ success: true });
+  res.status(200).json({
+    'avatar-bg': result.avatarBg,
+    'avatar-fg': result.avatarFg,
+  });
 }

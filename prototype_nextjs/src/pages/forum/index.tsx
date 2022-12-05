@@ -1,19 +1,19 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */ // TODO: remove once this is done
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 import { unstable_getServerSession } from 'next-auth/next';
 
+import prisma from '~/lib/prisma';
 import { SidebarType, type PageLayout } from '~/components/Layout';
 import ForumSidebar from '~/components/layout/sidebar/ForumSidebar';
-import hashids from '~/lib/hashids';
-import type { Post } from '~/types';
+import ForumPostPreview from '~/components/forum/ForumPostPreview';
+import type { SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import { ssrGetUserInfo } from '~/server/utils';
-import { getAllPosts } from '~/server/store/posts';
 
 // TODO: ForumPage
 export default function ForumPage({ posts }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  // TODO: top10voted?
+  // TODO: option to list the posts only by this user (can be a different page)
+
   return (
     <main>
       <Head>
@@ -29,29 +29,6 @@ export default function ForumPage({ posts }: InferGetServerSidePropsType<typeof 
   );
 }
 
-// Dara recommends using something like Luxon (https://github.com/moment/luxon) to display how long ago a post was made (relative)
-// and when they hover over it, have a tooltip saying the actual date & time (absolute)
-
-// TODO: implement & move to components/forum
-function ForumPostPreview({ post }: { post: Post }) {
-  const {
-    id,
-    author,
-    datePosted,
-    title,
-    content,
-    topics,
-  } = post;
-
-  return (
-    <div className="mb-3">
-      <Link href={`/forum/posts/${hashids.encode(id)}`}>
-        <span className="h3">{title}</span>
-      </Link>
-    </div>
-  );
-}
-
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
 
@@ -59,9 +36,24 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { notFound: true };
   }
 
-  const user = await ssrGetUserInfo(session);
+  const user = session.user as SessionUser;
 
-  const posts = await getAllPosts();
+  const result = await prisma.post.findMany({
+    include: {
+      author: {
+        select: {
+          name: true,
+        },
+      },
+      topics: true,
+    },
+  });
+
+  // can't serialize type Date
+  const posts = result.map((post) => ({
+    ...post,
+    datePosted: post.datePosted.getTime(),
+  }));
 
   return {
     props: {

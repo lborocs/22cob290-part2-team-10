@@ -29,14 +29,3 @@ export function copyToClipboard(content: string): Promise<void> {
     });
   }
 }
-
-/**
- * @param start The start number (inclusive)
- * @param end The end number (inclusive)
- * @returns List of numbers from `start` to `end`
- *
- * [Source](https://stackoverflow.com/a/38213213)
- */
-export function range(start: number, end: number): number[] {
-  return [...Array(end).keys()].map((i) => i + start);
-}
