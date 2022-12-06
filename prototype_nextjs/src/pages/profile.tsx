@@ -9,6 +9,7 @@ import Row from 'react-bootstrap/Row';
 import { Toaster } from 'react-hot-toast';
 
 import prisma from '~/lib/prisma';
+import { getEmailFromToken } from '~/lib/inviteToken';
 import { SidebarType, type PageLayout } from '~/components/Layout';
 import TextAvatarEditor from '~/components/profile/TextAvatarEditor';
 import UserDetails from '~/components/profile/UserDetails';
@@ -76,19 +77,28 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const user = session.user as SessionUser;
 
-  const { inviter } = await prisma.user.findUniqueOrThrow({
+  const { inviteToken } = await prisma.user.findUniqueOrThrow({
     where: {
       id: user.id,
     },
     select: {
-      inviter: {
-        select: {
-          email: true,
-          name: true,
-        },
-      },
+      inviteToken: true,
     },
   });
+
+  const inviterEmail = getEmailFromToken(inviteToken);
+
+  const inviter = inviterEmail
+    ? await prisma.user.findUniqueOrThrow({
+      where: {
+        email: inviterEmail,
+      },
+      select: {
+        email: true,
+        name: true,
+      },
+    })
+    : null;
 
   return {
     props: {
