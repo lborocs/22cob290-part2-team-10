@@ -27,10 +27,6 @@ export default async function handler(
 
   const url = process.env.NEXTAUTH_URL as string;
 
-  // maybe use a different method that gives a shorter URL
-  // (compression algorithm?)
-  // compression: https://github.com/rotemdan/lzutf8.js/
-
   res.status(200).json({
     inviteUrl: `${url}/signup?invite=${token}`,
   });
