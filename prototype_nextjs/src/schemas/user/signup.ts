@@ -6,7 +6,7 @@ const SignUpSchema = z.object({
   name: nameSchema(),
   email: EmailSchema,
   password: PasswordSchema,
-  token: z.string(),
+  inviteToken: z.string(),
 });
 
 export default SignUpSchema;

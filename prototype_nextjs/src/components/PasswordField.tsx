@@ -42,6 +42,7 @@ export interface PasswordFieldProps extends FormControlProps {
   placeholder?: string
   feedback?: React.ReactNode
   feedbackTooltip?: boolean
+  onlyFeedbackOutline?: boolean
   policyTooltip?: boolean
 }
 
@@ -53,6 +54,7 @@ export default forwardRef(function PasswordField({
   placeholder = 'Enter password',
   feedback,
   feedbackTooltip = false,
+  onlyFeedbackOutline = false,
   policyTooltip,
   ...props
 }: PasswordFieldProps, ref: React.ForwardedRef<HTMLInputElement>) {
@@ -86,7 +88,11 @@ export default forwardRef(function PasswordField({
           >
             {showPassword ? <EyeSlashFill /> : <EyeFill />}
           </Button>
-          <Form.Control.Feedback type="invalid" tooltip={feedbackTooltip}>
+          <Form.Control.Feedback
+            type="invalid"
+            tooltip={feedbackTooltip}
+            className={onlyFeedbackOutline ? 'd-none' : ''}
+          >
             {feedback}
           </Form.Control.Feedback>
         </InputGroup>

@@ -1,9 +1,15 @@
 import { PrismaClient, type Prisma } from '@prisma/client';
+import * as dotenv from 'dotenv';
 
 import { hashPassword } from '../src/lib/user';
+import { getInviteToken, getEmailFromToken } from '../src/lib/inviteToken';
+
+// needed for `/lib/inviteToken` to know the secret for invite tokens
+dotenv.config({
+  path: '.env.development',
+});
 
 const prisma = new PrismaClient();
-
 
 /**
  * @param start The start number (inclusive)
@@ -37,11 +43,9 @@ function randomTimeMs(): number {
 
 const testPassword = hashPassword.bind(null, 'TestPassword123!');
 
-const adminInvite: Prisma.UserCreateNestedOneWithoutInvitedInput = {
-  connect: {
-    email: 'admin@make-it-all.co.uk',
-  },
-};
+const adminInviteToken = getInviteToken.bind(null, 'admin@make-it-all.co.uk');
+
+const managerInviteToken = getInviteToken.bind(null, 'manager@make-it-all.co.uk');
 
 const getUserData = async (): Promise<Prisma.UserCreateInput[]> => [
   {
@@ -53,38 +57,38 @@ const getUserData = async (): Promise<Prisma.UserCreateInput[]> => [
     email: 'manager@make-it-all.co.uk',
     hashedPassword: await testPassword(),
     name: 'Project Manager',
-    inviter: adminInvite,
+    inviteToken: adminInviteToken(),
   },
   {
     email: 'leader@make-it-all.co.uk',
     hashedPassword: await testPassword(),
     name: 'Project Leader',
-    inviter: adminInvite,
+    inviteToken: managerInviteToken(),
   },
   {
     email: 'left@make-it-all.co.uk',
     hashedPassword: await testPassword(),
     name: 'Left The Company',
-    inviter: adminInvite,
+    inviteToken: adminInviteToken(),
     leftCompany: true, // should not be allowed to sign in
   },
   {
     email: 'alice@make-it-all.co.uk',
     hashedPassword: await testPassword(),
     name: 'Alice Felicity Henry', // text avatar should be AFH
-    inviter: adminInvite,
+    inviteToken: managerInviteToken(),
   },
   {
     email: 'jane@make-it-all.co.uk',
     hashedPassword: await testPassword(),
     name: 'Jane Doe Doherty Tate', // text avatar should be JDD
-    inviter: adminInvite,
+    inviteToken: managerInviteToken(),
   },
   {
     email: 'john@make-it-all.co.uk',
     hashedPassword: await testPassword(),
     name: 'John Smith',
-    inviter: adminInvite,
+    inviteToken: managerInviteToken(),
   },
 ];
 
@@ -344,16 +348,9 @@ async function main() {
     for (const u of await getUserData()) {
       const user = await prisma.user.create({
         data: u,
-        include: {
-          inviter: {
-            select: {
-              email: true,
-            },
-          },
-        },
       });
 
-      console.log(`Created user with id: ${user.id} (name: ${user.name}), invited by email: ${user.inviter?.email}`);
+      console.log(`Created user with id: ${user.id} (name: ${user.name}), invited by email: ${getEmailFromToken(user.inviteToken)}`);
     }
 
     console.log();
@@ -390,10 +387,11 @@ async function main() {
           },
         },
       });
+      const permittedEmails = projectTask.permitted.map((user) => user.email);
 
       console.log(
         `Created task with id: ${projectTask.id}, under project named: ${projectTask.project.name}, `
-        + `assigned to user: ${projectTask.assignee.email}. Permitted emails: ${JSON.stringify(projectTask.permitted)}`
+        + `assigned to user: ${projectTask.assignee.email}. Permitted emails: ${JSON.stringify(permittedEmails)}`
       );
     }
 

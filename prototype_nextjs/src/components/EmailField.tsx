@@ -9,6 +9,7 @@ export interface EmailFieldProps extends FormControlProps {
   controlId: string
   feedback?: React.ReactNode
   feedbackTooltip?: boolean
+  onlyFeedbackOutline?: boolean
 }
 
 export default forwardRef(function EmailField({
@@ -16,6 +17,7 @@ export default forwardRef(function EmailField({
   controlId,
   feedback,
   feedbackTooltip = false,
+  onlyFeedbackOutline = false,
   ...props
 }: EmailFieldProps, ref: React.ForwardedRef<HTMLInputElement>) {
   return (
@@ -35,7 +37,11 @@ export default forwardRef(function EmailField({
           required
           {...props}
         />
-        <Form.Control.Feedback type="invalid" tooltip={feedbackTooltip}>
+        <Form.Control.Feedback
+          type="invalid"
+          tooltip={feedbackTooltip}
+          className={onlyFeedbackOutline ? 'd-none' : ''}
+        >
           {feedback}
         </Form.Control.Feedback>
       </Col>

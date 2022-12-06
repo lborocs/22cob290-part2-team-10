@@ -1,12 +1,56 @@
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
+import { signIn } from 'next-auth/react';
+import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
+import type { z } from 'zod';
 
 import SignUpSchema from '~/schemas/user/signup'; // TODO: use
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
+import type { ResponseSchema as SignUpResponse } from '~/pages/api/user/signUp';
+
+// signup?invite=${inviteToken}
+
+type SignUpFormData = z.infer<typeof SignUpSchema>;
 
 // TODO: SignupPage
-export default function SignupPage({ token }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+// TODO: use Formik and SignUpSchema for client-side validation
+export default function SignupPage({ inviteToken }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = Object.fromEntries(new FormData(e.currentTarget)) as SignUpFormData;
+
+    const { data } = await axios.post<SignUpResponse>('api/user/signUp', formData);
+
+    if (data.success) {
+      toast.success('Accounted created!');
+
+      await signIn('credentials', {
+        email: formData.email,
+        password: formData.password,
+        callbackUrl: '/home',
+      });
+    } else {
+      switch (data.reason) {
+        case 'ALREADY_EXISTS':
+          toast.error('You already have an account!');
+          break;
+
+        case 'INVALID_TOKEN':
+          toast.error('Your invite token is invalid!');
+          break;
+
+        case 'USED_TOKEN':
+          toast.error('Your invite token has already been used!');
+          break;
+
+        default:
+          console.error(data);
+          toast.error('Sign up failed, please try again later.');
+      }
+    }
+  };
 
   return (
     <main>
@@ -15,7 +59,41 @@ export default function SignupPage({ token }: InferGetServerSidePropsType<typeof
       </Head>
 
       {/* TODO */}
-      token = {token}
+      <Toaster
+        position="top-center"
+      />
+      <p>
+        token = {String(inviteToken)}
+      </p>
+
+      <form
+        onSubmit={handleSubmit}
+      >
+        <input
+          name="inviteToken"
+          title="Invite token"
+          placeholder="Enter invite token"
+          defaultValue={inviteToken ?? undefined}
+        />
+        <input
+          name="email"
+          title="Email"
+          placeholder="Enter email"
+        />
+        <input
+          name="name"
+          title="Name"
+          placeholder="Enter name"
+        />
+        <input
+          name="password"
+          title="Password"
+          placeholder="Enter password"
+        />
+        <button type="submit">
+          Sign up
+        </button>
+      </form>
     </main>
   );
 }
@@ -23,22 +101,23 @@ export default function SignupPage({ token }: InferGetServerSidePropsType<typeof
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
 
+  // TODO: decide what to do if they're already signed in
+  // ?: toast saying they're already signed in
   // if signed in, redirect to home page
-  if (session && session.user) {
-    return {
-      redirect: {
-        destination: '/home',
-        permanent: false,
-      },
-    };
-  }
+  // if (session && session.user) {
+  //   return {
+  //     redirect: {
+  //       destination: '/home',
+  //       permanent: false,
+  //     },
+  //   };
+  // }
 
-  // should we verify token during SSR?
-  const token = context.query?.invite as string | undefined ?? null;
+  const inviteToken = context.query?.invite as string | undefined ?? null;
 
   return {
     props: {
-      token,
+      inviteToken,
     },
   };
 }
