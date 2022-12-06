@@ -39,6 +39,8 @@ export default function SignInPage() {
       // because touched will update to true when they unfocus from the element
       document.querySelector<HTMLInputElement>(':focus')?.blur();
 
+      toast.dismiss('signInFailed');
+
       const resp = (await signIn('credentials', {
         redirect: false,
         email,
@@ -53,12 +55,15 @@ export default function SignInPage() {
         // https://next-auth.js.org/configuration/pages#error-codes
         switch (resp.error) {
           case 'CredentialsSignin': // failed signin
-            toast.error('Could not sign in, please check your credentials');
+            toast.error('Could not sign in, please check your credentials.', {
+              id: 'signInFailed',
+            });
             setFieldError('email', '');
             setFieldError('password', '');
             break;
 
           case 'AccessDenied': // left the company
+            toast.dismiss();
             setFieldError('email', 'You no longer have access to this website');
             break;
 
@@ -135,6 +140,8 @@ export default function SignInPage() {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   isInvalid={touched.email && errors.email !== undefined}
+                  feedbackTooltip
+                  onlyFeedbackOutline={errors.email?.length === 0}
                 />
                 <PasswordField
                   name="password"
@@ -144,6 +151,8 @@ export default function SignInPage() {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   isInvalid={touched.password && errors.password !== undefined}
+                  feedbackTooltip
+                  onlyFeedbackOutline={errors.password?.length === 0}
                   policyTooltip
                 />
                 <Form.Group as={Row}>
