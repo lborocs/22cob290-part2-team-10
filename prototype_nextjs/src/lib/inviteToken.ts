@@ -36,7 +36,7 @@ export function getEmailFromToken(token: string): string | null {
     const decoded = jwt.verify(token, secret) as jwt.JwtPayload;
     return decoded.email;
   } catch (err) {
-    // could be one of: expired, incorrect secret, etc.
+    // https://github.com/auth0/node-jsonwebtoken#errors--codes
     console.error(err);
     return null;
   }
