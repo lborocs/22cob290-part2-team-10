@@ -39,9 +39,7 @@ model User {
   hashedPassword String
   name           String
   leftCompany    Boolean @default(false)
-  inviterId      String?
-  inviter        User?   @relation("Invite", fields: [inviterId], references: [id])
-  invited        User[]  @relation("Invite")
+  inviteToken    String?
   avatarBg       String  @default("#e2ba39")
   avatarFg       String  @default("#ffffff")
 
