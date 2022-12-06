@@ -100,7 +100,7 @@
         "semi": "off",
         "no-empty-pattern": "warn", // annoying having it as error cos there's pages to be done
         "@typescript-eslint/semi": "error",
-        "@typescript-eslint/consistent-type-imports": "error",
+        "@typescript-eslint/consistent-type-imports": "warn",
 
         "@typescript-eslint/require-await": "off",
         "@typescript-eslint/no-empty-function": "off",
