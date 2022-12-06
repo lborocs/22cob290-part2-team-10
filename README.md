@@ -472,9 +472,11 @@ from the
 | [formik-validator-zod](https://github.com/Glazy/formik-validator-zod)   | 1.0           | Zod adapter for Formik                                                                       |
 | [SWR](https://swr.vercel.app/)                                          | 4.18          | Client-side data fetching                                                                    |
 | [hashids](https://hashids.org/)                                         | 2.2           | Mask IDs in URLs ([#16][iHashids])                                                           |
+| [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken)              | 8.5           | Generate invite tokens ([#19][iJwt])                                                         |
 | ...                                                                     |               |                                                                                              |
 
 <!-- https://stackoverflow.com/a/42424860 -->
 [pFormikZod]: https://github.com/lborocs/22cob290-part2-team-10/pull/1
 [iPrisma]: https://github.com/lborocs/22cob290-part2-team-10/pull/12
 [iHashids]: https://github.com/lborocs/22cob290-part2-team-10/issues/16
+[iJwt]: https://github.com/lborocs/22cob290-part2-team-10/issues/19
