@@ -43,23 +43,3 @@ export enum TaskStage {
   CODE_REVIEW = 'CODE_REVIEW',
   COMPLETED = 'COMPLETED',
 }
-
-export type ProjectTaskInfo = Prisma.ProjectTaskGetPayload<{
-  include: {
-    assignee: {
-      select: {
-        id: true,
-        name: true,
-      },
-    },
-    tags: true,
-  }
-}>;
-
-export type WithAssignedToMe<T> = T & {
-  assignedToMe: boolean
-};
-
-export type ProjectTasks = {
-  [k in TaskStage]: WithAssignedToMe<ProjectTaskInfo>[]
-};

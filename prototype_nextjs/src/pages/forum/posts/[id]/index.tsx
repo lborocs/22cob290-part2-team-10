@@ -1,7 +1,5 @@
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { unstable_getServerSession } from 'next-auth/next';
 
 import hashids from '~/lib/hashids';
@@ -13,67 +11,17 @@ import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 // TODO: PostPage
-const PostPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ post, authoredByMe }) => {
-  const router = useRouter();
+const PostPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ }) => {
+  // TODO: error page if no forum post with provided ID exists
+  // TODO: share button (copy URL)
 
-  if (!post) return (
-    <ErrorPage
-      title="Post does not exist."
-      buttonContent="Forum"
-      buttonUrl="/forum"
-    />
-  );
-
-  const {
-    author,
-    datePosted,
-    title,
-    summary,
-    content,
-    topics,
-    upvotes,
-  } = post;
-
-  const pageTitle = `${title} - Make-It-All`;
-  const date = new Date(datePosted);
-
-  // TODO share button (copy URL)
+  const pageTitle = '[INSERT POST TITLE] - Make-It-All';
 
   return (
     <main>
       <Head>
         <title>{pageTitle}</title>
       </Head>
-      {/* TODO */}
-      <div className="d-flex justify-content-between">
-        <h1>{title}</h1>
-
-        <div>
-          Votes: {upvotes}
-        </div>
-
-        <div>
-          {authoredByMe && (
-            <Link href={`${router.asPath}/edit`}>
-              <button>
-                Edit
-              </button>
-            </Link>
-          )}
-        </div>
-      </div>
-
-      <span>
-        <span><strong>Topics: </strong></span>
-        {topics.map((topic, index) => (
-          <span className="me-1" key={index}>{topic.name}</span>
-        ))}
-      </span>
-      <p>Author: {author.name}</p>
-      <p><small>Summary: {summary}</small></p>
-      <p>Posted: {date.toLocaleDateString()}</p>
-
-      <textarea value={content} readOnly />
     </main >
   );
 };
@@ -99,42 +47,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const postId = decodedId[0] as number | undefined;
 
-  const post = await prisma.post.findUnique({
-    where: {
-      id: postId,
-    },
-    include: {
-      author: {
-        select: {
-          name: true,
-        },
-      },
-      topics: true,
-    },
-  });
-
-  if (!post) return {
-    props: {
-      session,
-      user,
-      post: null,
-    },
-  };
-
-  // can't serialize type Date
-  const postWithSerializableDate = {
-    ...post,
-    datePosted: post.datePosted.getTime(),
-  };
-
-  const authoredByMe = post.authorId === user.id;
+  // TODO: use prisma to get post from database
+  // TODO: convert the post's date from `Date` to number (with `date.getTime()`) because Date isn't serializable
 
   return {
     props: {
       session,
       user,
-      post: postWithSerializableDate,
-      authoredByMe,
     },
   };
 }

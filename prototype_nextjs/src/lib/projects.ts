@@ -1,11 +1,6 @@
 import type { Prisma } from '@prisma/client';
 
-import {
-  ProjectRole,
-  TaskStage,
-  type WithAssignedToMe,
-  type ProjectTasks,
-} from '~/types';
+import { ProjectRole } from '~/types';
 
 export function whereUserHasAccessToProject(userId: string): Prisma.ProjectWhereInput {
   return {
@@ -60,42 +55,4 @@ export function getUserRoleInProject(userId: string, project: ProjectTeam): Proj
 
 export function userHasAccessToProject(userId: string, project: ProjectTeam): boolean {
   return getUserRoleInProject(userId, project) !== null;
-}
-
-// https://www.prisma.io/docs/concepts/components/prisma-client/computed-fields
-type TaskHasAssignee = Prisma.ProjectTaskGetPayload<{
-  select: {
-    assignee: {
-      select: {
-        id: true,
-      }
-    },
-  }
-}>;
-
-export function computeAssignedToMe<Task extends TaskHasAssignee>(
-  task: Task,
-  userId: string
-): WithAssignedToMe<Task> {
-  return {
-    ...task,
-    assignedToMe: task.assignee.id === userId,
-  };
-}
-
-export function toProjectTasks(
-  tasks: ProjectTasks[keyof ProjectTasks]
-): ProjectTasks {
-  const taskAcc: ProjectTasks = {
-    [TaskStage.TODO]: [],
-    [TaskStage.IN_PROGRESS]: [],
-    [TaskStage.CODE_REVIEW]: [],
-    [TaskStage.COMPLETED]: [],
-  };
-
-  return tasks.reduce((acc, task) => {
-    acc[task.stage as TaskStage].push(task);
-
-    return acc;
-  }, taskAcc);
 }

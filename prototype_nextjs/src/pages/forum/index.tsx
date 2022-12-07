@@ -5,12 +5,11 @@ import { unstable_getServerSession } from 'next-auth/next';
 import prisma from '~/lib/prisma';
 import { SidebarType } from '~/components/Layout';
 import ForumSidebar from '~/components/layout/sidebar/ForumSidebar';
-import ForumPostPreview from '~/components/forum/ForumPostPreview';
 import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 // TODO: ForumPage
-const ForumPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ posts }) => {
+const ForumPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ }) => {
   // TODO: top10voted?
   // TODO: option to list the posts only by this user (can be a different page)
 
@@ -19,12 +18,6 @@ const ForumPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>>
       <Head>
         <title>Forum - Make-It-All</title>
       </Head>
-      {/* TODO */}
-      <div className="d-flex flex-column">
-        {posts.map((post, index) => (
-          <ForumPostPreview key={index} post={post} />
-        ))}
-      </div>
     </main>
   );
 };
@@ -45,31 +38,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const user = session.user as SessionUser;
 
-  const result = await prisma.post.findMany({
-    orderBy: {
-      datePosted: 'desc',
-    },
-    include: {
-      author: {
-        select: {
-          name: true,
-        },
-      },
-      topics: true,
-    },
-  });
-
-  // can't serialize type Date
-  const posts = result.map((post) => ({
-    ...post,
-    datePosted: post.datePosted.getTime(),
-  }));
+  // TODO: use prisma to get forum posts from database
 
   return {
     props: {
       session,
       user,
-      posts,
     },
   };
 }
