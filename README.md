@@ -160,6 +160,20 @@ TODO
 
 #### Layout/Sidebar
 
+Your page component needs to be of type `AppPage`, example:
+
+```tsx
+import type { AppPage } from '~/types';
+
+const Page: AppPage = () => (
+  <>
+    Example
+  </>
+);
+
+export default Page;
+```
+
 To use our defined layout (sidebar and nav in top), you need to add the property `layout` to the file's default export:
 
 | Prop                   | Type                                                     | Description                                  |
@@ -169,6 +183,8 @@ To use our defined layout (sidebar and nav in top), you need to add the property
 | layout.sidebar         | `Sidebar`                                                |                                              |
 | layout.sidebar.type    | `SidebarType`                                            |                                              |
 | layout.sidebar.content | `ReactNode?` (only needed if `sidebarType` === `CUSTOM`) |                                              |
+
+> `AppPage` adds type hints for the above for you
 
 - Most pages will have a `layout.sidebar.type` of `PROJECTS`
   - e.g. main forum page should be `CUSTOM`
