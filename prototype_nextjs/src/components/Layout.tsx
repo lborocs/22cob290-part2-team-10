@@ -72,7 +72,7 @@ export default function Layout({
 
   return (
     <div className={styles.wrapper}>
-      {(
+      {!noSidebar && (
         <Sidebar
           show={showSidebar}
           content={getSidebarContent()}
@@ -85,7 +85,7 @@ export default function Layout({
             <div className="w-100 d-flex flex-row flex-nowrap position-relative">
               {/* left */}
               <div>
-                {(
+                {!noSidebar && (
                   <Button
                     onClick={() => setShowSidebar((show) => !show)}
                     className={styles['sidebar-toggle-btn']}
