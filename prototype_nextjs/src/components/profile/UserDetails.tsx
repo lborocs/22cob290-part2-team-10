@@ -17,6 +17,11 @@ type DetailsFormData = {
   name: string
 };
 
+/**
+ * Lists user info (name, email).
+ *
+ * Provides functionality for the user to change their name.
+ */
 export default function UserDetails() {
   const { setName, name, email } = useUserStore((state) => ({
     setName: state.setName,

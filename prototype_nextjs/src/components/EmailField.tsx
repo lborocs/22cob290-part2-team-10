@@ -9,9 +9,16 @@ export interface EmailFieldProps extends FormControlProps {
   controlId: string
   feedback?: React.ReactNode
   feedbackTooltip?: boolean
-  onlyFeedbackOutline?: boolean
+  onlyFeedbackOutline?: boolean // feedback is the outline on the input + a feedback message, sometimes we only want the outline
 }
 
+/**
+ * A reusable form input field for the user's email.
+ *
+ * - Customisable as it's a `forwardRef` component
+ * - Correct `autocomplete` of `username`
+ * - Easier API for providing form feedback
+ */
 export default forwardRef(function EmailField({
   name,
   controlId,

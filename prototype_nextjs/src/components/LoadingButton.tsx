@@ -8,6 +8,12 @@ export interface LoadingButtonProps extends ButtonProps {
   children: React.ReactNode
 }
 
+/**
+ * A reusable button that has a loading state.
+ *
+ * - Customisable as it's a `forwardRef` component
+ * - Optionally different content while in loading state
+ */
 export default forwardRef(function LoadingButton({
   isLoading,
   loadingContent,

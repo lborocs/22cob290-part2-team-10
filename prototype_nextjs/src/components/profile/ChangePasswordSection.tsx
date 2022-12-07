@@ -20,6 +20,14 @@ type ChangePwFormData = {
   confirm: string
 };
 
+/**
+ * Component providing functionality for the user to change their password.
+ *
+ * It is a separate component to the rest of the `profile` page to cause less re-renders:
+ *  - When the state representing the modal's open status (`showModal`) changes, the
+ *     entire page would re-render as the `state` was global to the page.
+ *  - Now, the `state` is local to just this component so only this component re-renders
+ */
 export default function ChangePasswordSection() {
   const [showModal, setShowModal] = useState(false);
 

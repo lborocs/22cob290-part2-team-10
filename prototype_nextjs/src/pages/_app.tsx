@@ -18,6 +18,15 @@ import useUserStore from '~/store/userStore';
 // https://fontawesome.com/v5/docs/web/use-with/react#getting-font-awesome-css-to-work
 config.autoAddCss = false;
 
+/**
+ * Workaround so we don't have to use `Layout` in every page.
+ *
+ * Works but adding these properties to the default export (`Component` in `App`)
+ *  of the page.
+ *
+ * @note using the layout requires `noAuth` to be falsy
+ * @see README # Part 2 # How We Need To Code # Layout/Sidebar
+ */
 type Page = {
   noAuth?: boolean
   layout?: PageLayout
@@ -33,7 +42,6 @@ export default function App({
 }: MyAppProps) {
   if (pageProps.user) {
     useUserStore.setState((state) => ({
-      ...state,
       user: pageProps.user,
     }));
   }
@@ -42,9 +50,6 @@ export default function App({
 
   return (
     <SessionProvider session={session}>
-      <Head>
-        <title>Make-It-All</title>
-      </Head>
       {noAuth ? (
         <Component {...pageProps} />
       ) : (

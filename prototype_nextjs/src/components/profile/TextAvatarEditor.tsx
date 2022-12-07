@@ -20,6 +20,9 @@ import LoadingButton from '~/components/LoadingButton';
 
 import styles from '~/styles/profile/TextAvatarSection.module.css';
 
+/**
+ * Component providing functionality for the user to change the colours of their text avatar.
+ */
 export default function TextAvatarEditor() {
   const [showModal, setShowModal] = useState(false);
 

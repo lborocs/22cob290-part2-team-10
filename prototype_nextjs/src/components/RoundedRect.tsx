@@ -5,6 +5,9 @@ export type RoundedRectProps = {
 };
 
 // copied the SVG in the header of Toasts in https://getbootstrap.com/docs/5.2/components/toasts/
+/**
+ * Useful for Bootstrap Toasts, but we're using `react-hot-toast` now
+ */
 export default function RoundedRect({
   fill,
   width = 20,

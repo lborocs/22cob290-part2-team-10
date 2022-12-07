@@ -15,6 +15,10 @@ enum CopyStatus {
   SUCCEEDED,
 }
 
+/**
+ * Component providing functionality for the user to invite an employee to join
+ *  the system.
+ */
 export default function InviteEmployeeSection() {
   const [showModal, setShowModal] = useState(false);
 

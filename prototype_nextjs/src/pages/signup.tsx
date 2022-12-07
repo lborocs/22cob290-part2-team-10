@@ -122,4 +122,5 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   };
 }
 
+// The user does not need to be logged in to access the SignupPage
 SignupPage.noAuth = true;

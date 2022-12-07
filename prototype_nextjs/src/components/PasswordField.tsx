@@ -46,6 +46,14 @@ export interface PasswordFieldProps extends FormControlProps {
   policyTooltip?: boolean
 }
 
+/**
+ * A reusable form input field for the user's password.
+ *
+ * - Customisable as it's a `forwardRef` component
+ * - Correct `autocomplete` of `current-password`
+ * - Easier API for providing form feedback
+ * - (Opt-in) Provides a tooltip for displaying the password policy
+ */
 export default forwardRef(function PasswordField({
   name,
   label = 'Password',
@@ -55,7 +63,7 @@ export default forwardRef(function PasswordField({
   feedback,
   feedbackTooltip = false,
   onlyFeedbackOutline = false,
-  policyTooltip,
+  policyTooltip = false,
   ...props
 }: PasswordFieldProps, ref: React.ForwardedRef<HTMLInputElement>) {
   const [showPassword, setShowPassword] = useState(false);

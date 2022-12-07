@@ -194,4 +194,5 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return { props: {} };
 }
 
+// The user does not need to be logged in to access the SignInPage
 SignInPage.noAuth = true;
