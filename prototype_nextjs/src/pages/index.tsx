@@ -15,6 +15,7 @@ import EmailField from '~/components/EmailField';
 import PasswordField from '~/components/PasswordField';
 import LoadingButton from '~/components/LoadingButton';
 import SignInSchema from '~/schemas/user/signIn';
+import type { AppPage } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 import styles from '~/styles/SignIn.module.css';
@@ -25,7 +26,7 @@ type SignInFormData = {
   password: string
 };
 
-export default function SignInPage() {
+const SignInPage: AppPage = () => {
   const router = useRouter();
 
   // handle using this as signIn page for auth flow
@@ -174,7 +175,10 @@ export default function SignInPage() {
       </main>
     </>
   );
-}
+};
+
+// The user does not need to be logged in to access the SignInPage
+SignInPage.noAuth = true;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
@@ -194,5 +198,4 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return { props: {} };
 }
 
-// The user does not need to be logged in to access the SignInPage
-SignInPage.noAuth = true;
+export default SignInPage;

@@ -7,6 +7,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import type { z } from 'zod';
 
 import SignUpSchema from '~/schemas/user/signup'; // TODO: use
+import type { AppPage } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import type { ResponseSchema as SignUpResponse } from '~/pages/api/user/signUp';
 
@@ -16,7 +17,7 @@ type SignUpFormData = z.infer<typeof SignUpSchema>;
 
 // TODO: SignupPage
 // TODO: use Formik and SignUpSchema for client-side validation
-export default function SignupPage({ inviteToken }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+const SignupPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ inviteToken }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = Object.fromEntries(new FormData(e.currentTarget)) as SignUpFormData;
@@ -96,7 +97,10 @@ export default function SignupPage({ inviteToken }: InferGetServerSidePropsType<
       </form>
     </main>
   );
-}
+};
+
+// The user does not need to be logged in to access the SignupPage
+SignupPage.noAuth = true;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
@@ -122,5 +126,4 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   };
 }
 
-// The user does not need to be logged in to access the SignupPage
-SignupPage.noAuth = true;
+export default SignupPage;

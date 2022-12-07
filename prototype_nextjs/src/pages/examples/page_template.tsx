@@ -2,13 +2,13 @@ import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'nex
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 
-import { SidebarType, type PageLayout } from '~/components/Layout';
-import type { SessionUser } from '~/types';
+import { SidebarType } from '~/components/Layout';
+import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 //! remove next line if you have any props
 // eslint-disable-next-line no-empty-pattern
-export default function Page({ }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+const Page: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ }) => {
   return (
     <main>
       <Head>
@@ -20,7 +20,13 @@ export default function Page({ }: InferGetServerSidePropsType<typeof getServerSi
       <button>Example Button</button>
     </main>
   );
-}
+};
+
+Page.layout = {
+  sidebar: {
+    type: SidebarType.PROJECTS,
+  },
+};
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
@@ -39,9 +45,4 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   };
 }
 
-const layout: PageLayout = {
-  sidebar: {
-    type: SidebarType.PROJECTS,
-  },
-};
-Page.layout = layout;
+export default Page;

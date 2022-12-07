@@ -8,12 +8,12 @@ import hashids from '~/lib/hashids';
 import prisma from '~/lib/prisma';
 import { getUserRoleInProject } from '~/lib/projects';
 import ErrorPage from '~/components/ErrorPage';
-import { SidebarType, type PageLayout } from '~/components/Layout';
+import { SidebarType } from '~/components/Layout';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import { type SessionUser, ProjectRole } from '~/types';
+import { type AppPage, type SessionUser, ProjectRole } from '~/types';
 
 // TODO: ProjectOverviewPage
-export default function ProjectOverviewPage({ project, role }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+const ProjectOverviewPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ project, role }) => {
   const router = useRouter();
 
   if (!project) return (
@@ -82,7 +82,13 @@ export default function ProjectOverviewPage({ project, role }: InferGetServerSid
       </main>
     </main>
   );
-}
+};
+
+ProjectOverviewPage.layout = {
+  sidebar: {
+    type: SidebarType.PROJECTS,
+  },
+};
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
@@ -172,9 +178,4 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   };
 }
 
-const layout: PageLayout = {
-  sidebar: {
-    type: SidebarType.PROJECTS,
-  },
-};
-ProjectOverviewPage.layout = layout;
+export default ProjectOverviewPage;

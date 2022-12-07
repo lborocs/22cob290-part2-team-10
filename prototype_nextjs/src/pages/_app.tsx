@@ -1,5 +1,4 @@
 import type { AppProps } from 'next/app';
-import Head from 'next/head';
 import { SessionProvider, useSession } from 'next-auth/react';
 import { config } from '@fortawesome/fontawesome-svg-core';
 
@@ -11,29 +10,16 @@ import '@fortawesome/fontawesome-svg-core/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '~/styles/globals.css';
 
-import Layout, { type PageLayout } from '~/components/Layout';
+import Layout from '~/components/Layout';
 import LoadingPage from '~/components/LoadingPage';
 import useUserStore from '~/store/userStore';
+import type { AppPage } from '~/types';
 
 // https://fontawesome.com/v5/docs/web/use-with/react#getting-font-awesome-css-to-work
 config.autoAddCss = false;
 
-/**
- * Workaround so we don't have to use `Layout` in every page.
- *
- * Works but adding these properties to the default export (`Component` in `App`)
- *  of the page.
- *
- * @note using the layout requires `noAuth` to be falsy
- * @see README # Part 2 # How We Need To Code # Layout/Sidebar
- */
-type Page = {
-  noAuth?: boolean
-  layout?: PageLayout
-};
-
 interface MyAppProps extends AppProps {
-  Component: AppProps['Component'] & Page
+  Component: AppProps['Component'] & AppPage
 }
 
 export default function App({

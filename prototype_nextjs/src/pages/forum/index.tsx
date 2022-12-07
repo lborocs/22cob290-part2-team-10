@@ -3,14 +3,14 @@ import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 
 import prisma from '~/lib/prisma';
-import { SidebarType, type PageLayout } from '~/components/Layout';
+import { SidebarType } from '~/components/Layout';
 import ForumSidebar from '~/components/layout/sidebar/ForumSidebar';
 import ForumPostPreview from '~/components/forum/ForumPostPreview';
-import type { SessionUser } from '~/types';
+import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 // TODO: ForumPage
-export default function ForumPage({ posts }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+const ForumPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ posts }) => {
   // TODO: top10voted?
   // TODO: option to list the posts only by this user (can be a different page)
 
@@ -27,7 +27,14 @@ export default function ForumPage({ posts }: InferGetServerSidePropsType<typeof 
       </div>
     </main>
   );
-}
+};
+
+ForumPage.layout = {
+  sidebar: {
+    type: SidebarType.CUSTOM,
+    content: <ForumSidebar />,
+  },
+};
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
@@ -67,10 +74,4 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   };
 }
 
-const layout: PageLayout = {
-  sidebar: {
-    type: SidebarType.CUSTOM,
-    content: <ForumSidebar />,
-  },
-};
-ForumPage.layout = layout;
+export default ForumPage;

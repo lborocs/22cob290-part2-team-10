@@ -3,10 +3,10 @@ import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 
 import useUserStore from '~/store/userStore';
-import type { SessionUser } from '~/types';
+import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
-export default function ExamplePage() {
+const ExamplePage: AppPage = () => {
   const { setName, email, name } = useUserStore((state) => ({
     setName: state.setName,
     email: state.user.email,
@@ -39,7 +39,7 @@ export default function ExamplePage() {
       </div>
     </main>
   );
-}
+};
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
@@ -62,3 +62,5 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   };
 }
+
+export default ExamplePage;
