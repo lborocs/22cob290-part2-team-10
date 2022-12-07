@@ -412,6 +412,8 @@ async function main() {
 
       console.log(`Created post with id: ${post.id} (title: ${post.title}), authored by name: ${post.author.name}`);
     }
+  }, {
+    timeout: 15_000, // 15 seconds timeout
   });
 
   console.log('Seeding finished.');
