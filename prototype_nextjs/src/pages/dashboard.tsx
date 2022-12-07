@@ -5,8 +5,8 @@ import { unstable_getServerSession } from 'next-auth/next';
 
 import hashids from '~/lib/hashids';
 import prisma from '~/lib/prisma';
-import { SidebarType, type PageLayout } from '~/components/Layout';
-import type { SessionUser } from '~/types';
+import { SidebarType } from '~/components/Layout';
+import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 /*
@@ -16,7 +16,7 @@ ers can keep track of the progression of the project they are responsible for."
 */
 
 // TODO: DashboardPage
-export default function DashboardPage({ managedProjects }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+const DashboardPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ managedProjects }) => {
 
   return (
     <main>
@@ -45,7 +45,13 @@ export default function DashboardPage({ managedProjects }: InferGetServerSidePro
       </Link>
     </main>
   );
-}
+};
+
+DashboardPage.layout = {
+  sidebar: {
+    type: SidebarType.PROJECTS,
+  },
+};
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
@@ -75,9 +81,4 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   };
 }
 
-const layout: PageLayout = {
-  sidebar: {
-    type: SidebarType.PROJECTS,
-  },
-};
-DashboardPage.layout = layout;
+export default DashboardPage;

@@ -10,16 +10,16 @@ import { Toaster } from 'react-hot-toast';
 
 import prisma from '~/lib/prisma';
 import { getEmailFromToken } from '~/lib/inviteToken';
-import { SidebarType, type PageLayout } from '~/components/Layout';
+import { SidebarType } from '~/components/Layout';
 import TextAvatarEditor from '~/components/profile/TextAvatarEditor';
 import UserDetails from '~/components/profile/UserDetails';
 import ChangePasswordSection from '~/components/profile/ChangePasswordSection';
 import InviteEmployeeSection from '~/components/profile/InviteEmployeeSection';
-import type { SessionUser } from '~/types';
+import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 // TODO: theme switcher
-export default function ProfilePage({ inviter }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+const ProfilePage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ inviter }) => {
   return (
     <main>
       <Head>
@@ -64,7 +64,7 @@ export default function ProfilePage({ inviter }: InferGetServerSidePropsType<typ
       </Button>
     </main>
   );
-}
+};
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
@@ -109,9 +109,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   };
 }
 
-const layout: PageLayout = {
+ProfilePage.layout = {
   sidebar: {
     type: SidebarType.PROJECTS,
   },
 };
-ProfilePage.layout = layout;
+
+export default ProfilePage;

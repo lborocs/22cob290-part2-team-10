@@ -7,13 +7,15 @@ import hashids from '~/lib/hashids';
 import prisma from '~/lib/prisma';
 import { userHasAccessToProject, getUserRoleInProject, computeAssignedToMe, toProjectTasks } from '~/lib/projects';
 import ErrorPage from '~/components/ErrorPage';
-import { SidebarType, type PageLayout } from '~/components/Layout';
+import { SidebarType } from '~/components/Layout';
 import KanbanBoard from '~/components/projects/KanbanBoard';
-import { type SessionUser, type ProjectTaskInfo, ProjectRole } from '~/types';
+import { type AppPage, type SessionUser, type ProjectTaskInfo, ProjectRole } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 // TODO: project page (Projects page from before)
-export default function ProjectPage({ noAccess, project, role, tasks }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+const ProjectPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
+  noAccess, project, role, tasks,
+}) => {
   if (noAccess) return (
     <ErrorPage
       title="You do not have access to this project."
@@ -54,7 +56,13 @@ export default function ProjectPage({ noAccess, project, role, tasks }: InferGet
       />
     </main>
   );
-}
+};
+
+ProjectPage.layout = {
+  sidebar: {
+    type: SidebarType.PROJECTS,
+  },
+};
 
 const includeProjectTaskInfo = {
   assignee: {
@@ -188,9 +196,4 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   };
 }
 
-const layout: PageLayout = {
-  sidebar: {
-    type: SidebarType.PROJECTS,
-  },
-};
-ProjectPage.layout = layout;
+export default ProjectPage;

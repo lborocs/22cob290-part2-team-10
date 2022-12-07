@@ -7,13 +7,13 @@ import { unstable_getServerSession } from 'next-auth/next';
 import hashids from '~/lib/hashids';
 import prisma from '~/lib/prisma';
 import ErrorPage from '~/components/ErrorPage';
-import { SidebarType, type PageLayout } from '~/components/Layout';
+import { SidebarType } from '~/components/Layout';
 import ForumSidebar from '~/components/layout/sidebar/ForumSidebar';
-import type { SessionUser } from '~/types';
+import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 // TODO: PostPage
-export default function PostPage({ post, authoredByMe }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+const PostPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ post, authoredByMe }) => {
   const router = useRouter();
 
   if (!post) return (
@@ -76,7 +76,14 @@ export default function PostPage({ post, authoredByMe }: InferGetServerSideProps
       <textarea value={content} readOnly />
     </main >
   );
-}
+};
+
+PostPage.layout = {
+  sidebar: {
+    type: SidebarType.CUSTOM,
+    content: <ForumSidebar />,
+  },
+};
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
@@ -132,10 +139,4 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   };
 }
 
-const layout: PageLayout = {
-  sidebar: {
-    type: SidebarType.CUSTOM,
-    content: <ForumSidebar />,
-  },
-};
-PostPage.layout = layout;
+export default PostPage;

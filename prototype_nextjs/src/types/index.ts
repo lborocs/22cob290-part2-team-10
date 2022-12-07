@@ -13,7 +13,8 @@ import type { PageLayout } from '~/components/Layout';
  * @note using the layout requires `noAuth` to be falsy
  * @see README # Part 2 # How We Need To Code # Layout/Sidebar
  */
-export type AppPage<Props = any> = NextPage<Props> & {
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type AppPage<Props = {}> = NextPage<Props> & {
   noAuth?: boolean
   layout?: PageLayout
 };
