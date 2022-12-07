@@ -5,7 +5,6 @@
 ## Table of Contents <!-- omit in toc -->
 
 <!-- TOC -->
-- [TODO](#todo)
 - [Part 1 (Prototype)](#part-1-prototype)
   - [How it works](#how-it-works)
     - [Submitted version](#submitted-version)
@@ -15,12 +14,12 @@
 - [Part 2 Plan (Next.JS)](#part-2-plan-nextjs)
   - [TODO (feedback from Part 1 presentation)](#todo-feedback-from-part-1-presentation)
   - [TODO (not from feedback)](#todo-not-from-feedback)
-  - [Architecture](#architecture)
-  - [How it works](#how-it-works-1)
+  - [How it works (Overview)](#how-it-works-overview)
+  - [Architecture (?)](#architecture-)
   - [How we need to code](#how-we-need-to-code)
     - [Layout/Sidebar](#layoutsidebar)
       - [Examples](#examples)
-    - [Knowing who is logged in](#knowing-who-is-logged-in)
+    - [User](#user)
     - [Client-side state management](#client-side-state-management)
     - [Code Style](#code-style)
       - [Absolute Imports](#absolute-imports)
@@ -33,17 +32,6 @@
     - [Using in development](#using-in-development)
   - [Libraries](#libraries-1)
 <!-- TOC -->
-
-## TODO
-
-TODO at some point (not feedback from client):
-
-- [x] Store logged-in user using cookies
-- [ ] Move template CSS & JS to 1 file which get imported into all pages to repeat less
-- [ ] Move hardcoded values from JS to PHP backend (not that much)
-  - [ ] I think this is only needed for staff assignment page
-
-> **Might not need to do these at all for Part 2**
 
 ## Part 1 (Prototype)
 
@@ -147,15 +135,17 @@ https://cloud.google.com/nodejs/getting-started/getting-started-on-compute-engin
 - [ ] Decide what goes in manager dashboard sidebar
   - Same as every other page? (list of projects)
 
-### Architecture
+### How it works (Overview)
+
+- Using [NextAuth.js](https://next-auth.js.org/getting-started/client#usesession) which creates a session (with a JWT storing the user's info)
+
+### Architecture (?)
 
 TODO
 
-Next.JS...
-
-### How it works
-
-- Using [NextAuth.js](https://next-auth.js.org/getting-started/client#usesession) which creates a session (with a JWT storing the user's info)
+- UI: React.Js
+- Full stack framework (handles routing, SSR, etc.): Next.Js
+- Database ORM: prisma
 
 ### How we need to code
 
@@ -170,14 +160,12 @@ Next.JS...
 
 #### Layout/Sidebar
 
-Return your pages content as if it's a normal page, but add additional properties to the
-
-To use our defined layout, you need to add additional property to the default export:
+To use our defined layout (sidebar and nav in top), you need to add the property `layout` to the file's default export:
 
 | Prop                   | Type                                                     | Description                                  |
 |------------------------|----------------------------------------------------------|----------------------------------------------|
 | layout                 | `PageLayout`                                             | Basically `Layout`'s props                   |
-| layout.title           | `string?`                                                | Title to display in the centre of the navbar |
+| layout.title           | `ReactNode?`                                             | Title to display in the centre of the navbar |
 | layout.sidebar         | `Sidebar`                                                |                                              |
 | layout.sidebar.type    | `SidebarType`                                            |                                              |
 | layout.sidebar.content | `ReactNode?` (only needed if `sidebarType` === `CUSTOM`) |                                              |
@@ -194,9 +182,9 @@ If this is unclear, see examples:
 - [Custom sidebar](prototype_nextjs/src/pages/examples/custom_sidebar.tsx)
 - [No sidebar](prototype_nextjs/src/pages/examples/no_sidebar.tsx)
 
-#### Knowing who is logged in
+#### User
 
-There are two ways to know who is logged in:
+There are two ways to know the user that is signed in:
 1. Reading the `user` prop passed to the page component by `getServerSideProps` ([example](prototype_nextjs/src/pages/examples/user_ssr.tsx))
 2. Reading `state.user` from the client-side store `store/userStore` (see next section) ([example](prototype_nextjs/src/pages/examples/user_userstore.tsx))
 
