@@ -1,4 +1,5 @@
 import type { GetServerSidePropsContext } from 'next';
+import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 import create from 'zustand';
 
@@ -21,6 +22,10 @@ export default function ExamplePage() {
 
   return (
     <main>
+      <Head>
+        <title>Custom Sidebar - Examples</title>
+      </Head>
+
       <h1>Custom sidebar example</h1>
       Enter a name:
       <input

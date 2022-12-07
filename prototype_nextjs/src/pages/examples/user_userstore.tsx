@@ -7,9 +7,19 @@ import type { SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 export default function ExamplePage() {
-  const [email, name] = useUserStore(
-    ({ user }) => [user.email, user.name]
-  );
+  const { setName, email, name } = useUserStore((state) => ({
+    setName: state.setName,
+    email: state.user.email,
+    name: state.user.name,
+  }));
+
+  const changeName = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const newName = new FormData(e.currentTarget).get('name') as string;
+
+    setName(newName);
+  };
 
   return (
     <main>
@@ -18,7 +28,15 @@ export default function ExamplePage() {
       </Head>
       <div className="h2 mb-4">Using <code>useUserStore</code></div>
       <h1>Email: {email}</h1>
-      <span>Name: {name}</span>
+      <p>Name: {name}</p>
+
+      <div>
+        <form onSubmit={changeName}>
+          <label htmlFor="new-name">New name:</label>
+          <input id="new-name" defaultValue={name} name="name" />
+          <button type="submit" >Change (only on client)</button>
+        </form>
+      </div>
     </main>
   );
 }
