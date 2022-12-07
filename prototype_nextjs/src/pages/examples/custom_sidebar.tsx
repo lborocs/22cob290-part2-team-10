@@ -3,8 +3,8 @@ import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 import create from 'zustand';
 
-import { SidebarType, type PageLayout } from '~/components/Layout';
-import type { SessionUser } from '~/types';
+import { SidebarType } from '~/components/Layout';
+import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 type Store = {
@@ -17,7 +17,7 @@ const useStore = create<Store>((set) => ({
   setName: (name) => set((state) => ({ name })),
 }));
 
-export default function ExamplePage() {
+const ExamplePage: AppPage = () => {
   const { name, setName } = useStore();
 
   return (
@@ -34,7 +34,7 @@ export default function ExamplePage() {
       />
     </main>
   );
-}
+};
 
 function Sidebar() {
   const name = useStore((state) => state.name);
@@ -57,6 +57,13 @@ function Sidebar() {
   );
 }
 
+ExamplePage.layout = {
+  sidebar: {
+    type: SidebarType.CUSTOM,
+    content: <Sidebar />,
+  },
+};
+
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
 
@@ -74,13 +81,4 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   };
 }
 
-// we should just be able to do `ExamplePage.layout = { ... } satisfies PageLayout`
-// but for some reason it gives error saying SidebarType isn't defined, idk why and cba
-
-const layout: PageLayout = {
-  sidebar: {
-    type: SidebarType.CUSTOM,
-    content: <Sidebar />,
-  },
-};
-ExamplePage.layout = layout;
+export default ExamplePage;

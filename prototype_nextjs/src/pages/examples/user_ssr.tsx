@@ -2,13 +2,13 @@ import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'nex
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 
-import type { SessionUser } from '~/types';
+import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
-export default function ExamplePage({
+const ExamplePage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   user,
   /* the rest of your props */
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}) => {
   const { email, name } = user;
 
   return (
@@ -21,7 +21,7 @@ export default function ExamplePage({
       <span>Name: {name}</span>
     </main>
   );
-}
+};
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
@@ -44,3 +44,5 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   };
 }
+
+export default ExamplePage;
