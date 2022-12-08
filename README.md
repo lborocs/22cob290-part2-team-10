@@ -479,6 +479,7 @@ from the
 | [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken)              | 8.5           | Generate invite tokens ([#19][iJwt])                                                                   |
 | [dotenv](https://github.com/motdotla/dotenv)                            | 16.0          | Load development environment variables during database seeding                                         |
 | [lodash](https://lodash.com/)                                           | 4.17          | Utility library                                                                                        |
+| [lorem-ipsum](https://github.com/knicklabs/lorem-ipsum.js)              | 2.0           | Generating placeholder text (for seeding)                                                              |
 | ...                                                                     |               |                                                                                                        |
 
 <!-- https://stackoverflow.com/a/42424860 -->
