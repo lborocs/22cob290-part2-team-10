@@ -18,7 +18,7 @@ export const SPECIAL_SYMBOL_REGEX = /(.*\W)/;
  * User email has to be a Make-It-All work email address.
  */
 export const EmailSchema = z.string()
-  .endsWith('@make-it-all.co.uk', 'Invalid Make-It-All email')
+  .regex(/@make-it-all.co.uk$/i, 'Invalid Make-It-All email')
   .email('Not an email')
   ;
 

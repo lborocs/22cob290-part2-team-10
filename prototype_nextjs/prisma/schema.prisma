@@ -35,7 +35,7 @@ datasource db {
 // company-wide role?
 model User {
   id             String  @id @default(uuid())
-  email          String  @unique
+  email          String  @unique // because emails are case insensitive, we need to store them in lowercase
   hashedPassword String
   name           String
   leftCompany    Boolean @default(false)
