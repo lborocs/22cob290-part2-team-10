@@ -1,5 +1,6 @@
 import { PrismaClient, type Prisma } from '@prisma/client';
 import * as dotenv from 'dotenv';
+import _ from 'lodash';
 
 import { hashPassword } from '../src/lib/user';
 import { getInviteToken, getEmailFromToken } from '../src/lib/inviteToken';
@@ -10,17 +11,6 @@ dotenv.config({
 });
 
 const prisma = new PrismaClient();
-
-/**
- * @param start The start number (inclusive)
- * @param end The end number (inclusive)
- * @returns List of numbers from `start` to `end`
- *
- * [Source](https://stackoverflow.com/a/38213213)
- */
-function range(start: number, end: number): number[] {
-  return [...Array(end).keys()].map((i) => i + start);
-}
 
 /**
  * Generate a random date between today and the start of 2022.
@@ -92,7 +82,7 @@ const getUserData = async (): Promise<Prisma.UserCreateInput[]> => [
   },
 ];
 
-const projectData: Prisma.ProjectCreateInput[] = range(1, 10).map<Prisma.ProjectCreateInput>((num) => ({
+const projectData: Prisma.ProjectCreateInput[] = _.range(1, 11).map<Prisma.ProjectCreateInput>((num) => ({
   name: `Project ${num}`,
   manager: {
     connect: {
