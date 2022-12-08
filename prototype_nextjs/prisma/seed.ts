@@ -1,6 +1,7 @@
 import { PrismaClient, type Prisma } from '@prisma/client';
 import * as dotenv from 'dotenv';
 import _ from 'lodash';
+import { LoremIpsum } from 'lorem-ipsum';
 
 import { hashPassword } from '../src/lib/user';
 import { getInviteToken, getEmailFromToken } from '../src/lib/inviteToken';
@@ -11,6 +12,17 @@ dotenv.config({
 });
 
 const prisma = new PrismaClient();
+
+const lorem = new LoremIpsum({
+  sentencesPerParagraph: {
+    max: 8,
+    min: 4,
+  },
+  wordsPerSentence: {
+    max: 16,
+    min: 3,
+  },
+});
 
 /**
  * Generate a random date between today and the start of 2022.
@@ -329,6 +341,57 @@ const postData: Prisma.PostCreateInput[] = [
   },
 ];
 
+// TODO: makeRandomProject (will have to get the current users and pick random users to assign to it)
+
+async function makeRandomUser(): Promise<Prisma.UserCreateInput> {
+  const firstName = _.capitalize(lorem.generateWords(1));
+  const lastName = _.capitalize(lorem.generateWords(1));
+  const name = `${firstName} ${lastName}`;
+
+  const email = `${firstName}@make-it-all.co.uk`.toLowerCase();
+
+  const numberOfPosts = _.random(1, 11);
+
+  return {
+    email,
+    hashedPassword: await testPassword(),
+    name,
+    inviteToken: managerInviteToken(),
+    posts: {
+      create: _.range(numberOfPosts).map(makeRandomPost),
+    },
+  };
+}
+
+function makeRandomPost(): Prisma.PostUncheckedCreateWithoutAuthorInput {
+  const title = lorem.generateSentences(1);
+  const summary = lorem.generateSentences(1);
+  const content = lorem.generateParagraphs(_.random(1, 5));
+
+  const topics = lorem.generateWords(_.random(1, 10)).split(' ');
+
+  const upvotes = _.random(0, 400);
+
+  return {
+    title,
+    summary,
+    content,
+    upvotes,
+    topics: {
+      connectOrCreate: topics.map(
+        (name) => ({
+          where: {
+            name,
+          },
+          create: {
+            name,
+          },
+        })
+      ),
+    },
+  };
+}
+
 async function main() {
   console.log('Start seeding ...');
 
@@ -341,6 +404,23 @@ async function main() {
       });
 
       console.log(`Created user with id: ${user.id} (name: ${user.name}), invited by email: ${getEmailFromToken(user.inviteToken)}`);
+    }
+
+    // random users + random posts
+    for (const i of _.range(5)) {
+      const data = await makeRandomUser();
+      const user = await prisma.user.create({
+        data,
+        include: {
+          _count: {
+            select: {
+              posts: true,
+            },
+          },
+        },
+      });
+
+      console.log(`Created random user with id: ${user.id} (name: ${user.name}), with ${user._count.posts} posts`);
     }
 
     console.log();
