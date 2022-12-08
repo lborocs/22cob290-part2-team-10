@@ -297,6 +297,8 @@ In each of the above groups, imports should be in alphabetic order of the file t
 Use dynamic routes instead of URL params, with similar functionality to a REST API
 
 > Not sure about the forum pages that aren't yet templated
+>
+> Will want a page/option to list posts made by a certain user
 
 | Page URL/Route                        | Owner | Status                | Completed             | Notes                                                                                                                                                              |
 |---------------------------------------|-------|-----------------------|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
