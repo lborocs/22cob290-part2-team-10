@@ -40,6 +40,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   // TODO: use prisma to get forum posts from database
 
+  // TODO: convert each post's date from `Date` to number because Date isn't serializable
+  // can use `lib/posts#serializablePost`
+
   return {
     props: {
       session,

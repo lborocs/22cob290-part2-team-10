@@ -268,17 +268,7 @@ Imports should be in the order ([example](prototype_nextjs/src/pages/profile.tsx
   - React Boostrap/UI library (e.g. `Button` from `react-bootstrap/Button`)
   - _Any other external libraries (e.g. `axios`)_
 - [space]
-- Our code
-  - `~/lib`
-  - `~/components` (e.g. `Layout` from `~/components/Layout`)
-  - `~/store`
-  - `~/schemas`
-  - `~/types`
-  - `~/utils`
-  - _Any other client-side things_
-  - `~/pages/api`
-  - `~/server` **in order that they're used in when thinking about a page's life cycle (SSR->client)**
-  - _Anything else_
+- Our code e.g. from `~/types`
 - [space]
 - Other
   - External CSS (e.g. from Bootstrap)
@@ -298,7 +288,10 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 
 > Not sure about the forum pages that aren't yet templated
 >
-> Will want a page/option to list posts made by a certain user
+> Will want a page/option to list posts made by a certain user.
+> Maybe on a post, make the author's name clickable and it'll take u to /forum/authors/[authorId]
+>
+> > Atm theres a link to `/forum/authors` in the forum sidebar
 
 | Page URL/Route                        | Owner | Status                | Completed             | Notes                                                                                                                                                              |
 |---------------------------------------|-------|-----------------------|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -314,6 +307,8 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 | `/forum/posts`                        |       |                       |                       | Display all posts                                                                                                                                                  |
 | `/forum/posts/[id]`                   |       | Templated             |                       | Display a specific post                                                                                                                                            |
 | `/forum/posts/[id]/edit`?             |       |                       |                       | Dara thinks having a new page to edit a post may make it easier to implement                                                                                       |
+| `/forum/authors/`                     |       | Templated             |                       | List authors                                                                                                                                                       |
+| `/forum/authors/[id]`                 |       | Templated             |                       | Display posts by a specific author                                                                                                                                 |
 | `/dashboard`                          |       | Templated             |                       |                                                                                                                                                                    |
 | `/staff_assignment`                   |       |                       |                       | Dara thinks we should rename this URL                                                                                                                              |
 | `/profile`                            | Dara  | Functionally complete | <ul><li>[ ] </li><ul> |                                                                                                                                                                    |

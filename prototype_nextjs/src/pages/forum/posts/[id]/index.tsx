@@ -48,7 +48,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const postId = decodedId[0] as number | undefined;
 
   // TODO: use prisma to get post from database
-  // TODO: convert the post's date from `Date` to number (with `date.getTime()`) because Date isn't serializable
+  // TODO: convert the post's date from `Date` to number because Date isn't serializable
+  // can use `lib/posts#serializablePost`
 
   return {
     props: {
