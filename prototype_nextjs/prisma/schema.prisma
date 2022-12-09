@@ -18,14 +18,6 @@ datasource db {
 // - estimatedDuration for task
 // - deadline for project/task?
 
-// TODO: (need to clarify with client) (waiting for reply):
-// - post editors
-// - post lastEdited
-// - post lastEditor
-// - post contentHistory? [1-many]
-//   - content String
-//   - dateChanged DateTime
-
 model User {
   id             String  @id @default(uuid())
   email          String  @unique // because emails are case insensitive, we need to store them in lowercase
@@ -45,8 +37,9 @@ model User {
   permittedTasks   ProjectTask[] @relation("ProjectTaskPermitted")
 
   // forum
-  posts        Post[] @relation("Post")
-  upvotedPosts Post[] @relation("PostUpvotes")
+  posts        Post[]        @relation("Post")
+  editedPosts  PostHistory[] @relation("PostEditor")
+  upvotedPosts Post[]        @relation("PostUpvotes")
 }
 
 // ------------------------------------------
@@ -84,16 +77,28 @@ model ProjectTaskTag {
 
 // ------------------------------------------
 
+// current post state is Post.history[ORDER BY dateEdited DESC][0]
+// original state is Post.history[ORDER BY dateEdited ASC][0]
 model Post {
-  id         Int         @id @default(autoincrement())
-  authorId   String
-  author     User        @relation("Post", fields: [authorId], references: [id])
-  datePosted DateTime    @default(now())
-  title      String
-  summary    String
-  content    String
-  topics     PostTopic[]
-  upvotes    User[]      @relation("PostUpvotes")
+  id       Int           @id @default(autoincrement())
+  authorId String
+  author   User          @relation("Post", fields: [authorId], references: [id])
+  upvotes  User[]        @relation("PostUpvotes")
+  topics   PostTopic[]
+  history  PostHistory[] @relation("PostHistory")
+}
+
+// many-to-many relationship table representing User (editor) <-> Post
+model PostHistory {
+  id       Int      @id @default(autoincrement())
+  postId   Int
+  post     Post     @relation("PostHistory", fields: [postId], references: [id])
+  editorId String
+  editor   User     @relation("PostEditor", fields: [editorId], references: [id])
+  date     DateTime @default(now())
+  title    String
+  summary  String
+  content  String
 }
 
 model PostTopic {
