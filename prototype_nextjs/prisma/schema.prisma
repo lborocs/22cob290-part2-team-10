@@ -37,9 +37,9 @@ model User {
   permittedTasks   ProjectTask[] @relation("ProjectTaskPermitted")
 
   // forum
-  posts        Post[]        @relation("Post")
-  editedPosts  PostHistory[] @relation("PostEditor")
-  upvotedPosts Post[]        @relation("PostUpvotes")
+  posts              Post[]        @relation("Post")
+  editedPostsHistory PostHistory[] @relation("PostEditor")
+  upvotedPosts       Post[]        @relation("PostUpvotes")
 }
 
 // ------------------------------------------
@@ -83,8 +83,9 @@ model Post {
   id       Int           @id @default(autoincrement())
   authorId String
   author   User          @relation("Post", fields: [authorId], references: [id])
-  upvotes  User[]        @relation("PostUpvotes")
   topics   PostTopic[]
+  upvoters User[]        @relation("PostUpvotes")
+  // datePosted DateTime  - not sure if to have here
   history  PostHistory[] @relation("PostHistory")
 }
 
