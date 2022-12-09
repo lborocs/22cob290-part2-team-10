@@ -52,7 +52,8 @@ model User {
   permittedTasks   ProjectTask[] @relation("ProjectTaskPermitted")
 
   // forum
-  posts Post[] @relation("Post")
+  posts        Post[] @relation("Post")
+  upvotedPosts Post[] @relation("PostUpvotes")
 }
 
 // ------------------------------------------
@@ -100,8 +101,8 @@ model Post {
   title      String
   summary    String
   content    String
-  upvotes    Int         @default(0)
   topics     PostTopic[]
+  upvotes    User[]      @relation("PostUpvotes")
 }
 
 model PostTopic {

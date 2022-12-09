@@ -287,7 +287,6 @@ const postData: Prisma.PostCreateInput[] = [
     summary: 'posted sometime between 1/1/22 and today',
     datePosted: new Date(randomTimeMs()),
     content: 'Well, sometimes you just gotta do what you gotta do',
-    upvotes: 2000,
     topics: {
       connectOrCreate: [
         {
@@ -305,6 +304,16 @@ const postData: Prisma.PostCreateInput[] = [
           create: {
             name: 'Topic2',
           },
+        },
+      ],
+    },
+    upvotes: {
+      connect: [
+        {
+          email: 'manager@make-it-all.co.uk',
+        },
+        {
+          email: 'john@make-it-all.co.uk',
         },
       ],
     },
@@ -351,6 +360,7 @@ async function makeRandomUser(): Promise<Prisma.UserCreateInput> {
   const email = `${firstName}@make-it-all.co.uk`.toLowerCase();
 
   const numberOfPosts = _.random(1, 11);
+  const posts = await Promise.all(_.range(numberOfPosts).map(makeRandomPost));
 
   return {
     email,
@@ -358,25 +368,48 @@ async function makeRandomUser(): Promise<Prisma.UserCreateInput> {
     name,
     inviteToken: managerInviteToken(),
     posts: {
-      create: _.range(numberOfPosts).map(makeRandomPost),
+      create: posts,
     },
   };
 }
 
-function makeRandomPost(): Prisma.PostUncheckedCreateWithoutAuthorInput {
+async function makeRandomPost(): Promise<Prisma.PostUncheckedCreateWithoutAuthorInput> {
   const title = lorem.generateSentences(1);
   const summary = lorem.generateSentences(1);
   const content = lorem.generateParagraphs(_.random(1, 5));
 
   const topics = lorem.generateWords(_.random(1, 10)).split(' ');
 
-  const upvotes = _.random(0, 400);
+  async function getUpvotesUsers(): Promise<string[]> {
+    const users = await getUserData();
+    const nUsers = users.length;
+
+    const nUpvotes = _.random(0, nUsers - 1);
+    const upVotedUsers = new Set<string>(); // emails
+
+    _.range(0, nUpvotes).forEach(() => {
+      let email: string;
+
+      do {
+        email = users[_.random(0, nUsers - 1)].email;
+      } while (upVotedUsers.has(email));
+
+      upVotedUsers.add(email);
+    });
+
+    return [...upVotedUsers];
+  }
+  const upvoters = await getUpvotesUsers();
 
   return {
     title,
     summary,
     content,
-    upvotes,
+    upvotes: {
+      connect: upvoters.map((email) => ({
+        email,
+      })),
+    },
     topics: {
       connectOrCreate: topics.map(
         (name) => ({

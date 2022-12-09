@@ -36,10 +36,10 @@ const AuthorsPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps
               </Link>
             </Col>
             <Col>
-              Number of posts: {author._count.posts}
+              Number of posts: {author.posts.length}
             </Col>
             <Col>
-              Upvotes received: {author.upvotes}
+              Upvotes received: {author.totalUpvotes}
             </Col>
           </Row>
         ))}
@@ -64,14 +64,20 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const user = session.user as SessionUser;
 
-  const authors = await prisma.user.findMany({
+  // TODO: would like to order by totalUpvotes but not sure how to do that with prisma (in 1 query)
+
+  const result = await prisma.user.findMany({
     select: {
       id: true,
-      name: true,
       email: true,
-      _count: {
+      name: true,
+      posts: {
         select: {
-          posts: true,
+          _count: {
+            select: {
+              upvotes: true,
+            },
+          },
         },
       },
     },
@@ -82,21 +88,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   });
 
-  const totalUpvotes = await prisma.post.groupBy({
-    by: [
-      'authorId',
-    ],
-    _sum: {
-      upvotes: true,
-    },
-  });
+  const authors = result.map((author) => {
+    const totalUpvotes = author.posts.reduce((acc, post) => acc + post._count.upvotes, 0);
 
-  const result = authors.map((author) => {
-    const groupBy = totalUpvotes.find((groupBy) => groupBy.authorId === author.id);
-    const upvotes = groupBy?._sum.upvotes ?? 0;
     return {
       ...author,
-      upvotes,
+      totalUpvotes,
     };
   });
 
@@ -104,7 +101,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     props: {
       session,
       user,
-      authors: result,
+      authors,
     },
   };
 }
