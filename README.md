@@ -326,20 +326,21 @@ All have unique IDs (`autoincrement`/`uuid`)
 <details>
 <summary>User</summary>
 
-| Name             | Type             | Default   | Relation        | Description                                                                        |
-|------------------|------------------|-----------|-----------------|------------------------------------------------------------------------------------|
-| id               | `String` (UUID)  | `uuid()`  |                 |                                                                                    |
-| email            | `String`         |           |                 |                                                                                    |
-| hashedPassword   | `String`         |           |                 |                                                                                    |
-| name             | `String`         |           |                 |                                                                                    |
-| leftCompany      | `boolean`        | `false`   |                 |                                                                                    |
-| inviterId        | `String?` (UUID) |           | `User`          | The ID of the user that invited them.                                              |
-| avatarBg         | `String`         | `#e2ba39` |                 |                                                                                    |
-| avatarFg         | `String`         | `#ffffff` |                 |                                                                                    |
-| assignedProjects | -                |           | `Project[]`     | Implicit many-to-many relation. The projects where the user is just a team member. |
-| permittedTasks   | -                |           | `ProjectTask[]` | Implicit many-to-many relation.                                                    |
-| posts            | -                |           | `Post`          | Implicit many-to-many relation.                                                    |
-| upvotedPosts     | -                |           | `Post`          | Implicit many-to-many relation.                                                    |
+| Name             | Type             | Default   | Relation        | Description                                                                   |
+|------------------|------------------|-----------|-----------------|-------------------------------------------------------------------------------|
+| id               | `String` (UUID)  | `uuid()`  |                 |                                                                               |
+| email            | `String`         |           |                 |                                                                               |
+| hashedPassword   | `String`         |           |                 |                                                                               |
+| name             | `String`         |           |                 |                                                                               |
+| leftCompany      | `boolean`        | `false`   |                 |                                                                               |
+| inviterId        | `String?` (UUID) |           | `User`          | The ID of the user that invited them.                                         |
+| avatarBg         | `String`         | `#e2ba39` |                 |                                                                               |
+| avatarFg         | `String`         | `#ffffff` |                 |                                                                               |
+| ledProjects      | -                |           | `Project[]`     | Implicit many-to-many relation. The projects where the user is a team leader. |
+| assignedProjects | -                |           | `Project[]`     | Implicit many-to-many relation. The projects where the user is a team member. |
+| permittedTasks   | -                |           | `ProjectTask[]` | Implicit many-to-many relation.                                               |
+| posts            | -                |           | `Post`          | Implicit many-to-many relation.                                               |
+| upvotedPosts     | -                |           | `Post`          | Implicit many-to-many relation.                                               |
 
 </details>
 
@@ -352,7 +353,6 @@ TODO: user's personal todo list
 |-----------|-----------------|-------------------|----------|---------------------------------|
 | id        | `Int`           | `autoincrement()` |          |                                 |
 | name      | `String`        |                   |          |                                 |
-| managerId | `String` (UUID) |                   | `User`   |                                 |
 | leaderId  | `String` (UUID) |                   | `User`   |                                 |
 | members   | -               |                   | `User[]` | Implicit many-to-many relation. |
 
