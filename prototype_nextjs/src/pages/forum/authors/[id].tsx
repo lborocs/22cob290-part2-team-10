@@ -32,7 +32,7 @@ const AuthorPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>
       <h1>{author.name}</h1>
       <small>{author.email}</small>
 
-      Number of posts: {author._count.posts}
+      Number of posts: {author.posts.length}
 
       <div>
         <h4>Their posts:</h4>
@@ -80,11 +80,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       posts: {
         orderBy: {
           datePosted: 'desc',
-        },
-      },
-      _count: {
-        select: {
-          posts: true,
         },
       },
     },
