@@ -92,6 +92,7 @@ export default function Layout({
   );
 }
 
+// left, center, right: https://stackoverflow.com/a/20362024
 const NavigationBar = ({ noSidebar, setShowSidebar, title }: {
   noSidebar: boolean
   setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>
