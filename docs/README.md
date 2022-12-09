@@ -1,3 +1,3 @@
 # Docs (Part 2)
 
-- [Quickstart](Quickstart.md)
+- [Quickstart](quickstart.md)
