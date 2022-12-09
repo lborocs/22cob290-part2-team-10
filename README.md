@@ -354,6 +354,7 @@ All have unique IDs (`autoincrement`/`uuid`)
 | assignedProjects | -                |           | `Project[]`     | Implicit many-to-many relation. The projects where the user is just a team member. |
 | permittedTasks   | -                |           | `ProjectTask[]` | Implicit many-to-many relation.                                                    |
 | posts            | -                |           | `Post`          | Implicit many-to-many relation.                                                    |
+| upvotedPosts     | -                |           | `Post`          | Implicit many-to-many relation.                                                    |
 
 </details>
 
@@ -401,8 +402,8 @@ TODO: user's personal todo list
 | title      | `String`        |                   |               |                                 |
 | summary    | `String`        |                   |               |                                 |
 | content    | `String`        |                   |               |                                 |
-| upvotes    | `Int`           | `0`               |               |                                 |
 | topics     | -               |                   | `PostTopic[]` | Implicit many-to-many relation. |
+| upvotes    | -               |                   | `User[]`      | Implicit many-to-many relation. |
 
 - `PostTopic` is just `{ name: string }`
 
