@@ -292,7 +292,7 @@ const postData: Prisma.PostCreateInput[] = [
         },
       ],
     },
-    upvotes: {
+    upvoters: {
       connect: [
         {
           email: 'manager@make-it-all.co.uk',
@@ -394,7 +394,7 @@ async function makeRandomPost(authorEmail: string): Promise<Prisma.PostUnchecked
 
   const topics = lorem.generateWords(_.random(1, 10)).split(' ');
 
-  async function getUpvotesUsers(): Promise<string[]> {
+  async function getUpvoters(): Promise<string[]> {
     const users = await getUserData();
     const nUsers = users.length;
 
@@ -413,12 +413,12 @@ async function makeRandomPost(authorEmail: string): Promise<Prisma.PostUnchecked
 
     return [...upVotedUsers];
   }
-  const upvoters = await getUpvotesUsers();
+  const upvoters = await getUpvoters();
 
   const adminEdited = _.random() > 0.2;
 
   return {
-    upvotes: {
+    upvoters: {
       connect: upvoters.map((email) => ({
         email,
       })),
