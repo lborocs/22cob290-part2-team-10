@@ -1,6 +1,7 @@
 import type { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
+import Navbar from 'react-bootstrap/Navbar';
 
 import { SidebarType } from '~/components/Layout';
 import type { AppPage, SessionUser } from '~/types';
@@ -18,7 +19,11 @@ const ExamplePage: AppPage = () => {
 };
 
 ExamplePage.layout = {
-  title: <h1>Look no sidebar!</h1>,
+  title: (
+    <Navbar.Brand>
+      Look no sidebar!
+    </Navbar.Brand>
+  ),
   sidebar: {
     type: SidebarType.NONE,
   },
