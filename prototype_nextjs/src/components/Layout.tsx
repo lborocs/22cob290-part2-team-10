@@ -43,7 +43,6 @@ export interface LayoutProps extends PageLayout {
   children: React.ReactNode
 }
 
-// TODO: center brand horizontally
 export default function Layout({
   title,
   sidebar,
@@ -81,63 +80,70 @@ export default function Layout({
 
       <div className={styles.content}>
         <header>
-          <Navbar expand="lg" className={styles.navbar}>
-            <div className="w-100 d-flex flex-row flex-nowrap position-relative">
-              {/* left */}
-              <div>
-                {!noSidebar && (
-                  <Button
-                    onClick={() => setShowSidebar((show) => !show)}
-                    className={styles['sidebar-toggle-btn']}
-                  >
-                    <FontAwesomeIcon icon={faAlignLeft} />
-                    {' '}
-                    <span className="d-none d-lg-inline">Toggle Sidebar</span>
-                  </Button>
-                )}
-              </div>
-
-              {/*
-                middle
-                 - stacked on top using `position-absolute` & centered using `justify-content-center`
-                 - `pointer-events: none` so navbar items are still clickable
-                  - `auto` on inner div in case provided title has clickable things
-              */}
-              <div
-                className="position-absolute w-100 h-100"
-                style={{ pointerEvents: 'none' }}
-              >
-                <div
-                  className="d-flex align-items-center justify-content-center"
-                  style={{ pointerEvents: 'auto' }}
-                >
-                  {title}
-                </div>
-              </div>
-
-              <Navbar.Toggle
-                aria-controls="nav"
-                as={Button}
-                variant="dark"
-                className="d-lg-none ms-auto"
-                bsPrefix="_" // hacky way to not have default toggle style. Can't use undefined so using _
-              >
-                <FontAwesomeIcon icon={faAlignJustify} />
-              </Navbar.Toggle>
-
-              {/* right */}
-              <Navbar.Collapse
-                id="nav"
-                className="justify-content-end"
-              >
-                <LayoutNav />
-              </Navbar.Collapse>
-            </div>
-          </Navbar>
+          <NavigationBar
+            noSidebar={noSidebar}
+            setShowSidebar={setShowSidebar}
+            title={title}
+          />
         </header>
-
         {children}
       </div>
     </div>
   );
 }
+
+const NavigationBar = ({ noSidebar, setShowSidebar, title }: {
+  noSidebar: boolean
+  setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>
+  title: React.ReactNode
+}) => {
+  const toggleSidebarButton = !noSidebar && (
+    <Button
+      onClick={() => setShowSidebar((show) => !show)}
+      className={styles['sidebar-toggle-btn']}
+    >
+      <FontAwesomeIcon icon={faAlignLeft} />
+      {' '}
+      <span className="d-none d-lg-inline">Toggle Sidebar</span>
+    </Button>
+  );
+
+  return (
+    <Navbar expand="lg" className={styles.navbar}>
+      {/* desktop left */}
+      <div className="w-100 order-1 order-md-0">
+        <div className="d-none d-lg-inline">
+          {toggleSidebarButton}
+        </div>
+      </div>
+      {/* desktop middle */}
+      <div className="mx-auto w-100 order-1 d-flex">
+        {/* mobile left */}
+        <div className="d-inline-block d-lg-none">
+          {toggleSidebarButton}
+        </div>
+        {/* middle */}
+        <div className="mx-auto">
+          {title}
+        </div>
+        {/* mobile right */}
+        <div className="d-inline-block d-lg-none">
+          <Navbar.Toggle
+            aria-controls="nav"
+            as={Button}
+            variant="dark"
+            bsPrefix="_" // hacky way to not have default toggle style. Can't use undefined so using _
+          >
+            <FontAwesomeIcon icon={faAlignJustify} />
+          </Navbar.Toggle>
+        </div>
+      </div>
+      {/* desktop right */}
+      <Navbar.Collapse id="nav" className="w-100 order-2">
+        <div className="ms-auto">
+          <LayoutNav />
+        </div>
+      </Navbar.Collapse>
+    </Navbar>
+  );
+};
