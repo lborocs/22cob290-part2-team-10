@@ -85,21 +85,6 @@ Deploy to Vercel for development before using GCP?
 
 https://cloud.google.com/nodejs/getting-started/getting-started-on-compute-engine
 
-> Think we misunderstood roles:
->
-> They're meant to be in teams? And a project is assigned to a team?
->
-> A team has a manager, leader and >=1 team members?
->
-> [Asked on forum](https://learn.lboro.ac.uk/mod/forum/discuss.php?d=369233),
-> awaiting response, will update this & google doc
->
-> If they're meant to be teams, need to ask who assigns projects & employees to
-> teams - e.g. company-wide manager idk
->
-> Or maybe the only company-wide roles are `MANAGER` and `USER`
-> Then each project has a manager, leader (`USER`) and members (`USER`s)
-
 > Think we also misunderstood the dashboard:
 >
 > "There should also be a manager’s dashboard so that the managers or team lead‐
@@ -310,7 +295,7 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 | `/forum/authors/`                     |       | Templated             |                       | List authors                                                                                                                                                       |
 | `/forum/authors/[id]`                 |       | Templated             |                       | Display posts by a specific author                                                                                                                                 |
 | `/dashboard`                          |       | Templated             |                       |                                                                                                                                                                    |
-| `/staff_assignment`                   |       |                       |                       | Dara thinks we should rename this URL                                                                                                                              |
+| `/staff_assignment`                   |       |                       |                       | Dara thinks we should rename this URL, `/employees`?                                                                                                               |
 | `/profile`                            | Dara  | Functionally complete | <ul><li>[ ] </li><ul> |                                                                                                                                                                    |
 | `/signup`                             |       | Templated             |                       | Can merge signup and signin?                                                                                                                                       |
 

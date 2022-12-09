@@ -16,7 +16,8 @@ ers can keep track of the progression of the project they are responsible for."
 */
 
 // TODO: DashboardPage
-const DashboardPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ managedProjects }) => {
+const DashboardPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ }) => {
+  // TODO: new project button if manager
 
   return (
     <main>
@@ -25,24 +26,6 @@ const DashboardPage: AppPage<InferGetServerSidePropsType<typeof getServerSidePro
       </Head>
       {/* TODO */}
       <h1>Manager dashboard</h1>
-
-      <div>
-        <ul>
-          {managedProjects.map((project, index) => (
-            <Link key={index} href={`/projects/${hashids.encode(project.id)}/overview`}>
-              <li>
-                {project.name}
-              </li>
-            </Link>
-          ))}
-        </ul>
-      </div>
-
-      <Link href="projects/new">
-        <button>
-          New project
-        </button>
-      </Link>
     </main>
   );
 };
@@ -62,21 +45,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const user = session.user as SessionUser;
 
-  const managedProjects = await prisma.project.findMany({
-    where: {
-      managerId: user.id,
-    },
-    select: {
-      id: true,
-      name: true,
-    },
-  });
+  // TODO: get all projects if manager
+  // else, get all projects where leader
 
   return {
     props: {
       session,
       user,
-      managedProjects,
     },
   };
 }

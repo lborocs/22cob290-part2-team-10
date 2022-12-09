@@ -1,6 +1,6 @@
 import { PrismaClient, type Prisma } from '@prisma/client';
 import * as dotenv from 'dotenv';
-import _ from 'lodash';
+import _, { StringNullableChain } from 'lodash';
 import { LoremIpsum } from 'lorem-ipsum';
 
 import { hashPassword } from '../src/lib/user';
@@ -54,12 +54,14 @@ const getUserData = async (): Promise<Prisma.UserCreateInput[]> => [
     email: 'admin@make-it-all.co.uk',
     hashedPassword: await testPassword(),
     name: 'Admin',
+    isManager: true,
   },
   {
     email: 'manager@make-it-all.co.uk',
     hashedPassword: await testPassword(),
     name: 'Project Manager',
     inviteToken: adminInviteToken(),
+    isManager: true,
   },
   {
     email: 'leader@make-it-all.co.uk',
@@ -85,6 +87,7 @@ const getUserData = async (): Promise<Prisma.UserCreateInput[]> => [
     hashedPassword: await testPassword(),
     name: 'Jane Doe Doherty Tate', // text avatar should be JDD
     inviteToken: managerInviteToken(),
+    isManager: true,
   },
   {
     email: 'john@make-it-all.co.uk',
@@ -96,11 +99,6 @@ const getUserData = async (): Promise<Prisma.UserCreateInput[]> => [
 
 const projectData: Prisma.ProjectCreateInput[] = _.range(1, 11).map<Prisma.ProjectCreateInput>((num) => ({
   name: `Project ${num}`,
-  manager: {
-    connect: {
-      email: 'manager@make-it-all.co.uk',
-    },
-  },
   leader: {
     connect: {
       email: 'leader@make-it-all.co.uk',
@@ -121,15 +119,10 @@ const projectData: Prisma.ProjectCreateInput[] = _.range(1, 11).map<Prisma.Proje
   },
 }) satisfies Prisma.ProjectCreateInput).concat([
   {
-    name: 'Alice SHOULD NOT see this',
-    manager: {
-      connect: {
-        email: 'manager@make-it-all.co.uk',
-      },
-    },
+    name: 'ONLY Manager, John & Jane should see this',
     leader: {
       connect: {
-        email: 'leader@make-it-all.co.uk',
+        email: 'john@make-it-all.co.uk',
       },
     },
     members: {
@@ -142,14 +135,9 @@ const projectData: Prisma.ProjectCreateInput[] = _.range(1, 11).map<Prisma.Proje
   },
   {
     name: 'VERYYYYYYYYYYYYYYYYYYYYYYYYYYYYY LONGGGGGGGGGGGGGGGGGGGGGGGGGGGG NAME',
-    manager: {
-      connect: {
-        email: 'manager@make-it-all.co.uk',
-      },
-    },
     leader: {
       connect: {
-        email: 'leader@make-it-all.co.uk',
+        email: 'john@make-it-all.co.uk',
       },
     },
     members: {
@@ -362,11 +350,14 @@ async function makeRandomUser(): Promise<Prisma.UserCreateInput> {
   const numberOfPosts = _.random(1, 11);
   const posts = await Promise.all(_.range(numberOfPosts).map(makeRandomPost));
 
+  const isManager = _.random() > 0.3;
+
   return {
     email,
     hashedPassword: await testPassword(),
     name,
     inviteToken: managerInviteToken(),
+    isManager,
     posts: {
       create: posts,
     },

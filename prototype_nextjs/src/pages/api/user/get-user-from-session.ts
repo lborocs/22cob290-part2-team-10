@@ -33,6 +33,7 @@ export default async function handler(
       id: true,
       email: true,
       name: true,
+      isManager: true,
     },
   });
 
@@ -42,6 +43,7 @@ export default async function handler(
       email: user.email,
       name: user.name,
       image: null,
+      isManager: user.isManager,
     },
   });
 }

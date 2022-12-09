@@ -13,10 +13,6 @@ datasource db {
   url      = "file:./dev.db"
 }
 
-// TODO: consider (discuss) using `username` instead of email, which will be the portion before @ in their email
-// it's unique and never changing, like email
-// ^ probably not right
-
 // TODO: things like (can clarify with client?):
 // - manHours for project
 // - estimatedDuration for task
@@ -30,9 +26,6 @@ datasource db {
 //   - content String
 //   - dateChanged DateTime
 
-// TODO?: model team, waiting for response from stakeholders
-
-// company-wide role?
 model User {
   id             String  @id @default(uuid())
   email          String  @unique // because emails are case insensitive, we need to store them in lowercase
@@ -43,8 +36,8 @@ model User {
   avatarBg       String  @default("#e2ba39")
   avatarFg       String  @default("#ffffff")
 
+  isManager        Boolean       @default(false)
   // projects
-  managedProjects  Project[]     @relation("ProjectManager")
   ledProjects      Project[]     @relation("ProjectLeader")
   assignedProjects Project[]     @relation("ProjectMembers")
   // tasks from ALL projects
@@ -63,14 +56,12 @@ model User {
 // ------------------------------------------
 
 model Project {
-  id        Int           @id @default(autoincrement())
-  name      String
-  managerId String
-  manager   User          @relation("ProjectManager", fields: [managerId], references: [id])
-  leaderId  String
-  leader    User          @relation("ProjectLeader", fields: [leaderId], references: [id])
-  members   User[]        @relation("ProjectMembers")
-  tasks     ProjectTask[] @relation("ProjectTasks")
+  id       Int           @id @default(autoincrement())
+  name     String
+  leaderId String
+  leader   User          @relation("ProjectLeader", fields: [leaderId], references: [id])
+  members  User[]        @relation("ProjectMembers")
+  tasks    ProjectTask[] @relation("ProjectTasks")
 }
 
 model ProjectTask {
