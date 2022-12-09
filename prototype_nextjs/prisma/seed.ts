@@ -271,10 +271,7 @@ const postData: Prisma.PostCreateInput[] = [
         email: 'alice@make-it-all.co.uk',
       },
     },
-    title: 'Alice made this post!',
-    summary: 'posted sometime between 1/1/22 and today',
-    datePosted: new Date(randomTimeMs()),
-    content: 'Well, sometimes you just gotta do what you gotta do',
+    // datePosted: new Date(randomTimeMs()),
     topics: {
       connectOrCreate: [
         {
@@ -305,6 +302,21 @@ const postData: Prisma.PostCreateInput[] = [
         },
       ],
     },
+    history: {
+      create: [
+        {
+          editor: {
+            connect: {
+              email: 'alice@make-it-all.co.uk',
+            },
+          },
+          title: 'Alice made this post!',
+          summary: 'posted sometime between 1/1/22 and today',
+          content: 'Well, sometimes you just gotta do what you gotta do',
+          date: new Date(randomTimeMs()),
+        },
+      ],
+    },
   },
   {
     author: {
@@ -312,9 +324,6 @@ const postData: Prisma.PostCreateInput[] = [
         email: 'john@make-it-all.co.uk',
       },
     },
-    title: 'A post by John',
-    summary: 'john\'s post, posted today*',
-    content: 'Oh hello there!\n* the day db was seeded',
     topics: {
       connectOrCreate: [
         {
@@ -335,6 +344,20 @@ const postData: Prisma.PostCreateInput[] = [
         },
       ],
     },
+    history: {
+      create: [
+        {
+          editor: {
+            connect: {
+              email: 'john@make-it-all.co.uk',
+            },
+          },
+          title: 'A post by John',
+          summary: 'john\'s post, posted today*',
+          content: 'Oh hello there!\n* the day db was seeded',
+        },
+      ],
+    },
   },
 ];
 
@@ -348,7 +371,7 @@ async function makeRandomUser(): Promise<Prisma.UserCreateInput> {
   const email = `${firstName}@make-it-all.co.uk`.toLowerCase();
 
   const numberOfPosts = _.random(1, 11);
-  const posts = await Promise.all(_.range(numberOfPosts).map(makeRandomPost));
+  const posts = await Promise.all(_.range(numberOfPosts).map(makeRandomPost.bind(undefined, email)));
 
   const isManager = _.random() > 0.3;
 
@@ -364,7 +387,7 @@ async function makeRandomUser(): Promise<Prisma.UserCreateInput> {
   };
 }
 
-async function makeRandomPost(): Promise<Prisma.PostUncheckedCreateWithoutAuthorInput> {
+async function makeRandomPost(authorEmail: string): Promise<Prisma.PostUncheckedCreateWithoutAuthorInput> {
   const title = lorem.generateSentences(1);
   const summary = lorem.generateSentences(1);
   const content = lorem.generateParagraphs(_.random(1, 5));
@@ -392,10 +415,9 @@ async function makeRandomPost(): Promise<Prisma.PostUncheckedCreateWithoutAuthor
   }
   const upvoters = await getUpvotesUsers();
 
+  const adminEdited = _.random() > 0.2;
+
   return {
-    title,
-    summary,
-    content,
     upvotes: {
       connect: upvoters.map((email) => ({
         email,
@@ -412,6 +434,31 @@ async function makeRandomPost(): Promise<Prisma.PostUncheckedCreateWithoutAuthor
           },
         })
       ),
+    },
+    history: {
+      create: [
+        {
+          editor: {
+            connect: {
+              email: authorEmail,
+            },
+          },
+          title,
+          summary,
+          content,
+        },
+      ].concat(adminEdited ? [
+        {
+          editor: {
+            connect: {
+              email: 'admin@make-it-all.co.uk',
+            },
+          },
+          title: `ADMIN edited: ${title}`,
+          summary,
+          content,
+        },
+      ] : []),
     },
   };
 }
@@ -501,10 +548,16 @@ async function main() {
               name: true,
             },
           },
+          history: {
+            orderBy: {
+              date: 'desc',
+            },
+            take: 1,
+          },
         },
       });
 
-      console.log(`Created post with id: ${post.id} (title: ${post.title}), authored by name: ${post.author.name}`);
+      console.log(`Created post with id: ${post.id} (title: ${post.history[0].title}), authored by name: ${post.author.name}`);
     }
   }, {
     timeout: 15_000, // 15 seconds timeout

@@ -2,17 +2,26 @@ import type { Prisma } from '@prisma/client';
 
 type PostWithDate = Prisma.PostGetPayload<{
   select: {
-    datePosted: true
+    history: {
+      select: {
+        date: true,
+      },
+    },
   },
 }>;
 
-export type SerializablePost<T extends PostWithDate> = Omit<T, 'datePosted'> & {
-  datePosted: number
+export type SerializablePost<T extends PostWithDate> = T & {
+  history: {
+    date: number
+  }[]
 };
 
 export function asSerializablePost<T extends PostWithDate>(post: T): SerializablePost<T> {
   return {
     ...post,
-    datePosted: post.datePosted.getTime(),
+    history: post.history.map((history) => ({
+      ...history,
+      date: history.date.getTime(),
+    })),
   };
 }

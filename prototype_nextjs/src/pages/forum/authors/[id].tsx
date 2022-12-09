@@ -40,7 +40,7 @@ const AuthorPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>
           {author.posts.map((post, index) => (
             <div key={index}>
               <Link href={`/forum/posts/${hashids.encode(post.id)}`}>
-                {post.title} (Posted {new Date(post.datePosted).toLocaleDateString()})
+                {post.history[0].title} (Posted {new Date(post.history[0].date).toLocaleDateString()})
               </Link>
             </div>
           ))}
@@ -78,8 +78,17 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
     include: {
       posts: {
-        orderBy: {
-          datePosted: 'desc',
+        include: {
+          history: {
+            orderBy: {
+              date: 'desc',
+            },
+            take: 1,
+            select: {
+              date: true,
+              title: true,
+            },
+          },
         },
       },
     },
