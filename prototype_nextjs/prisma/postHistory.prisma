@@ -39,6 +39,7 @@ model User {
   // forum
   posts             Post[]        @relation("PostAuthor")
   editedPostHistory PostHistory[] @relation("PostEditor")
+  upvotedPosts      Post[]        @relation("PostUpvotes")
 }
 
 // ------------------------------------------
@@ -86,9 +87,9 @@ model Post {
   title           String
   summary         String
   originalContent String
-  upvotes         Int           @default(0)
   topics          PostTopic[]
   history         PostHistory[]
+  upvotes         User[]        @relation("PostUpvotes")
 }
 
 // many-to-many relationship table representing User <-> Post
