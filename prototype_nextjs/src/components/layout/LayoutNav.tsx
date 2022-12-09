@@ -2,17 +2,16 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Nav from 'react-bootstrap/Nav';
 
+import useUserStore from '~/store/userStore';
 import TextAvatar from '~/components/TextAvatar';
-
-// TODO: dashboard might depend on if user role is company-wide project manager
 
 export default function LayoutNav() {
   const router = useRouter();
-  const route = router.pathname;
+  const isManager = useUserStore((state) => state.user.isManager);
 
   return (
     <Nav
-      activeKey={route}
+      activeKey={router.pathname}
       className="align-items-lg-center"
     >
       <Link href="/home" passHref legacyBehavior>
@@ -24,14 +23,14 @@ export default function LayoutNav() {
       <Link href="/projects" passHref legacyBehavior>
         <Nav.Link>Projects</Nav.Link>
       </Link>
-      {/* {(role === Role.MANAGER || role === Role.TEAM_LEADER) && (
-        <Link href="/dashboard" passHref legacyBehavior>
-          <Nav.Link>Dashboard</Nav.Link>
-        </Link>
-      )} */}
       <Link href="/dashboard" passHref legacyBehavior>
         <Nav.Link>Dashboard</Nav.Link>
       </Link>
+      {isManager && (
+        <Link href="/staff_assignment" passHref legacyBehavior>
+          <Nav.Link>Staff Assignment</Nav.Link>
+        </Link>
+      )}
       <Link href="/profile" passHref legacyBehavior>
         <Nav.Link><Profile /></Nav.Link>
       </Link>

@@ -1,26 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { unstable_getServerSession } from 'next-auth/next';
+import type { Prisma } from '@prisma/client';
 
 import prisma from '~/lib/prisma';
-import { whereUserHasAccessToProject } from '~/lib/projects';
+import { whereEmployeeHasAccessToProject } from '~/lib/projects';
 import type { ErrorResponse, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
-async function getProjects(userId: string) {
-  const projects = await prisma.project.findMany({
-    where: {
-      ...whereUserHasAccessToProject(userId),
-    },
-    select: {
-      id: true,
-      name: true,
-    },
-  });
-
-  return projects;
-}
-
-export type ResponseSchema = Awaited<ReturnType<typeof getProjects>>;
+export type ResponseSchema = Prisma.ProjectGetPayload<{
+  select: {
+    id: true,
+    name: true,
+  },
+}>[];
 
 export default async function handler(
   req: NextApiRequest,
@@ -36,9 +28,26 @@ export default async function handler(
     return res.status(401).json({ error: 'You must be signed in.' });
   }
 
-  const userId = (session.user as SessionUser).id;
+  const user = (session.user as SessionUser);
 
-  const projects = await getProjects(userId);
+  let projects: ResponseSchema;
+
+  if (user.isManager) {
+    projects = await prisma.project.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+  } else {
+    projects = await prisma.project.findMany({
+      where: whereEmployeeHasAccessToProject(user.id),
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+  }
 
   res.status(200).json(projects);
 }

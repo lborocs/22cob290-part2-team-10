@@ -7,7 +7,7 @@ import type { PageLayout } from '~/components/Layout';
 /**
  * Workaround so we don't have to use `Layout` in every page.
  *
- * Works by adding these properties to the default export (`Component` in `App`)
+ * Works by adding these properties to the default export (`Component` in `_app`)
  *  of the page.
  *
  * @note using the layout requires `noAuth` to be falsy
@@ -24,15 +24,14 @@ export interface SessionUser extends User {
   name: string
   email: string
   image: null
+  isManager: boolean
 }
 
 export type ErrorResponse = {
   error: string
 };
 
-// TODO: might have to change to TeamRole?
 export enum ProjectRole {
-  MANAGER,
   LEADER,
   MEMBER,
 }

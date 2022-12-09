@@ -23,6 +23,7 @@ export const authOptions: NextAuthOptions = {
         refetchUser: {},
       },
       async authorize(credentials, req) {
+        console.log('AUTHORIZE');
         /**
          * Workaround to update the user's details in the cookie/session stored on the client. Need
          *  a workaround because Next-Auth doesn't currently support doing mutating the cookie/session.
@@ -65,6 +66,7 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     async signIn({ user, account }) {
+      console.log('SIGNIN');
       const { leftCompany } = await prisma.user.findUniqueOrThrow({
         where: {
           id: user.id,
@@ -91,10 +93,13 @@ export const authOptions: NextAuthOptions = {
       return baseUrl;
     },
 
-    async jwt({ token, user, account }) {
+    async jwt({ token, user: _user, account }) {
+      const user = _user as SessionUser | undefined;
+
       if (user && account) {
         // modify token...
         token.uid = user.id;
+        token.isManager = user.isManager;
       }
 
       return token;
@@ -107,6 +112,7 @@ export const authOptions: NextAuthOptions = {
         // modify session...
         const sUser = session.user as SessionUser;
         sUser.id = token.uid as string;
+        sUser.isManager = token.isManager as boolean;
       }
 
       return session;

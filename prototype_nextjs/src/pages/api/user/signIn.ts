@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import type { z } from 'zod';
+import { boolean, z } from 'zod';
 
 import prisma from '~/lib/prisma';
 import { isCorrectPassword } from '~/lib/user';
@@ -54,6 +54,7 @@ export default async function handler(
       email: true,
       name: true,
       hashedPassword: true,
+      isManager: true,
     },
   });
 
@@ -74,6 +75,7 @@ export default async function handler(
       email: user.email,
       name: user.name,
       image: null,
+      isManager: user.isManager,
     },
   });
 }
