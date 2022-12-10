@@ -4,7 +4,6 @@ import { unstable_getServerSession } from 'next-auth/next';
 import { signOut } from 'next-auth/react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { Toaster } from 'react-hot-toast';
 
@@ -28,7 +27,7 @@ const ProfilePage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps
 
       <Toaster />
 
-      <Container as="section">
+      <section>
         <Row>
           <Col sm="auto" className="d-flex justify-content-center pb-4 pe-md-4">
             <TextAvatarEditor />
@@ -40,7 +39,7 @@ const ProfilePage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps
             <UserDetails />
           </Col>
         </Row>
-      </Container>
+      </section>
 
       <br />
       <br />
@@ -62,7 +61,7 @@ const ProfilePage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps
       <Button variant="danger" onClick={() => signOut({ callbackUrl: '/' })}>
         Sign Out
       </Button>
-    </main>
+    </main >
   );
 };
 
