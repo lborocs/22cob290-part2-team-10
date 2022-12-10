@@ -1,10 +1,7 @@
 import { forwardRef } from 'react';
 import type { FormControlProps } from 'react-bootstrap';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import Form from 'react-bootstrap/Form';
 
 export interface FloatingEmailFieldProps extends FormControlProps {
   name: string
@@ -21,43 +18,6 @@ export interface FloatingEmailFieldProps extends FormControlProps {
  * - Correct `autocomplete` of `username`
  * - Easier API for providing form feedback
  */
-// export default forwardRef(function EmailField({
-//   name,
-//   controlId,
-//   feedback,
-//   feedbackTooltip = false,
-//   onlyFeedbackOutline = false,
-//   ...props
-// }: EmailFieldProps, ref: React.ForwardedRef<HTMLInputElement>) {
-//   return (
-//     <Form.Group
-//       as={Row}
-//       className={`mb-3 ${feedbackTooltip ? 'position-relative' : ''}`}
-//       controlId={controlId}
-//     >
-//       <Form.Label column sm={3}>Email</Form.Label>
-//       <Col sm={9}>
-//         <Form.Control
-//           type="email"
-//           autoComplete="username"
-//           name={name}
-//           placeholder="Enter email"
-//           ref={ref}
-//           required
-//           {...props}
-//         />
-//         <Form.Control.Feedback
-//           type="invalid"
-//           tooltip={feedbackTooltip}
-//           className={onlyFeedbackOutline ? 'd-none' : ''}
-//         >
-//           {feedback}
-//         </Form.Control.Feedback>
-//       </Col>
-//     </Form.Group>
-//   );
-// });
-
 export default forwardRef(function FloatingEmailField({
   name,
   controlId,
