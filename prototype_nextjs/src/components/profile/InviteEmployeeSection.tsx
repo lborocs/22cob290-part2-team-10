@@ -32,11 +32,13 @@ export default function InviteEmployeeSection() {
     setCopyStatus(CopyStatus.NOT_COPIED);
   };
 
-  const fetchInviteUrl = (config?: AxiosRequestConfig) => {
-    axios.get<InviteUrlResponse>('/api/user/get-invite-url', config)
-      .then(({ data }) => setInviteUrl(data.inviteUrl))
-      .catch((e) => console.error(e))
-      ;
+  const fetchInviteUrl = async (config?: AxiosRequestConfig) => {
+    try {
+      const { data } = await axios.get<InviteUrlResponse>('/api/user/get-invite-url', config);
+      setInviteUrl(data.inviteUrl);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const copyInviteUrl = async () => {
@@ -49,9 +51,13 @@ export default function InviteEmployeeSection() {
     }
   };
 
-  const regenerateInvite = () => {
+  const regenerateInvite = async () => {
     reset();
-    fetchInviteUrl();
+
+    // artificial delay
+    await new Promise((res) => setTimeout(res, 400));
+
+    await fetchInviteUrl();
   };
 
   const fetchingInviteUrl = inviteUrl === '';
