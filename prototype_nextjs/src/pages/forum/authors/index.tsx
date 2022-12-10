@@ -75,7 +75,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         select: {
           _count: {
             select: {
-              upvotes: true,
+              upvoters: true,
             },
           },
         },
@@ -89,7 +89,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   });
 
   const authors = result.map((author) => {
-    const totalUpvotes = author.posts.reduce((acc, post) => acc + post._count.upvotes, 0);
+    const totalUpvotes = author.posts.reduce((acc, post) => acc + post._count.upvoters, 0);
 
     return {
       ...author,
