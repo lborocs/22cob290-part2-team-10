@@ -130,7 +130,9 @@ TODO
 
 - UI: React.Js
 - Full stack framework (handles routing, SSR, etc.): Next.Js
-- Database ORM: prisma
+- Database: MySQL
+- Database ORM: Prisma
+- HTTP Client: axios
 
 ### How we need to code
 
