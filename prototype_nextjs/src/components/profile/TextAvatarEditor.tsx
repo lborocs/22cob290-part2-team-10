@@ -193,6 +193,9 @@ export default function TextAvatarEditor() {
             size="sm"
             isLoading={isSaving}
             loadingContent="Saving"
+            style={{
+              width: '5.7em',
+            }}
           >
             Save
           </LoadingButton>

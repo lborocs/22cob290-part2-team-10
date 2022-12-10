@@ -194,6 +194,9 @@ export default function ChangePasswordSection() {
             isLoading={changingPw}
             loadingContent="Changing"
             disabled={!isValid}
+            style={{
+              width: '7em',
+            }}
           >
             Change
           </LoadingButton>
