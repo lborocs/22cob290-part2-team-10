@@ -79,6 +79,9 @@ export default function InviteEmployeeSection() {
       <Button
         variant="dark"
         onClick={() => setShowModal(true)}
+        style={{
+          width: '10em',
+        }}
       >
         Generate invite
       </Button>

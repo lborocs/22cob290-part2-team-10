@@ -45,7 +45,7 @@ const ProfilePage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps
       <br />
 
       <section>
-        <Row>
+        <Row xs={1} sm={2}>
           <Col>
             <ChangePasswordSection />
           </Col>

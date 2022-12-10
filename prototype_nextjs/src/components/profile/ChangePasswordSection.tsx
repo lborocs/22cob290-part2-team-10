@@ -69,6 +69,9 @@ export default function ChangePasswordSection() {
       <Button
         variant="dark"
         onClick={() => setShowModal(true)}
+        style={{
+          width: '10em',
+        }}
       >
         Change
       </Button>
