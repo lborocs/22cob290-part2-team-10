@@ -6,7 +6,7 @@ import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 import type { z } from 'zod';
 
-import SignUpSchema from '~/schemas/user/signup'; // TODO: use
+import SignUpSchema from '~/schemas/user/signup';
 import type { AppPage } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import type { ResponseSchema as SignUpResponse } from '~/pages/api/user/signUp';
@@ -46,7 +46,7 @@ const SignupPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>
           toast.error('Your invite token has already been used!');
           break;
 
-        default:
+        default: // should never happen
           console.error(data);
           toast.error('Sign up failed, please try again later.');
       }
