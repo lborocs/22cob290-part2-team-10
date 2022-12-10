@@ -46,7 +46,7 @@ export default forwardRef(function PasswordField({
   return (
     <Form.Group
       as={Row}
-      className={`mb-3 ${feedbackTooltip ? 'position-relative' : ''}`}
+      className={feedbackTooltip ? 'position-relative' : ''}
       controlId={controlId}
     >
       <Form.Label column sm={3}>{label}</Form.Label>

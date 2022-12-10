@@ -5,14 +5,15 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { unstable_getServerSession } from 'next-auth/next';
 import { signIn } from 'next-auth/react';
+import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { Formik } from 'formik';
 import { withZodSchema } from 'formik-validator-zod';
 import toast, { Toaster } from 'react-hot-toast';
 
-import EmailField from '~/components/EmailField';
-import PasswordField from '~/components/PasswordField';
+import FloatingEmailField from '~/components/FloatingEmailField';
+import FloatingPasswordField from '~/components/FloatingPasswordField';
 import LoadingButton from '~/components/LoadingButton';
 import SignInSchema from '~/schemas/user/signIn';
 import type { AppPage } from '~/types';
@@ -102,12 +103,12 @@ const SignInPage: AppPage = () => {
         position="top-center"
       />
 
-      <main className={`vh-100 d-flex align-items-center justify-content-center flex-column ${styles.main}`}>
-        <div>
+      <main className={`vh-100 vw-100 d-flex align-items-center justify-content-center ${styles.main}`}>
+        <div className={styles['form-wrapper']}>
           <Image
+            className={`mb-3 ${styles.logo}`}
             src={makeItAllLogo}
             alt="Make-It-All Logo"
-            className="mb-3"
             priority
           />
 
@@ -131,42 +132,52 @@ const SignInPage: AppPage = () => {
             }) => (
               <Form
                 onSubmit={handleSubmit}
+                className="w-100"
                 noValidate
               >
-                <EmailField
-                  name="email"
-                  controlId="email"
-                  feedback={touched.email ? errors.email : undefined}
-                  value={values.email}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  isInvalid={touched.email && errors.email !== undefined}
-                  feedbackTooltip
-                  onlyFeedbackOutline={errors.email?.length === 0}
-                />
-                <PasswordField
-                  name="password"
-                  controlId="password"
-                  feedback={touched.password ? errors.password : undefined}
-                  value={values.password}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  isInvalid={touched.password && errors.password !== undefined}
-                  feedbackTooltip
-                  onlyFeedbackOutline={errors.password?.length === 0}
-                  policyTooltip
-                />
+                <Form.Group as={Row} className="mb-3">
+                  <Col>
+                    <FloatingEmailField
+                      name="email"
+                      controlId="email"
+                      feedback={touched.email ? errors.email : undefined}
+                      value={values.email}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      isInvalid={touched.email && errors.email !== undefined}
+                      feedbackTooltip
+                      onlyFeedbackOutline={errors.email?.length === 0}
+                    />
+                  </Col>
+                </Form.Group>
+                <Form.Group as={Row} className="mb-3">
+                  <Col>
+                    <FloatingPasswordField
+                      name="password"
+                      controlId="password"
+                      feedback={touched.password ? errors.password : undefined}
+                      value={values.password}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      isInvalid={touched.password && errors.password !== undefined}
+                      feedbackTooltip
+                      onlyFeedbackOutline={errors.password?.length === 0}
+                      policyTooltip
+                    />
+                  </Col>
+                </Form.Group>
                 <Form.Group as={Row}>
-                  <div className="d-flex justify-content-center">
+                  <Col>
                     <LoadingButton
                       variant="secondary"
                       type="submit"
                       isLoading={isSubmitting}
                       disabled={!isValid}
+                      className={styles['sign-in-btn']}
                     >
                       Sign In
                     </LoadingButton>
-                  </div>
+                  </Col>
                 </Form.Group>
               </Form>
             )}

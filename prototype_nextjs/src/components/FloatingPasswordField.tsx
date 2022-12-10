@@ -38,7 +38,7 @@ export default forwardRef(function FloatingPasswordField({
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <InputGroup className="mb-3">
+    <InputGroup>
       <FloatingLabel
         controlId={controlId}
         label="Password"
