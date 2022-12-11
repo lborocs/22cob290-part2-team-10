@@ -1,0 +1,11 @@
+Dockerfile
+docker-compose.yaml
+.dockerignore
+node_modules
+npm-debug.log
+README.md
+.next
+.git
+.gitignore
+
+prisma/dev.db
