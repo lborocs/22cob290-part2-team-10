@@ -4,7 +4,7 @@ From the project root, run these commands in the terminal:
 
 1. Open Part 2 directory
 
-```
+```s
 cd prototype_nextjs
 ```
 
