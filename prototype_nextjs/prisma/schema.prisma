@@ -7,10 +7,8 @@ generator client {
 
 // sqlite doesn't support enums :/
 datasource db {
-  // provider = "mysql"
-  // url      = env("DATABASE_URL")
   provider = "sqlite"
-  url      = "file:./dev.db"
+  url      = env("DATABASE_URL")
 }
 
 // TODO: things like (can clarify with client?):
@@ -18,11 +16,14 @@ datasource db {
 // - estimatedDuration for task
 // - deadline for project/task?
 
+// TODO: rename Post to Article?
+
 model User {
   id             String  @id @default(uuid())
   email          String  @unique // because emails are case insensitive, we need to store them in lowercase
   hashedPassword String
   name           String
+  isAdmin        Boolean @default(false)
   leftCompany    Boolean @default(false)
   inviteToken    String?
   avatarBg       String  @default("#e2ba39")

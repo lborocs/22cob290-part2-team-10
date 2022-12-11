@@ -1,6 +1,6 @@
 import { PrismaClient, type Prisma } from '@prisma/client';
 import * as dotenv from 'dotenv';
-import _, { StringNullableChain } from 'lodash';
+import _ from 'lodash';
 import { LoremIpsum } from 'lorem-ipsum';
 
 import { hashPassword } from '../src/lib/user';
@@ -54,6 +54,7 @@ const getUserData = async (): Promise<Prisma.UserCreateInput[]> => [
     email: 'admin@make-it-all.co.uk',
     hashedPassword: await testPassword(),
     name: 'Admin',
+    isAdmin: true,
     isManager: true,
   },
   {
