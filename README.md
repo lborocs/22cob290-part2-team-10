@@ -128,7 +128,7 @@ https://cloud.google.com/nodejs/getting-started/getting-started-on-compute-engin
 
 TODO
 
-- Build Tool: pnpm
+- Package Manager: pnpm
 - UI: React.Js
 - Full stack framework (handles routing, SSR, etc.): Next.Js
 - Database: MySQL
