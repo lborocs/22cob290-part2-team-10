@@ -1,0 +1,31 @@
+version: '3.7'
+
+# docker-compose -p t10gp-prod -f docker-compose.prod.yaml --env-file .env.docker
+
+services:
+  db:
+    image: mysql:8.0
+    expose:
+      - 3306
+    environment:
+      - MYSQL_DEFAULT_AUTH=caching_sha2_password
+      - MYSQL_ROOT_PASSWORD=need_to_generate_production_root_password
+      - MYSQL_DATABASE=${DATABASE_NAME}
+      - MYSQL_USER=${DATABASE_USER}
+      - MYSQL_PASSWORD=${DATABASE_PASSWORD}
+    volumes:
+      - db-data:/var/lib/mysql
+
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - .env.docker
+    depends_on:
+      - db
+
+volumes:
+  db-data:

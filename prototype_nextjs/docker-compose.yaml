@@ -1,0 +1,35 @@
+version: '3.7'
+
+# docker-compose -p t10gp-dev --env-file .env.development
+
+services:
+  db:
+    # image: mysql:8.0
+    build:
+      context: ./mysql
+      args:
+        - name=value
+        - MYSQL_ROOT_PASSWORD=asdf
+        - MYSQL_DATABASE=${DATABASE_NAME}
+        - MYSQL_USER=${DATABASE_USER}
+        - MYSQL_PASSWORD=${DATABASE_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+
+  # app:
+  #   build: .
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - NODE_ENV=production
+  #   env_file:
+  #     # - .env # it gets included in the standalone anyway
+  #     # - .env.docker
+  #     - .env.development
+  #   depends_on:
+  #     - db
+
+volumes:
+  db-data:
