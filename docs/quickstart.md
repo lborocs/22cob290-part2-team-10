@@ -8,16 +8,18 @@ From the project root, run these commands in the terminal:
 cd prototype_nextjs
 ```
 
-2. Install `npm` dependencies
+> **You need to have [pnpm](https://pnpm.io/) installed**
+
+1. Install dependencies
 
 ```
-npm install
+pnpm install
 ```
 
 3. Setup local development database
 
 ```
-npx prisma migrate dev
+npm run migrate:dev
 ```
 
 > Note it may give an error like `email` failed unique constant. This is because some users are generated
@@ -39,5 +41,5 @@ npm run dev
 ## Shorthand
 
 ```
-cd prototype_nextjs && npm i && npx prisma migrate dev && npm run dev
+cd prototype_nextjs && pnpm i && npm run migrate:dev && npm run dev
 ```
