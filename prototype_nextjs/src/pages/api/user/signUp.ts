@@ -1,12 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { tuple, z } from 'zod';
-import { getEmailFromTokenIfValid } from '~/lib/inviteToken';
+import type { z } from 'zod';
 
 import prisma from '~/lib/prisma';
+import { getEmailFromTokenIfValid } from '~/lib/inviteToken';
 import { hashPassword } from '~/lib/user';
 import SignUpSchema from '~/schemas/user/signup';
 
-// TODO*: how specific feedback do we want to give?
 export type ErrorReason =
   | 'ALREADY_EXISTS'
   | 'INVALID_TOKEN'
