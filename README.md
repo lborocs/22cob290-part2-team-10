@@ -16,6 +16,7 @@
   - [TODO (not from feedback)](#todo-not-from-feedback)
   - [How it works (Overview)](#how-it-works-overview)
   - [Architecture (?)](#architecture-)
+    - [Docker](#docker)
   - [How we need to code](#how-we-need-to-code)
     - [Layout/Sidebar](#layoutsidebar)
       - [Examples](#examples)
@@ -134,6 +135,18 @@ TODO
 - Database: MySQL
 - Database ORM: Prisma
 - HTTP Client: axios
+
+#### Docker
+
+Using Docker Compose to run both the app and database together.
+
+> > This Docker Compose file defines two services: `db` and `app`. The `db` service is based on the mysql:8.0 image
+> > and exposes port 3306. It also defines several environment variables that configure the database. The `app`
+> > service is built from the current directory and exposes port 3000. It also depends on the `db` service, which
+> > means that the `db` service will be started before the `app` service. Finally, the file defines a volume called
+> > `db-data`, which is used by the `db` service to store persistent data.
+>
+> ChatGPT explaining [docker-compose.prod.yaml](prototype_nextjs/docker-compose.prod.yaml)
 
 ### How we need to code
 
