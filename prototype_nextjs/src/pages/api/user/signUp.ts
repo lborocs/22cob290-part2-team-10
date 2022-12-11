@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import type { z } from 'zod';
+import { tuple, z } from 'zod';
 import { getEmailFromTokenIfValid } from '~/lib/inviteToken';
 
 import prisma from '~/lib/prisma';
@@ -55,6 +55,34 @@ export default async function handler(
     success: false,
     reason: 'ALREADY_EXISTS',
   });
+
+  // on first run of prod, admin has to create their account
+  if (inviteToken === process.env.ADMIN_INVITE_TOKEN) {
+    const adminExists = await prisma.user.count({
+      where: {
+        isAdmin: true,
+      },
+    }) > 0;
+
+    if (adminExists) return res.status(200).json({
+      success: false,
+      reason: 'USED_TOKEN',
+    });
+
+    await prisma.user.create({
+      data: {
+        email: email.toLowerCase(),
+        name,
+        hashedPassword: await hashPassword(password),
+        isAdmin: true,
+        isManager: true,
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+    });
+  }
 
   const inviterEmail = getEmailFromTokenIfValid(inviteToken);
 
