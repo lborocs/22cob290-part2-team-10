@@ -13,6 +13,8 @@ import useUserStore from '~/store/userStore';
 import ChangeNameSchema from '~/schemas/user/changeName';
 import type { RequestSchema as ChangeNamePayload, ResponseSchema as ChangeNameResponse } from '~/pages/api/user/change-name';
 
+import styles from '~/styles/Profile.module.css';
+
 type DetailsFormData = {
   name: string
 };
@@ -132,6 +134,7 @@ export default function UserDetails() {
                 type="submit"
                 variant="success"
                 disabled={!dirty || !isValid}
+                className={styles.button}
               >
                 Update profile
               </Button>

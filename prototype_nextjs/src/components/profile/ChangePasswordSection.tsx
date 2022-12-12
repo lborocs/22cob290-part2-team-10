@@ -14,6 +14,8 @@ import useUserStore from '~/store/userStore';
 import ChangePasswordSchema from '~/schemas/user/changePassword';
 import type { RequestSchema as ChangePwPayload, ResponseSchema as ChangePwResponse } from '~/pages/api/user/change-password';
 
+import styles from '~/styles/Profile.module.css';
+
 type ChangePwFormData = {
   currentPassword: string
   newPassword: string
@@ -69,9 +71,7 @@ export default function ChangePasswordSection() {
       <Button
         variant="dark"
         onClick={() => setShowModal(true)}
-        style={{
-          width: '10em',
-        }}
+        className={styles.button}
       >
         Change
       </Button>

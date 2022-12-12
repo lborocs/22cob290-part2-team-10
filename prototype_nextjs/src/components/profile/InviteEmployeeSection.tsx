@@ -9,6 +9,8 @@ import axios, { type AxiosRequestConfig } from 'axios';
 import { copyToClipboard } from '~/utils';
 import type { ResponseSchema as InviteUrlResponse } from '~/pages/api/user/get-invite-url';
 
+import styles from '~/styles/Profile.module.css';
+
 enum CopyStatus {
   NOT_COPIED,
   FAILED,
@@ -85,9 +87,7 @@ export default function InviteEmployeeSection() {
       <Button
         variant="dark"
         onClick={() => setShowModal(true)}
-        style={{
-          width: '10em',
-        }}
+        className={styles.button}
       >
         Generate invite
       </Button>
