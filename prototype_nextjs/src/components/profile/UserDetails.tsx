@@ -54,16 +54,10 @@ export default function UserDetails() {
            *
            * @see [...nextauth].ts
            */
-          const resp = (await signIn('credentials', {
+          await signIn('credentials', {
             refetchUser: true,
             redirect: false,
-          }))!;
-
-          if (!resp.ok) { // shouldn't happen
-            setFieldError('name', '');
-            console.error(resp.error);
-            throw new Error(resp.error);
-          }
+          });
 
           setName(name);
 
