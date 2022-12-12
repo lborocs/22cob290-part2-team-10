@@ -98,9 +98,9 @@ export default function UserDetails() {
         dirty,
       }) => (
         <Form onSubmit={handleSubmit} noValidate>
-          <Row>
-            <Col md>
-              <FloatingLabel label="Name" className="mb-3" controlId="name">
+          <Row className="mb-3">
+            <Col>
+              <FloatingLabel label="Name" controlId="name">
                 <Form.Control
                   name="name"
                   placeholder="Enter Name"
@@ -116,9 +116,9 @@ export default function UserDetails() {
               </FloatingLabel>
             </Col>
           </Row>
-          <Row>
+          <Row className="mb-3">
             <Col>
-              <FloatingLabel label="Email" className="mb-3">
+              <FloatingLabel label="Email">
                 <Form.Control
                   value={email}
                   title="email"
@@ -129,7 +129,7 @@ export default function UserDetails() {
             </Col>
           </Row>
           <Row>
-            <div>
+            <Col>
               <Button
                 type="submit"
                 variant="success"
@@ -138,7 +138,7 @@ export default function UserDetails() {
               >
                 Update profile
               </Button>
-            </div>
+            </Col>
           </Row>
         </Form>
       )}
