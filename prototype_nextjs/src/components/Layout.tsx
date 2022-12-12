@@ -51,6 +51,8 @@ export default function Layout({
   const noSidebar = sidebar.type === SidebarType.NONE;
   const [showSidebar, setShowSidebar] = useState(true && !noSidebar);
 
+  const toggleSidebar = () => setShowSidebar((show) => !show);
+
   const getSidebarContent = (): React.ReactNode => {
     switch (sidebar.type) {
       case SidebarType.CUSTOM:
@@ -82,7 +84,7 @@ export default function Layout({
         <header>
           <NavigationBar
             noSidebar={noSidebar}
-            setShowSidebar={setShowSidebar}
+            toggleSidebar={toggleSidebar}
             title={title}
           />
         </header>
@@ -93,14 +95,14 @@ export default function Layout({
 }
 
 // left, center, right: https://stackoverflow.com/a/20362024
-const NavigationBar = ({ noSidebar, setShowSidebar, title }: {
+const NavigationBar = ({ noSidebar, toggleSidebar, title }: {
   noSidebar: boolean
-  setShowSidebar: React.Dispatch<React.SetStateAction<boolean>>
+  toggleSidebar: () => void
   title: React.ReactNode
 }) => {
   const toggleSidebarButton = !noSidebar && (
     <Button
-      onClick={() => setShowSidebar((show) => !show)}
+      onClick={toggleSidebar}
       className={styles['sidebar-toggle-btn']}
     >
       <FontAwesomeIcon icon={faAlignLeft} />
