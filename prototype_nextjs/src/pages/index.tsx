@@ -27,6 +27,7 @@ type SignInFormData = {
   password: string
 };
 
+// TODO: add create account link that takes to /signup
 const SignInPage: AppPage = () => {
   const router = useRouter();
 
@@ -162,7 +163,7 @@ const SignInPage: AppPage = () => {
                     policyTooltip
                   />
                 </div>
-                <div>
+                <div className={styles['sign-in-btn-wrapper']}>
                   <LoadingButton
                     variant="secondary"
                     type="submit"
