@@ -292,7 +292,7 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 > Will want a page/option to list posts made by a certain user.
 > Maybe on a post, make the author's name clickable and it'll take u to /forum/authors/[authorId]
 >
-> > Atm theres a link to `/forum/authors` in the forum sidebar
+> > Atm there's a link to `/forum/authors` in the forum sidebar
 
 | Page URL/Route                        | Owner | Status                | Completed             | Notes                                                                                                                                                              |
 |---------------------------------------|-------|-----------------------|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
