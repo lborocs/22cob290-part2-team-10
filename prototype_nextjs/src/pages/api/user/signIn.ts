@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { boolean, z } from 'zod';
+import type { z } from 'zod';
 
 import prisma from '~/lib/prisma';
 import { isCorrectPassword } from '~/lib/user';

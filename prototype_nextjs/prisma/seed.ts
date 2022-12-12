@@ -1,6 +1,6 @@
 import { PrismaClient, type Prisma } from '@prisma/client';
 import * as dotenv from 'dotenv';
-import _, { StringNullableChain } from 'lodash';
+import _ from 'lodash';
 import { LoremIpsum } from 'lorem-ipsum';
 
 import { hashPassword } from '../src/lib/user';
@@ -34,13 +34,13 @@ const lorem = new LoremIpsum({
  *
  * [Source](https://stackoverflow.com/a/9035732)
  */
-function randomTimeMs(): number {
-  const start = new Date(2022, 1, 1).getTime();
-  const end = Date.now();
+function randomTimeMs(start: Date = new Date(2022, 1, 1), end: Date = new Date()): number {
+  const startTime = start.getTime();
+  const endTime = end.getTime();
 
-  const diff = end - start;
+  const diff = endTime - startTime;
 
-  return start + (Math.random() * diff);
+  return startTime + (Math.random() * diff);
 }
 
 const testPassword = hashPassword.bind(null, 'TestPassword123!');
@@ -54,6 +54,7 @@ const getUserData = async (): Promise<Prisma.UserCreateInput[]> => [
     email: 'admin@make-it-all.co.uk',
     hashedPassword: await testPassword(),
     name: 'Admin',
+    isAdmin: true,
     isManager: true,
   },
   {
@@ -96,6 +97,8 @@ const getUserData = async (): Promise<Prisma.UserCreateInput[]> => [
     inviteToken: managerInviteToken(),
   },
 ];
+
+// TODO: seed user's todo list
 
 const projectData: Prisma.ProjectCreateInput[] = _.range(1, 11).map<Prisma.ProjectCreateInput>((num) => ({
   name: `Project ${num}`,
@@ -160,6 +163,7 @@ const taskData: Prisma.ProjectTaskCreateInput[] = [
     title: 'Alice\'s Task',
     description: 'desc',
     stage: 'TODO',
+    deadline: new Date(2023, 2, 10),
     tags: {
       create: {
         name: 'TestTag',
@@ -180,6 +184,7 @@ const taskData: Prisma.ProjectTaskCreateInput[] = [
     title: 'Manager\'s Task',
     description: 'Alice SHOULD see this',
     stage: 'COMPLETED',
+    deadline: new Date(randomTimeMs(new Date(), new Date(2023, 11, 31))),
     tags: {
       connectOrCreate: [
         {
@@ -217,6 +222,7 @@ const taskData: Prisma.ProjectTaskCreateInput[] = [
     title: 'Jane\'s Task',
     description: 'Alice SHOULD NOT see this',
     stage: 'IN_PROGRESS',
+    deadline: new Date(randomTimeMs(new Date(), new Date(2023, 11, 31))),
     tags: {
       connectOrCreate: [
         {
@@ -244,6 +250,7 @@ const taskData: Prisma.ProjectTaskCreateInput[] = [
     title: 'Project 2 Task',
     description: 'Alice should only have 1 task in project 1',
     stage: 'IN_PROGRESS',
+    deadline: new Date(randomTimeMs(new Date(), new Date(2023, 11, 31))),
     tags: {
       connectOrCreate: [
         {

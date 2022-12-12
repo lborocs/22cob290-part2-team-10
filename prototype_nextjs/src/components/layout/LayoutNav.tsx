@@ -28,7 +28,7 @@ export default function LayoutNav() {
       </Link>
       {isManager && (
         <Link href="/staff_assignment" passHref legacyBehavior>
-          <Nav.Link>Staff Assignment</Nav.Link>
+          <Nav.Link>Staff</Nav.Link>
         </Link>
       )}
       <Link href="/profile" passHref legacyBehavior>

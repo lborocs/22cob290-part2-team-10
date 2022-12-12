@@ -13,6 +13,8 @@ import useUserStore from '~/store/userStore';
 import ChangeNameSchema from '~/schemas/user/changeName';
 import type { RequestSchema as ChangeNamePayload, ResponseSchema as ChangeNameResponse } from '~/pages/api/user/change-name';
 
+import styles from '~/styles/Profile.module.css';
+
 type DetailsFormData = {
   name: string
 };
@@ -54,16 +56,10 @@ export default function UserDetails() {
            *
            * @see [...nextauth].ts
            */
-          const resp = (await signIn('credentials', {
+          await signIn('credentials', {
             refetchUser: true,
             redirect: false,
-          }))!;
-
-          if (!resp.ok) { // shouldn't happen
-            setFieldError('name', '');
-            console.error(resp.error);
-            throw new Error(resp.error);
-          }
+          });
 
           setName(name);
 
@@ -102,9 +98,9 @@ export default function UserDetails() {
         dirty,
       }) => (
         <Form onSubmit={handleSubmit} noValidate>
-          <Row>
-            <Col md>
-              <FloatingLabel label="Name" className="mb-3" controlId="name">
+          <Row className="mb-3">
+            <Col>
+              <FloatingLabel label="Name" controlId="name">
                 <Form.Control
                   name="name"
                   placeholder="Enter Name"
@@ -120,9 +116,9 @@ export default function UserDetails() {
               </FloatingLabel>
             </Col>
           </Row>
-          <Row>
+          <Row className="mb-3">
             <Col>
-              <FloatingLabel label="Email" className="mb-3">
+              <FloatingLabel label="Email">
                 <Form.Control
                   value={email}
                   title="email"
@@ -133,15 +129,16 @@ export default function UserDetails() {
             </Col>
           </Row>
           <Row>
-            <div>
+            <Col>
               <Button
                 type="submit"
                 variant="success"
                 disabled={!dirty || !isValid}
+                className={styles.button}
               >
                 Update profile
               </Button>
-            </div>
+            </Col>
           </Row>
         </Form>
       )}

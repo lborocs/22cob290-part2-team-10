@@ -43,6 +43,6 @@ export const PasswordSchema = z.string()
 // no trailing & leading spaces regex: https://stackoverflow.com/a/38935454
 export function nameSchema() {
   return z.string()
-    .regex(/^(?! )[a-z ]*(?<! )$/i, 'Invalid name')
+    .regex(/^[a-z][a-z ]*[a-z]$/i, 'Invalid name')
     .min(1, 'Name is required');
 }

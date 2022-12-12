@@ -1,7 +1,5 @@
 .wrapper {
     display: flex;
-    width: 100%;
-    align-items: stretch;
 }
 
 .sidebar-toggle-btn {
@@ -19,16 +17,13 @@
 .navbar {
     padding: 15px 10px;
     background: var(--primary-color);
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, .17);
     margin-bottom: 30px;
-    border-radius: 0;
-    border: none
 }
 
 .content {
     width: 100%;
     padding: 20px;
-    min-height: 100vh;
 
     /* pages can use flex-grow-1 to take rest of space */
     display: flex;

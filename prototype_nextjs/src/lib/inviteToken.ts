@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 // use JWT to generate an invite token that contains the inviter's email as payload
 // and expires a week from when it is generated
 
-const getSecret = () => process.env.INVITETOKEN_SECRET as string;
+const getSecret = () => process.env.INVITE_TOKEN_SECRET as string;
 
 /**
  * Returns a JWT token that is to be used as as invite token.

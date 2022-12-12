@@ -16,6 +16,7 @@
   - [TODO (not from feedback)](#todo-not-from-feedback)
   - [How it works (Overview)](#how-it-works-overview)
   - [Architecture (?)](#architecture-)
+    - [Docker](#docker)
   - [How we need to code](#how-we-need-to-code)
     - [Layout/Sidebar](#layoutsidebar)
       - [Examples](#examples)
@@ -128,11 +129,24 @@ https://cloud.google.com/nodejs/getting-started/getting-started-on-compute-engin
 
 TODO
 
+- Package Manager: pnpm
 - UI: React.Js
 - Full stack framework (handles routing, SSR, etc.): Next.Js
 - Database: MySQL
 - Database ORM: Prisma
 - HTTP Client: axios
+
+#### Docker
+
+Using Docker Compose to run both the app and database together.
+
+> > This Docker Compose file defines two services: `db` and `app`. The `db` service is based on the mysql:8.0 image
+> > and exposes port 3306. It also defines several environment variables that configure the database. The `app`
+> > service is built from the current directory and exposes port 3000. It also depends on the `db` service, which
+> > means that the `db` service will be started before the `app` service. Finally, the file defines a volume called
+> > `db-data`, which is used by the `db` service to store persistent data.
+>
+> ChatGPT explaining [docker-compose.prod.yaml](prototype_nextjs/docker-compose.prod.yaml)
 
 ### How we need to code
 
@@ -278,34 +292,26 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 > Will want a page/option to list posts made by a certain user.
 > Maybe on a post, make the author's name clickable and it'll take u to /forum/authors/[authorId]
 >
-> > Atm theres a link to `/forum/authors` in the forum sidebar
+> > Atm there's a link to `/forum/authors` in the forum sidebar
 
-| Page URL/Route                        | Owner | Status                | Completed             | Notes                                                                                                                                                              |
-|---------------------------------------|-------|-----------------------|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `/`                                   | Dara  | Complete              | <ul><li>[x] </li><ul> | Can make `/` display home instead and if user isn't logged in, redirect to `/signin`?                                                                              |
-| `/home`                               |       | Templated             |                       |                                                                                                                                                                    |
-| `/projects`                           |       | Templated             |                       | Display all projects                                                                                                                                               |
-| `/projects/[id]`                      |       | Templated             |                       | A specific project, use `components/Task` and `components/KanbanBoard`                                                                                             |
-| `/projects/[id]/overview`?            | Faye? |                       |                       | Manager's overview of a project. Not sure about the URL name                                                                                                       |
-| `/projects/new`                       |       |                       |                       | Creating a new project (accessed from manager dashboard)                                                                                                           |
-| `/forum`                              | Ade?  | Templated             |                       | Displays all forum topics (TODO: forum redesign)                                                                                                                   |
-| `/forum?topics=[topic1],[topic2],...` | ^     | -                     |                       | (Same page as ^, but with modified functionality when topics are specified) Posts with the specified topics (dynamic page with updating url without changing page) |
-| `/forum/topics/[topicname]`?          |       |                       |                       | Displays post summaries for a topic (click to open the page for that post)                                                                                         |
-| `/forum/posts`                        |       |                       |                       | Display all posts                                                                                                                                                  |
-| `/forum/posts/[id]`                   |       | Templated             |                       | Display a specific post                                                                                                                                            |
-| `/forum/posts/[id]/edit`?             |       |                       |                       | Dara thinks having a new page to edit a post may make it easier to implement                                                                                       |
-| `/forum/authors/`                     |       | Templated             |                       | List authors                                                                                                                                                       |
-| `/forum/authors/[id]`                 |       | Templated             |                       | Display posts by a specific author                                                                                                                                 |
-| `/dashboard`                          |       | Templated             |                       |                                                                                                                                                                    |
-| `/staff_assignment`                   |       |                       |                       | Dara thinks we should rename this URL, `/employees`?                                                                                                               |
-| `/profile`                            | Dara  | Functionally complete | <ul><li>[ ] </li><ul> |                                                                                                                                                                    |
-| `/signup`                             |       | Templated             |                       | Can merge signup and signin?                                                                                                                                       |
-
-> Note: the dashboard is meant to be available to managers & team leaders - it's meant to be a project
-> overview page
->
-> So we need to split up the current `/dashboard` functionality to have another page like staff overview -
-> it could be combined with `/staff_assignment`
+| Page URL/Route                        | Owner   | Status                | Completed                                                                | Notes                                                                                                                                                              |
+|---------------------------------------|---------|-----------------------|--------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `/`                                   | Dara    | Complete              | <ul><li>[x] </li><ul>                                                    | Can make `/` display home instead and if user isn't logged in, redirect to `/signin`?                                                                              |
+| `/home`                               | Michael | Templated             |                                                                          |                                                                                                                                                                    |
+| `/projects`                           | Lu      | Templated             |                                                                          | Display all projects                                                                                                                                               |
+| `/projects/[id]`                      | Michael | Templated             |                                                                          | A specific project, use `components/Task` and `components/KanbanBoard`                                                                                             |
+| `/projects/[id]/overview`             | Faye    |                       | "keep track of the progression of the project they are responsible for"  | Manager's overview of a project. Not sure about the URL name                                                                                                       |
+| `/projects/new`                       | Faye    |                       |                                                                          | Creating a new project (accessed from manager dashboard)                                                                                                           |
+| `/forum`                              | Ade     | Templated             |                                                                          | Displays all forum topics (TODO: forum redesign)                                                                                                                   |
+| `/forum?topics=[topic1],[topic2],...` | ^       | -                     |                                                                          | (Same page as ^, but with modified functionality when topics are specified) Posts with the specified topics (dynamic page with updating url without changing page) |
+| `/forum/posts/[id]`                   | Ade     | Templated             |                                                                          | Display a specific post                                                                                                                                            |
+| `/forum/posts/[id]/edit`              | Ade     |                       |                                                                          | Dara thinks having a new page to edit a post may make it easier to implement                                                                                       |
+| `/forum/authors/`                     | Sean    | Templated             |                                                                          | List authors                                                                                                                                                       |
+| `/forum/authors/[id]`                 | Sean    | Templated             |                                                                          | Display posts by a specific author                                                                                                                                 |
+| `/dashboard`                          | David   | Templated             |                                                                          | Projects progress                                                                                                                                                  |
+| `/staff`                              | David   |                       |                                                                          |                                                                                                                                                                    |
+| `/profile`                            | Dara    | Functionally complete | <ul><li>[ ] </li><ul>                                                    |                                                                                                                                                                    |
+| `/signup`                             | Lu      | Templated             |                                                                          | Can merge signup and signin?                                                                                                                                       |
 
 #### Dynamic Routes
 

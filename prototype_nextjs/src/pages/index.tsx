@@ -27,6 +27,7 @@ type SignInFormData = {
   password: string
 };
 
+// TODO: add create account link that takes to /signup
 const SignInPage: AppPage = () => {
   const router = useRouter();
 
@@ -103,8 +104,8 @@ const SignInPage: AppPage = () => {
         position="top-center"
       />
 
-      <main className={`vh-100 vw-100 d-flex align-items-center justify-content-center ${styles.main}`}>
-        <div className={styles['form-wrapper']}>
+      <main className={styles.main}>
+        <div className={styles.wrapper}>
           <Image
             className={`mb-3 ${styles.logo}`}
             src={makeItAllLogo}
@@ -132,53 +133,47 @@ const SignInPage: AppPage = () => {
             }) => (
               <Form
                 onSubmit={handleSubmit}
-                className="w-100"
+                className={styles.form}
                 noValidate
               >
-                <Form.Group as={Row} className="mb-3">
-                  <Col>
-                    <FloatingEmailField
-                      name="email"
-                      controlId="email"
-                      feedback={touched.email ? errors.email : undefined}
-                      value={values.email}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      isInvalid={touched.email && errors.email !== undefined}
-                      feedbackTooltip
-                      onlyFeedbackOutline={errors.email?.length === 0}
-                    />
-                  </Col>
-                </Form.Group>
-                <Form.Group as={Row} className="mb-3">
-                  <Col>
-                    <FloatingPasswordField
-                      name="password"
-                      controlId="password"
-                      feedback={touched.password ? errors.password : undefined}
-                      value={values.password}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      isInvalid={touched.password && errors.password !== undefined}
-                      feedbackTooltip
-                      onlyFeedbackOutline={errors.password?.length === 0}
-                      policyTooltip
-                    />
-                  </Col>
-                </Form.Group>
-                <Form.Group as={Row}>
-                  <Col>
-                    <LoadingButton
-                      variant="secondary"
-                      type="submit"
-                      isLoading={isSubmitting}
-                      disabled={!isValid}
-                      className={styles['sign-in-btn']}
-                    >
-                      Sign In
-                    </LoadingButton>
-                  </Col>
-                </Form.Group>
+                <div>
+                  <FloatingEmailField
+                    name="email"
+                    controlId="email"
+                    feedback={touched.email ? errors.email : undefined}
+                    value={values.email}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    isInvalid={touched.email && errors.email !== undefined}
+                    feedbackTooltip
+                    onlyFeedbackOutline={errors.email?.length === 0}
+                  />
+                </div>
+                <div>
+                  <FloatingPasswordField
+                    name="password"
+                    controlId="password"
+                    feedback={touched.password ? errors.password : undefined}
+                    value={values.password}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    isInvalid={touched.password && errors.password !== undefined}
+                    feedbackTooltip
+                    onlyFeedbackOutline={errors.password?.length === 0}
+                    policyTooltip
+                  />
+                </div>
+                <div className={styles['sign-in-btn-wrapper']}>
+                  <LoadingButton
+                    variant="secondary"
+                    type="submit"
+                    isLoading={isSubmitting}
+                    disabled={!isValid}
+                    className={styles['sign-in-btn']}
+                  >
+                    Sign In
+                  </LoadingButton>
+                </div>
               </Form>
             )}
           </Formik>
