@@ -22,7 +22,7 @@ import styles from '~/styles/Profile.module.css';
 // TODO: theme switcher
 const ProfilePage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ inviter }) => {
   return (
-    <main>
+    <main className="flex-grow-1">
       <Head>
         <title>Profile - Make-It-All</title>
       </Head>
