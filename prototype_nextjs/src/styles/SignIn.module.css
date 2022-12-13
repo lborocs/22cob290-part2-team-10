@@ -1,19 +1,11 @@
 .main {
-    background-color: #d3d3d3;
-
-    height: 100vh;
-    width: 100vw;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 /* mobile first */
 .wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    padding-top: 50%;
+    margin: auto;
+
     width: 75vw;
 }
 
@@ -50,8 +42,18 @@
 
 /* tablets/large phones? */
 @media screen and (min-width: 481px) {
+    .main {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
     .wrapper {
         width: 60vw;
+
+        padding-top: 0;
+        margin: 0;
     }
 }
 
