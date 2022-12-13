@@ -2,6 +2,7 @@ import { forwardRef } from 'react';
 import type { FormControlProps } from 'react-bootstrap';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
 
 export interface FloatingEmailFieldProps extends FormControlProps {
   name: string
@@ -27,16 +28,17 @@ export default forwardRef(function FloatingEmailField({
   ...props
 }: FloatingEmailFieldProps, ref: React.ForwardedRef<HTMLInputElement>) {
   return (
-    <div className={feedbackTooltip ? 'position-relative' : ''}>
+    <InputGroup>
       <FloatingLabel
         controlId={controlId}
         label="Email address"
+        className={feedbackTooltip ? 'position-relative' : ''}
       >
         <Form.Control
           type="email"
           autoComplete="username"
           name={name}
-          placeholder="Enter email"
+          placeholder="Email address"
           ref={ref}
           required
           {...props}
@@ -49,6 +51,6 @@ export default forwardRef(function FloatingEmailField({
           {feedback}
         </Form.Control.Feedback>
       </FloatingLabel>
-    </div>
+    </InputGroup>
   );
 });

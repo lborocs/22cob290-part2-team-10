@@ -28,7 +28,7 @@ export default forwardRef(function FloatingPasswordField({
   label = 'Password',
   controlId,
   autoComplete = 'current-password',
-  placeholder = 'Enter password',
+  placeholder = 'Password',
   feedback,
   feedbackTooltip = false,
   onlyFeedbackOutline = false,
@@ -41,7 +41,7 @@ export default forwardRef(function FloatingPasswordField({
     <InputGroup>
       <FloatingLabel
         controlId={controlId}
-        label="Password"
+        label={label}
         className={`${feedbackTooltip ? 'position-relative' : ''}`}
       >
         <Form.Control
