@@ -2,8 +2,6 @@ import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'nex
 import Head from 'next/head';
 import Link from 'next/link';
 import { unstable_getServerSession } from 'next-auth/next';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
 
 import { encodeString } from '~/lib/hashids';
 import prisma from '~/lib/prisma';
@@ -13,37 +11,14 @@ import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 // TODO: AuthorsPage
-const AuthorsPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ authors }) => {
+const AuthorsPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ }) => {
+  // TODO: Link to each other page using `encodeString` for their ID
 
   return (
     <main>
       <Head>
         <title>Authors - Make-It-All</title>
       </Head>
-      <div className="d-flex flex-column">
-        {authors.map((author, index) => (
-          <Row key={index}>
-            <Col xs={7}>
-              <Link
-                href={`/forum/authors/${encodeString(author.id)}`}
-                style={{
-                  color: 'blue',
-                }}
-              >
-                <span className="me-4">
-                  {author.name} ({author.email})
-                </span>
-              </Link>
-            </Col>
-            <Col>
-              Number of posts: {author.posts.length}
-            </Col>
-            <Col>
-              Upvotes received: {author.totalUpvotes}
-            </Col>
-          </Row>
-        ))}
-      </div>
     </main>
   );
 };
@@ -64,44 +39,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const user = session.user as SessionUser;
 
-  // TODO: would like to order by totalUpvotes but not sure how to do that with prisma (in 1 query)
-
-  const result = await prisma.user.findMany({
-    select: {
-      id: true,
-      email: true,
-      name: true,
-      posts: {
-        select: {
-          _count: {
-            select: {
-              upvoters: true,
-            },
-          },
-        },
-      },
-    },
-    orderBy: {
-      posts: {
-        _count: 'desc',
-      },
-    },
-  });
-
-  const authors = result.map((author) => {
-    const totalUpvotes = author.posts.reduce((acc, post) => acc + post._count.upvoters, 0);
-
-    return {
-      ...author,
-      totalUpvotes,
-    };
-  });
+  // TODO: get authors from database
 
   return {
     props: {
       session,
       user,
-      authors,
     },
   };
 }
