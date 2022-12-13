@@ -1,13 +1,12 @@
 import { useEffect } from 'react';
 import type { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
+import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { unstable_getServerSession } from 'next-auth/next';
 import { signIn } from 'next-auth/react';
-import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
 import { Formik } from 'formik';
 import { withZodSchema } from 'formik-validator-zod';
 import toast, { Toaster } from 'react-hot-toast';
@@ -133,7 +132,7 @@ const SignInPage: AppPage = () => {
             }) => (
               <Form
                 onSubmit={handleSubmit}
-                className={styles.form}
+                className={styles['form-grid']}
                 noValidate
               >
                 <div>
@@ -163,16 +162,21 @@ const SignInPage: AppPage = () => {
                     policyTooltip
                   />
                 </div>
-                <div className={styles['sign-in-btn-wrapper']}>
-                  <LoadingButton
-                    variant="secondary"
-                    type="submit"
-                    isLoading={isSubmitting}
-                    disabled={!isValid}
-                    className={styles['sign-in-btn']}
-                  >
-                    Sign In
-                  </LoadingButton>
+                <div>
+                  <div className={styles.links}>
+                    <Link href="/signup" className={styles['signup-link']}>
+                      Create Account
+                    </Link>
+                    <LoadingButton
+                      variant="secondary"
+                      type="submit"
+                      isLoading={isSubmitting}
+                      disabled={!isValid}
+                      className={styles['sign-in-btn']}
+                    >
+                      Sign In
+                    </LoadingButton>
+                  </div>
                 </div>
               </Form>
             )}

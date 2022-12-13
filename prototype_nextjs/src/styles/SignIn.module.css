@@ -23,7 +23,7 @@
     height: auto;
 }
 
-.form {
+.form-grid {
     width: 100%;
 
     display: grid;
@@ -31,15 +31,20 @@
     grid-template-rows: repeat(3, 1fr);
 }
 
-.sign-in-btn-wrapper {
-    text-align: center;
+.links {
+    padding: 0 0.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-/* ! ASK for opinions */
+.signup-link {
+    font-weight: 600; /* semi-bold */
+    color: black;
+}
+
 .sign-in-btn {
-    /* height: 80%; */
-    /* width: 75%; */
-    /* width: 100%; */
+    height: fit-content;
     background: linear-gradient(to right, grey, #d8363a, #dd3675, #b44593);
 }
 
@@ -50,6 +55,8 @@
     }
 }
 
+/* TODO: outline on wrapper on bigger screens */
+
 /* desktop */
 @media screen and (min-width: 1200px) {
     .wrapper {
@@ -57,7 +64,7 @@
     }
 }
 
-/* extra large? */
+/* extra large? 4K? */
 @media screen and (min-width: 2560px) {
     .wrapper {
         width: 25vw;
