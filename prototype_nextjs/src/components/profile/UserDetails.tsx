@@ -31,11 +31,8 @@ export default function UserDetails() {
     email: state.user.email,
   }));
 
-  // TODO: add a glow to name to show it's editable?
-  // see https://stackoverflow.com/a/14822905
-
   const handleSubmit: React.ComponentProps<typeof Formik<DetailsFormData>>['onSubmit']
-    = async (values, { setFieldError, resetForm }) => {
+    = async (values, { resetForm }) => {
       // see pages/index#handleSubmit
       document.querySelector<HTMLInputElement>(':focus')?.blur();
 
