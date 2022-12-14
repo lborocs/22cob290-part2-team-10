@@ -505,6 +505,7 @@ from the
 | [dotenv](https://github.com/motdotla/dotenv)                            | 16.0          | Load development environment variables during database seeding                                         |
 | [lodash](https://lodash.com/)                                           | 4.17          | Utility library                                                                                        |
 | [lorem-ipsum](https://github.com/knicklabs/lorem-ipsum.js)              | 2.0           | Generating placeholder text (for seeding)                                                              |
+| [next-themes](https://github.com/pacocoursey/next-themes)               | 0.2           | Handling themes                                                                                        |
 | ...                                                                     |               |                                                                                                        |
 
 <!-- https://stackoverflow.com/a/42424860 -->
