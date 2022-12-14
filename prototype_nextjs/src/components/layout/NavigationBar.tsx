@@ -36,7 +36,7 @@ export default function NavigationBar({ noSidebar, toggleSidebar, title }: {
       {/* desktop middle */}
       <div className="mx-auto w-100 order-1 d-flex">
         {/* mobile left */}
-        <div className="d-inline-block d-lg-none">
+        <div className="d-inline-flex d-lg-none">
           {toggleSidebarButton}
         </div>
         {/* middle */}
@@ -44,7 +44,7 @@ export default function NavigationBar({ noSidebar, toggleSidebar, title }: {
           {title}
         </div>
         {/* mobile right */}
-        <div className="d-inline-block d-lg-none">
+        <div className="d-inline-flex d-lg-none">
           <ThemeSwitcher />
           <Navbar.Toggle
             aria-controls="nav"
