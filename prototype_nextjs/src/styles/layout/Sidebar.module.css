@@ -1,7 +1,8 @@
 .sidebar {
     min-width: 250px;
     max-width: 250px;
-    background: var(--secondary-color);
+    background-color: var(--sidebar-background);
+    filter: brightness(var(--sidebar-brightness));
     color: var(--sidebar-text);
     transition: all 0.3s;
 
@@ -16,7 +17,6 @@
 
 .sidebarHeader {
     padding: 20px;
-    background: var(--secondary-color);
 }
 
 .companyLogo {

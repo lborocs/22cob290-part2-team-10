@@ -4,8 +4,8 @@
 
 .sidebarToggleBtn {
     color: black;
-    background-color: var(--secondary-color);
-    border-color: var(--secondary-color);
+    background-color: var(--sidebar-background);
+    border-color: var(--sidebar-background);
 }
 
 .sidebarToggleBtn:hover {
@@ -22,8 +22,8 @@
 
 .navbar {
     padding: 15px 10px;
-    background: var(--primary-color);
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, .17);
+    background-color: var(--navbar-background);
+    box-shadow: 1px 1px 3px var(--navbar-shadow-color);
     margin-bottom: 30px;
 }
 
