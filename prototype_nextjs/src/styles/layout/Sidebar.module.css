@@ -30,7 +30,7 @@
     flex-grow: 1;
 }
 
-/* default hide sidebar */
+/* default hide sidebar (on big screens) */
 @media (max-width: 768px) {
     .sidebar {
         margin-left: -250px;
