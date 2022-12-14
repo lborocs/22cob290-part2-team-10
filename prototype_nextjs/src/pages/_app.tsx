@@ -1,6 +1,7 @@
 import type { AppProps } from 'next/app';
 import { SessionProvider, useSession } from 'next-auth/react';
 import { config } from '@fortawesome/fontawesome-svg-core';
+import { ThemeProvider } from 'next-themes';
 
 // put global css imports before component imports because otherwise:
 //  it will put the component css before the global css in the head,
@@ -36,19 +37,21 @@ export default function App({
 
   return (
     <SessionProvider session={session}>
-      {noAuth ? (
-        <Component {...pageProps} />
-      ) : (
-        <Auth>
-          {layout ? (
-            <Layout {...layout}>
+      <ThemeProvider>
+        {noAuth ? (
+          <Component {...pageProps} />
+        ) : (
+          <Auth>
+            {layout ? (
+              <Layout {...layout}>
+                <Component {...pageProps} />
+              </Layout>
+            ) : (
               <Component {...pageProps} />
-            </Layout>
-          ) : (
-            <Component {...pageProps} />
-          )}
-        </Auth>
-      )}
+            )}
+          </Auth>
+        )}
+      </ThemeProvider>
     </SessionProvider>
   );
 }
