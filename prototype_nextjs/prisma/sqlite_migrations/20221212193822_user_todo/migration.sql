@@ -16,16 +16,16 @@ CREATE TABLE "UserTask" (
 );
 
 -- CreateTable
-CREATE TABLE "UserTaskTags" (
+CREATE TABLE "UserTaskTag" (
     "name" TEXT NOT NULL PRIMARY KEY
 );
 
 -- CreateTable
-CREATE TABLE "_UserTaskToUserTaskTags" (
+CREATE TABLE "_UserTaskToUserTaskTag" (
     "A" INTEGER NOT NULL,
     "B" TEXT NOT NULL,
-    CONSTRAINT "_UserTaskToUserTaskTags_A_fkey" FOREIGN KEY ("A") REFERENCES "UserTask" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "_UserTaskToUserTaskTags_B_fkey" FOREIGN KEY ("B") REFERENCES "UserTaskTags" ("name") ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT "_UserTaskToUserTaskTag_A_fkey" FOREIGN KEY ("A") REFERENCES "UserTask" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "_UserTaskToUserTaskTag_B_fkey" FOREIGN KEY ("B") REFERENCES "UserTaskTag" ("name") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- RedefineTables
@@ -48,7 +48,7 @@ PRAGMA foreign_key_check;
 PRAGMA foreign_keys=ON;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "_UserTaskToUserTaskTags_AB_unique" ON "_UserTaskToUserTaskTags"("A", "B");
+CREATE UNIQUE INDEX "_UserTaskToUserTaskTag_AB_unique" ON "_UserTaskToUserTaskTag"("A", "B");
 
 -- CreateIndex
-CREATE INDEX "_UserTaskToUserTaskTags_B_index" ON "_UserTaskToUserTaskTags"("B");
+CREATE INDEX "_UserTaskToUserTaskTag_B_index" ON "_UserTaskToUserTaskTag"("B");
