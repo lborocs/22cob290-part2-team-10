@@ -4,6 +4,7 @@ import Nav from 'react-bootstrap/Nav';
 
 import useUserStore from '~/store/userStore';
 import TextAvatar from '~/components/TextAvatar';
+import ThemeSwitcher from '~/components/layout/ThemeSwitcher';
 
 export default function LayoutNav() {
   const router = useRouter();
@@ -14,6 +15,9 @@ export default function LayoutNav() {
       activeKey={router.pathname}
       className="align-items-lg-center"
     >
+      <span className="d-none d-lg-inline">
+        <ThemeSwitcher />
+      </span>
       <Link href="/home" passHref legacyBehavior>
         <Nav.Link>Home</Nav.Link>
       </Link>

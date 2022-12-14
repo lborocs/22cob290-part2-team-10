@@ -1,13 +1,3 @@
-:root {
-    --primary-color: white;
-    --secondary-color: #d3d3d3;
-    --tertiary-color: #e2ba39;
-    --sidebar-text: black;
-    --sidebar-hover: #e2ba3990;
-    --avatar-bg: #e2ba39;
-    --avatar-fg: white;
-}
-
 html,
 body {
     padding: 0;
@@ -16,19 +6,88 @@ body {
         Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
+:root {
+    --background: white;
+    --foreground: black;
+
+    /* TODO: idk what to call this (sidebarToggleBtn:hover and projectLink.active) */
+    --tertiary-color: #e2ba39;
+
+    --navbar-shadow-color: rgba(0, 0, 0, .17);
+
+    --sidebar-background: #d3d3d3;
+    --sidebar-brightness: 1;
+    --sidebar-text: black;
+    --sidebar-hover: #e2ba3990;
+}
+
+[data-theme='dark'],
+[data-theme='dark'] body {
+    --background: #1c1e21;
+    --foreground: white;
+
+    --navbar-background: #131416;
+    --navbar-shadow-color: rgba(255, 255, 255, .17);
+
+    /* TODO: sidebar colour in dark mode */
+    /* --sidebar-background: #d3d3d3; */
+    /* --sidebar-brightness: 0.8; */
+    /* --sidebar-text: black; */
+    /* --sidebar-hover: #e2ba3990; */
+}
+
 body {
+    background-color: var(--background);
+    color: var(--foreground);
+}
+
+[data-theme='dark'] body {
+    background-color: var(--background);
+    color: white;
+}
+
+html:not(:has(div[class^='Layout'])),
+body:not(:has(div[class^='Layout'])) {
     /*
     bg only grey for SignInPage & SignupPage:
       - well specifically any page that isn't using the `Layout`
       - cannot set bg color of just `main` elem because of things like notches on iPhones (next to the notch will be white)
       - so we have to set bg color of the body
     */
-    background-color: var(--secondary-color);
+    background-color: #d3d3d3;
+    color: black;
 }
 
-/* remove grey bg for every other page */
-body:has(div[class^="Layout"]) {
-    background-color: transparent;
+/* dark theme SignIn & SignUp: 70% brightness */
+[data-theme='dark']:not(:has(div[class^='Layout'])),
+[data-theme='dark'] body:not(:has(div[class^='Layout'])) {
+    background-color: #949494;
+}
+
+[data-theme='dark'] body:not(:has(div[class^='Layout'])) > * {
+    filter: brightness(0.7);
+}
+
+.nav-link {
+    font-weight: 600;
+}
+
+[data-theme='dark'] .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.nav-link.active {
+    color: var(--tertiary-color) !important;
+    filter: brightness(1.1);
+}
+
+[data-theme='dark'] .nav-link.active {
+    color: var(--tertiary-color) !important;
+}
+
+[data-theme='dark'] .modal-content {
+    background-color: var(--background);
+    border-color: rgba(255, 255, 255, 0.175);
 }
 
 a {

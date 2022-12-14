@@ -19,7 +19,6 @@ import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 import styles from '~/styles/Profile.module.css';
 
-// TODO: theme switcher
 const ProfilePage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ inviter }) => {
   return (
     <main className="flex-grow-1">

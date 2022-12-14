@@ -94,7 +94,12 @@ export default function UserDetails() {
         isValid,
         dirty,
       }) => (
-        <Form onSubmit={handleSubmit} noValidate>
+        <Form onSubmit={handleSubmit}
+          noValidate
+          style={{
+            color: 'black',
+          }}
+        >
           <Row className="mb-3">
             <Col>
               <FloatingLabel label="Name" controlId="name">

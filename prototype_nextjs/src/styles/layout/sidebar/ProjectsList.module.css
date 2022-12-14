@@ -20,11 +20,11 @@
 }
 
 .projectLink:hover {
-    color: var(--primary-color);
-    background: var(--sidebar-hover);
+    background-color: var(--sidebar-hover);
+    color: #fff;
 }
 
 .projectLink.active {
+    background-color: var(--tertiary-color);
     color: #fff;
-    background: var(--tertiary-color);
 }
