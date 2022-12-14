@@ -1,13 +1,12 @@
 import { useEffect } from 'react';
 import type { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
+import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { unstable_getServerSession } from 'next-auth/next';
 import { signIn } from 'next-auth/react';
-import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
 import { Formik } from 'formik';
 import { withZodSchema } from 'formik-validator-zod';
 import toast, { Toaster } from 'react-hot-toast';
@@ -33,7 +32,7 @@ const SignInPage: AppPage = () => {
 
   // handle using this as signIn page for auth flow
   const { callbackUrl } = router.query;
-  const nextUrl = callbackUrl as string ?? '/home';
+  const nextUrl = callbackUrl as string | undefined ?? '/home';
 
   const handleSubmit: React.ComponentProps<typeof Formik<SignInFormData>>['onSubmit']
     = async ({ email, password }, { setFieldError }) => {
@@ -95,7 +94,7 @@ const SignInPage: AppPage = () => {
   }, [callbackUrl]);
 
   return (
-    <>
+    <main className={styles.main}>
       <Head>
         <title>Sign In - Make-It-All</title>
       </Head>
@@ -104,82 +103,85 @@ const SignInPage: AppPage = () => {
         position="top-center"
       />
 
-      <main className={styles.main}>
-        <div className={styles.wrapper}>
-          <Image
-            className={`mb-3 ${styles.logo}`}
-            src={makeItAllLogo}
-            alt="Make-It-All Logo"
-            priority
-          />
+      <div className={styles.wrapper}>
+        <Image
+          className={`mb-3 ${styles.logo}`}
+          src={makeItAllLogo}
+          alt="Make-It-All Logo"
+          priority
+        />
 
-          <Formik
-            initialValues={{
-              email: 'alice@make-it-all.co.uk',
-              password: 'TestPassword123!',
-            }}
-            validate={withZodSchema(SignInSchema)}
-            onSubmit={handleSubmit}
-          >
-            {({
-              values,
-              errors,
-              touched,
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              isSubmitting,
-              isValid,
-            }) => (
-              <Form
-                onSubmit={handleSubmit}
-                className={styles.form}
-                noValidate
-              >
-                <div>
-                  <FloatingEmailField
-                    name="email"
-                    controlId="email"
-                    feedback={touched.email ? errors.email : undefined}
-                    value={values.email}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    isInvalid={touched.email && errors.email !== undefined}
-                    feedbackTooltip
-                    onlyFeedbackOutline={errors.email?.length === 0}
-                  />
-                </div>
-                <div>
-                  <FloatingPasswordField
-                    name="password"
-                    controlId="password"
-                    feedback={touched.password ? errors.password : undefined}
-                    value={values.password}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    isInvalid={touched.password && errors.password !== undefined}
-                    feedbackTooltip
-                    onlyFeedbackOutline={errors.password?.length === 0}
-                    policyTooltip
-                  />
-                </div>
-                <div className={styles['sign-in-btn-wrapper']}>
+        <Formik
+          initialValues={{
+            email: 'alice@make-it-all.co.uk',
+            password: 'TestPassword123!',
+          }}
+          validate={withZodSchema(SignInSchema)}
+          onSubmit={handleSubmit}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            isSubmitting,
+            isValid,
+          }) => (
+            <Form
+              onSubmit={handleSubmit}
+              className={styles.formGrid}
+              noValidate
+            >
+              <div>
+                <FloatingEmailField
+                  name="email"
+                  controlId="email"
+                  feedback={touched.email ? errors.email : undefined}
+                  value={values.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  isInvalid={touched.email && errors.email !== undefined}
+                  feedbackTooltip
+                  onlyFeedbackOutline={errors.email?.length === 0}
+                />
+              </div>
+              <div>
+                <FloatingPasswordField
+                  name="password"
+                  controlId="password"
+                  feedback={touched.password ? errors.password : undefined}
+                  value={values.password}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  isInvalid={touched.password && errors.password !== undefined}
+                  feedbackTooltip
+                  onlyFeedbackOutline={errors.password?.length === 0}
+                  policyTooltip
+                />
+              </div>
+              <div>
+                <div className={styles.links}>
+                  <Link href="/signup" className={styles.signupLink}>
+                    Create Account
+                  </Link>
                   <LoadingButton
                     variant="secondary"
                     type="submit"
                     isLoading={isSubmitting}
                     disabled={!isValid}
-                    className={styles['sign-in-btn']}
+                    className={styles.signInBtn}
                   >
                     Sign In
                   </LoadingButton>
                 </div>
-              </Form>
-            )}
-          </Formik>
-        </div>
-      </main>
-    </>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      </div>
+    </main>
   );
 };
 

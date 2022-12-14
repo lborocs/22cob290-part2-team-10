@@ -4,12 +4,12 @@
     margin-bottom: 0;
 }
 
-.projects-list {
+.projectsList {
     height: 420px;
     overflow-y: scroll;
 }
 
-.project-link {
+.projectLink {
     padding: 10px;
     font-size: 1.1em;
     display: block;
@@ -19,12 +19,12 @@
     text-overflow: ellipsis;
 }
 
-.project-link:hover {
+.projectLink:hover {
     color: var(--primary-color);
     background: var(--sidebar-hover);
 }
 
-.active {
+.projectLink.active {
     color: #fff;
     background: var(--tertiary-color);
 }

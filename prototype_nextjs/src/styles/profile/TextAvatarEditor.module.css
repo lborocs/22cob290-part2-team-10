@@ -1,7 +1,7 @@
-.text-avatar {
+.textAvatar {
     cursor: pointer;
 }
 
-.text-avatar:hover {
+.textAvatar:hover {
     filter: brightness(85%);
 }

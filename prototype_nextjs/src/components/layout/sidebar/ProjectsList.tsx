@@ -111,7 +111,7 @@ export default function ProjectsList() {
         resetResults={resetResults}
       />
 
-      <ol className={`list-unstyled ${styles['projects-list']}`}>
+      <ol className={`list-unstyled ${styles.projectsList}`}>
         {filteredProjects.map((project, index) => {
           const url = `/projects/${hashids.encode(project.id)}`;
           const active = currentProjectUrl === url;
@@ -133,7 +133,7 @@ export default function ProjectsList() {
               >
                 <Link
                   href={url}
-                  className={`${styles['project-link']} ${active ? styles.active : ''}`}
+                  className={`${styles.projectLink} ${active ? styles.active : ''}`}
                 >
                   {project.name}
                 </Link>

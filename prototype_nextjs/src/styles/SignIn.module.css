@@ -1,19 +1,11 @@
 .main {
-    background-color: #d3d3d3;
-
-    height: 100vh;
-    width: 100vw;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 /* mobile first */
 .wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    padding-top: 50%;
+    margin: auto;
+
     width: 75vw;
 }
 
@@ -23,7 +15,7 @@
     height: auto;
 }
 
-.form {
+.formGrid {
     width: 100%;
 
     display: grid;
@@ -31,24 +23,41 @@
     grid-template-rows: repeat(3, 1fr);
 }
 
-.sign-in-btn-wrapper {
-    text-align: center;
+.links {
+    padding: 0 0.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-/* ! ASK for opinions */
-.sign-in-btn {
-    /* height: 80%; */
-    /* width: 75%; */
-    /* width: 100%; */
+.signupLink {
+    font-weight: 600; /* semi-bold */
+    color: black;
+}
+
+.signInBtn {
+    height: fit-content;
     background: linear-gradient(to right, grey, #d8363a, #dd3675, #b44593);
 }
 
 /* tablets/large phones? */
 @media screen and (min-width: 481px) {
+    .main {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
     .wrapper {
         width: 60vw;
+
+        padding-top: 0;
+        margin: 0;
     }
 }
+
+/* TODO: outline on wrapper on bigger screens */
 
 /* desktop */
 @media screen and (min-width: 1200px) {
@@ -57,7 +66,7 @@
     }
 }
 
-/* extra large? */
+/* extra large? 4K? */
 @media screen and (min-width: 2560px) {
     .wrapper {
         width: 25vw;

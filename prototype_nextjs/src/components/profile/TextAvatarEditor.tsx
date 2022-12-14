@@ -18,7 +18,7 @@ import {
 import TextAvatarComponent from '~/components/TextAvatar';
 import LoadingButton from '~/components/LoadingButton';
 
-import styles from '~/styles/profile/TextAvatarSection.module.css';
+import styles from '~/styles/profile/TextAvatarEditor.module.css';
 
 /**
  * Component providing functionality for the user to change the colours of their text avatar.
@@ -84,7 +84,7 @@ export default function TextAvatarEditor() {
     <div>
       {/* TODO: on hover show like a pencil to signify that it's editable */}
       <TextAvatarComponent
-        className={styles['text-avatar']}
+        className={styles.textAvatar}
         size="120px"
         style={{
           fontSize: '3em',

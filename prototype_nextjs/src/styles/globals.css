@@ -13,7 +13,22 @@ body {
     padding: 0;
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-      Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+        Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+body {
+    /*
+    bg only grey for SignInPage & SignupPage:
+      - well specifically any page that isn't using the `Layout`
+      - cannot set bg color of just `main` elem because of things like notches on iPhones (next to the notch will be white)
+      - so we have to set bg color of the body
+    */
+    background-color: var(--secondary-color);
+}
+
+/* remove grey bg for every other page */
+body:has(div[class^="Layout"]) {
+    background-color: transparent;
 }
 
 a {

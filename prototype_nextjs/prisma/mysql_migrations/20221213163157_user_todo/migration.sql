@@ -20,26 +20,26 @@ CREATE TABLE `UserTask` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `UserTaskTags` (
+CREATE TABLE `UserTaskTag` (
     `name` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`name`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `_UserTaskToUserTaskTags` (
+CREATE TABLE `_UserTaskToUserTaskTag` (
     `A` INTEGER NOT NULL,
     `B` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `_UserTaskToUserTaskTags_AB_unique`(`A`, `B`),
-    INDEX `_UserTaskToUserTaskTags_B_index`(`B`)
+    UNIQUE INDEX `_UserTaskToUserTaskTag_AB_unique`(`A`, `B`),
+    INDEX `_UserTaskToUserTaskTag_B_index`(`B`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
 ALTER TABLE `UserTask` ADD CONSTRAINT `UserTask_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `_UserTaskToUserTaskTags` ADD CONSTRAINT `_UserTaskToUserTaskTags_A_fkey` FOREIGN KEY (`A`) REFERENCES `UserTask`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `_UserTaskToUserTaskTag` ADD CONSTRAINT `_UserTaskToUserTaskTag_A_fkey` FOREIGN KEY (`A`) REFERENCES `UserTask`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `_UserTaskToUserTaskTags` ADD CONSTRAINT `_UserTaskToUserTaskTags_B_fkey` FOREIGN KEY (`B`) REFERENCES `UserTaskTags`(`name`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `_UserTaskToUserTaskTag` ADD CONSTRAINT `_UserTaskToUserTaskTag_B_fkey` FOREIGN KEY (`B`) REFERENCES `UserTaskTag`(`name`) ON DELETE CASCADE ON UPDATE CASCADE;
