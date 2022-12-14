@@ -131,7 +131,7 @@ const SignInPage: AppPage = () => {
           }) => (
             <Form
               onSubmit={handleSubmit}
-              className={styles['form-grid']}
+              className={styles.formGrid}
               noValidate
             >
               <div>
@@ -163,7 +163,7 @@ const SignInPage: AppPage = () => {
               </div>
               <div>
                 <div className={styles.links}>
-                  <Link href="/signup" className={styles['signup-link']}>
+                  <Link href="/signup" className={styles.signupLink}>
                     Create Account
                   </Link>
                   <LoadingButton
@@ -171,7 +171,7 @@ const SignInPage: AppPage = () => {
                     type="submit"
                     isLoading={isSubmitting}
                     disabled={!isValid}
-                    className={styles['sign-in-btn']}
+                    className={styles.signInBtn}
                   >
                     Sign In
                   </LoadingButton>

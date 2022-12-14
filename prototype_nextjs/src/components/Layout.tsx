@@ -103,7 +103,7 @@ const NavigationBar = ({ noSidebar, toggleSidebar, title }: {
   const toggleSidebarButton = !noSidebar && (
     <Button
       onClick={toggleSidebar}
-      className={styles['sidebar-toggle-btn']}
+      className={styles.sidebarToggleBtn}
     >
       <FontAwesomeIcon icon={faAlignLeft} />
       {' '}

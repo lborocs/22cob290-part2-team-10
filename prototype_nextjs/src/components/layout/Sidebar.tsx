@@ -12,18 +12,18 @@ export type SidebarProps = {
 export default function Sidebar({ show, content }: SidebarProps) {
   return (
     <aside className={`${styles.sidebar} ${show ? '' : styles.hidden}`} >
-      <div className={styles['sidebar-header']}>
+      <div className={styles.sidebarHeader}>
         <Link href="/home">
           <Image
             src={makeItAllLogo}
             alt="Company logo"
-            className={styles['company-logo']}
+            className={styles.companyLogo}
             priority
           />
         </Link>
       </div>
 
-      <div className={styles['sidebar-content']}>
+      <div className={styles.sidebarContent}>
         {content}
       </div>
     </aside>

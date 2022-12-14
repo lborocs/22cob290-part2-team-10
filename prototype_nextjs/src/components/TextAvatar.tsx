@@ -12,6 +12,8 @@ export interface TextAvatarProps extends React.ComponentPropsWithoutRef<'span'> 
 
 export default forwardRef(function LoadingButton({
   size = '40px',
+  className,
+  style,
   ...props
 }: TextAvatarProps, ref: React.ForwardedRef<HTMLButtonElement>) {
   const username = useUserStore((state) => state.user.name);
@@ -28,22 +30,16 @@ export default forwardRef(function LoadingButton({
     updateTextAvatarCss(textAvatar);
   });
 
-  const {
-    className,
-    style,
-    ...passedProps
-  } = props;
-
   return (
     <span
-      className={`${styles['text-avatar']} ${className ?? ''}`}
+      className={`${styles.textAvatar} ${className ?? ''}`}
       style={{
         width: size,
         lineHeight: size,
         ...style,
       }}
       ref={ref}
-      {...passedProps}
+      {...props}
     >
       {initials.join('')}
     </span>

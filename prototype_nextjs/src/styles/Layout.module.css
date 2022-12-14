@@ -2,13 +2,19 @@
     display: flex;
 }
 
-.sidebar-toggle-btn {
+.sidebarToggleBtn {
     color: black;
     background-color: var(--secondary-color);
     border-color: var(--secondary-color);
 }
 
-.sidebar-toggle-btn:hover {
+.sidebarToggleBtn:hover {
+    color: black;
+    background-color: var(--tertiary-color);
+    border-color: var(--tertiary-color);
+}
+
+.sidebarToggleBtn:first-child:active {
     color: black;
     background-color: var(--tertiary-color);
     border-color: var(--tertiary-color);

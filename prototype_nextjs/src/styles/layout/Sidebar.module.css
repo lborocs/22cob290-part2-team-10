@@ -14,17 +14,17 @@
     margin-left: -250px;
 }
 
-.sidebar-header {
+.sidebarHeader {
     padding: 20px;
     background: var(--secondary-color);
 }
 
-.company-logo {
+.companyLogo {
     max-width: 100%;
     height: auto;
 }
 
-.sidebar-content {
+.sidebarContent {
     padding-top: 20px;
     /* border-bottom: 1px solid #47748b; */
     flex-grow: 1;

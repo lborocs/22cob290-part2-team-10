@@ -15,7 +15,7 @@
     height: auto;
 }
 
-.form-grid {
+.formGrid {
     width: 100%;
 
     display: grid;
@@ -30,12 +30,12 @@
     align-items: center;
 }
 
-.signup-link {
+.signupLink {
     font-weight: 600; /* semi-bold */
     color: black;
 }
 
-.sign-in-btn {
+.signInBtn {
     height: fit-content;
     background: linear-gradient(to right, grey, #d8363a, #dd3675, #b44593);
 }
