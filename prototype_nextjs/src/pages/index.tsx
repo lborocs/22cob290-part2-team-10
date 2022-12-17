@@ -11,6 +11,7 @@ import { Formik } from 'formik';
 import { withZodSchema } from 'formik-validator-zod';
 import toast, { Toaster } from 'react-hot-toast';
 
+import FloatingTokenField from '~/components/FloatingTokenField';
 import FloatingEmailField from '~/components/FloatingEmailField';
 import FloatingPasswordField from '~/components/FloatingPasswordField';
 import LoadingButton from '~/components/LoadingButton';
