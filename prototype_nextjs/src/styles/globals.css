@@ -76,6 +76,7 @@ body:not(:has(div[class^='Layout'])) {
     color: rgba(255, 255, 255, 0.8);
 }
 
+/* TODO add underline same color https://www.youtube.com/watch?v=nS1UrJnncWc */
 .nav-link.active {
     color: var(--tertiary-color) !important;
     filter: brightness(1.1);

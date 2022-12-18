@@ -161,7 +161,7 @@ Using Docker Compose to run both the app and database together.
 
 #### Layout/Sidebar
 
-Your page component needs to be of type `AppPage`, example:
+Your page component needs to be of type `AppPage`, e.g.:
 
 ```tsx
 import type { AppPage } from '~/types';
@@ -175,7 +175,7 @@ const Page: AppPage = () => (
 export default Page;
 ```
 
-To use our defined layout (sidebar and nav in top), you need to add the property `layout` to the file's default export:
+To use our defined layout (sidebar and nav in top), you need to [add the property `layout` to the file's default export](https://youtube.com/watch?v=R59e1Vl5lO8&t=331&si=EnSIkaIECMiOmarE):
 
 | Prop                   | Type                                                     | Description                                  |
 |------------------------|----------------------------------------------------------|----------------------------------------------|
