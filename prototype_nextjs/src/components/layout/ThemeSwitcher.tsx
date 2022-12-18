@@ -1,21 +1,36 @@
-import { BrightnessHigh, Moon } from 'react-bootstrap-icons';
+import { useEffect, useState } from 'react';
+import IconButton from '@mui/material/IconButton';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
 import { useTheme } from 'next-themes';
 
-import styles from '~/styles/layout/ThemeSwitcher.module.css';
+// TODO: MUI themes
 
 export default function ThemeSwitcher() {
   const { theme, setTheme } = useTheme();
+
+  // https://github.com/pacocoursey/next-themes#avoid-hydration-mismatch
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   const isDark = theme === 'dark';
 
   const toggleTheme = () => setTheme(isDark ? 'light' : 'dark');
 
   return (
-    <button
+    <IconButton
+      aria-label="toggle theme"
       onClick={toggleTheme}
-      className={`pe-2 ${styles.themeSwitcher}`}
+      size="small"
     >
-      {isDark ? <Moon /> : <BrightnessHigh />}
-    </button>
+      {isDark
+        ? <DarkModeIcon sx={{ color: 'white' }} />
+        : <LightModeIcon sx={{ color: 'black' }} />}
+    </IconButton>
   );
 }
