@@ -490,6 +490,7 @@ from the
 | [React Boostrap](https://react-bootstrap.github.io/)                                  | 2.6           | Bootstrap React components                                                                             |
 | [React Boostrap Icons](https://github.com/ismamz/react-bootstrap-icons)               | 1.10          | Bootstrap Icons React components                                                                       |
 | [MUI Material UI](https://mui.com/)                                                   | 5.11          | Component Library ([#40][iMui])                                                                        |
+| [MUI Material UI Lab](https://mui.com/material-ui/about-the-lab/)                     | 5.0           | MUI Components not yet added to core (e.g. `LoadingButton`)                                            |
 | [MUI Material Icons](https://mui.com/material-ui/getting-started/installation/#icons) | 5.11          | MUI Icons                                                                                              |
 | [Emotion](https://emotion.sh/)                                                        | 11.10         | Styling engine for MUI, and styled components                                                          |
 | [Roboto](https://mui.com/material-ui/getting-started/installation/#roboto-font)       | 4.5           | MUI default font                                                                                       |
