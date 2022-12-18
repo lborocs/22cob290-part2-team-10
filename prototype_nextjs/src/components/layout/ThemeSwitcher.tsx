@@ -1,35 +1,23 @@
-import { useEffect, useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
-import { useTheme } from 'next-themes';
 
-// TODO: MUI themes
+import useColorMode from '~/store/colorMode';
 
 export default function ThemeSwitcher() {
-  const { theme, setTheme } = useTheme();
+  const mode = useColorMode((state) => state.mode);
+  const toggleColorMode = useColorMode((state) => state.toggleColorMode);
 
-  // https://github.com/pacocoursey/next-themes#avoid-hydration-mismatch
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
-
-  const isDark = theme === 'dark';
-
-  const toggleTheme = () => setTheme(isDark ? 'light' : 'dark');
+  const isDark = mode === 'dark';
 
   return (
     <IconButton
       aria-label="toggle theme"
-      onClick={toggleTheme}
+      onClick={toggleColorMode}
       size="small"
     >
       {isDark
-        ? <DarkModeIcon sx={{ color: 'white' }} />
+        ? <DarkModeIcon />
         : <LightModeIcon sx={{ color: 'black' }} />}
     </IconButton>
   );

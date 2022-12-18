@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTheme } from '@mui/material/styles';
 import Button from 'react-bootstrap/Button';
 import CloseButton from 'react-bootstrap/CloseButton';
 import Form from 'react-bootstrap/Form';
@@ -6,7 +7,6 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Modal from 'react-bootstrap/Modal';
 import { Clipboard2Fill } from 'react-bootstrap-icons';
 import axios, { type AxiosRequestConfig } from 'axios';
-import { useTheme } from 'next-themes';
 
 import { copyToClipboard } from '~/utils';
 import type { ResponseSchema as InviteUrlResponse } from '~/pages/api/user/get-invite-url';
@@ -24,7 +24,7 @@ enum CopyStatus {
  *  the system.
  */
 export default function InviteEmployeeSection() {
-  const { theme } = useTheme();
+  const theme = useTheme();
 
   const [showModal, setShowModal] = useState(false);
 
@@ -89,7 +89,7 @@ export default function InviteEmployeeSection() {
     <div>
       <h3>Invite Employee</h3>
       <Button
-        variant={theme === 'dark' ? 'light' : 'dark'}
+        variant={theme.palette.mode === 'dark' ? 'light' : 'dark'}
         onClick={() => setShowModal(true)}
         className={styles.button}
       >
@@ -103,7 +103,7 @@ export default function InviteEmployeeSection() {
       >
         <Modal.Header>
           <Modal.Title>Invite URL (valid for 7 days)</Modal.Title>
-          <CloseButton variant={theme === 'dark' ? 'white' : undefined} />
+          <CloseButton variant={theme.palette.mode === 'dark' ? 'white' : undefined} />
         </Modal.Header>
 
         <Modal.Body>

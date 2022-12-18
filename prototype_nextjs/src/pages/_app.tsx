@@ -1,10 +1,13 @@
+import { useEffect, useMemo } from 'react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { SessionProvider, useSession } from 'next-auth/react';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { createTheme, type ThemeOptions, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import { Toaster, ToastBar } from 'react-hot-toast';
-import { ThemeProvider } from 'next-themes';
 
 // put global css imports before component imports because otherwise:
 //  it will put the component css before the global css in the head,
@@ -22,10 +25,23 @@ import '~/styles/globals.css';
 import Layout from '~/components/Layout';
 import LoadingPage from '~/components/LoadingPage';
 import useUserStore from '~/store/userStore';
+import useColorMode from '~/store/colorMode';
 import type { AppPage } from '~/types';
 
 // https://fontawesome.com/v5/docs/web/use-with/react#getting-font-awesome-css-to-work
 config.autoAddCss = false;
+
+const lightThemeOptions: ThemeOptions = {
+  palette: {
+    mode: 'light',
+  },
+};
+
+const darkThemeOptions: ThemeOptions = {
+  palette: {
+    mode: 'dark',
+  },
+};
 
 interface MyAppProps extends AppProps {
   Component: AppProps['Component'] & AppPage
@@ -41,6 +57,19 @@ export default function App({
     }));
   }
 
+  const mode = useColorMode((state) => state.mode);
+  const setColorMode = useColorMode((state) => state.setColorMode);
+
+  const theme = useMemo(
+    () => createTheme(mode === 'dark' ? darkThemeOptions : lightThemeOptions),
+    [mode],
+  );
+
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  useEffect(() => {
+    setColorMode(prefersDarkMode ? 'dark' : 'light');
+  }, [prefersDarkMode, setColorMode]);
+
   const { noAuth, layout } = Component;
 
   return (
@@ -48,7 +77,9 @@ export default function App({
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-      <ThemeProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+
         <Toaster>
           {(t) => (
             <ToastBar toast={t}>
