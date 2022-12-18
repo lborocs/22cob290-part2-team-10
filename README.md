@@ -489,6 +489,8 @@ from the
 | [Bootstrap](https://getbootstrap.com/)                                  | 5.2           | CSS Framework                                                                                          |
 | [React Boostrap](https://react-bootstrap.github.io/)                    | 2.6           | Bootstrap React components                                                                             |
 | [React Boostrap Icons](https://github.com/ismamz/react-bootstrap-icons) | 1.10          | Bootstrap Icons React components                                                                       |
+| [MUI](https://mui.com/)                                                 | 5.11          | Component Library ([#40][iMui])                                                                        |
+| [Emotion](https://emotion.sh/)                                          | 11.10         | Styling engine for MUI, and styled components                                                          |
 | [react-hot-toast](https://react-hot-toast.com/)                         | 2.4           | Toasts                                                                                                 |
 | [Axios](https://axios-http.com/)                                        | 1.2           | HTTP client (use instead of the `fetch` API)                                                           |
 | [zustand](https://github.com/pmndrs/zustand)                            | 4.1           | State management                                                                                       |
@@ -514,3 +516,4 @@ from the
 [iHashids]: https://github.com/lborocs/22cob290-part2-team-10/issues/16
 [iJwt]: https://github.com/lborocs/22cob290-part2-team-10/issues/19
 [iNextThemes]: https://github.com/lborocs/22cob290-part2-team-10/issues/38
+[iMui]: https://github.com/lborocs/22cob290-part2-team-10/issues/40
