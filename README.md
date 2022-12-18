@@ -478,37 +478,39 @@ from the
 
 ### Libraries
 
-| Name                                                                    | Minor Version | Purpose                                                                                                |
-|-------------------------------------------------------------------------|---------------|--------------------------------------------------------------------------------------------------------|
-| [TypeScript](https://www.typescriptlang.org/)                           | 4.9           | Programming language                                                                                   |
-| [ESLint](https://eslint.org/)                                           | 8.28          | Static code analysis                                                                                   |
-| [React](https://reactjs.org/)                                           | 18.2          | UI library                                                                                             |
-| [Next.Js](https://nextjs.org/)                                          | 13.0          | Full stack framework                                                                                   |
-| [NextAuth.js](https://next-auth.js.org/)                                | 4.17          | Authentication                                                                                         |
-| [sharp](https://nextjs.org/docs/messages/sharp-missing-in-production)   | 0.31          | Next.Js Image Optimization (not used explicitly by us)                                                 |
-| [Bootstrap](https://getbootstrap.com/)                                  | 5.2           | CSS Framework                                                                                          |
-| [React Boostrap](https://react-bootstrap.github.io/)                    | 2.6           | Bootstrap React components                                                                             |
-| [React Boostrap Icons](https://github.com/ismamz/react-bootstrap-icons) | 1.10          | Bootstrap Icons React components                                                                       |
-| [MUI](https://mui.com/)                                                 | 5.11          | Component Library ([#40][iMui])                                                                        |
-| [Emotion](https://emotion.sh/)                                          | 11.10         | Styling engine for MUI, and styled components                                                          |
-| [react-hot-toast](https://react-hot-toast.com/)                         | 2.4           | Toasts                                                                                                 |
-| [Axios](https://axios-http.com/)                                        | 1.2           | HTTP client (use instead of the `fetch` API)                                                           |
-| [zustand](https://github.com/pmndrs/zustand)                            | 4.1           | State management                                                                                       |
-| [Prisma](https://www.prisma.io/)                                        | 4.7           | Database ORM ([#12][iPrisma])                                                                          |
-| [ts-node](https://typestrong.org/ts-node/)                              | 10.9          | Run code to [seed Prisma database](https://www.prisma.io/docs/guides/database/seed-database)           |
-| [node.bcrypt.js](https://github.com/kelektiv/node.bcrypt.js)            | 5.1           | Hashing user passwords                                                                                 |
-| [react-markdown](https://github.com/remarkjs/react-markdown)?           | -             | Render markdown content in forum posts                                                                 |
-| [Zod](https://zod.dev/)                                                 | 3.19          | Object schema validation ([#1][pFormikZod])                                                            |
-| [Formik](https://formik.org/)                                           | 2.2           | Form validation ([#1][pFormikZod])                                                                     |
-| [formik-validator-zod](https://github.com/Glazy/formik-validator-zod)   | 1.0           | Zod adapter for Formik ([Formik uses Yup](https://formik.org/docs/guides/validation#validationschema)) |
-| [SWR](https://swr.vercel.app/)                                          | 4.18          | Client-side data fetching                                                                              |
-| [hashids](https://hashids.org/)                                         | 2.2           | Mask IDs in URLs ([#16][iHashids])                                                                     |
-| [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken)              | 8.5           | Generate invite tokens ([#19][iJwt])                                                                   |
-| [dotenv](https://github.com/motdotla/dotenv)                            | 16.0          | Load development environment variables during database seeding                                         |
-| [lodash](https://lodash.com/)                                           | 4.17          | Utility library                                                                                        |
-| [lorem-ipsum](https://github.com/knicklabs/lorem-ipsum.js)              | 2.0           | Generating placeholder text (for seeding)                                                              |
-| [next-themes](https://github.com/pacocoursey/next-themes)               | 0.2           | Handling themes ([#38][iNextThemes])                                                                   |
-| ...                                                                     |               |                                                                                                        |
+| Name                                                                                  | Minor Version | Purpose                                                                                                |
+|---------------------------------------------------------------------------------------|---------------|--------------------------------------------------------------------------------------------------------|
+| [TypeScript](https://www.typescriptlang.org/)                                         | 4.9           | Programming language                                                                                   |
+| [ESLint](https://eslint.org/)                                                         | 8.28          | Static code analysis                                                                                   |
+| [React](https://reactjs.org/)                                                         | 18.2          | UI library                                                                                             |
+| [Next.Js](https://nextjs.org/)                                                        | 13.0          | Full stack framework                                                                                   |
+| [NextAuth.js](https://next-auth.js.org/)                                              | 4.17          | Authentication                                                                                         |
+| [sharp](https://nextjs.org/docs/messages/sharp-missing-in-production)                 | 0.31          | Next.Js Image Optimization (not used explicitly by us)                                                 |
+| [Bootstrap](https://getbootstrap.com/)                                                | 5.2           | CSS Framework                                                                                          |
+| [React Boostrap](https://react-bootstrap.github.io/)                                  | 2.6           | Bootstrap React components                                                                             |
+| [React Boostrap Icons](https://github.com/ismamz/react-bootstrap-icons)               | 1.10          | Bootstrap Icons React components                                                                       |
+| [MUI Material UI](https://mui.com/)                                                   | 5.11          | Component Library ([#40][iMui])                                                                        |
+| [MUI Material Icons](https://mui.com/material-ui/getting-started/installation/#icons) | 5.11          | MUI Icons                                                                                              |
+| [Emotion](https://emotion.sh/)                                                        | 11.10         | Styling engine for MUI, and styled components                                                          |
+| [Roboto](https://mui.com/material-ui/getting-started/installation/#roboto-font)       | 4.5           | MUI default font                                                                                       |
+| [react-hot-toast](https://react-hot-toast.com/)                                       | 2.4           | Toasts                                                                                                 |
+| [Axios](https://axios-http.com/)                                                      | 1.2           | HTTP client (use instead of the `fetch` API)                                                           |
+| [zustand](https://github.com/pmndrs/zustand)                                          | 4.1           | State management                                                                                       |
+| [Prisma](https://www.prisma.io/)                                                      | 4.7           | Database ORM ([#12][iPrisma])                                                                          |
+| [ts-node](https://typestrong.org/ts-node/)                                            | 10.9          | Run code to [seed Prisma database](https://www.prisma.io/docs/guides/database/seed-database)           |
+| [node.bcrypt.js](https://github.com/kelektiv/node.bcrypt.js)                          | 5.1           | Hashing user passwords                                                                                 |
+| [react-markdown](https://github.com/remarkjs/react-markdown)?                         | -             | Render markdown content in forum posts                                                                 |
+| [Zod](https://zod.dev/)                                                               | 3.19          | Object schema validation ([#1][pFormikZod])                                                            |
+| [Formik](https://formik.org/)                                                         | 2.2           | Form validation ([#1][pFormikZod])                                                                     |
+| [formik-validator-zod](https://github.com/Glazy/formik-validator-zod)                 | 1.0           | Zod adapter for Formik ([Formik uses Yup](https://formik.org/docs/guides/validation#validationschema)) |
+| [SWR](https://swr.vercel.app/)                                                        | 4.18          | Client-side data fetching                                                                              |
+| [hashids](https://hashids.org/)                                                       | 2.2           | Mask IDs in URLs ([#16][iHashids])                                                                     |
+| [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken)                            | 8.5           | Generate invite tokens ([#19][iJwt])                                                                   |
+| [dotenv](https://github.com/motdotla/dotenv)                                          | 16.0          | Load development environment variables during database seeding                                         |
+| [lodash](https://lodash.com/)                                                         | 4.17          | Utility library                                                                                        |
+| [lorem-ipsum](https://github.com/knicklabs/lorem-ipsum.js)                            | 2.0           | Generating placeholder text (for seeding)                                                              |
+| [next-themes](https://github.com/pacocoursey/next-themes)                             | 0.2           | Handling themes ([#38][iNextThemes])                                                                   |
+| ...                                                                                   |               |                                                                                                        |
 
 <!-- https://stackoverflow.com/a/42424860 -->
 [pFormikZod]: https://github.com/lborocs/22cob290-part2-team-10/pull/1
