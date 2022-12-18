@@ -8,8 +8,8 @@ body {
 }
 
 :root {
-    --background: white;
-    --foreground: black;
+    /* --background: white;
+    --foreground: black; */
 
     /* TODO: idk what to call this (sidebarToggleBtn:hover and projectLink.active) */
     --tertiary-color: #e2ba39;
@@ -24,8 +24,8 @@ body {
 
 [data-theme='dark'],
 [data-theme='dark'] body {
-    --background: #1c1e21;
-    --foreground: white;
+    /* --background: #1c1e21;
+    --foreground: white; */
 
     --navbar-background: #131416;
     --navbar-shadow-color: rgba(255, 255, 255, .17);
@@ -62,11 +62,11 @@ body:not(:has(div[class^='Layout'])) {
 /* dark theme SignIn & SignUp: 70% brightness */
 [data-theme='dark']:not(:has(div[class^='Layout'])),
 [data-theme='dark'] body:not(:has(div[class^='Layout'])) {
-    background-color: #949494;
+    /* background-color: #949494; */
 }
 
 [data-theme='dark'] body:not(:has(div[class^='Layout'])) > * {
-    filter: brightness(0.7);
+    /* filter: brightness(0.7); */
 }
 
 .nav-link {

@@ -1,6 +1,5 @@
 import { forwardRef, useState } from 'react';
 
-import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -39,8 +38,8 @@ export default forwardRef(function PasswordField({
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">
-            <Box
-              sx={{
+            <div
+              style={{
                 display: 'flex',
               }}
             >
@@ -57,7 +56,7 @@ export default forwardRef(function PasswordField({
               >
                 {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
               </IconButton>
-            </Box>
+            </div>
           </InputAdornment>
         ),
       }}
