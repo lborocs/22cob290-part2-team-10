@@ -3,6 +3,7 @@ import { forwardRef, useState } from 'react';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
+import Stack from '@mui/material/Stack';
 import TextField, { type TextFieldProps } from '@mui/material/TextField';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -38,15 +39,13 @@ export default forwardRef(function PasswordField({
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">
-            <div
-              style={{
-                display: 'flex',
-              }}
+            <Stack
+              direction="row"
+              divider={<Divider orientation="vertical" variant="middle" flexItem />}
             >
               {policyTooltip && (
                 <>
                   <PolicyTooltip />
-                  <Divider orientation="vertical" variant="middle" flexItem />
                 </>
               )}
               <IconButton
@@ -56,7 +55,7 @@ export default forwardRef(function PasswordField({
               >
                 {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
               </IconButton>
-            </div>
+            </Stack>
           </InputAdornment>
         ),
       }}

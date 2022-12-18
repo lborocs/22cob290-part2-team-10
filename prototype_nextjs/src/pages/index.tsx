@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { unstable_getServerSession } from 'next-auth/next';
 import { signIn } from 'next-auth/react';
+import Box from '@mui/material/Box';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Typography from '@mui/material/Typography';
 import { Formik } from 'formik';
@@ -20,7 +21,6 @@ import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 import styles from '~/styles/SignIn.module.css';
 import makeItAllLogo from '~/../public/make_it_all.png';
-import { createTheme } from '@mui/material';
 
 type SignInFormData = {
   email: string
@@ -29,9 +29,6 @@ type SignInFormData = {
 
 const SignInPage: AppPage = () => {
   const router = useRouter();
-  const theme = createTheme({
-    spacing: (factor: number) => `${0.25 * factor}rem`, // (Bootstrap strategy)
-  });
 
   // handle using this as signIn page for auth flow
   const { callbackUrl } = router.query;
@@ -104,15 +101,18 @@ const SignInPage: AppPage = () => {
       </Head>
 
       <div className={styles.wrapper}>
-        <Image
-          className={styles.logo}
-          src={makeItAllLogo}
-          alt="Make-It-All Logo"
-          style={{
-            marginBottom: theme.spacing(5),
+        <Box
+          sx={{
+            mb: 2.5,
           }}
-          priority
-        />
+        >
+          <Image
+            className={styles.logo}
+            src={makeItAllLogo}
+            alt="Make-It-All Logo"
+            priority
+          />
+        </Box>
 
         <Formik
           initialValues={{
