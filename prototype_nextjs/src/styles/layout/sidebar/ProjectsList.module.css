@@ -1,19 +1,11 @@
-.title {
-    color: var(--sidebar-text);
-    padding: 10px;
-    margin-bottom: 0;
-}
-
 .projectsList {
+    /* TODO: increase height to rest of viewport but page isn't scrollable but this is */
     height: 420px;
     overflow-y: scroll;
 }
 
 .projectLink {
-    padding: 10px;
-    font-size: 1.1em;
     display: block;
-
     white-space: nowrap;
     overflow-x: hidden;
     text-overflow: ellipsis;

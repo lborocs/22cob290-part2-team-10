@@ -1,16 +1,20 @@
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
-import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import FormControl from 'react-bootstrap/FormControl';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Tooltip from 'react-bootstrap/Tooltip';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import Skeleton from '@mui/material/Skeleton';
+import TextField from '@mui/material/TextField';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import _ from 'lodash';
 import useSWR from 'swr';
 
-import LoadingPage from '~/components/LoadingPage';
 import hashids from '~/lib/hashids';
+import LoadingPage from '~/components/LoadingPage';
+import { NextLinkComposed } from '~/components/Link';
 import type { ResponseSchema as GetProjectsResponse } from '~/pages/api/projects/get-assigned-projects';
 
 import styles from '~/styles/layout/sidebar/ProjectsList.module.css';
@@ -51,16 +55,21 @@ function SearchBar({ onSearchSubmit, resetResults }: {
     }
   }, [query, onSearchSubmit, resetResults]);
 
+  // TODO: want input's outline to be greyish
+
   return (
-    <div className="ms-1 me-3 my-2">
-      <FloatingLabel label="Search by name" controlId="query">
-        <FormControl
-          placeholder="Query"
-          value={debouncedQuery}
-          onChange={(e) => setDebouncedQuery(e.target.value)}
-        />
-      </FloatingLabel>
-    </div>
+    <TextField
+      id="query"
+      label="Search by name"
+      variant="outlined"
+      value={debouncedQuery}
+      onChange={(e) => setDebouncedQuery(e.target.value)}
+      sx={(theme) => ({
+        marginLeft: theme.spacing(0.5),
+        marginRight: theme.spacing(1.5),
+        my: theme.spacing(1),
+      })}
+    />
   );
 }
 
@@ -78,8 +87,6 @@ const filterProjects = _.memoize((query: string, projects: GetProjectsResponse) 
 });
 
 export default function ProjectsList() {
-  const router = useRouter();
-
   const { data: projects, error } = useSWR('/api/projects/get-assigned-projects', async (url) => {
     const { data } = await axios.get<GetProjectsResponse>(url);
     return data;
@@ -90,9 +97,47 @@ export default function ProjectsList() {
   // TODO: decide what to show on error
   if (error) return null;
 
+  // TODO: show skeleton
   if (!projects) return (
     <LoadingPage dark={false} />
   );
+
+  const onSearchSubmit = (query: string) => setFilteredProjects(filterProjects(query, projects));
+
+  const resetResults = () => setFilteredProjects(projects);
+
+  // TODO: look into using react-window (virtualized list)
+  // https://mui.com/material-ui/react-list/#virtualized-list
+
+  return (
+    <div>
+      <Typography
+        fontSize="large"
+        sx={{
+          padding: 1,
+        }}
+      >
+        Assigned Projects:
+      </Typography>
+
+      <SearchBar
+        onSearchSubmit={onSearchSubmit}
+        resetResults={resetResults}
+      />
+
+      <List
+        className={styles.projectsList}
+      >
+        {filteredProjects.map((project, index) => (
+          <ProjectListItem key={index} project={project} />
+        ))}
+      </List>
+    </div>
+  );
+}
+
+function ProjectListItem({ project }: { project: GetProjectsResponse[number] }) {
+  const router = useRouter();
 
   let currentProjectUrl: string | undefined;
   if (router.pathname.startsWith('/projects/[id]')) {
@@ -100,50 +145,34 @@ export default function ProjectsList() {
     currentProjectUrl = `/projects/${id as string}`;
   }
 
-  const onSearchSubmit = (query: string) => setFilteredProjects(filterProjects(query, projects));
+  const url = `/projects/${hashids.encode(project.id)}`;
+  const active = currentProjectUrl === url;
 
-  const resetResults = () => setFilteredProjects(projects);
+  // TODO: some sort of like way to signify that they can hover over it for tooltip
+  const nameIsTooLong = project.name.length > 18;
+
+  const renderLink = (
+    <ListItemButton
+      className={`${styles.projectLink} ${active ? styles.active : ''}`}
+      component={NextLinkComposed}
+      to={{
+        pathname: url,
+      }}
+    >
+      <ListItemText>{project.name}</ListItemText>
+    </ListItemButton>
+  );
 
   return (
-    <div>
-      <p className={styles.title}>Assigned Projects:</p>
-
-      <SearchBar
-        onSearchSubmit={onSearchSubmit}
-        resetResults={resetResults}
-      />
-
-      <ol className={`list-unstyled ${styles.projectsList}`}>
-        {filteredProjects.map((project, index) => {
-          const url = `/projects/${hashids.encode(project.id)}`;
-          const active = currentProjectUrl === url;
-
-          // TODO: some sort of like way to signify that they can hover over it for tooltip
-          const nameIsTooLong = project.name.length > 18;
-
-          return (
-            <li key={index}>
-              <OverlayTrigger
-                placement="right"
-                overlay={nameIsTooLong ? (
-                  <Tooltip>
-                    {project.name}
-                  </Tooltip>
-                ) : (
-                  <></>
-                )}
-              >
-                <Link
-                  href={url}
-                  className={`${styles.projectLink} ${active ? styles.active : ''}`}
-                >
-                  {project.name}
-                </Link>
-              </OverlayTrigger>
-            </li>
-          );
-        })}
-      </ol>
-    </div>
+    <ListItem disablePadding disableGutters>
+      {nameIsTooLong ? (
+        <Tooltip
+          placement="right"
+          title={<Typography fontSize="small">{project.name}</Typography>}
+        >
+          {renderLink}
+        </Tooltip>
+      ) : renderLink}
+    </ListItem>
   );
 }
