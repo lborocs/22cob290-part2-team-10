@@ -26,6 +26,7 @@
     "axios": "^1.2.0",
     "bcrypt": "^5.1.0",
     "bootstrap": "^5.2.3",
+    "clsx": "^1.2.1",
     "formik": "^2.2.9",
     "formik-validator-zod": "^1.0.2",
     "hashids": "^2.2.10",

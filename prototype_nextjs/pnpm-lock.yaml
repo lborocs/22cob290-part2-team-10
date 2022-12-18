@@ -21,6 +21,7 @@ specifiers:
   axios: ^1.2.0
   bcrypt: ^5.1.0
   bootstrap: ^5.2.3
+  clsx: ^1.2.1
   dotenv: ^16.0.3
   dotenv-cli: ^6.0.0
   eslint: ^8.28.0
@@ -63,6 +64,7 @@ dependencies:
   axios: 1.2.1
   bcrypt: 5.1.0
   bootstrap: 5.2.3_@popperjs+core@2.11.6
+  clsx: 1.2.1
   formik: 2.2.9_react@18.2.0
   formik-validator-zod: 1.0.2_formik@2.2.9+zod@3.19.1
   hashids: 2.2.10
