@@ -20,6 +20,8 @@ import styles from '~/styles/layout/sidebar/ProjectsList.module.css';
 
 const DEBOUNCE_TIMEOUT = 600;
 
+// https://mui.com/material-ui/react-skeleton/
+
 /**
  * Using debouncing for better performance.
  *

@@ -1,29 +1,38 @@
-import InputGroup from 'react-bootstrap/InputGroup';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Tooltip from 'react-bootstrap/Tooltip';
-import { InfoCircleFill } from 'react-bootstrap-icons';
+import IconButton from '@mui/material/IconButton';
+import InfoIcon from '@mui/icons-material/Info';
+import Tooltip, { type TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+
+import { styled } from '@mui/material/styles';
+
+// source: https://mui.com/material-ui/react-tooltip/#customization
+const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} arrow classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.arrow}`]: {
+    color: theme.palette.common.black,
+  },
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: theme.palette.common.black,
+  },
+}));
 
 export default function PolicyTooltip() {
   return (
-    <OverlayTrigger
+    <BootstrapTooltip
       placement="top"
-      overlay={
-        <Tooltip>
+      title={
+        <Typography variant="caption">
           At least 1 uppercase<br />
           At least 1 lowercase<br />
           At least 1 number<br />
           At least 1 special symbol
-        </Tooltip>
+        </Typography>
       }
     >
-      {({ ref, ...triggerHandler }) => (
-        <InputGroup.Text
-          {...triggerHandler}
-          ref={ref}
-        >
-          <InfoCircleFill />
-        </InputGroup.Text>
-      )}
-    </OverlayTrigger>
+      <IconButton>
+        <InfoIcon />
+      </IconButton>
+    </BootstrapTooltip>
   );
 }

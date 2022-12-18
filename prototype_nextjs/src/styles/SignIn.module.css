@@ -16,11 +16,14 @@
 }
 
 .formGrid {
-    width: 100%;
-
     display: grid;
-    gap: 1rem;
-    grid-template-rows: repeat(3, 1fr);
+    gap: 0.6rem;
+}
+
+.inputGrid {
+    display: grid;
+    gap: 1.2rem;
+    grid-template-rows: repeat(2, 1fr);
 }
 
 .links {
@@ -30,13 +33,12 @@
     align-items: center;
 }
 
-.signupLink {
-    font-weight: 600; /* semi-bold */
+/* .signupLink {
+    font-weight: 600; /* semi-bold * /
     color: black;
-}
+} */
 
-.signInBtn {
-    height: fit-content;
+.signInBtn:not(:disabled) {
     background: linear-gradient(to right, grey, #d8363a, #dd3675, #b44593);
 }
 

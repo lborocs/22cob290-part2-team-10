@@ -1,6 +1,9 @@
 import type { AppProps } from 'next/app';
+import Head from 'next/head';
 import { SessionProvider, useSession } from 'next-auth/react';
+import Typography from '@mui/material/Typography';
 import { config } from '@fortawesome/fontawesome-svg-core';
+import { Toaster, ToastBar } from 'react-hot-toast';
 import { ThemeProvider } from 'next-themes';
 
 // put global css imports before component imports because otherwise:
@@ -8,7 +11,12 @@ import { ThemeProvider } from 'next-themes';
 //  so the global will get precedence when styling a component
 //  which is bad because the components won't look how we want them to look
 import '@fortawesome/fontawesome-svg-core/styles.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';
+// Roboto is MUI default font
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
 import '~/styles/globals.css';
 
 import Layout from '~/components/Layout';
@@ -37,7 +45,25 @@ export default function App({
 
   return (
     <SessionProvider session={session}>
+      <Head>
+        <meta name="viewport" content="initial-scale=1, width=device-width" />
+      </Head>
       <ThemeProvider>
+        <Toaster>
+          {(t) => (
+            <ToastBar toast={t}>
+              {({ icon, message }) => (
+                <>
+                  {icon}
+                  <Typography component={'div'}>
+                    {message}
+                  </Typography>
+                </>
+              )}
+            </ToastBar>
+          )}
+        </Toaster>
+
         {noAuth ? (
           <Component {...pageProps} />
         ) : (

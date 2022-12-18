@@ -6,29 +6,32 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { unstable_getServerSession } from 'next-auth/next';
 import { signIn } from 'next-auth/react';
-import Form from 'react-bootstrap/Form';
+import LoadingButton from '@mui/lab/LoadingButton';
+import Typography from '@mui/material/Typography';
 import { Formik } from 'formik';
 import { withZodSchema } from 'formik-validator-zod';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
-import FloatingEmailField from '~/components/FloatingEmailField';
-import FloatingPasswordField from '~/components/FloatingPasswordField';
-import LoadingButton from '~/components/LoadingButton';
+import EmailField from '~/components/EmailField';
+import PasswordField from '~/components/PasswordField';
 import SignInSchema from '~/schemas/user/signIn';
 import type { AppPage } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 import styles from '~/styles/SignIn.module.css';
 import makeItAllLogo from '~/../public/make_it_all.png';
+import { createTheme } from '@mui/material';
 
 type SignInFormData = {
   email: string
   password: string
 };
 
-// TODO: add create account link that takes to /signup
 const SignInPage: AppPage = () => {
   const router = useRouter();
+  const theme = createTheme({
+    spacing: (factor: number) => `${0.25 * factor}rem`, // (Bootstrap strategy)
+  });
 
   // handle using this as signIn page for auth flow
   const { callbackUrl } = router.query;
@@ -59,6 +62,7 @@ const SignInPage: AppPage = () => {
           case 'CredentialsSignin': // failed signin
             toast.error('Could not sign in, please check your credentials.', {
               id: 'signInFailed',
+              position: 'top-center',
             });
             setFieldError('email', '');
             setFieldError('password', '');
@@ -99,15 +103,14 @@ const SignInPage: AppPage = () => {
         <title>Sign In - Make-It-All</title>
       </Head>
 
-      <Toaster
-        position="top-center"
-      />
-
       <div className={styles.wrapper}>
         <Image
-          className={`mb-3 ${styles.logo}`}
+          className={styles.logo}
           src={makeItAllLogo}
           alt="Make-It-All Logo"
+          style={{
+            marginBottom: theme.spacing(5),
+          }}
           priority
         />
 
@@ -129,47 +132,46 @@ const SignInPage: AppPage = () => {
             isSubmitting,
             isValid,
           }) => (
-            <Form
+            <form
               onSubmit={handleSubmit}
               className={styles.formGrid}
               noValidate
             >
-              <div>
-                <FloatingEmailField
+              <div className={styles.inputGrid}>
+                <EmailField
+                  variant="outlined"
+                  id="email"
                   name="email"
-                  controlId="email"
-                  feedback={touched.email ? errors.email : undefined}
                   value={values.email}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  isInvalid={touched.email && errors.email !== undefined}
-                  feedbackTooltip
-                  onlyFeedbackOutline={errors.email?.length === 0}
+                  error={touched.email && errors.email !== undefined}
+                  helperText={errors.email || 'Please enter your work email'}
+                  required
                 />
-              </div>
-              <div>
-                <FloatingPasswordField
+                <PasswordField
                   name="password"
-                  controlId="password"
-                  feedback={touched.password ? errors.password : undefined}
+                  variant="outlined"
                   value={values.password}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  isInvalid={touched.password && errors.password !== undefined}
-                  feedbackTooltip
-                  onlyFeedbackOutline={errors.password?.length === 0}
+                  error={touched.password && errors.password !== undefined}
+                  helperText={errors.password || 'Please enter your password'}
                   policyTooltip
+                  required
                 />
               </div>
               <div>
                 <div className={styles.links}>
-                  <Link href="/signup" className={styles.signupLink}>
-                    Create Account
+                  <Link href="/signup">
+                    <Typography fontWeight={500}>
+                      Create Account
+                    </Typography>
                   </Link>
                   <LoadingButton
-                    variant="secondary"
                     type="submit"
-                    isLoading={isSubmitting}
+                    variant="contained"
+                    loading={isSubmitting}
                     disabled={!isValid}
                     className={styles.signInBtn}
                   >
@@ -177,7 +179,7 @@ const SignInPage: AppPage = () => {
                   </LoadingButton>
                 </div>
               </div>
-            </Form>
+            </form>
           )}
         </Formik>
       </div>
@@ -191,7 +193,7 @@ SignInPage.noAuth = true;
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await unstable_getServerSession(context.req, context.res, authOptions);
 
-  // if signed in, redirect to home page
+  // if signed in, redirect to home page or callbackUrl
   if (session && session.user) {
     const { callbackUrl } = context.query;
 
