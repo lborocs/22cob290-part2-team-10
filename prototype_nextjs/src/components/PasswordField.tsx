@@ -43,11 +43,7 @@ export default forwardRef(function PasswordField({
               direction="row"
               divider={<Divider orientation="vertical" variant="middle" flexItem />}
             >
-              {policyTooltip && (
-                <>
-                  <PolicyTooltip />
-                </>
-              )}
+              {policyTooltip && <PolicyTooltip />}
               <IconButton
                 aria-label="toggle password visibility"
                 onClick={togglePassword}

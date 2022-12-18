@@ -139,9 +139,10 @@ const SignInPage: AppPage = () => {
             >
               <div className={styles.inputGrid}>
                 <EmailField
-                  variant="outlined"
                   id="email"
                   name="email"
+                  variant="outlined"
+                  size="small"
                   value={values.email}
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -150,8 +151,10 @@ const SignInPage: AppPage = () => {
                   required
                 />
                 <PasswordField
+                  id="password"
                   name="password"
                   variant="outlined"
+                  size="small"
                   value={values.password}
                   onChange={handleChange}
                   onBlur={handleBlur}

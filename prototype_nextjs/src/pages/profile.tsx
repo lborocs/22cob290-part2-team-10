@@ -5,7 +5,6 @@ import { signOut } from 'next-auth/react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import { Toaster } from 'react-hot-toast';
 
 import prisma from '~/lib/prisma';
 import { getEmailFromToken } from '~/lib/inviteToken';
@@ -25,8 +24,6 @@ const ProfilePage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps
       <Head>
         <title>Profile - Make-It-All</title>
       </Head>
-
-      <Toaster />
 
       <section>
         <Row>
@@ -66,7 +63,7 @@ const ProfilePage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps
       >
         Sign Out
       </Button>
-    </main >
+    </main>
   );
 };
 
