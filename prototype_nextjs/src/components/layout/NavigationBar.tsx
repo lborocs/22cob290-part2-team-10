@@ -165,17 +165,21 @@ function LayoutNav() {
 
 // TODO: maybe change from Button to MUI Link (or whatever its called)
 // TODO: active style
-function NavItem({
-  ...props
-}: ButtonProps & React.ComponentProps<typeof NextLinkComposed>) {
+function NavItem(props: ButtonProps & React.ComponentProps<typeof NextLinkComposed>) {
   const router = useRouter();
+
+  const active = router.pathname.startsWith(props.to as string);
 
   return (
     <Button
       size="small"
       component={NextLinkComposed}
+      color="contrast"
       sx={(theme) => ({
-        color: theme.palette.mode === 'dark' ? 'white' : 'black',
+        color: active ? theme.palette.primary.main : undefined,
+        '&:hover': {
+          color: theme.palette.primary.dark,
+        },
       })}
       {...props}
     />
