@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { IconButton, styled } from '@mui/material/';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Button, { type ButtonProps } from '@mui/material/Button';
@@ -12,15 +11,12 @@ import Stack from '@mui/material/Stack';
 import Toolbar from '@mui/material/Toolbar';
 import { grey } from '@mui/material/colors';
 import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
-import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
 import MenuIcon from '@mui/icons-material/Menu';
 
 import { NextLinkComposed } from '~/components/Link';
 import TextAvatar from '~/components/TextAvatar';
 import ThemeSwitcher from '~/components/layout/ThemeSwitcher';
 import useUserStore from '~/store/userStore';
-
-import styles from '~/styles/Layout.module.css';
 
 const userPages = ['Home', 'Forum', 'Projects', 'Dashboard'];
 const managerPages = ['Home', 'Forum', 'Projects', 'Dashboard', 'Staff'];
