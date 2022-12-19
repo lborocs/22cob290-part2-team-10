@@ -1,4 +1,5 @@
 .main {
+    /* background-color: #d3d3d3; */
 }
 
 /* mobile first */
@@ -40,6 +41,7 @@
 
 .signInBtn:not(:disabled) {
     background: linear-gradient(to right, grey, #d8363a, #dd3675, #b44593);
+    color: white;
 }
 
 /* tablets/large phones? */

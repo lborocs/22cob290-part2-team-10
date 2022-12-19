@@ -8,6 +8,7 @@ import { unstable_getServerSession } from 'next-auth/next';
 import { signIn } from 'next-auth/react';
 import Box from '@mui/material/Box';
 import LoadingButton from '@mui/lab/LoadingButton';
+import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { Formik } from 'formik';
 import { withZodSchema } from 'formik-validator-zod';
@@ -100,92 +101,97 @@ const SignInPage: AppPage = () => {
         <title>Sign In - Make-It-All</title>
       </Head>
 
-      <div className={styles.wrapper}>
-        <Box
-          sx={{
-            mb: 2.5,
-          }}
-        >
-          <Image
-            className={styles.logo}
-            src={makeItAllLogo}
-            alt="Make-It-All Logo"
-            priority
-          />
-        </Box>
+      <Paper>
+        <Box sx={(theme) => ({
+          padding: theme.spacing(8),
+          color: 'black', // TODO: inner components not black
+        })}>
+          <div className={styles.wrapper}>
+            <Box sx={{
+              mb: 2.5,
+            }}>
+              <Image
+                className={styles.logo}
+                src={makeItAllLogo}
+                alt="Make-It-All Logo"
+                priority
+              />
+            </Box>
 
-        <Formik
-          initialValues={{
-            email: 'alice@make-it-all.co.uk',
-            password: 'TestPassword123!',
-          }}
-          validate={withZodSchema(SignInSchema)}
-          onSubmit={handleSubmit}
-        >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            isSubmitting,
-            isValid,
-          }) => (
-            <form
+            <Formik
+              initialValues={{
+                email: 'alice@make-it-all.co.uk',
+                password: 'TestPassword123!',
+              }}
+              validate={withZodSchema(SignInSchema)}
               onSubmit={handleSubmit}
-              className={styles.formGrid}
-              noValidate
             >
-              <div className={styles.inputGrid}>
-                <EmailField
-                  id="email"
-                  name="email"
-                  variant="outlined"
-                  size="small"
-                  value={values.email}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.email && errors.email !== undefined}
-                  helperText={errors.email || 'Please enter your work email'}
-                  required
-                />
-                <PasswordField
-                  id="password"
-                  name="password"
-                  variant="outlined"
-                  size="small"
-                  value={values.password}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.password && errors.password !== undefined}
-                  helperText={errors.password || 'Please enter your password'}
-                  policyTooltip
-                  required
-                />
-              </div>
-              <div>
-                <div className={styles.links}>
-                  <Link href="/signup">
-                    <Typography fontWeight={500}>
-                      Create Account
-                    </Typography>
-                  </Link>
-                  <LoadingButton
-                    type="submit"
-                    variant="contained"
-                    loading={isSubmitting}
-                    disabled={!isValid}
-                    className={styles.signInBtn}
-                  >
-                    Sign In
-                  </LoadingButton>
-                </div>
-              </div>
-            </form>
-          )}
-        </Formik>
-      </div>
+              {({
+                values,
+                errors,
+                touched,
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                isSubmitting,
+                isValid,
+              }) => (
+                <form
+                  onSubmit={handleSubmit}
+                  className={styles.formGrid}
+                  noValidate
+                >
+                  <div className={styles.inputGrid}>
+                    <EmailField
+                      id="email"
+                      name="email"
+                      variant="outlined"
+                      size="small"
+                      value={values.email}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={touched.email && errors.email !== undefined}
+                      helperText={errors.email || 'Please enter your work email'}
+                      required
+                    />
+                    <PasswordField
+                      id="password"
+                      name="password"
+                      variant="outlined"
+                      size="small"
+                      value={values.password}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={touched.password && errors.password !== undefined}
+                      helperText={errors.password || 'Please enter your password'}
+                      policyTooltip
+                      required
+                    />
+                  </div>
+                  <div>
+                    <div className={styles.links}>
+                      <Link href="/signup">
+                        <Typography fontWeight={500} color="contrast.main">
+                          Create Account
+                        </Typography>
+                      </Link>
+                      <LoadingButton
+                        type="submit"
+                        variant="contained"
+                        loading={isSubmitting}
+                        disabled={!isValid}
+                        className={styles.signInBtn}
+                      >
+                        Sign In
+                      </LoadingButton>
+                    </div>
+                  </div>
+                </form>
+              )}
+            </Formik>
+          </div>
+        </Box>
+      </Paper>
     </main>
   );
 };
