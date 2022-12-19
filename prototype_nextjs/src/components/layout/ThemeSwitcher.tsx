@@ -15,10 +15,9 @@ export default function ThemeSwitcher() {
       aria-label="toggle theme"
       onClick={toggleColorMode}
       size="small"
+      color="contrast"
     >
-      {isDark
-        ? <DarkModeIcon />
-        : <LightModeIcon sx={{ color: 'black' }} />}
+      {isDark ? <DarkModeIcon /> : <LightModeIcon />}
     </IconButton>
   );
 }

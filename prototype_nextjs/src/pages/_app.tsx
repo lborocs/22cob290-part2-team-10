@@ -68,27 +68,27 @@ declare module '@mui/material/styles' {
   }
 }
 
+interface ColorOverrides {
+  light: true;
+  dark: true;
+  contrast: true;
+  makeItAllGrey: true;
+  makeItAllOrange: true;
+}
+
 declare module '@mui/material/Button' {
-  interface ButtonPropsColorOverrides {
-    light: true;
-    dark: true;
-    contrast: true;
-    makeItAllGrey: true;
-    makeItAllOrange: true;
-  }
+  interface ButtonPropsColorOverrides extends ColorOverrides { }
+}
+
+declare module '@mui/material/IconButton' {
+  interface IconButtonPropsColorOverrides extends ColorOverrides { }
 }
 
 declare module '@mui/material/TextField' {
-  interface TextFieldPropsColorOverrides {
-    light: true;
-    dark: true;
-    contrast: true;
-    makeItAllGrey: true;
-    makeItAllOrange: true;
-  }
+  interface TextFieldPropsColorOverrides extends ColorOverrides { }
 }
 
-const commonThemeOptions: ThemeOptions = {
+export const commonThemeOptions: ThemeOptions = {
   palette: {
     light: {
       main: grey[200],
@@ -124,7 +124,7 @@ const commonThemeOptions: ThemeOptions = {
   },
 };
 
-const lightThemeOptions: ThemeOptions = {
+export const lightThemeOptions: ThemeOptions = {
   palette: {
     mode: 'light',
     background: {
@@ -143,10 +143,15 @@ const lightThemeOptions: ThemeOptions = {
   },
 };
 
-const darkThemeOptions: ThemeOptions = {
+export const darkThemeOptions: ThemeOptions = {
   palette: {
     mode: 'dark',
     contrast: commonThemeOptions.palette?.light,
+  },
+  typography: {
+    allVariants: {
+      color: 'rgba(255, 255, 255, 0.9)',
+    },
   },
 };
 
@@ -174,7 +179,7 @@ export default function App({
         mode === 'dark' ? darkThemeOptions : lightThemeOptions
       )
     ),
-    [mode],
+    [mode]
   );
 
   // TODO: store current mode in localstorage somehow like how next-themes does
@@ -201,7 +206,7 @@ export default function App({
               {({ icon, message }) => (
                 <>
                   {icon}
-                  <Typography component={'div'}>
+                  <Typography component={'div'} color="black">
                     {message}
                   </Typography>
                 </>
