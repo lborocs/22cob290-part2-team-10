@@ -6,6 +6,7 @@ export type ColorModeStore = {
   setColorMode: (mode: ColorModeStore['mode']) => void
 };
 
+// initially dark
 const useColorMode = create<ColorModeStore>((set) => ({
   mode: 'dark',
   toggleColorMode: () => set((state) => ({

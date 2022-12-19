@@ -2,9 +2,12 @@ import { useEffect, useMemo } from 'react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { SessionProvider, useSession } from 'next-auth/react';
+import { deepmerge } from '@mui/utils';
+import { type ThemeOptions, createTheme, ThemeProvider } from '@mui/material/styles';
+import { grey } from '@mui/material/colors';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { createTheme, type ThemeOptions, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import { Toaster, ToastBar } from 'react-hot-toast';
@@ -31,15 +34,116 @@ import type { AppPage } from '~/types';
 // https://fontawesome.com/v5/docs/web/use-with/react#getting-font-awesome-css-to-work
 config.autoAddCss = false;
 
+// https://mui.com/material-ui/customization/theming/#custom-variables
+// https://mui.com/material-ui/customization/palette/#adding-new-colors
+declare module '@mui/material/styles' {
+  interface Theme {
+    status: {
+      danger: string;
+    };
+  }
+
+  interface Palette {
+    light: Palette['primary'];
+    dark: Palette['primary'];
+
+    contrast: Palette['primary']; // constrast to theme
+    makeItAllGrey: Palette['primary'];
+    makeItAllOrange: Palette['primary'];
+  }
+  interface PaletteOptions {
+    light?: PaletteOptions['primary'];
+    dark?: PaletteOptions['primary'];
+    contrast?: PaletteOptions['primary'];
+    makeItAllGrey?: PaletteOptions['primary'];
+    makeItAllOrange?: PaletteOptions['primary'];
+  }
+
+  // allow configuration using `createTheme`
+  interface ThemeOptions {
+    status?: {
+      danger?: string;
+    };
+  }
+}
+
+declare module '@mui/material/Button' {
+  interface ButtonPropsColorOverrides {
+    light: true;
+    dark: true;
+    contrast: true;
+    makeItAllGrey: true;
+    makeItAllOrange: true;
+  }
+}
+
+declare module '@mui/material/TextField' {
+  interface TextFieldPropsColorOverrides {
+    light: true;
+    dark: true;
+    contrast: true;
+    makeItAllGrey: true;
+    makeItAllOrange: true;
+  }
+}
+
+const commonThemeOptions: ThemeOptions = {
+  palette: {
+    light: {
+      main: grey[200],
+      dark: grey[400],
+      contrastText: 'black',
+    },
+    dark: {
+      main: grey[900],
+      light: grey[700],
+      contrastText: 'white',
+    },
+
+    makeItAllOrange: {
+      main: '#e2ba39',
+      dark: '#e2ba39',
+    },
+    makeItAllGrey: {
+      main: '#d3d3d3',
+    },
+    primary: {
+      main: '#e2ba39',
+    },
+    secondary: {
+      main: '#d3d3d3',
+    },
+  },
+  components: {
+    MuiButton: {
+      // TODO: textTransform: 'none',
+    },
+  },
+};
+
 const lightThemeOptions: ThemeOptions = {
   palette: {
     mode: 'light',
+    background: {
+      paper: '#d3d3d3',
+    },
+    contrast: commonThemeOptions.palette?.dark,
+  },
+  components: {
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'white',
+        },
+      },
+    },
   },
 };
 
 const darkThemeOptions: ThemeOptions = {
   palette: {
     mode: 'dark',
+    contrast: commonThemeOptions.palette?.light,
   },
 };
 
@@ -61,11 +165,18 @@ export default function App({
   const setColorMode = useColorMode((state) => state.setColorMode);
 
   const theme = useMemo(
-    () => createTheme(mode === 'dark' ? darkThemeOptions : lightThemeOptions),
+    () => createTheme(
+      deepmerge(
+        commonThemeOptions,
+        mode === 'dark' ? darkThemeOptions : lightThemeOptions
+      )
+    ),
     [mode],
   );
 
+  // TODO: store current mode in localstorage somehow like how next-themes does
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+
   useEffect(() => {
     setColorMode(prefersDarkMode ? 'dark' : 'light');
   }, [prefersDarkMode, setColorMode]);
@@ -95,19 +206,24 @@ export default function App({
           )}
         </Toaster>
 
-        {noAuth ? (
-          <Component {...pageProps} />
-        ) : (
-          <Auth>
-            {layout ? (
-              <Layout {...layout}>
+        <Box sx={{
+          bgcolor: 'background.default',
+          height: '100vh',
+        }}>
+          {noAuth ? (
+            <Component {...pageProps} />
+          ) : (
+            <Auth>
+              {layout ? (
+                <Layout {...layout}>
+                  <Component {...pageProps} />
+                </Layout>
+              ) : (
                 <Component {...pageProps} />
-              </Layout>
-            ) : (
-              <Component {...pageProps} />
-            )}
-          </Auth>
-        )}
+              )}
+            </Auth>
+          )}
+        </Box>
       </ThemeProvider>
     </SessionProvider>
   );
