@@ -86,25 +86,6 @@ export default function NavigationBar({ noSidebar, toggleSidebar, title }: {
   );
 }
 
-// TODO: maybe change from Button to MUI Link (or whatever its called)
-// TODO: active style
-function NavButton({
-  ...props
-}: ButtonProps & React.ComponentProps<typeof NextLinkComposed>) {
-  const router = useRouter();
-
-  return (
-    <Button
-      size="small"
-      component={NextLinkComposed}
-      sx={(theme) => ({
-        color: theme.palette.mode === 'dark' ? 'white' : 'black',
-      })}
-      {...props}
-    />
-  );
-}
-
 function LayoutNav() {
   const isManager = useUserStore((state) => state.user.isManager);
 
@@ -138,16 +119,16 @@ function LayoutNav() {
         }}
       >
         {pages.map((page, index) => (
-          <NavButton
+          <NavItem
             key={index}
             to={`/${page.toLowerCase()}`}
           >
             {page}
-          </NavButton>
+          </NavItem>
         ))}
-        <NavButton to="/profile">
+        <NavItem to="/profile">
           <Profile />
-        </NavButton>
+        </NavItem>
       </Stack>
     </Stack>
   );
@@ -180,6 +161,25 @@ function LayoutNav() {
   //     </Link>
   //   </Nav>
   // );
+}
+
+// TODO: maybe change from Button to MUI Link (or whatever its called)
+// TODO: active style
+function NavItem({
+  ...props
+}: ButtonProps & React.ComponentProps<typeof NextLinkComposed>) {
+  const router = useRouter();
+
+  return (
+    <Button
+      size="small"
+      component={NextLinkComposed}
+      sx={(theme) => ({
+        color: theme.palette.mode === 'dark' ? 'white' : 'black',
+      })}
+      {...props}
+    />
+  );
 }
 
 function Profile() {
