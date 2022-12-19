@@ -266,7 +266,7 @@ Imports should be in the order ([example](prototype_nextjs/src/pages/profile.tsx
   - NextJs (e.g. `GetServerSidePropsContext`)
   - NextJs subpackages (e.g. `Head` from `next/head`)
   - Next-Auth (e.g. `signIn` from `next-auth/next`)
-  - React Boostrap/UI library (e.g. `Button` from `react-bootstrap/Button`)
+  - React Boostrap/UI library (e.g. `Button` from `react-bootstrap/Button`, `IconButton` from `@mui/material/IconButton`)
   - _Any other external libraries (e.g. `axios`)_
 - [space]
 - Our code e.g. from `~/types`
