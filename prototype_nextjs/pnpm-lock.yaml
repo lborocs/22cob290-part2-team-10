@@ -37,7 +37,6 @@ specifiers:
   lorem-ipsum: ^2.0.8
   next: ^13.0.5
   next-auth: ^4.17.0
-  next-themes: ^0.2.1
   prisma: ^4.7.1
   react: ^18.2.0
   react-bootstrap: ^2.6.0
@@ -74,7 +73,6 @@ dependencies:
   lodash: 4.17.21
   next: 13.0.6_672uxklweod7ene3nqtsh262ca
   next-auth: 4.18.4_6jx7hpii6hgsrmhxgqrmo3277u
-  next-themes: 0.2.1_6jx7hpii6hgsrmhxgqrmo3277u
   react: 18.2.0
   react-bootstrap: 2.7.0_ib3m5ricvtkl2cll7qpr2f6lvq
   react-bootstrap-icons: 1.10.2_react@18.2.0
@@ -3025,18 +3023,6 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       uuid: 8.3.2
-    dev: false
-
-  /next-themes/0.2.1_6jx7hpii6hgsrmhxgqrmo3277u:
-    resolution: {integrity: sha512-B+AKNfYNIzh0vqQQKqQItTS8evEouKD7H5Hj3kmuPERwddR2TxvDSFZuTj6T7Jfn1oyeUyJMydPl1Bkxkh0W7A==}
-    peerDependencies:
-      next: '*'
-      react: '*'
-      react-dom: '*'
-    dependencies:
-      next: 13.0.6_672uxklweod7ene3nqtsh262ca
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
     dev: false
 
   /next/13.0.6_672uxklweod7ene3nqtsh262ca:
