@@ -96,6 +96,7 @@ function LayoutNav() {
   return (
     <Stack
       direction="row"
+      alignItems="center"
       spacing={1}
     >
       <ThemeSwitcher />
@@ -111,7 +112,7 @@ function LayoutNav() {
       </Box>
       <Stack
         direction="row"
-        divider={<Divider orientation="vertical" />}
+        divider={<Divider orientation="vertical" flexItem />}
         spacing={1}
         component={'nav'}
         sx={{
