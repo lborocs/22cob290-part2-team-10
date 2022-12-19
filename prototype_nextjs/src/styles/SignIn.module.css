@@ -2,16 +2,7 @@
     /* background-color: #d3d3d3; */
 }
 
-/* mobile first */
-.wrapper {
-    padding-top: 50%;
-    margin: auto;
-
-    width: 75vw;
-}
-
 .logo {
-    /* margin-top: -40px; */
     width: 100%;
     height: auto;
 }
@@ -51,28 +42,5 @@
         display: flex;
         justify-content: center;
         align-items: center;
-    }
-
-    .wrapper {
-        width: 60vw;
-
-        padding-top: 0;
-        margin: 0;
-    }
-}
-
-/* TODO: outline on wrapper on bigger screens */
-
-/* desktop */
-@media screen and (min-width: 1200px) {
-    .wrapper {
-        width: 35vw;
-    }
-}
-
-/* extra large? 4K? */
-@media screen and (min-width: 2560px) {
-    .wrapper {
-        width: 25vw;
     }
 }

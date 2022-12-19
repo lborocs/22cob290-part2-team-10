@@ -48,6 +48,12 @@ export default forwardRef(function PasswordField({
                 aria-label="toggle password visibility"
                 onClick={togglePassword}
                 edge="end"
+                sx={{
+                  color: showPassword ? 'primary.main' : 'inherit',
+                  '&:hover': {
+                    color: showPassword ? 'inherit' : 'primary.main',
+                  },
+                }}
               >
                 {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
               </IconButton>
