@@ -1,9 +1,10 @@
+import type { CSSProperties } from 'react';
 import Head from 'next/head';
-import Link from 'next/link';
-import ListGroup from 'react-bootstrap/ListGroup';
-import List from '@mui/material/List';
-import ListSubheader from '@mui/material/ListSubheader';
-import ListItem from '@mui/material/ListItem';
+import Divider from '@mui/material/Divider';
+import MuiLink from '@mui/material/Link';
+import List, { type ListProps } from '@mui/material/List';
+import ListSubheader, { type ListSubheaderProps } from '@mui/material/ListSubheader';
+import ListItem, { type ListItemProps } from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Paper from '@mui/material/Paper';
@@ -13,7 +14,69 @@ import Typography from '@mui/material/Typography';
 import { NextLinkComposed } from '~/components/Link';
 import ThemeSwitcher from '~/components/layout/ThemeSwitcher';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
+const ExampleList = ({
+  header,
+  listStyle = 'disc',
+  ...props
+}: ListProps & { header: React.ReactNode, listStyle?: CSSProperties['listStyle'] }
+) => (
+  <List
+    subheader={<StyledListSubheader>{header}</StyledListSubheader>}
+    dense
+    disablePadding
+    sx={{
+      listStyle,
+    }}
+    {...props}
+  />
+);
+
+const StyledListSubheader = ({ children, ...props }: ListSubheaderProps) => (
+  <ListSubheader
+    sx={(theme) => ({
+      bgcolor: theme.palette.mode === 'dark' ? undefined : 'white',
+    })}
+    {...props}
+  >
+    <Typography variant="h5" component="h2" paddingY={0.5}>
+      {children}
+    </Typography>
+  </ListSubheader>
+);
+
+// TODO: hover text not blue
+// maybe use MUI+NextJS Link (components/Link)
+// instead of ListItemButton
+// and wrap it in ListItemText?
+// might have it width 100
+// could just use `sx` to set hover color to blue
+const BulletListItemLink = ({
+  href,
+  children,
+  ...props
+}: ListItemProps & { href: string }) => (
+  <ListItem
+    sx={{
+      display: 'list-item',
+      ml: 4,
+      pl: 0,
+    }}
+    {...props}
+  >
+    <ListItemButton
+      component={NextLinkComposed}
+      to={href}
+    >
+      <ListItemText>
+        <MuiLink component="span"
+        // only using MuiLink for styling
+        >
+          {children}
+        </MuiLink>
+      </ListItemText>
+    </ListItemButton>
+  </ListItem>
+);
 
 export default function ExamplesPage() {
   return (
@@ -37,97 +100,60 @@ export default function ExamplesPage() {
       </Typography>
 
       <Paper
-        elevation={3}
+        elevation={4}
         sx={(theme) => ({
           bgcolor: theme.palette.mode === 'dark' ? undefined : 'white',
           marginTop: 2,
+          p: 2,
         })}
       >
-        <List>
+        <List
+          dense
+          component={Stack}
+          divider={<Divider />}
+          spacing={1}
+        >
           <section>
-            <List
-              subheader={
-                <ListSubheader
-                  sx={(theme) => ({
-                    bgcolor: theme.palette.mode === 'dark' ? undefined : 'white',
-                  })}
-                >
-                  <Typography variant="h4" component="h2">
-                    Template
-                  </Typography>
-                </ListSubheader>
-              }
+            <ExampleList header="Template">
+              <BulletListItemLink href="/examples/page_template">
+                Page template (you copy and paste the code)
+              </BulletListItemLink>
+            </ExampleList>
+          </section>
+
+          <section>
+            {/* TODO: rename header? */}
+            <ExampleList header="Page">
+              <BulletListItemLink href="/examples/user_ssr">
+                Getting user from <code>user</code> prop from SSR <small><strong>(not recommended)</strong></small>
+              </BulletListItemLink>
+              <BulletListItemLink href="/examples/user_userstore">
+                Getting user from <code>userStore</code> <small><strong>(recommended)</strong></small>
+              </BulletListItemLink>
+            </ExampleList>
+          </section>
+
+          <section>
+            <ExampleList
+              header="Sidebar"
+              listStyle="decimal"
+              // @ts-expect-error cba to properly configure prop type of ExampleList
+              component="ol"
+              start={0}
             >
-              <ListItem
-                sx={(theme) => ({
-                  display: 'list-item',
-                  listStyleType: 'disc',
-                  ml: 4,
-                  pl: 0,
-                  width: `calc(100% - ${theme.spacing(4)})`,
-                })}
-              >
-                <ListItemButton
-                  component={NextLinkComposed}
-                  to="/examples/page_template"
-                >
-                  <ListItemText>Page template (you copy and paste the code)</ListItemText>
-                </ListItemButton>
-              </ListItem>
-            </List>
-          </section>
-          <section>
-            {/* TODO: Page section */}
-          </section>
-          <section>
-            {/* TODO: Sidebar section */}
+              <BulletListItemLink href="/examples/projects_sidebar">
+                Projects sidebar
+              </BulletListItemLink>
+              <BulletListItemLink href="/examples/custom_sidebar">
+                Custom sidebar
+              </BulletListItemLink>
+              <BulletListItemLink href="/examples/no_sidebar">
+                No sidebar (with title)
+              </BulletListItemLink>
+            </ExampleList>
           </section>
         </List>
-
-      </Paper >
-      <ListGroup as="ul">
-        <ListGroup.Item as="li">
-          <section>
-            <h2>Template</h2>
-            <ul>
-              <li><Link href="/examples/page_template">Page template (you copy and paste the code)</Link></li>
-            </ul>
-          </section>
-        </ListGroup.Item>
-
-        <ListGroup.Item as="li">
-          <section>
-            <h2>Page</h2>
-            <ul>
-              <li><Link href="/examples/user_ssr">
-                Getting user from <code>user</code> prop from SSR <small><strong>(not recommended)</strong></small>
-              </Link></li>
-            </ul>
-            <ul>
-              <li><Link href="/examples/user_userstore">
-                Getting user from <code>userStore</code> <small><strong>(recommended)</strong></small>
-              </Link></li>
-            </ul>
-          </section>
-        </ListGroup.Item>
-
-        <ListGroup.Item as="li">
-          <section>
-            <h2>Sidebar</h2>
-            <ListGroup as="ol" numbered>
-              <ListGroup.Item as="li">
-                <Link href="/examples/projects_sidebar">Projects sidebar</Link>
-              </ListGroup.Item>
-              <ListGroup.Item as="li">
-                <Link href="/examples/custom_sidebar">Custom sidebar</Link>
-              </ListGroup.Item>
-              <ListGroup.Item as="li">
-                <Link href="/examples/no_sidebar">No sidebar (with title)</Link>
-              </ListGroup.Item>
-            </ListGroup>
-          </section>
-        </ListGroup.Item>
-      </ListGroup>
+      </Paper>
     </Stack>
   );
 }
