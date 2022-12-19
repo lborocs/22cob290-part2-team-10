@@ -107,52 +107,54 @@ export default function ExamplesPage() {
           p: 2,
         })}
       >
-        <List
-          dense
-          component={Stack}
-          divider={<Divider />}
-          spacing={1}
-        >
-          <section>
-            <ExampleList header="Template">
-              <BulletListItemLink href="/examples/page_template">
-                Page template (you copy and paste the code)
-              </BulletListItemLink>
-            </ExampleList>
-          </section>
+        <nav>
+          <List
+            dense
+            component={Stack}
+            divider={<Divider />}
+            spacing={1}
+          >
+            <section>
+              <ExampleList header="Template">
+                <BulletListItemLink href="/examples/page_template">
+                  Page template (you copy and paste the code)
+                </BulletListItemLink>
+              </ExampleList>
+            </section>
 
-          <section>
-            {/* TODO: rename header? */}
-            <ExampleList header="Page">
-              <BulletListItemLink href="/examples/user_ssr">
-                Getting user from <code>user</code> prop from SSR <small><strong>(not recommended)</strong></small>
-              </BulletListItemLink>
-              <BulletListItemLink href="/examples/user_userstore">
-                Getting user from <code>userStore</code> <small><strong>(recommended)</strong></small>
-              </BulletListItemLink>
-            </ExampleList>
-          </section>
+            <section>
+              {/* TODO: rename header? */}
+              <ExampleList header="Page">
+                <BulletListItemLink href="/examples/user_ssr">
+                  Getting user from <code>user</code> prop from SSR <small><strong>(not recommended)</strong></small>
+                </BulletListItemLink>
+                <BulletListItemLink href="/examples/user_userstore">
+                  Getting user from <code>userStore</code> <small><strong>(recommended)</strong></small>
+                </BulletListItemLink>
+              </ExampleList>
+            </section>
 
-          <section>
-            <ExampleList
-              header="Sidebar"
-              listStyle="decimal"
-              // @ts-expect-error cba to properly configure prop type of ExampleList
-              component="ol"
-              start={0}
-            >
-              <BulletListItemLink href="/examples/projects_sidebar">
-                Projects sidebar
-              </BulletListItemLink>
-              <BulletListItemLink href="/examples/custom_sidebar">
-                Custom sidebar
-              </BulletListItemLink>
-              <BulletListItemLink href="/examples/no_sidebar">
-                No sidebar (with title)
-              </BulletListItemLink>
-            </ExampleList>
-          </section>
-        </List>
+            <section>
+              <ExampleList
+                header="Sidebar"
+                listStyle="decimal"
+                // @ts-expect-error cba to properly configure prop type of ExampleList
+                component="ol"
+                start={0}
+              >
+                <BulletListItemLink href="/examples/projects_sidebar">
+                  Projects sidebar
+                </BulletListItemLink>
+                <BulletListItemLink href="/examples/custom_sidebar">
+                  Custom sidebar
+                </BulletListItemLink>
+                <BulletListItemLink href="/examples/no_sidebar">
+                  No sidebar (with title)
+                </BulletListItemLink>
+              </ExampleList>
+            </section>
+          </List>
+        </nav>
       </Paper>
     </Stack>
   );

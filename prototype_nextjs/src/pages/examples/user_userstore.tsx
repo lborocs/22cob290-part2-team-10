@@ -1,6 +1,7 @@
 import type { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
+import Typography from '@mui/material/Typography';
 
 import useUserStore from '~/store/userStore';
 import type { AppPage, SessionUser } from '~/types';
@@ -26,15 +27,36 @@ const ExamplePage: AppPage = () => {
       <Head>
         <title>User Store - Examples</title>
       </Head>
-      <div className="h2 mb-4">Using <code>useUserStore</code></div>
-      <h1>Email: {email}</h1>
-      <p>Name: {name}</p>
+
+      <Typography variant="h4" marginBottom={2} component="h1">
+        Using
+        {' '}
+        <code
+          style={{
+            color: 'crimson',
+            backgroundColor: '#f1f1f1',
+          }}
+        >
+          useUserStore
+        </code>
+        {' '}
+        prop
+      </Typography>
+
+      <Typography variant="h5" component="p">
+        Email: {email}
+      </Typography>
+      <Typography>
+        Name: {name}
+      </Typography>
 
       <div>
         <form onSubmit={changeName}>
-          <label htmlFor="new-name">New name:</label>
+          <Typography marginRight={1} component="label" htmlFor="new-name">
+            New name:
+          </Typography>
           <input id="new-name" defaultValue={name} name="name" />
-          <button type="submit" >Change (only on client)</button>
+          <button type="submit">Change (only on client)</button>
         </form>
       </div>
     </main>

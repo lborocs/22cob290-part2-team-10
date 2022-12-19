@@ -1,6 +1,7 @@
 import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
+import Typography from '@mui/material/Typography';
 
 import { SidebarType } from '~/components/Layout';
 import type { AppPage, SessionUser } from '~/types';
@@ -14,9 +15,10 @@ const Page: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
       <Head>
         <title>Page Template - Examples</title>
       </Head>
-
-      <h1>Page template</h1>
-      <span>~ok~</span>
+      <Typography variant="h4" component="h1">
+        Page template
+      </Typography>
+      <Typography variant="caption">~ok~</Typography>
       <button>Example Button</button>
     </main>
   );
