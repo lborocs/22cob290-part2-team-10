@@ -92,6 +92,8 @@ export default function NavigationBar({ noSidebar, toggleSidebar, title }: {
 
 // TODO: active style
 function NavButton(props: ButtonProps & React.ComponentProps<typeof NextLinkComposed>) {
+  const router = useRouter();
+
   return (
     <Button
       size="small"
@@ -105,7 +107,6 @@ function NavButton(props: ButtonProps & React.ComponentProps<typeof NextLinkComp
 }
 
 function LayoutNav() {
-  const router = useRouter();
   const isManager = useUserStore((state) => state.user.isManager);
 
   const pages = isManager ? managerPages : userPages;
@@ -135,7 +136,6 @@ function LayoutNav() {
         component={'nav'}
         sx={{
           display: { xs: 'none', lg: 'inline-flex' },
-          flexGrow: 1,
         }}
       >
         {pages.map((page, index) => (

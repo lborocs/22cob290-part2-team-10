@@ -101,12 +101,14 @@ const commonThemeOptions: ThemeOptions = {
     },
 
     makeItAllOrange: {
+      light: '#F4DC49',
       main: '#e2ba39',
-      dark: '#e2ba39',
+      // dark: '#e2ba39',
     },
     makeItAllGrey: {
       main: '#d3d3d3',
     },
+    // TODO: look at using the darker makeItAllOrange (on logo) for light primary cos kinda hard to see
     primary: {
       main: '#e2ba39',
     },
