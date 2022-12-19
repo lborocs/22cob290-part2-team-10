@@ -22,16 +22,11 @@ import styles from '~/styles/layout/sidebar/ProjectsList.module.css';
 // TODO: update styling
 // TODO: style scrollbar
 
+// TODO: use Skeleton while loading
+
 const DEBOUNCE_TIMEOUT = 600;
 
 // https://mui.com/material-ui/react-skeleton/
-
-// Update the Button's color prop options
-declare module '@mui/material/TextField' {
-  interface TextFieldPropsColorOverrides {
-    makeItAllOrange: true;
-  }
-}
 
 /**
  * Using debouncing for better performance.
@@ -62,8 +57,6 @@ function SearchBar({ onSearchSubmit, resetResults }: {
     }
   }, [query, onSearchSubmit, resetResults]);
 
-  // TODO: want input's outline to be greyish
-
   return (
     <TextField
       id="query"
@@ -71,10 +64,10 @@ function SearchBar({ onSearchSubmit, resetResults }: {
       variant="outlined"
       value={debouncedQuery}
       onChange={(e) => setDebouncedQuery(e.target.value)}
-      sx={(theme) => ({
-        marginLeft: theme.spacing(0.5),
-        marginRight: theme.spacing(1.5),
-        my: theme.spacing(1),
+      sx={{
+        marginLeft: 0.5,
+        marginRight: 1.5,
+        my: 1,
         '& label': {
           color: 'black',
         },
@@ -86,19 +79,16 @@ function SearchBar({ onSearchSubmit, resetResults }: {
         },
         '& .MuiOutlinedInput-root': {
           '& fieldset': {
-            borderColor: theme.palette.dark.main,
-            // color: 'black',
+            borderColor: 'dark.main',
           },
           '&:hover fieldset': {
-            borderColor: theme.palette.dark.main,
-            // borderColor: 'black',
+            borderColor: 'dark.main',
           },
           '&.Mui-focused fieldset': {
-            borderColor: theme.palette.dark.main,
-            // borderColor: 'black',
+            borderColor: 'dark.main',
           },
         },
-      })}
+      }}
     />
   );
 }
@@ -141,12 +131,7 @@ export default function ProjectsList() {
 
   return (
     <div>
-      <Typography
-        fontSize="large"
-        sx={{
-          padding: 1,
-        }}
-      >
+      <Typography fontSize="large" padding={1}>
         Assigned Projects:
       </Typography>
 
@@ -180,6 +165,7 @@ function ProjectListItem({ project }: { project: GetProjectsResponse[number] }) 
   const active = currentProjectUrl === url;
 
   // TODO: some sort of like way to signify that they can hover over it for tooltip
+  // maybe underline
   const nameIsTooLong = project.name.length > 18;
 
   const renderLink = (
