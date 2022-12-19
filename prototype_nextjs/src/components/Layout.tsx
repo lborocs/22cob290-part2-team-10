@@ -77,13 +77,11 @@ export default function Layout({
       )}
 
       <div className={styles.content}>
-        <header>
-          <NavigationBar
-            noSidebar={noSidebar}
-            toggleSidebar={toggleSidebar}
-            title={title}
-          />
-        </header>
+        <NavigationBar
+          noSidebar={noSidebar}
+          toggleSidebar={toggleSidebar}
+          title={title}
+        />
         {children}
       </div>
     </div>

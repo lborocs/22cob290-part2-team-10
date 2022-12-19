@@ -26,6 +26,13 @@ const DEBOUNCE_TIMEOUT = 600;
 
 // https://mui.com/material-ui/react-skeleton/
 
+// Update the Button's color prop options
+declare module '@mui/material/TextField' {
+  interface TextFieldPropsColorOverrides {
+    makeItAllOrange: true;
+  }
+}
+
 /**
  * Using debouncing for better performance.
  *
@@ -68,6 +75,29 @@ function SearchBar({ onSearchSubmit, resetResults }: {
         marginLeft: theme.spacing(0.5),
         marginRight: theme.spacing(1.5),
         my: theme.spacing(1),
+        '& label': {
+          color: 'black',
+        },
+        '& label.Mui-focused': {
+          color: 'black',
+        },
+        '& input': {
+          color: 'black',
+        },
+        '& .MuiOutlinedInput-root': {
+          '& fieldset': {
+            borderColor: theme.palette.dark.main,
+            // color: 'black',
+          },
+          '&:hover fieldset': {
+            borderColor: theme.palette.dark.main,
+            // borderColor: 'black',
+          },
+          '&.Mui-focused fieldset': {
+            borderColor: theme.palette.dark.main,
+            // borderColor: 'black',
+          },
+        },
       })}
     />
   );
@@ -127,6 +157,7 @@ export default function ProjectsList() {
 
       <List
         className={styles.projectsList}
+      // dense
       >
         {filteredProjects.map((project, index) => (
           <ProjectListItem key={index} project={project} />
