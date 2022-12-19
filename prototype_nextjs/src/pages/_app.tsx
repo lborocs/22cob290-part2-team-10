@@ -17,6 +17,7 @@ import { Toaster, ToastBar } from 'react-hot-toast';
 //  so the global will get precedence when styling a component
 //  which is bad because the components won't look how we want them to look
 import '@fortawesome/fontawesome-svg-core/styles.css';
+// TODO: remove BS
 // import 'bootstrap/dist/css/bootstrap.min.css';
 // Roboto is MUI default font
 import '@fontsource/roboto/300.css';
@@ -180,6 +181,7 @@ export default function App({
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   useEffect(() => {
+    // TODO: get mode from localStorage, if null then use preference
     setColorMode(prefersDarkMode ? 'dark' : 'light');
   }, [prefersDarkMode, setColorMode]);
 

@@ -7,9 +7,9 @@ import ProjectsList from '~/components/layout/sidebar/ProjectsList';
 
 // gives flexibility to have more shared sidebars (not just projects)
 export enum SidebarType {
-  NONE = 'none',
-  CUSTOM = 'custom',
-  PROJECTS = 'projects',
+  NONE,
+  CUSTOM,
+  PROJECTS,
 }
 
 type BaseSidebar = {

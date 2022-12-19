@@ -86,8 +86,11 @@ export default function NavigationBar({ noSidebar, toggleSidebar, title }: {
   );
 }
 
+// TODO: maybe change from Button to MUI Link (or whatever its called)
 // TODO: active style
-function NavButton(props: ButtonProps & React.ComponentProps<typeof NextLinkComposed>) {
+function NavButton({
+  ...props
+}: ButtonProps & React.ComponentProps<typeof NextLinkComposed>) {
   const router = useRouter();
 
   return (
@@ -127,7 +130,7 @@ function LayoutNav() {
       </Box>
       <Stack
         direction="row"
-        divider={<Divider orientation="vertical" flexItem />}
+        divider={<Divider orientation="vertical" />}
         spacing={1}
         component={'nav'}
         sx={{
@@ -137,18 +140,12 @@ function LayoutNav() {
         {pages.map((page, index) => (
           <NavButton
             key={index}
-            to={{
-              pathname: `/${page.toLowerCase()}`,
-            }}
+            to={`/${page.toLowerCase()}`}
           >
             {page}
           </NavButton>
         ))}
-        <NavButton
-          to={{
-            pathname: '/profile',
-          }}
-        >
+        <NavButton to="/profile">
           <Profile />
         </NavButton>
       </Stack>
