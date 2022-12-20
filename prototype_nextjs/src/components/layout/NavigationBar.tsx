@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import Link from 'next/link';
+import { useCallback, useState } from 'react';
 import { useRouter } from 'next/router';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -9,15 +8,16 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import Toolbar from '@mui/material/Toolbar';
-import { grey } from '@mui/material/colors';
 import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
 import MenuIcon from '@mui/icons-material/Menu';
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 
 import { NextLinkComposed } from '~/components/Link';
 import TextAvatar from '~/components/TextAvatar';
 import ThemeSwitcher from '~/components/layout/ThemeSwitcher';
 import useUserStore from '~/store/userStore';
 
+// TODO: look at using icons, AT LEAST for mobile nav (probably not for desktop)
 const userPages = ['Home', 'Forum', 'Projects', 'Dashboard'];
 const managerPages = ['Home', 'Forum', 'Projects', 'Dashboard', 'Staff'];
 
@@ -87,11 +87,16 @@ export default function NavigationBar({ noSidebar, toggleSidebar, title }: {
 }
 
 function LayoutNav() {
+  const router = useRouter();
   const isManager = useUserStore((state) => state.user.isManager);
 
   const pages = isManager ? managerPages : userPages;
 
-  // TODO: mobile menu
+  // mobile menu: https://mui.com/material-ui/react-app-bar/#app-bar-with-responsive-menu
+  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+
+  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => setAnchorElNav(event.currentTarget);
+  const handleCloseNavMenu = useCallback(() => setAnchorElNav(null), []);
 
   return (
     <Stack
@@ -101,18 +106,51 @@ function LayoutNav() {
     >
       <ThemeSwitcher />
 
+      {/* mobile nav */}
       <Box sx={{
         display: { xs: 'inline-block', lg: 'none' },
       }}>
-        <Button variant="contained" color="contrast">
-          <MenuIcon />
+        <Button variant="contained" color="contrast" onClick={handleOpenNavMenu}>
+          {/* TODO: animate transition */}
+          {anchorElNav ? <MenuOpenIcon /> : <MenuIcon />}
         </Button>
+        <Menu
+          anchorEl={anchorElNav}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          keepMounted
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'left',
+          }}
+          open={Boolean(anchorElNav)}
+          onClose={handleCloseNavMenu}
+          sx={{
+            display: { xs: 'block', lg: 'none' },
+          }}
+        >
+          <nav>
+            {pages.concat('Profile').map((page) => (
+              // TODO: use MobileNavItem
+              <MenuItem key={page} onClick={() => {
+                router.push(`/${page.toLowerCase()}`);
+                handleCloseNavMenu();
+              }}>
+                {page}
+              </MenuItem>
+            ))}
+          </nav>
+        </Menu>
       </Box>
 
+      {/* desktop divider */}
       <Box sx={{ display: { xs: 'none', lg: 'inline-flex' }, height: '100%' }}>
         <Divider orientation="vertical" flexItem />
       </Box>
 
+      {/* desktop nav */}
       <Stack
         direction="row"
         alignItems="center"
@@ -123,49 +161,47 @@ function LayoutNav() {
           display: { xs: 'none', lg: 'inline-flex' },
         }}
       >
-        {pages.map((page, index) => (
+        {pages.map((page) => (
           <NavItem
-            key={index}
+            key={page}
             to={`/${page.toLowerCase()}`}
           >
             {page}
           </NavItem>
         ))}
         <NavItem to="/profile">
-          <Profile />
+          <TextAvatar />
         </NavItem>
       </Stack>
     </Stack>
   );
+}
 
-  // return (
-  //   <Nav
-  //     activeKey={router.pathname}
-  //     className="align-items-lg-center"
-  //   >
-  //     <ThemeSwitcher />
-  //     <Link href="/home" passHref legacyBehavior>
-  //       <Nav.Link>Home</Nav.Link>
-  //     </Link>
-  //     <Link href="/forum" passHref legacyBehavior>
-  //       <Nav.Link>Forum</Nav.Link>
-  //     </Link>
-  //     <Link href="/projects" passHref legacyBehavior>
-  //       <Nav.Link>Projects</Nav.Link>
-  //     </Link>
-  //     <Link href="/dashboard" passHref legacyBehavior>
-  //       <Nav.Link>Dashboard</Nav.Link>
-  //     </Link>
-  //     {isManager && (
-  //       <Link href="/staff_assignment" passHref legacyBehavior>
-  //         <Nav.Link>Staff</Nav.Link>
-  //       </Link>
-  //     )}
-  //     <Link href="/profile" passHref legacyBehavior>
-  //       <Nav.Link><Profile /></Nav.Link>
-  //     </Link>
-  //   </Nav>
-  // );
+// TODO: MobileNavItem
+// TODO: active style
+function MobileNavItem({
+  page,
+  handleCloseNavMenu,
+  children = page,
+}: React.PropsWithChildren<{ page: string, handleCloseNavMenu: () => void }>) {
+  const router = useRouter();
+
+  const url = `/${page.toLowerCase()}`;
+
+  const active = router.pathname.startsWith(url);
+
+  return (
+    <NavItem
+      to={url}
+      onClick={() => {
+        // TODO?: maybe try and change to button with NextLinkComposed?
+        router.push(`/${page.toLowerCase()}`);
+        handleCloseNavMenu();
+      }}
+    >
+      {children}
+    </NavItem>
+  );
 }
 
 // TODO: maybe change from Button to MUI Link (or whatever its called)
@@ -189,18 +225,5 @@ function NavItem(props: ButtonProps & React.ComponentProps<typeof NextLinkCompos
       component={NextLinkComposed}
       {...props}
     />
-  );
-}
-
-function Profile() {
-  return (
-    <>
-      <Box sx={{ display: { xs: 'inline', lg: 'none' } }}>
-        Profile
-      </Box>
-      <Box sx={{ display: { xs: 'none', lg: 'inline' } }}>
-        <TextAvatar />
-      </Box>
-    </>
   );
 }
