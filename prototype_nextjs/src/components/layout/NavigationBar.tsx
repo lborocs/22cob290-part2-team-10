@@ -100,6 +100,7 @@ function LayoutNav() {
       spacing={1}
     >
       <ThemeSwitcher />
+
       <Box sx={{
         display: { xs: 'inline-block', lg: 'none' },
       }}>
@@ -107,11 +108,14 @@ function LayoutNav() {
           <MenuIcon />
         </Button>
       </Box>
+
       <Box sx={{ display: { xs: 'none', lg: 'inline-flex' }, height: '100%' }}>
         <Divider orientation="vertical" flexItem />
       </Box>
+
       <Stack
         direction="row"
+        alignItems="center"
         divider={<Divider orientation="vertical" flexItem />}
         spacing={1}
         component={'nav'}
@@ -165,7 +169,6 @@ function LayoutNav() {
 }
 
 // TODO: maybe change from Button to MUI Link (or whatever its called)
-// TODO: active style
 function NavItem(props: ButtonProps & React.ComponentProps<typeof NextLinkComposed>) {
   const router = useRouter();
 
@@ -173,15 +176,17 @@ function NavItem(props: ButtonProps & React.ComponentProps<typeof NextLinkCompos
 
   return (
     <Button
-      size="small"
-      component={NextLinkComposed}
+      variant="text"
       color="contrast"
+      size="small"
       sx={(theme) => ({
+        fontSize: '14px',
         color: active ? theme.palette.primary.main : undefined,
         '&:hover': {
-          color: theme.palette.primary.dark,
+          color: theme.palette.primary.main,
         },
       })}
+      component={NextLinkComposed}
       {...props}
     />
   );

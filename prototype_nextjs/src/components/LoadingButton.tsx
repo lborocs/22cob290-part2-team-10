@@ -8,6 +8,8 @@ export interface LoadingButtonProps extends ButtonProps {
   children: React.ReactNode
 }
 
+// TODO: delete once profile stuff has been moved to MUI
+
 /**
  * A reusable button that has a loading state.
  *

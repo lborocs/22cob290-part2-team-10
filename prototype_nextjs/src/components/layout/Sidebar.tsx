@@ -26,7 +26,7 @@ export default function Sidebar({ show, content }: SidebarProps) {
 
   return (
     <ThemeProvider theme={theme}>
-      <aside className={`${styles.sidebar} ${show ? '' : styles.hidden}`} >
+      <aside className={`${styles.sidebar} ${show ? '' : styles.hidden}`}>
         <div className={styles.sidebarHeader}>
           <Link href="/home">
             <Image
