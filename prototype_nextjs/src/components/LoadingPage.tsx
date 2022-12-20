@@ -1,26 +1,33 @@
-import Spinner from 'react-bootstrap/Spinner';
+import CircularProgress from '@mui/material/CircularProgress';
+import Stack from '@mui/material/Stack';
 
 export type LoadingPageProps = {
   dark?: boolean
+  size?: number
 };
 
 /**
  * A component displaying an infinitely spinning spinner to represent something
  *  is loading.
  *
- * @param dark if `true`, black background & grey spinner; else default background & back spinner
+ * @param dark if `true`, black background & light spinner; else default background & dark spinner
  */
-export default function LoadingPage({ dark = true }: LoadingPageProps) {
+export default function LoadingPage({
+  dark = true,
+  size = 32,
+}: LoadingPageProps) {
   return (
-    <div className={`flex-grow h-100 w-100 d-flex justify-content-center align-items-center ${dark ? 'bg-dark' : ''}`}>
-      <Spinner
-        animation="border"
-        variant={dark ? 'light' : undefined}
-        role="status"
-        size="sm"
-      >
-        <span className="visually-hidden">Loading...</span>
-      </Spinner>
-    </div>
+    <Stack
+      height="100%"
+      width="100%"
+      justifyContent="center"
+      alignItems="center"
+      bgcolor={(theme) => (dark ? theme.palette.dark.main : undefined)}
+    >
+      <CircularProgress
+        size={size}
+        color={dark ? 'light' : 'dark'}
+      />
+    </Stack>
   );
 }

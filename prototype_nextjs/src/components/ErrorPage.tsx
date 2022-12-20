@@ -1,7 +1,8 @@
-import Link from 'next/link';
-import Button from 'react-bootstrap/Button';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 
-import styles from '~/styles/ErrorPage.module.css';
+import { NextLinkComposed } from '~/components/Link';
 
 export type ErrorPageProps = {
   title: string
@@ -24,18 +25,32 @@ export default function ErrorPage({
   buttonUrl,
 }: ErrorPageProps) {
   return (
-    <main className="flex-grow-1 d-flex align-items-center justify-content-center flex-column">
-      <div>
-        <h2 className={styles.title}>{title}</h2>
+    <Stack
+      direction="column"
+      flexGrow={1}
+      alignItems="center"
+      justifyContent="center"
+      component="main"
+    >
+      <Typography
+        sx={{
+          fontSize: '24px',
+          fontWeight: 500,
+          lineHeight: '49px',
+        }}
+        component="h2"
+      >
+        {title}
+      </Typography>
 
-        <div className="mt-2 d-flex justify-content-center">
-          <Link href={buttonUrl}>
-            <Button variant="secondary">
-              {buttonContent}
-            </Button>
-          </Link>
-        </div>
-      </div>
-    </main>
+      <Button
+        variant="contained"
+        color="secondary"
+        component={NextLinkComposed}
+        to={buttonUrl}
+      >
+        {buttonContent}
+      </Button>
+    </Stack>
   );
 }
