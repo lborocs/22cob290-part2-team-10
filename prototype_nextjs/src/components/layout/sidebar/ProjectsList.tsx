@@ -144,8 +144,8 @@ export default function ProjectsList() {
         className={styles.projectsList}
       // dense
       >
-        {filteredProjects.map((project, index) => (
-          <ProjectListItem key={index} project={project} />
+        {filteredProjects.map((project) => (
+          <ProjectListItem key={project.id} project={project} />
         ))}
       </List>
     </div>
