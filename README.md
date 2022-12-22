@@ -266,13 +266,13 @@ Imports should be in the order ([example](prototype_nextjs/src/pages/profile.tsx
   - NextJs (e.g. `GetServerSidePropsContext`)
   - NextJs subpackages (e.g. `Head` from `next/head`)
   - Next-Auth (e.g. `signIn` from `next-auth/next`)
-  - React Boostrap/UI library (e.g. `Button` from `react-bootstrap/Button`, `IconButton` from `@mui/material/IconButton`)
+  - React Boostrap/UI library (e.g. `IconButton` from `@mui/material/IconButton`)
   - _Any other external libraries (e.g. `axios`)_
 - [space]
 - Our code e.g. from `~/types`
 - [space]
 - Other
-  - External CSS (e.g. from Bootstrap)
+  - External CSS
   - Our CSS (e.g. `[componentname].module.css`)
   - Images
   - _Anything else_
@@ -486,9 +486,6 @@ from the
 | [Next.Js](https://nextjs.org/)                                                        | 13.0          | Full stack framework                                                                                   |
 | [NextAuth.js](https://next-auth.js.org/)                                              | 4.17          | Authentication                                                                                         |
 | [sharp](https://nextjs.org/docs/messages/sharp-missing-in-production)                 | 0.31          | Next.Js Image Optimization (not used explicitly by us)                                                 |
-| [Bootstrap](https://getbootstrap.com/)                                                | 5.2           | CSS Framework                                                                                          |
-| [React Boostrap](https://react-bootstrap.github.io/)                                  | 2.6           | Bootstrap React components                                                                             |
-| [React Boostrap Icons](https://github.com/ismamz/react-bootstrap-icons)               | 1.10          | Bootstrap Icons React components                                                                       |
 | [MUI Material UI](https://mui.com/)                                                   | 5.11          | Component Library ([#40][iMui])                                                                        |
 | [MUI Material UI Lab](https://mui.com/material-ui/about-the-lab/)                     | 5.0           | MUI Components not yet added to core (e.g. `LoadingButton`)                                            |
 | [MUI Material Icons](https://mui.com/material-ui/getting-started/installation/#icons) | 5.11          | MUI Icons                                                                                              |
