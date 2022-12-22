@@ -10,6 +10,7 @@ export interface TextAvatarProps extends React.ComponentPropsWithoutRef<'span'> 
   size?: string
 }
 
+// https://mui.com/material-ui/react-avatar/#main-content
 export default forwardRef(function LoadingButton({
   size = '40px',
   className,

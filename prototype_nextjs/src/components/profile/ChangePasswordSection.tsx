@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTheme } from '@mui/material/styles';
 import Button from 'react-bootstrap/Button';
 import CloseButton from 'react-bootstrap/CloseButton';
 import Form from 'react-bootstrap/Form';
@@ -6,7 +7,6 @@ import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
 import { Formik } from 'formik';
 import { withZodSchema } from 'formik-validator-zod';
-import { useTheme } from 'next-themes';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
 
@@ -33,7 +33,7 @@ type ChangePwFormData = {
  *  - Now, the `state` is local to just this component so only this component re-renders
  */
 export default function ChangePasswordSection() {
-  const { theme } = useTheme();
+  const theme = useTheme();
 
   const [showModal, setShowModal] = useState(false);
 
@@ -72,7 +72,7 @@ export default function ChangePasswordSection() {
     <div>
       <h3>Change Password</h3>
       <Button
-        variant={theme === 'dark' ? 'light' : 'dark'}
+        variant={theme.palette.mode === 'dark' ? 'light' : 'dark'}
         onClick={() => setShowModal(true)}
         className={styles.button}
       >
@@ -88,7 +88,7 @@ export default function ChangePasswordSection() {
       >
         <Modal.Header>
           <Modal.Title>Change Password</Modal.Title>
-          <CloseButton variant={theme === 'dark' ? 'white' : undefined} />
+          <CloseButton variant={theme.palette.mode === 'dark' ? 'white' : undefined} />
         </Modal.Header>
 
         <Modal.Body>

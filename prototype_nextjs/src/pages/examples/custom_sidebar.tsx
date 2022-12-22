@@ -1,6 +1,7 @@
 import type { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
+import Typography from '@mui/material/Typography';
 import create from 'zustand';
 
 import { SidebarType } from '~/components/Layout';
@@ -26,8 +27,13 @@ const ExamplePage: AppPage = () => {
         <title>Custom Sidebar - Examples</title>
       </Head>
 
-      <h1>Custom sidebar example</h1>
-      Enter a name:
+      <Typography variant="h4" component="h1">
+        Custom sidebar example
+      </Typography>
+
+      <Typography component="span" marginRight={1}>
+        Enter a name:
+      </Typography>
       <input
         value={name}
         onChange={(e) => setName(e.target.value)}
@@ -41,7 +47,9 @@ function Sidebar() {
 
   return (
     <div>
-      <span className="h3">Prem Table</span>
+      <Typography variant="h5" component="h1">
+        Prem Table
+      </Typography>
       <ol>
         <li>Arsenal</li>
         <li>Man City</li>
@@ -50,9 +58,9 @@ function Sidebar() {
         <li>{'Don\'t care'}</li>
       </ol>
 
-      <div className="mt-4">
+      <Typography>
         name = {name}
-      </div>
+      </Typography>
     </div>
   );
 }

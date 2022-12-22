@@ -2,10 +2,9 @@ import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'nex
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 import { signOut } from 'next-auth/react';
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import { Toaster } from 'react-hot-toast';
+// import Button from 'react-bootstrap/Button';
+// import Col from 'react-bootstrap/Col';
+// import Row from 'react-bootstrap/Row';
 
 import prisma from '~/lib/prisma';
 import { getEmailFromToken } from '~/lib/inviteToken';
@@ -26,9 +25,7 @@ const ProfilePage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps
         <title>Profile - Make-It-All</title>
       </Head>
 
-      <Toaster />
-
-      <section>
+      {/* <section>
         <Row>
           <Col sm="auto" className="d-flex justify-content-center pb-4 pe-md-4">
             <TextAvatarEditor />
@@ -54,19 +51,19 @@ const ProfilePage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps
             <InviteEmployeeSection />
           </Col>
         </Row>
-      </section>
+      </section> */}
 
       <br />
       <br />
 
-      <Button
-        variant="danger"
+      <button
+        // variant="danger"
         className={styles.button}
         onClick={() => signOut({ callbackUrl: '/' })}
       >
         Sign Out
-      </Button>
-    </main >
+      </button>
+    </main>
   );
 };
 

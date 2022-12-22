@@ -19,7 +19,7 @@ export const SPECIAL_SYMBOL_REGEX = /(.*\W)/;
  */
 export const EmailSchema = z.string()
   .regex(/@make-it-all.co.uk$/i, 'Invalid Make-It-All email')
-  .email('Not an email')
+  .email('Enter a valid email')
   ;
 
 /**

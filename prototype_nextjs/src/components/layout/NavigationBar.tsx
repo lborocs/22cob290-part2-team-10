@@ -1,69 +1,72 @@
-import Button from 'react-bootstrap/Button';
-import Navbar from 'react-bootstrap/Navbar';
-import { faAlignJustify, faAlignLeft } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Toolbar from '@mui/material/Toolbar';
+import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
 
-import LayoutNav from '~/components/layout/LayoutNav';
-import ThemeSwitcher from '~/components/layout/ThemeSwitcher';
+import LayoutNav from '~/components/layout/nav/Nav';
 
-import styles from '~/styles/Layout.module.css';
-
-// left, center, right: https://stackoverflow.com/a/20362024
 export default function NavigationBar({ noSidebar, toggleSidebar, title }: {
   noSidebar: boolean
   toggleSidebar: () => void
   title: React.ReactNode
 }) {
-  const toggleSidebarButton = !noSidebar && (
+  const renderToggleSidebarButton = !noSidebar && (
     <Button
       onClick={toggleSidebar}
-      className={styles.sidebarToggleBtn}
+      variant="contained"
+      color="secondary"
+      sx={(theme) => ({
+        px: 1.5,
+        ':hover': {
+          bgcolor: theme.palette.makeItAllOrange.main,
+        },
+      })}
     >
-      <FontAwesomeIcon icon={faAlignLeft} />
-      {' '}
-      <span className="d-none d-lg-inline">Toggle Sidebar</span>
+      <FormatAlignLeftIcon />
+      <Box sx={{
+        display: {
+          xs: 'none',
+          md: 'inline-block',
+        },
+        marginLeft: {
+          md: 1,
+        },
+      }}>
+        Toggle Sidebar
+      </Box>
     </Button>
   );
 
   return (
-    <Navbar expand="lg" className={styles.navbar}>
-      {/* desktop left */}
-      <div className="w-100 order-1 order-md-0 d-none d-lg-inline">
-        {/* <div className="d-none d-lg-inline">
-        </div> */}
-        {toggleSidebarButton}
-      </div>
-      {/* desktop middle */}
-      <div className="mx-auto w-100 order-1 d-flex">
-        {/* mobile left */}
-        <div className="d-inline-flex d-lg-none">
-          {toggleSidebarButton}
-        </div>
+    <AppBar position="static">
+      <Toolbar>
+        {/* left */}
+        <Box sx={{
+          width: '100%',
+        }}>
+          {renderToggleSidebarButton}
+        </Box>
         {/* middle */}
-        <div className="mx-auto">
-          {title}
-        </div>
-        {/* mobile right */}
-        <div className="d-inline-flex d-lg-none">
-          <ThemeSwitcher />
-          <Navbar.Toggle
-            aria-controls="nav"
-            as={Button}
-            variant="dark"
-            bsPrefix="_" // hacky way to not have default toggle style. Can't use undefined so using _
-          >
-            <FontAwesomeIcon icon={faAlignJustify} />
-          </Navbar.Toggle>
-        </div>
-      </div>
-      {/* desktop right */}
-      <div className="w-100 order-2">
-        <Navbar.Collapse id="nav">
-          <div className="ms-auto">
-            <LayoutNav />
-          </div>
-        </Navbar.Collapse>
-      </div>
-    </Navbar>
+        <Box sx={{
+          width: '100%',
+          display: 'flex',
+        }}>
+          <Box sx={{
+            mx: 'auto',
+          }}>
+            {title}
+          </Box>
+        </Box>
+        {/* right */}
+        <Box sx={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'flex-end',
+        }}>
+          <LayoutNav />
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 }

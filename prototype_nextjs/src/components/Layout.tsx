@@ -1,16 +1,15 @@
 import { useState } from 'react';
+import Stack from '@mui/material/Stack';
 
 import NavigationBar from '~/components/layout/NavigationBar';
 import Sidebar from '~/components/layout/Sidebar';
 import ProjectsList from '~/components/layout/sidebar/ProjectsList';
 
-import styles from '~/styles/Layout.module.css';
-
 // gives flexibility to have more shared sidebars (not just projects)
 export enum SidebarType {
-  NONE = 'none',
-  CUSTOM = 'custom',
-  PROJECTS = 'projects',
+  NONE,
+  CUSTOM,
+  PROJECTS,
 }
 
 type BaseSidebar = {
@@ -39,6 +38,9 @@ export interface LayoutProps extends PageLayout {
   children: React.ReactNode
 }
 
+/**
+ * Pages can use `flexGrow: 1` to take up the rest of the available space
+ */
 export default function Layout({
   title,
   sidebar,
@@ -68,7 +70,7 @@ export default function Layout({
   };
 
   return (
-    <div className={styles.wrapper}>
+    <Stack direction="row">
       {!noSidebar && (
         <Sidebar
           show={showSidebar}
@@ -76,16 +78,18 @@ export default function Layout({
         />
       )}
 
-      <div className={styles.content}>
-        <header>
-          <NavigationBar
-            noSidebar={noSidebar}
-            toggleSidebar={toggleSidebar}
-            title={title}
-          />
-        </header>
+      <Stack
+        width="100%"
+        padding={2.5}
+        spacing={3}
+      >
+        <NavigationBar
+          noSidebar={noSidebar}
+          toggleSidebar={toggleSidebar}
+          title={title}
+        />
         {children}
-      </div>
-    </div>
+      </Stack>
+    </Stack>
   );
 }

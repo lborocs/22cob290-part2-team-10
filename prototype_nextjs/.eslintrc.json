@@ -26,6 +26,14 @@
     "no-unused-vars": ["warn", { "args": "none" }],
     "no-empty-pattern": "warn", // annoying having it as error cos there's pages to be done
 
+    // https://mui.com/material-ui/guides/minimizing-bundle-size/#option-one-use-path-imports
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": ["@mui/*/*/*", "!@mui/material/test-utils/*"]
+      }
+    ],
+
     // taking from airbnb (mostly modifying severity tho)
     "quote-props": ["error", "as-needed"],
     "no-new-object": "error",
@@ -113,7 +121,8 @@
         "@typescript-eslint/no-unsafe-member-access": "off",
         "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/no-unused-vars": ["warn", { "args": "none" }],
-        "@typescript-eslint/restrict-template-expressions": "off"
+        "@typescript-eslint/restrict-template-expressions": "off",
+        "@typescript-eslint/no-empty-interface": "off"
       }
     }
   ]

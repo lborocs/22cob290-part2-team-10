@@ -1,21 +1,23 @@
-import { BrightnessHigh, Moon } from 'react-bootstrap-icons';
-import { useTheme } from 'next-themes';
+import IconButton from '@mui/material/IconButton';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
 
-import styles from '~/styles/layout/ThemeSwitcher.module.css';
+import useColorMode from '~/store/colorMode';
 
 export default function ThemeSwitcher() {
-  const { theme, setTheme } = useTheme();
+  const mode = useColorMode((state) => state.mode);
+  const toggleColorMode = useColorMode((state) => state.toggleColorMode);
 
-  const isDark = theme === 'dark';
-
-  const toggleTheme = () => setTheme(isDark ? 'light' : 'dark');
+  const isDark = mode === 'dark';
 
   return (
-    <button
-      onClick={toggleTheme}
-      className={`pe-2 ${styles.themeSwitcher}`}
+    <IconButton
+      aria-label="toggle theme"
+      onClick={toggleColorMode}
+      size="small"
+      color="contrast"
     >
-      {isDark ? <Moon /> : <BrightnessHigh />}
-    </button>
+      {isDark ? <DarkModeIcon /> : <LightModeIcon />}
+    </IconButton>
   );
 }

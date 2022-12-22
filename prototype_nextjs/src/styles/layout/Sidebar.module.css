@@ -24,12 +24,6 @@
     height: auto;
 }
 
-.sidebarContent {
-    padding-top: 20px;
-    /* border-bottom: 1px solid #47748b; */
-    flex-grow: 1;
-}
-
 /* default hide sidebar (on big screens) */
 @media (max-width: 768px) {
     .sidebar {
