@@ -1,9 +1,10 @@
+import Link from 'next/link';
 import { useRouter } from 'next/router';
+import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
 
-import NavItem from '~/components/layout/nav/NavItem';
+import { navButtonSx } from '~/components/layout/nav/NavItem';
 
-// TODO: MobileNavItem
-// TODO: active style
 export default function MobileNavItem({
   page,
   handleCloseNavMenu,
@@ -16,15 +17,12 @@ export default function MobileNavItem({
   const active = router.pathname.startsWith(url);
 
   return (
-    <NavItem
-      to={url}
-      onClick={() => {
-        // TODO?: maybe try and change to button with NextLinkComposed?
-        router.push(`/${page.toLowerCase()}`);
-        handleCloseNavMenu();
-      }}
-    >
-      {children}
-    </NavItem>
+    <Link href={url}>
+      <MenuItem onClick={handleCloseNavMenu} sx={navButtonSx(active)}>
+        <Typography variant="button" color="inherit">
+          {children}
+        </Typography>
+      </MenuItem>
+    </Link>
   );
 }

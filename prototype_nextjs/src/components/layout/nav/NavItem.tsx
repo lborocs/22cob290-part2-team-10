@@ -3,27 +3,31 @@ import Button, { type ButtonProps } from '@mui/material/Button';
 
 import { NextLinkComposed } from '~/components/Link';
 
-// TODO: maybe change from Button to MUI Link (or whatever its called)
-export default function NavItem(props: ButtonProps & React.ComponentProps<typeof NextLinkComposed>) {
+export const navButtonSx = (active: boolean) => ({
+  fontSize: '14px',
+  color: active ? 'primary.main' : undefined,
+  '&:hover': {
+    color: 'primary.main',
+  },
+});
+
+export type NavItemProps = ButtonProps & React.ComponentProps<typeof NextLinkComposed>;
+
+export default function NavItem(props: NavItemProps) {
   const router = useRouter();
 
-  const active = router.pathname.startsWith(props.to as string);
+  const path = typeof props.to === 'string' ? props.to : props.to.pathname!;
+
+  const active = router.pathname.startsWith(path);
 
   return (
     <Button
       variant="text"
       color="contrast"
       size="small"
-      sx={(theme) => ({
-        fontSize: '14px',
-        color: active ? theme.palette.primary.main : undefined,
-        '&:hover': {
-          color: theme.palette.primary.main,
-        },
-      })}
+      sx={navButtonSx(active)}
       component={NextLinkComposed}
       {...props}
     />
   );
 }
-
