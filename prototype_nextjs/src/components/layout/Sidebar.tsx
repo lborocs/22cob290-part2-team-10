@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { deepmerge } from '@mui/utils';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Box from '@mui/material/Box';
 
 import { commonThemeOptions, lightThemeOptions } from '~/pages/_app';
 import styles from '~/styles/layout/Sidebar.module.css';
@@ -13,6 +14,7 @@ export type SidebarProps = {
   content: React.ReactNode
 };
 
+// TODO?: make sidebar sticky? (have its scroll separate to the page)
 export default function Sidebar({ show, content }: SidebarProps) {
   // override app theme for sidebar - at least until configured sidebar colours in dark mode
   const theme = useMemo(
@@ -38,9 +40,9 @@ export default function Sidebar({ show, content }: SidebarProps) {
           </Link>
         </div>
 
-        <div className={styles.sidebarContent}>
+        <Box flexGrow={1} paddingTop={0} paddingBottom={3}>
           {content}
-        </div>
+        </Box>
       </aside>
     </ThemeProvider>
   );
