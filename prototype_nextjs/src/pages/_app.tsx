@@ -1,14 +1,13 @@
-import { useEffect, useMemo } from 'react';
+import { type CSSProperties, useEffect, useMemo } from 'react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { SessionProvider, useSession } from 'next-auth/react';
 import { deepmerge } from '@mui/utils';
-import { type ThemeOptions, createTheme, ThemeProvider } from '@mui/material/styles';
+import { type ThemeOptions, createTheme, useTheme, ThemeProvider } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import CssBaseline from '@mui/material/CssBaseline';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import { Toaster, ToastBar } from 'react-hot-toast';
 
@@ -215,20 +214,7 @@ export default function App({
       <ThemeProvider theme={theme}>
         <CssBaseline />
 
-        <Toaster>
-          {(t) => (
-            <ToastBar toast={t}>
-              {({ icon, message }) => (
-                <>
-                  {icon}
-                  <Typography component={'div'} color="black">
-                    {message}
-                  </Typography>
-                </>
-              )}
-            </ToastBar>
-          )}
-        </Toaster>
+        <ThemedToaster />
 
         <Box sx={{
           bgcolor: 'background.default',
@@ -250,6 +236,39 @@ export default function App({
         </Box>
       </ThemeProvider>
     </SessionProvider>
+  );
+}
+
+function ThemedToaster() {
+  const theme = useTheme();
+
+  const darkToastStyle: CSSProperties = {
+    backgroundColor: '#333',
+    color: '#fff',
+  };
+
+  const lightToastStyle: CSSProperties = {
+  };
+
+  return (
+    <Toaster
+      toastOptions={{
+        duration: 6000,
+        success: {
+          duration: 5000,
+        },
+      }}
+    >
+      {(t) => (
+        <ToastBar
+          style={{
+            ...t.style,
+            ...theme.palette.mode === 'dark' ? darkToastStyle : lightToastStyle,
+          }}
+          toast={t}
+        />
+      )}
+    </Toaster>
   );
 }
 
