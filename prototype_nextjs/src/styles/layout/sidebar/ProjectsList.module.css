@@ -1,9 +1,3 @@
-.projectsList {
-    /* TODO: increase height to rest of viewport but page isn't scrollable but this is */
-    height: 420px;
-    overflow-y: scroll;
-}
-
 .projectLink {
     display: block;
     white-space: nowrap;
