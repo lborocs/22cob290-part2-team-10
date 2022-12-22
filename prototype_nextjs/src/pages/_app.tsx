@@ -84,32 +84,41 @@ declare module '@mui/material/IconButton' {
   interface IconButtonPropsColorOverrides extends ColorOverrides { }
 }
 
+declare module '@mui/material/Chip' {
+  interface ChipPropsColorOverrides extends ColorOverrides { }
+}
+
+declare module '@mui/material/CircularProgress' {
+  interface CircularProgressPropsColorOverrides extends ColorOverrides { }
+}
+
 declare module '@mui/material/TextField' {
   interface TextFieldPropsColorOverrides extends ColorOverrides { }
 }
 
 export const commonThemeOptions: ThemeOptions = {
   palette: {
+    // https://mui.com/material-ui/customization/palette/#accessibility
+    contrastThreshold: 4.5,
     light: {
       main: grey[200],
       dark: grey[400],
-      contrastText: 'black',
+      contrastText: '#000',
     },
     dark: {
       main: grey[900],
       light: grey[700],
-      contrastText: 'white',
+      contrastText: '#fff',
     },
 
     makeItAllOrange: {
-      light: '#F4DC49',
+      light: '#f4dc49',
       main: '#e2ba39',
-      // dark: '#e2ba39',
+      dark: '#ffa726', // default palette.warning.main
     },
     makeItAllGrey: {
       main: '#d3d3d3',
     },
-    // TODO: look at using the darker makeItAllOrange (on logo) for light primary cos kinda hard to see
     primary: {
       main: '#e2ba39',
     },
@@ -119,7 +128,7 @@ export const commonThemeOptions: ThemeOptions = {
   },
   components: {
     MuiButton: {
-      // TODO: textTransform: 'none',
+      // TODO?: textTransform: 'none',
     },
   },
 };
@@ -130,13 +139,19 @@ export const lightThemeOptions: ThemeOptions = {
     background: {
       paper: '#d3d3d3',
     },
+    primary: {
+      light: '#e2ba39', // makeItAllOrange.main
+      main: '#ffa726', // makeItAllOrange.dark
+      // TODO: decide whether to use makeItAllOrange (default primary)
+      // or not, sometimes its fine, sometimes it's too light
+    },
     contrast: commonThemeOptions.palette?.dark,
   },
   components: {
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: 'white',
+          backgroundColor: '#fff',
         },
       },
     },
