@@ -97,8 +97,6 @@ declare module '@mui/material/TextField' {
 
 export const commonThemeOptions: ThemeOptions = {
   palette: {
-    // https://mui.com/material-ui/customization/palette/#accessibility
-    contrastThreshold: 4.5,
     light: {
       main: grey[200],
       dark: grey[400],
@@ -127,7 +125,11 @@ export const commonThemeOptions: ThemeOptions = {
   },
   components: {
     MuiButton: {
-      // TODO?: textTransform: 'none',
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+        },
+      },
     },
   },
 };
@@ -218,7 +220,7 @@ export default function App({
 
         <Box sx={{
           bgcolor: 'background.default',
-          height: '100vh',
+          minHeight: '100vh',
         }}>
           {noAuth ? (
             <Component {...pageProps} />

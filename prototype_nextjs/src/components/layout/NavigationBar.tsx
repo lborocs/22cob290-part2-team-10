@@ -4,8 +4,9 @@ import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
 
-import LayoutNav from '~/components/layout/nav/Nav';
+import Nav from '~/components/layout/nav/Nav';
 
+// TODO: navbar sticky to top? if so then blur
 export default function NavigationBar({ noSidebar, toggleSidebar, title }: {
   noSidebar: boolean
   toggleSidebar: () => void
@@ -64,7 +65,7 @@ export default function NavigationBar({ noSidebar, toggleSidebar, title }: {
           display: 'flex',
           justifyContent: 'flex-end',
         }}>
-          <LayoutNav />
+          <Nav />
         </Box>
       </Toolbar>
     </AppBar>

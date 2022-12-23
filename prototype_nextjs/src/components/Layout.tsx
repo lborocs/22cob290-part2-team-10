@@ -80,7 +80,9 @@ export default function Layout({
 
       <Stack
         width="100%"
-        padding={2.5}
+        paddingX={{ xs: 1.75, md: 2, lg: 2.5 }}
+        paddingTop={1.5}
+        paddingBottom={1}
         spacing={3}
       >
         <NavigationBar

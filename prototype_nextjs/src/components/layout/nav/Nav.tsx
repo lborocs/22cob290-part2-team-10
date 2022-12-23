@@ -33,9 +33,7 @@ export default function Nav() {
       <ThemeSwitcher />
 
       {/* mobile nav */}
-      <Box sx={{
-        display: { xs: 'inline-block', lg: 'none' },
-      }}>
+      <Box display={{ xs: 'inline-block', lg: 'none' }}>
         <Button
           variant="contained"
           color="contrast"
@@ -74,14 +72,16 @@ export default function Nav() {
                 key={page}
                 page={page}
                 handleCloseNavMenu={handleCloseNavMenu}
-              />
+              >
+                {page.toUpperCase()}
+              </MobileNavItem>
             ))}
           </Menu>
         </nav>
       </Box>
 
       {/* desktop divider */}
-      <Box sx={{ display: { xs: 'none', lg: 'inline-flex' }, height: '100%' }}>
+      <Box display={{ xs: 'none', lg: 'inline-flex' }} height="100%">
         <Divider orientation="vertical" flexItem />
       </Box>
 
@@ -92,16 +92,14 @@ export default function Nav() {
         divider={<Divider orientation="vertical" flexItem />}
         spacing={1}
         component={'nav'}
-        sx={{
-          display: { xs: 'none', lg: 'inline-flex' },
-        }}
+        display={{ xs: 'none', lg: 'inline-flex' }}
       >
         {pages.map((page) => (
           <NavItem
             key={page}
             to={`/${page.toLowerCase()}`}
           >
-            {page}
+            {page.toUpperCase()}
           </NavItem>
         ))}
         <NavItem to="/profile">

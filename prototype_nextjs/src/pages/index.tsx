@@ -196,7 +196,7 @@ const SignInPage: AppPage = () => {
                     disabled={!isValid}
                     className={styles.signInBtn}
                   >
-                    Sign In
+                    SIGN IN
                   </LoadingButton>
                 </div>
               </div>
