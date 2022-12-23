@@ -115,12 +115,13 @@ export const commonThemeOptions: ThemeOptions = {
     },
     makeItAllGrey: {
       main: '#d3d3d3',
+      contrastText: '#000',
     },
     primary: {
-      main: '#e2ba39',
+      main: '#e2ba39', // makeItAllOrange.main
     },
     secondary: {
-      main: '#d3d3d3',
+      main: '#d3d3d3', // makeItAllGrey.main
     },
   },
   components: {
@@ -137,16 +138,13 @@ export const commonThemeOptions: ThemeOptions = {
 export const lightThemeOptions: ThemeOptions = {
   palette: {
     mode: 'light',
-    background: {
-      paper: '#d3d3d3',
-    },
     primary: {
       light: '#e2ba39', // makeItAllOrange.main
       main: '#ffa726', // makeItAllOrange.dark
       // TODO: decide whether to use makeItAllOrange (default primary)
       // or not, sometimes its fine, sometimes it's too light
     },
-    contrast: commonThemeOptions.palette?.dark,
+    contrast: commonThemeOptions.palette!.dark,
   },
   components: {
     MuiAppBar: {
@@ -155,6 +153,25 @@ export const lightThemeOptions: ThemeOptions = {
           backgroundColor: '#fff',
         },
       },
+    },
+    MuiButton: {
+      variants: [
+        // makeItAllGrey is too light
+        {
+          props: { variant: 'outlined', color: 'secondary' },
+          style: {
+            color: grey[700],
+            borderColor: grey[700],
+          },
+        },
+        {
+          props: { variant: 'text', color: 'secondary' },
+          style: {
+            color: grey[700],
+            borderColor: grey[700],
+          },
+        },
+      ],
     },
   },
 };

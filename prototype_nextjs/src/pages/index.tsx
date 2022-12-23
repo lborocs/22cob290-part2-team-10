@@ -101,7 +101,7 @@ const SignInPage: AppPage = () => {
         <title>Sign In - Make-It-All</title>
       </Head>
 
-      <Paper sx={{
+      <Paper sx={(theme) => ({
         position: 'absolute',
         left: 0,
         right: 0,
@@ -109,6 +109,7 @@ const SignInPage: AppPage = () => {
         bottom: 0,
         margin: 'auto',
         height: 'fit-content',
+        bgcolor: theme.palette.mode === 'light' ? '#d3d3d3' : undefined,
         width: {
           xs: '85vw',
           sm: '70vw',
@@ -120,7 +121,7 @@ const SignInPage: AppPage = () => {
           xs: 3,
           md: 8,
         },
-      }}>
+      })}>
         <Box marginBottom={2.5}>
           <Image
             className={styles.logo}

@@ -16,7 +16,7 @@ export default function NavigationBar({ noSidebar, toggleSidebar, title }: {
     <Button
       onClick={toggleSidebar}
       variant="contained"
-      color="secondary"
+      color="makeItAllGrey"
       sx={(theme) => ({
         px: 1.5,
         ':hover': {

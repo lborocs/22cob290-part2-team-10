@@ -59,13 +59,9 @@ export default function Nav() {
             }}
             open={Boolean(anchorElNav)}
             onClose={handleCloseNavMenu}
-            sx={(theme) => ({
+            sx={{
               display: { xs: 'block', lg: 'none' },
-              '& .MuiList-root': {
-                // @ts-expect-error Property exists in light mode
-                bgcolor: theme.components?.MuiAppBar?.styleOverrides?.root?.backgroundColor,
-              },
-            })}
+            }}
           >
             {pages.concat('Profile').map((page) => (
               <MobileNavItem
