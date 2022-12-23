@@ -39,6 +39,11 @@ export default function Nav() {
           color="contrast"
           onClick={handleOpenNavMenu}
           aria-controls="mobile-nav"
+          sx={(theme) => ({
+            paddingX: 1.5,
+            height: `calc(1.5rem + ${theme.spacing(1.5)})`,
+            minWidth: 0,
+          })}
         >
           {/* TODO: animate transition */}
           {anchorElNav ? <MenuOpenIcon /> : <MenuIcon />}

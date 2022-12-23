@@ -35,7 +35,7 @@ export default function Sidebar({ show, content }: SidebarProps) {
         component="aside"
       >
         <div className={styles.sidebarHeader}>
-          <Link href="/home">
+          <Link href="/home" aria-label="Navigate to the home page">
             <Image
               src={makeItAllLogo}
               alt="Company logo"
