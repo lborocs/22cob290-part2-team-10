@@ -78,6 +78,7 @@ export default function ProjectsList() {
         debounceTimeoutMs={600}
         onSearchSubmit={onSearchSubmit}
         resetResults={resetResults}
+        type="search"
         id="query"
         label="Search by project name"
         variant="outlined"
