@@ -16,8 +16,6 @@ import { Toaster, ToastBar } from 'react-hot-toast';
 //  so the global will get precedence when styling a component
 //  which is bad because the components won't look how we want them to look
 import '@fortawesome/fontawesome-svg-core/styles.css';
-// TODO: remove BS
-// import 'bootstrap/dist/css/bootstrap.min.css';
 // Roboto is MUI default font
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -79,16 +77,24 @@ declare module '@mui/material/Button' {
   interface ButtonPropsColorOverrides extends ColorOverrides { }
 }
 
-declare module '@mui/material/IconButton' {
-  interface IconButtonPropsColorOverrides extends ColorOverrides { }
-}
-
 declare module '@mui/material/Chip' {
   interface ChipPropsColorOverrides extends ColorOverrides { }
 }
 
 declare module '@mui/material/CircularProgress' {
   interface CircularProgressPropsColorOverrides extends ColorOverrides { }
+}
+
+declare module '@mui/material/FormLabel' {
+  interface FormLabelPropsColorOverrides extends ColorOverrides { }
+}
+
+declare module '@mui/material/IconButton' {
+  interface IconButtonPropsColorOverrides extends ColorOverrides { }
+}
+
+declare module '@mui/material/InputBase' {
+  interface InputBasePropsColorOverrides extends ColorOverrides { }
 }
 
 declare module '@mui/material/TextField' {
