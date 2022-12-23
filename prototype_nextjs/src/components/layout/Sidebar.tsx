@@ -28,7 +28,12 @@ export default function Sidebar({ show, content }: SidebarProps) {
 
   return (
     <ThemeProvider theme={theme}>
-      <aside className={`${styles.sidebar} ${show ? '' : styles.hidden}`}>
+      <Box
+        className={`${styles.sidebar} ${show ? '' : styles.hidden}`}
+        bgcolor="makeItAllGrey.main"
+        color="black"
+        component="aside"
+      >
         <div className={styles.sidebarHeader}>
           <Link href="/home">
             <Image
@@ -43,7 +48,7 @@ export default function Sidebar({ show, content }: SidebarProps) {
         <Box flexGrow={1} paddingTop={0} paddingBottom={3}>
           {content}
         </Box>
-      </aside>
+      </Box>
     </ThemeProvider>
   );
 }

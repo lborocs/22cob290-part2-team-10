@@ -22,8 +22,6 @@ import DebouncedTextField from '~/components/DebouncedTextField';
 import { NextLinkComposed } from '~/components/Link';
 import type { ResponseSchema as GetProjectsResponse } from '~/pages/api/projects/get-assigned-projects';
 
-import styles from '~/styles/layout/sidebar/ProjectsList.module.css';
-
 /**
  * Using memoization for better performance.
  *
@@ -218,7 +216,24 @@ function ProjectListItem({ project }: { project: GetProjectsResponse[number] }) 
 
   const renderLink = (
     <ListItemButton
-      className={`${styles.projectLink} ${active ? styles.active : ''}`}
+      sx={{
+        whiteSpace: 'nowrap',
+        overflowX: 'hidden',
+        textOverflow: 'ellipsis',
+
+        ':hover': {
+          bgcolor: '#e2ba3990', // darker makeItAllOrange.main
+          color: 'white',
+        },
+        ...(active && {
+          bgcolor: 'makeItAllOrange.main',
+          color: 'white',
+          ':hover': {
+            bgcolor: 'makeItAllOrange.main', // darker makeItAllOrange.main
+            color: 'white',
+          },
+        }),
+      }}
       component={NextLinkComposed}
       to={url}
     >
