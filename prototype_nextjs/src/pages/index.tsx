@@ -28,6 +28,8 @@ type SignInFormData = {
   password: string
 };
 
+// FIXME: when holding a key, UI freezes until it is released
+// maybe this issue https://github.com/jaredpalmer/formik/issues/1026
 const SignInPage: AppPage = () => {
   const router = useRouter();
 
@@ -84,6 +86,7 @@ const SignInPage: AppPage = () => {
 
   useEffect(() => {
     if (callbackUrl) {
+      // TODO: add close icon
       toast.error((t) => (
         <span onClick={() => toast.dismiss(t.id)} style={{ cursor: 'pointer' }}>
           You need to sign in first.
@@ -195,7 +198,7 @@ const SignInPage: AppPage = () => {
                     disabled={!isValid}
                     className={styles.signInBtn}
                   >
-                    SIGN IN
+                    Sign in
                   </LoadingButton>
                 </div>
               </div>

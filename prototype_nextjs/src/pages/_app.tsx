@@ -107,7 +107,6 @@ export const commonThemeOptions: ThemeOptions = {
       light: grey[700],
       contrastText: '#fff',
     },
-
     makeItAllOrange: {
       light: '#f4dc49',
       main: '#e2ba39',
@@ -128,7 +127,7 @@ export const commonThemeOptions: ThemeOptions = {
     MuiButton: {
       styleOverrides: {
         root: {
-          textTransform: 'none',
+          // textTransform: 'none',
         },
       },
     },

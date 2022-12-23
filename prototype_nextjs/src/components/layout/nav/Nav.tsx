@@ -69,7 +69,7 @@ export default function Nav() {
                 page={page}
                 handleCloseNavMenu={handleCloseNavMenu}
               >
-                {page.toUpperCase()}
+                {page}
               </MobileNavItem>
             ))}
           </Menu>
@@ -95,7 +95,7 @@ export default function Nav() {
             key={page}
             to={`/${page.toLowerCase()}`}
           >
-            {page.toUpperCase()}
+            {page}
           </NavItem>
         ))}
         <NavItem to="/profile">
