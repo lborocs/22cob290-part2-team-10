@@ -96,7 +96,7 @@ const SignInPage: AppPage = () => {
   }, [callbackUrl]);
 
   return (
-    <main className={styles.main}>
+    <main>
       <Head>
         <title>Sign In - Make-It-All</title>
       </Head>
@@ -121,9 +121,7 @@ const SignInPage: AppPage = () => {
           md: 8,
         },
       }}>
-        <Box sx={{
-          mb: 2.5,
-        }}>
+        <Box marginBottom={2.5}>
           <Image
             className={styles.logo}
             src={makeItAllLogo}
