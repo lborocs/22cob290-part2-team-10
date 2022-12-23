@@ -137,6 +137,18 @@ export const commonThemeOptions: ThemeOptions = {
         },
       },
     },
+    MuiInputBase: {
+      styleOverrides: {
+        root: ({ ownerState, theme }) => ({
+          // same caretColor as input color
+          caretColor: ownerState.color && theme.palette[ownerState.color].main,
+          '&.Mui-error': {
+            // red caret on error
+            caretColor: 'red',
+          },
+        }),
+      },
+    },
   },
 };
 
