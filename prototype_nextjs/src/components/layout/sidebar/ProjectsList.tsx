@@ -220,11 +220,9 @@ function ProjectListItem({ project }: { project: GetProjectsResponse[number] }) 
     <ListItemButton
       className={`${styles.projectLink} ${active ? styles.active : ''}`}
       component={NextLinkComposed}
-      to={{
-        pathname: url,
-      }}
+      to={url}
     >
-      <ListItemText>{project.name}</ListItemText>
+      <ListItemText primary={project.name} />
     </ListItemButton>
   );
 
