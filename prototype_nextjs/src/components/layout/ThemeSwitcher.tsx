@@ -1,6 +1,6 @@
 import IconButton from '@mui/material/IconButton';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import LightModeIcon from '@mui/icons-material/LightMode';
+import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 
 import useColorMode from '~/store/colorMode';
 
@@ -17,7 +17,7 @@ export default function ThemeSwitcher() {
       size="small"
       color="contrast"
     >
-      {isDark ? <DarkModeIcon /> : <LightModeIcon />}
+      {isDark ? <DarkModeOutlinedIcon /> : <LightModeOutlinedIcon />}
     </IconButton>
   );
 }
