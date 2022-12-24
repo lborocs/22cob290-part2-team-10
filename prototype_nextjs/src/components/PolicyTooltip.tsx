@@ -20,6 +20,7 @@ export default function PolicyTooltip() {
   return (
     <BootstrapTooltip
       placement="top"
+      aria-label="display password policy"
       title={
         <Typography variant="caption">
           At least 1 uppercase<br />

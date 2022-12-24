@@ -96,6 +96,7 @@ export default function ProjectsList() {
           },
           '& input': {
             color: 'black',
+            caretColor: 'currentColor',
           },
           '& .MuiOutlinedInput-root': {
             '& fieldset': {
