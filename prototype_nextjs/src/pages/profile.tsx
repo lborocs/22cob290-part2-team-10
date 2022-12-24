@@ -6,13 +6,12 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Unstable_Grid2';
 import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 
 import prisma from '~/lib/prisma';
 import { getEmailFromToken } from '~/lib/inviteToken';
 import { SidebarType } from '~/components/Layout';
 import TextAvatarEditor from '~/components/profile/TextAvatarEditor';
-import UserDetails from '~/components/profile/UserDetails';
+import UserDetailsSection from '~/components/profile/UserDetailsSection';
 import ChangePasswordSection from '~/components/profile/ChangePasswordSection';
 import InviteEmployeeSection from '~/components/profile/InviteEmployeeSection';
 import type { AppPage, SessionUser } from '~/types';
@@ -37,10 +36,7 @@ const ProfilePage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps
           <TextAvatarEditor />
         </Box>
         <Box flexGrow={1}>
-          {inviter && (
-            <Typography variant="caption">Invited by: {inviter.name} ({inviter.email})</Typography>
-          )}
-          <UserDetails />
+          <UserDetailsSection inviter={inviter} />
         </Box>
       </Stack>
 
