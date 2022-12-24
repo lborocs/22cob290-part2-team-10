@@ -5,6 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Stack from '@mui/material/Stack';
 import TextField, { type TextFieldProps } from '@mui/material/TextField';
+import Tooltip from '@mui/material/Tooltip';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
@@ -44,19 +45,20 @@ export default forwardRef(function PasswordField({
               divider={<Divider orientation="vertical" variant="middle" flexItem />}
             >
               {policyTooltip && <PolicyTooltip />}
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={togglePassword}
-                edge="end"
-                sx={{
-                  color: showPassword ? 'primary.main' : 'inherit',
-                  '&:hover': {
-                    color: showPassword ? 'inherit' : 'primary.main',
-                  },
-                }}
-              >
-                {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-              </IconButton>
+              <Tooltip title={showPassword ? 'Hide password' : 'Show password'} describeChild>
+                <IconButton
+                  onClick={togglePassword}
+                  edge="end"
+                  sx={{
+                    color: showPassword ? 'primary.main' : 'inherit',
+                    '&:hover': {
+                      color: showPassword ? 'inherit' : 'primary.main',
+                    },
+                  }}
+                >
+                  {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                </IconButton>
+              </Tooltip>
             </Stack>
           </InputAdornment>
         ),
