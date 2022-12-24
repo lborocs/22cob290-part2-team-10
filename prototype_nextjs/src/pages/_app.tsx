@@ -77,6 +77,10 @@ declare module '@mui/material/Button' {
   interface ButtonPropsColorOverrides extends ColorOverrides { }
 }
 
+declare module '@mui/material/ButtonGroup' {
+  interface ButtonGroupPropsColorOverrides extends ColorOverrides { }
+}
+
 declare module '@mui/material/Chip' {
   interface ChipPropsColorOverrides extends ColorOverrides { }
 }
