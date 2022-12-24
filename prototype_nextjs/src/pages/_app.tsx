@@ -11,10 +11,12 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import { Toaster, ToastBar } from 'react-hot-toast';
 
-// put global css imports before component imports because otherwise:
-//  it will put the component css before the global css in the head,
-//  so the global will get precedence when styling a component
-//  which is bad because the components won't look how we want them to look
+import Layout from '~/components/Layout';
+import LoadingPage from '~/components/LoadingPage';
+import useUserStore from '~/store/userStore';
+import useColorMode from '~/store/colorMode';
+import type { AppPage } from '~/types';
+
 import '@fortawesome/fontawesome-svg-core/styles.css';
 // Roboto is MUI default font
 import '@fontsource/roboto/300.css';
@@ -22,12 +24,6 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import '~/styles/globals.css';
-
-import Layout from '~/components/Layout';
-import LoadingPage from '~/components/LoadingPage';
-import useUserStore from '~/store/userStore';
-import useColorMode from '~/store/colorMode';
-import type { AppPage } from '~/types';
 
 // https://fontawesome.com/v5/docs/web/use-with/react#getting-font-awesome-css-to-work
 config.autoAddCss = false;
@@ -162,7 +158,7 @@ export const lightThemeOptions: ThemeOptions = {
     primary: {
       light: '#e2ba39', // makeItAllOrange.main
       main: '#ffa726', // makeItAllOrange.dark
-      // TODO: decide whether to use makeItAllOrange (default primary)
+      // TODO: decide whether to use makeItAllOrange.main as primary.main
       // or not, sometimes its fine, sometimes it's too light
     },
     contrast: commonThemeOptions.palette!.dark,

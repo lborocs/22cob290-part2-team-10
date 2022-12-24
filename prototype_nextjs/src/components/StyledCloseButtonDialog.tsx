@@ -23,7 +23,8 @@ export type StyledCloseButtonDialogProps = DialogProps & {
 };
 
 /**
- * A styled dialog (less padding) with a close button in the header.
+ * A styled dialog (less padding) with an optional (default enabled) close button
+ *   in the header.
  *
  * @param dialogTitle The title of the dialog
  * @param noCloseButton
