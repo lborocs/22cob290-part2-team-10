@@ -10,6 +10,7 @@
     "migrate:dev": "dotenv -e .env.development -- npx prisma migrate dev",
     "migrate:reset": "dotenv -e .env.development -- npx prisma migrate reset",
     "env:dev": "dotenv -e .env.development --",
+    "analyze": "dotenv -v ANALYZE=true -e .env.development -- next build",
     "start:prod": "npx prisma migrate deploy && node server.js"
   },
   "dependencies": {
@@ -43,6 +44,7 @@
     "zustand": "^4.1.4"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^13.1.1",
     "@types/bcrypt": "^5.0.0",
     "@types/jsonwebtoken": "^8.5.9",
     "@types/lodash": "^4.14.191",
