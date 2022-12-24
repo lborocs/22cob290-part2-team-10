@@ -25,6 +25,8 @@ export default function Nav() {
 
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 
+  const open = Boolean(anchorElNav);
+
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => setAnchorElNav(event.currentTarget);
   const handleCloseNavMenu = useCallback(() => setAnchorElNav(null), []);
 
@@ -39,6 +41,7 @@ export default function Nav() {
           color="contrast"
           onClick={handleOpenNavMenu}
           aria-controls="mobile-nav"
+          aria-expanded={open}
           sx={(theme) => ({
             paddingX: 1.5,
             height: `calc(1.5rem + ${theme.spacing(1.5)})`,
@@ -51,7 +54,7 @@ export default function Nav() {
         <nav>
           <Menu
             id="mobile-nav"
-            aria-expanded={Boolean(anchorElNav)}
+            aria-expanded={open}
             anchorEl={anchorElNav}
             anchorOrigin={{
               vertical: 'bottom',
@@ -62,7 +65,7 @@ export default function Nav() {
               vertical: 'top',
               horizontal: 'left',
             }}
-            open={Boolean(anchorElNav)}
+            open={open}
             onClose={handleCloseNavMenu}
             sx={{
               display: { xs: 'block', lg: 'none' },
