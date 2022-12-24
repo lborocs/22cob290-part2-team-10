@@ -2,15 +2,16 @@ import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'nex
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 import { signOut } from 'next-auth/react';
-// import Button from 'react-bootstrap/Button';
-// import Col from 'react-bootstrap/Col';
-// import Row from 'react-bootstrap/Row';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Unstable_Grid2';
+import Stack from '@mui/material/Stack';
 
 import prisma from '~/lib/prisma';
 import { getEmailFromToken } from '~/lib/inviteToken';
 import { SidebarType } from '~/components/Layout';
 import TextAvatarEditor from '~/components/profile/TextAvatarEditor';
-import UserDetails from '~/components/profile/UserDetails';
+import UserDetailsSection from '~/components/profile/UserDetailsSection';
 import ChangePasswordSection from '~/components/profile/ChangePasswordSection';
 import InviteEmployeeSection from '~/components/profile/InviteEmployeeSection';
 import type { AppPage, SessionUser } from '~/types';
@@ -20,50 +21,49 @@ import styles from '~/styles/Profile.module.css';
 
 const ProfilePage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ inviter }) => {
   return (
-    <main className="flex-grow-1">
+    <Box flexGrow={1} component="main">
       <Head>
         <title>Profile - Make-It-All</title>
       </Head>
 
-      {/* <section>
-        <Row>
-          <Col sm="auto" className="d-flex justify-content-center pb-4 pe-md-4">
-            <TextAvatarEditor />
-          </Col>
-          <Col>
-            {inviter && (
-              <small>Invited by: {inviter.name} ({inviter.email})</small>
-            )}
-            <UserDetails />
-          </Col>
-        </Row>
-      </section>
+      <Stack direction={{ xs: 'column', sm: 'row' }} component="section">
+        <Box
+          display="flex"
+          justifyContent="center"
+          paddingBottom={{ xs: 4, sm: 0 }}
+          paddingRight={{ sm: 4 }}
+        >
+          <TextAvatarEditor />
+        </Box>
+        <Box flexGrow={1}>
+          <UserDetailsSection inviter={inviter} />
+        </Box>
+      </Stack>
 
       <br />
       <br />
 
-      <section>
-        <Row xs={1} sm={2}>
-          <Col>
-            <ChangePasswordSection />
-          </Col>
-          <Col>
-            <InviteEmployeeSection />
-          </Col>
-        </Row>
-      </section> */}
+      <Grid container columns={{ xs: 1, sm: 2 }} component="section">
+        <Grid xs={1} sm={1}>
+          <ChangePasswordSection />
+        </Grid>
+        <Grid xs={1} sm={1}>
+          <InviteEmployeeSection />
+        </Grid>
+      </Grid>
 
       <br />
       <br />
 
-      <button
-        // variant="danger"
+      <Button
+        variant="contained"
+        color="error"
         className={styles.button}
         onClick={() => signOut({ callbackUrl: '/' })}
       >
         Sign Out
-      </button>
-    </main>
+      </Button>
+    </Box>
   );
 };
 

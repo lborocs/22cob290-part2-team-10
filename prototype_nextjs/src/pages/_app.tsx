@@ -11,25 +11,19 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import { Toaster, ToastBar } from 'react-hot-toast';
 
-// put global css imports before component imports because otherwise:
-//  it will put the component css before the global css in the head,
-//  so the global will get precedence when styling a component
-//  which is bad because the components won't look how we want them to look
+import Layout from '~/components/Layout';
+import LoadingPage from '~/components/LoadingPage';
+import useUserStore from '~/store/userStore';
+import useColorMode from '~/store/colorMode';
+import type { AppPage } from '~/types';
+
 import '@fortawesome/fontawesome-svg-core/styles.css';
-// TODO: remove BS
-// import 'bootstrap/dist/css/bootstrap.min.css';
 // Roboto is MUI default font
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import '~/styles/globals.css';
-
-import Layout from '~/components/Layout';
-import LoadingPage from '~/components/LoadingPage';
-import useUserStore from '~/store/userStore';
-import useColorMode from '~/store/colorMode';
-import type { AppPage } from '~/types';
 
 // https://fontawesome.com/v5/docs/web/use-with/react#getting-font-awesome-css-to-work
 config.autoAddCss = false;
@@ -79,8 +73,8 @@ declare module '@mui/material/Button' {
   interface ButtonPropsColorOverrides extends ColorOverrides { }
 }
 
-declare module '@mui/material/IconButton' {
-  interface IconButtonPropsColorOverrides extends ColorOverrides { }
+declare module '@mui/material/ButtonGroup' {
+  interface ButtonGroupPropsColorOverrides extends ColorOverrides { }
 }
 
 declare module '@mui/material/Chip' {
@@ -89,6 +83,18 @@ declare module '@mui/material/Chip' {
 
 declare module '@mui/material/CircularProgress' {
   interface CircularProgressPropsColorOverrides extends ColorOverrides { }
+}
+
+declare module '@mui/material/FormLabel' {
+  interface FormLabelPropsColorOverrides extends ColorOverrides { }
+}
+
+declare module '@mui/material/IconButton' {
+  interface IconButtonPropsColorOverrides extends ColorOverrides { }
+}
+
+declare module '@mui/material/InputBase' {
+  interface InputBasePropsColorOverrides extends ColorOverrides { }
 }
 
 declare module '@mui/material/TextField' {
@@ -131,6 +137,18 @@ export const commonThemeOptions: ThemeOptions = {
         },
       },
     },
+    MuiInputBase: {
+      styleOverrides: {
+        root: ({ ownerState, theme }) => ({
+          // same caretColor as input color
+          caretColor: ownerState.color && theme.palette[ownerState.color].main,
+          '&.Mui-error': {
+            // red caret on error
+            caretColor: 'red',
+          },
+        }),
+      },
+    },
   },
 };
 
@@ -140,7 +158,7 @@ export const lightThemeOptions: ThemeOptions = {
     primary: {
       light: '#e2ba39', // makeItAllOrange.main
       main: '#ffa726', // makeItAllOrange.dark
-      // TODO: decide whether to use makeItAllOrange (default primary)
+      // TODO: decide whether to use makeItAllOrange.main as primary.main
       // or not, sometimes its fine, sometimes it's too light
     },
     contrast: commonThemeOptions.palette!.dark,

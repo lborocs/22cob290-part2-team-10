@@ -1,13 +1,21 @@
 import { useEffect, useState } from 'react';
-import { useTheme } from '@mui/material/styles';
-import Button from 'react-bootstrap/Button';
-import CloseButton from 'react-bootstrap/CloseButton';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Modal from 'react-bootstrap/Modal';
-import { Clipboard2Fill } from 'react-bootstrap-icons';
+import type { SxProps } from '@mui/material';
+import Button from '@mui/material/Button';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import FormHelperText from '@mui/material/FormHelperText';
+import FormControl from '@mui/material/FormControl';
+import IconButton, { type IconButtonProps } from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import LoadingButton from '@mui/lab/LoadingButton';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import Typography from '@mui/material/Typography';
+import CloseIcon from '@mui/icons-material/Close';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import axios, { type AxiosRequestConfig } from 'axios';
 
+import StyledCloseButtonDialog from '~/components/StyledCloseButtonDialog';
 import { copyToClipboard } from '~/utils';
 import type { ResponseSchema as InviteUrlResponse } from '~/pages/api/user/get-invite-url';
 
@@ -24,14 +32,20 @@ enum CopyStatus {
  *  the system.
  */
 export default function InviteEmployeeSection() {
-  const theme = useTheme();
+  const [showDialog, setShowDialog] = useState(false);
 
-  const [showModal, setShowModal] = useState(false);
+  const handleOpen = () => setShowDialog(true);
+  const handleClose = () => setShowDialog(false);
 
   const [inviteUrl, setInviteUrl] = useState('');
 
   const [copyStatus, setCopyStatus] = useState(CopyStatus.NOT_COPIED);
   const [copyFailedFeedback, setCopyFailedFeedback] = useState('');
+
+  const fetchingInviteUrl = inviteUrl === '';
+
+  const copySucceeded = copyStatus === CopyStatus.SUCCEEDED;
+  const copyFailed = copyStatus === CopyStatus.FAILED;
 
   const reset = () => {
     setInviteUrl('');
@@ -51,25 +65,23 @@ export default function InviteEmployeeSection() {
     try {
       await copyToClipboard(inviteUrl);
       setCopyStatus(CopyStatus.SUCCEEDED);
-    } catch (e: any) {
+    } catch (e: unknown) {
       setCopyStatus(CopyStatus.FAILED);
-      setCopyFailedFeedback(String(e));
+      setCopyFailedFeedback(String(e ?? ''));
     }
   };
 
   const regenerateInvite = async () => {
     reset();
 
-    // artificial delay
-    await new Promise((res) => setTimeout(res, 400));
+    // artificial delay (only in development)
+    process.env.NODE_ENV === 'development' && await new Promise((res) => setTimeout(res, 1000));
 
     await fetchInviteUrl();
   };
 
-  const fetchingInviteUrl = inviteUrl === '';
-
   useEffect(() => {
-    if (showModal) {
+    if (showDialog) {
       const controller = new AbortController();
       const signal = controller.signal;
 
@@ -81,67 +93,121 @@ export default function InviteEmployeeSection() {
     } else {
       reset();
     }
-  }, [showModal]);
+  }, [showDialog]);
 
-  const onHide = () => setShowModal(false);
+  // Mui's TextField/FormControl API doesn't provide functionality
+  // for success state, only for error state. So we have to implement it
+  // ourselves
+  const formControlSx: SxProps | undefined = copySucceeded
+    ? {
+      '& .MuiFormHelperText-root': {
+        color: 'success.main',
+      },
+      '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+          borderColor: 'success.main',
+        },
+        '&:hover fieldset': {
+          borderColor: 'success.main',
+        },
+        '&.Mui-focused fieldset': {
+          borderColor: 'success.main',
+        },
+      },
+    }
+    : undefined;
+
+  const copyIconColor: IconButtonProps['color'] = ({
+    [CopyStatus.NOT_COPIED]: undefined,
+    [CopyStatus.SUCCEEDED]: 'success',
+    [CopyStatus.FAILED]: 'error',
+  } as const)[copyStatus];
+
+  const helperText = {
+    [CopyStatus.NOT_COPIED]: '',
+    [CopyStatus.SUCCEEDED]: 'Copied!',
+    [CopyStatus.FAILED]: copyFailedFeedback || 'Failed to copy, please try again.',
+  }[copyStatus];
 
   return (
     <div>
-      <h3>Invite Employee</h3>
+      <Typography variant="h5" fontWeight={500} component="h2">
+        Invite Employee
+      </Typography>
       <Button
-        variant={theme.palette.mode === 'dark' ? 'light' : 'dark'}
-        onClick={() => setShowModal(true)}
+        variant="contained"
+        color="contrast"
+        onClick={handleOpen}
         className={styles.button}
       >
         Generate invite
       </Button>
 
-      <Modal
-        show={showModal}
-        onHide={onHide}
-        centered
+      <StyledCloseButtonDialog
+        open={showDialog}
+        onClose={handleClose}
+        maxWidth="xs"
+        fullWidth
+        dialogTitle="Invite URL (valid for 7 days)"
       >
-        <Modal.Header>
-          <Modal.Title>Invite URL (valid for 7 days)</Modal.Title>
-          <CloseButton variant={theme.palette.mode === 'dark' ? 'white' : undefined} />
-        </Modal.Header>
-
-        <Modal.Body>
-          <InputGroup hasValidation>
-            <Form.Control
-              type="text"
+        <DialogContent sx={{ paddingY: 2 }} dividers>
+          <FormControl
+            variant="outlined"
+            color="secondary"
+            sx={formControlSx}
+            error={copyFailed}
+            disabled={fetchingInviteUrl}
+            fullWidth
+          >
+            <OutlinedInput
+              size="small"
+              aria-label="invite URL"
               value={fetchingInviteUrl ? 'Generating...' : inviteUrl}
-              isValid={copyStatus === CopyStatus.SUCCEEDED}
-              isInvalid={copyStatus === CopyStatus.FAILED}
               readOnly
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    size="small"
+                    color={copyIconColor}
+                    aria-label="copy"
+                    onClick={copyInviteUrl}
+                    disabled={fetchingInviteUrl}
+                  >
+                    <ContentCopyIcon fontSize="inherit" />
+                  </IconButton>
+                </InputAdornment>
+              }
             />
-            <Button
-              variant="outline-secondary"
-              onClick={copyInviteUrl}
-              disabled={fetchingInviteUrl}
-              className="d-flex align-items-center"
-            >
-              <Clipboard2Fill />
-            </Button>
-            {/* even with hasValidation, it doesn't show rounded corners with 2 feedback elements :( */}
-            <Form.Control.Feedback
-              // dont need to handle NOT_COPIED because this shouldn't be shown if NOT_COPIED
-              type={copyStatus === CopyStatus.SUCCEEDED ? 'valid' : 'invalid'}
-            >
-              {copyStatus === CopyStatus.SUCCEEDED ? 'Coped!' : copyFailedFeedback}
-            </Form.Control.Feedback>
-          </InputGroup>
-        </Modal.Body>
+            <FormHelperText>
+              {helperText}
+            </FormHelperText>
+          </FormControl>
+        </DialogContent>
 
-        <Modal.Footer>
-          <Button variant="secondary" size="sm" onClick={onHide}>
+        <DialogActions sx={{ paddingY: 1.5 }}>
+          <Button
+            variant="outlined"
+            color="secondary"
+            size="small"
+            startIcon={<CloseIcon />}
+            onClick={handleClose}
+          >
             Close
           </Button>
-          <Button variant="success" size="sm" onClick={regenerateInvite}>
+          <LoadingButton
+            variant="contained"
+            color="secondary"
+            size="small"
+            startIcon={<RefreshIcon />}
+            loadingPosition="start"
+            onClick={regenerateInvite}
+            loading={fetchingInviteUrl}
+            disableElevation
+          >
             Regenerate
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          </LoadingButton>
+        </DialogActions>
+      </StyledCloseButtonDialog>
     </div>
   );
 }
