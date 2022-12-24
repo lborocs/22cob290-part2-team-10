@@ -32,9 +32,6 @@ config.autoAddCss = false;
 // https://mui.com/material-ui/customization/palette/#adding-new-colors
 declare module '@mui/material/styles' {
   interface Theme {
-    status: {
-      danger: string;
-    };
   }
 
   interface Palette {
@@ -55,9 +52,6 @@ declare module '@mui/material/styles' {
 
   // allow configuration using `createTheme`
   interface ThemeOptions {
-    status?: {
-      danger?: string;
-    };
   }
 }
 

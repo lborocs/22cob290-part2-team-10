@@ -87,7 +87,7 @@ const SignInPage: AppPage = () => {
   useEffect(() => {
     if (callbackUrl) {
       // TODO: add close icon
-      toast.error((t) => (
+      const toastId = toast.error((t) => (
         <span onClick={() => toast.dismiss(t.id)} style={{ cursor: 'pointer' }}>
           You need to sign in first.
         </span>
@@ -95,6 +95,10 @@ const SignInPage: AppPage = () => {
         id: 'needToSignIn',
         duration: Infinity,
       });
+
+      return () => {
+        toast.dismiss(toastId);
+      };
     }
   }, [callbackUrl]);
 

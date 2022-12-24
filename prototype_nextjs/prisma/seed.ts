@@ -1,6 +1,8 @@
 import { PrismaClient, type Prisma } from '@prisma/client';
 import * as dotenv from 'dotenv';
-import _ from 'lodash';
+import capitalize from 'lodash/capitalize';
+import random from 'lodash/random';
+import range from 'lodash/range';
 import { LoremIpsum } from 'lorem-ipsum';
 
 import { hashPassword } from '../src/lib/user';
@@ -100,7 +102,7 @@ const getUserData = async (): Promise<Prisma.UserCreateInput[]> => [
 
 // TODO: seed user's todo list
 
-const projectData: Prisma.ProjectCreateInput[] = _.range(1, 11).map<Prisma.ProjectCreateInput>((num) => ({
+const projectData: Prisma.ProjectCreateInput[] = range(1, 11).map<Prisma.ProjectCreateInput>((num) => ({
   name: `Project ${num}`,
   leader: {
     connect: {
@@ -371,16 +373,16 @@ const postData: Prisma.PostCreateInput[] = [
 // TODO: makeRandomProject (will have to get the current users and pick random users to assign to it)
 
 async function makeRandomUser(): Promise<Prisma.UserCreateInput> {
-  const firstName = _.capitalize(lorem.generateWords(1));
-  const lastName = _.capitalize(lorem.generateWords(1));
+  const firstName = capitalize(lorem.generateWords(1));
+  const lastName = capitalize(lorem.generateWords(1));
   const name = `${firstName} ${lastName}`;
 
   const email = `${firstName}@make-it-all.co.uk`.toLowerCase();
 
-  const numberOfPosts = _.random(1, 11);
-  const posts = await Promise.all(_.range(numberOfPosts).map(makeRandomPost.bind(undefined, email)));
+  const numberOfPosts = random(1, 11);
+  const posts = await Promise.all(range(numberOfPosts).map(makeRandomPost.bind(undefined, email)));
 
-  const isManager = _.random() > 0.3;
+  const isManager = random() > 0.3;
 
   return {
     email,
@@ -397,22 +399,22 @@ async function makeRandomUser(): Promise<Prisma.UserCreateInput> {
 async function makeRandomPost(authorEmail: string): Promise<Prisma.PostUncheckedCreateWithoutAuthorInput> {
   const title = lorem.generateSentences(1);
   const summary = lorem.generateSentences(1);
-  const content = lorem.generateParagraphs(_.random(1, 5));
+  const content = lorem.generateParagraphs(random(1, 5));
 
-  const topics = lorem.generateWords(_.random(1, 10)).split(' ');
+  const topics = lorem.generateWords(random(1, 10)).split(' ');
 
   async function getUpvoters(): Promise<string[]> {
     const users = await getUserData();
     const nUsers = users.length;
 
-    const nUpvotes = _.random(0, nUsers - 1);
+    const nUpvotes = random(0, nUsers - 1);
     const upVotedUsers = new Set<string>(); // emails
 
-    _.range(0, nUpvotes).forEach(() => {
+    range(0, nUpvotes).forEach(() => {
       let email: string;
 
       do {
-        email = users[_.random(0, nUsers - 1)].email;
+        email = users[random(0, nUsers - 1)].email;
       } while (upVotedUsers.has(email));
 
       upVotedUsers.add(email);
@@ -422,7 +424,7 @@ async function makeRandomPost(authorEmail: string): Promise<Prisma.PostUnchecked
   }
   const upvoters = await getUpvoters();
 
-  const adminEdited = _.random() > 0.2;
+  const adminEdited = random() > 0.2;
 
   return {
     upvoters: {
@@ -485,7 +487,7 @@ async function main() {
     }
 
     // random users + random posts
-    for (const i of _.range(5)) {
+    for (const i of range(5)) {
       const data = await makeRandomUser();
       const user = await prisma.user.create({
         data,

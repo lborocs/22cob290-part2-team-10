@@ -14,7 +14,8 @@ import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
-import _ from 'lodash';
+import memoize from 'lodash/memoize';
+import range from 'lodash/range';
 import useSWR from 'swr';
 
 import hashids from '~/lib/hashids';
@@ -27,7 +28,7 @@ import type { ResponseSchema as GetProjectsResponse } from '~/pages/api/projects
  *
  * @see https://javascript.plainenglish.io/how-to-create-an-optimized-real-time-search-with-react-6dd4026f4fa9
  */
-const filterProjects = _.memoize((query: string, projects: GetProjectsResponse) => {
+const filterProjects = memoize((query: string, projects: GetProjectsResponse) => {
   const lcQuery = query.toLowerCase();
 
   const filteredProjects = projects.filter((project) => project.name.toLowerCase().includes(lcQuery));
@@ -171,7 +172,7 @@ function Projects({ projects }: {
       overflow: 'hidden',
       marginX: 0.5,
     }}>
-      {_.range(10).map((num) => (
+      {range(10).map((num) => (
         <Skeleton
           key={num}
           width="100%"
