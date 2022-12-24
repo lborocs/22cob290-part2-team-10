@@ -39,9 +39,9 @@ const SignInPage: AppPage = () => {
 
   const handleSubmit: React.ComponentProps<typeof Formik<SignInFormData>>['onSubmit']
     = async ({ email, password }, { setFieldError }) => {
-      // unfocus the focused element so that an error from backend doesn't almost immediately
-      // disappear if they submitted the form while focused on an element (i.e. pressed enter.
-      // because touched will update to true when they unfocus from the element
+      // Unfocus the focused element so that an error from backend doesn't almost immediately
+      // disappear if they submitted the form while focused on an element (i.e. pressed enter).
+      // Because touched will immediately update to true when they unfocus from the element
       document.querySelector<HTMLInputElement>(':focus')?.blur();
 
       toast.dismiss('signInFailed');

@@ -1,9 +1,9 @@
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress, { type CircularProgressProps } from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 
 export type LoadingPageProps = {
   dark?: boolean
-  size?: number
+  size?: CircularProgressProps['size']
 };
 
 /**
@@ -11,6 +11,7 @@ export type LoadingPageProps = {
  *  is loading.
  *
  * @param dark if `true`, black background & light spinner; else default background & dark spinner
+ * @param size spinner size
  */
 export default function LoadingPage({
   dark = true,

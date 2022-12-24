@@ -47,7 +47,7 @@ export default function Layout({
   children,
 }: LayoutProps) {
   const noSidebar = sidebar.type === SidebarType.NONE;
-  const [showSidebar, setShowSidebar] = useState(true && !noSidebar);
+  const [showSidebar, setShowSidebar] = useState(!noSidebar);
 
   const toggleSidebar = () => setShowSidebar((show) => !show);
 

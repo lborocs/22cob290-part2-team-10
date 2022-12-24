@@ -2,7 +2,6 @@ import type { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 import Typography from '@mui/material/Typography';
-import { Box } from '@mui/material';
 
 import { SidebarType } from '~/components/Layout';
 import type { AppPage, SessionUser } from '~/types';

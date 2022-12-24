@@ -11,7 +11,9 @@ export type DebouncedTextFieldProps = Omit<TextFieldProps, 'value' | 'onChange' 
 /**
  * A controlled TextField that uses debouncing for better performance. Should be used for searching.
  *
- * @param onSearchSubmit
+ * @param debounceTimeoutMs The amount of time (ms) after user stops typing to wait before calling `onSearchSubmit`
+ * @param initialValue
+ * @param onSearchSubmit The action to execute `debounceTimeoutMs`ms after user stops typing
  * @param resetResults
  * @see https://javascript.plainenglish.io/how-to-create-an-optimized-real-time-search-with-react-6dd4026f4fa9
  */

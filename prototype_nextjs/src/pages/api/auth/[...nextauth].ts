@@ -29,7 +29,7 @@ export const authOptions: NextAuthOptions = {
          *
          * Works by basically re-signing them in (getting their info from database again), but instead
          *  of using their email & password, it uses the session to know who is signed in.
-         *  - We can't use their email & password because their password isn't stored in plain text and
+         *  - We can't use their email & password because their password isn't stored in plain text, and
          *   it's inconvenient to ask them to re-enter it.
          *
          * After "signing in", next-auth's signIn flow will re-set the cookie/session stored on the client.

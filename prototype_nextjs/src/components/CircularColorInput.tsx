@@ -6,7 +6,7 @@ export type CircularColorInputProps = React.ComponentProps<'input'> & {
 
 /**
  * Calculates a slightly lighter/darker color than `color`, depending on if it
- *  dark or light. If `color` is dark, returns a lighter color and vice verca.
+ *  dark or light. If `color` is dark, returns a lighter color and vice versa.
  *
  * Figure out a color is dark by checking the return value of
  *  `theme.palette.getContrastText`.
@@ -32,7 +32,7 @@ function calculateBorderColor(color: string, theme: Theme): string {
 }
 
 // color input styling: https://stackoverflow.com/a/56814437
-// there is also https://stackoverflow.com/a/41884762 but it's not a cross browser solution
+// there is also https://stackoverflow.com/a/41884762, but it's not a cross browser solution
 /**
  * Custom circular color input. Because MUI doesn't have a proper implementation
  *  of `type=color`.

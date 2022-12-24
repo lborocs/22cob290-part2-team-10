@@ -41,7 +41,7 @@ declare module '@mui/material/styles' {
     light: Palette['primary'];
     dark: Palette['primary'];
 
-    contrast: Palette['primary']; // constrast to theme
+    contrast: Palette['primary']; // contrast to theme
     makeItAllGrey: Palette['primary'];
     makeItAllOrange: Palette['primary'];
   }
@@ -252,10 +252,7 @@ export default function App({
 
         <ThemedToaster />
 
-        <Box sx={{
-          bgcolor: 'background.default',
-          minHeight: '100vh',
-        }}>
+        <Box minHeight="100vh">
           {noAuth ? (
             <Component {...pageProps} />
           ) : (
@@ -314,9 +311,9 @@ function Auth({ children }: { children: React.ReactNode }) {
 
   if (status === 'loading') {
     return (
-      <div className="vh-100 vw-100">
+      <Box height="100vh" width="100vw">
         <LoadingPage />
-      </div>
+      </Box>
     );
   }
 

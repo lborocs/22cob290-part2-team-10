@@ -140,7 +140,7 @@ export default function ProjectsList() {
           sx={{
             inset: 0,
             overflowY: 'auto',
-            // TODO?: scrollbar styling isnt fully supported on firefox
+            // TODO?: scrollbar styling isn't fully supported on firefox
             // so try and figure out workaround? idk
             // https://developer.mozilla.org/en-US/docs/Web/CSS/::-webkit-scrollbar
             '&::-webkit-scrollbar': {

@@ -43,6 +43,6 @@ export function getEmployeeRoleInProject(userId: string, project: ProjectTeam): 
   return null;
 }
 
-export function emmployeeHasAccessToProject(userId: string, project: ProjectTeam): boolean {
+export function employeeHasAccessToProject(userId: string, project: ProjectTeam): boolean {
   return getEmployeeRoleInProject(userId, project) !== null;
 }
