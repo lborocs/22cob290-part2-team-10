@@ -13,6 +13,7 @@ export const navButtonSx = (active: boolean) => ({
 
 export type NavItemProps = ButtonProps & React.ComponentProps<typeof NextLinkComposed>;
 
+// TODO add underline same color https://www.youtube.com/watch?v=nS1UrJnncWc
 export default function NavItem(props: NavItemProps) {
   const router = useRouter();
 

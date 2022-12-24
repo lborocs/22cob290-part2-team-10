@@ -8,7 +8,7 @@ import { navButtonSx } from '~/components/layout/nav/NavItem';
 export default function MobileNavItem({
   page,
   handleCloseNavMenu,
-  children = page,
+  children,
 }: React.PropsWithChildren<{ page: string, handleCloseNavMenu: () => void }>) {
   const router = useRouter();
 

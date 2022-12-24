@@ -25,6 +25,8 @@ export default function Nav() {
 
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 
+  const open = Boolean(anchorElNav);
+
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => setAnchorElNav(event.currentTarget);
   const handleCloseNavMenu = useCallback(() => setAnchorElNav(null), []);
 
@@ -33,14 +35,18 @@ export default function Nav() {
       <ThemeSwitcher />
 
       {/* mobile nav */}
-      <Box sx={{
-        display: { xs: 'inline-block', lg: 'none' },
-      }}>
+      <Box display={{ xs: 'inline-block', lg: 'none' }}>
         <Button
           variant="contained"
           color="contrast"
           onClick={handleOpenNavMenu}
           aria-controls="mobile-nav"
+          aria-expanded={open}
+          sx={(theme) => ({
+            paddingX: 1.5,
+            height: `calc(1.5rem + ${theme.spacing(1.5)})`,
+            minWidth: 0,
+          })}
         >
           {/* TODO: animate transition */}
           {anchorElNav ? <MenuOpenIcon /> : <MenuIcon />}
@@ -48,7 +54,7 @@ export default function Nav() {
         <nav>
           <Menu
             id="mobile-nav"
-            aria-expanded={Boolean(anchorElNav)}
+            aria-expanded={open}
             anchorEl={anchorElNav}
             anchorOrigin={{
               vertical: 'bottom',
@@ -59,29 +65,27 @@ export default function Nav() {
               vertical: 'top',
               horizontal: 'left',
             }}
-            open={Boolean(anchorElNav)}
+            open={open}
             onClose={handleCloseNavMenu}
-            sx={(theme) => ({
+            sx={{
               display: { xs: 'block', lg: 'none' },
-              '& .MuiList-root': {
-                // @ts-expect-error Property exists in light mode
-                bgcolor: theme.components?.MuiAppBar?.styleOverrides?.root?.backgroundColor,
-              },
-            })}
+            }}
           >
             {pages.concat('Profile').map((page) => (
               <MobileNavItem
                 key={page}
                 page={page}
                 handleCloseNavMenu={handleCloseNavMenu}
-              />
+              >
+                {page}
+              </MobileNavItem>
             ))}
           </Menu>
         </nav>
       </Box>
 
       {/* desktop divider */}
-      <Box sx={{ display: { xs: 'none', lg: 'inline-flex' }, height: '100%' }}>
+      <Box display={{ xs: 'none', lg: 'inline-flex' }} height="100%">
         <Divider orientation="vertical" flexItem />
       </Box>
 
@@ -92,9 +96,7 @@ export default function Nav() {
         divider={<Divider orientation="vertical" flexItem />}
         spacing={1}
         component={'nav'}
-        sx={{
-          display: { xs: 'none', lg: 'inline-flex' },
-        }}
+        display={{ xs: 'none', lg: 'inline-flex' }}
       >
         {pages.map((page) => (
           <NavItem

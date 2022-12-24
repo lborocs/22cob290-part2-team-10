@@ -1,7 +1,3 @@
-.main {
-    /* background-color: #d3d3d3; */
-}
-
 .logo {
     width: 100%;
     height: auto;
@@ -25,22 +21,7 @@
     align-items: center;
 }
 
-/* .signupLink {
-    font-weight: 600; /* semi-bold * /
-    color: black;
-} */
-
 .signInBtn:not(:disabled) {
     background: linear-gradient(to right, grey, #d8363a, #dd3675, #b44593);
     color: white;
-}
-
-/* tablets/large phones? */
-@media screen and (min-width: 481px) {
-    .main {
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
 }

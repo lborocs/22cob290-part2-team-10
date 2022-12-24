@@ -7,91 +7,6 @@ body {
     /* font-family: Roboto; */
 }
 
-:root {
-    /* --background: white;
-    --foreground: black; */
-
-    /* TODO: idk what to call this (sidebarToggleBtn:hover and projectLink.active) */
-    --tertiary-color: #e2ba39;
-
-    --navbar-shadow-color: rgba(0, 0, 0, .17);
-
-    --sidebar-background: #d3d3d3;
-    --sidebar-brightness: 1;
-    --sidebar-text: black;
-    --sidebar-hover: #e2ba3990;
-}
-
-[data-theme='dark'],
-[data-theme='dark'] body {
-    /* --background: #1c1e21;
-    --foreground: white; */
-
-    --navbar-background: #131416;
-    --navbar-shadow-color: rgba(255, 255, 255, .17);
-
-    /* TODO: sidebar colour in dark mode */
-    /* --sidebar-background: #d3d3d3; */
-    /* --sidebar-brightness: 0.8; */
-    /* --sidebar-text: black; */
-    /* --sidebar-hover: #e2ba3990; */
-}
-
-body {
-    background-color: var(--background);
-    color: var(--foreground);
-}
-
-[data-theme='dark'] body {
-    background-color: var(--background);
-    color: white;
-}
-
-html:not(:has(div[class^='Layout'])),
-body:not(:has(div[class^='Layout'])) {
-    /*
-    bg only grey for SignInPage & SignupPage:
-      - well specifically any page that isn't using the `Layout`
-      - cannot set bg color of just `main` elem because of things like notches on iPhones (next to the notch will be white)
-      - so we have to set bg color of the body
-    */
-    background-color: #d3d3d3;
-    color: black;
-}
-
-/* dark theme SignIn & SignUp: 70% brightness */
-[data-theme='dark']:not(:has(div[class^='Layout'])),
-[data-theme='dark'] body:not(:has(div[class^='Layout'])) {
-    /* background-color: #949494; */
-}
-
-[data-theme='dark'] body:not(:has(div[class^='Layout'])) > * {
-    /* filter: brightness(0.7); */
-}
-
-.nav-link {
-    font-weight: 600;
-}
-
-[data-theme='dark'] .nav-link {
-    color: rgba(255, 255, 255, 0.8);
-}
-
-/* TODO add underline same color https://www.youtube.com/watch?v=nS1UrJnncWc */
-.nav-link.active {
-    color: var(--tertiary-color) !important;
-    filter: brightness(1.1);
-}
-
-[data-theme='dark'] .nav-link.active {
-    color: var(--tertiary-color) !important;
-}
-
-[data-theme='dark'] .modal-content {
-    background-color: var(--background);
-    border-color: rgba(255, 255, 255, 0.175);
-}
-
 a {
     color: inherit;
     text-decoration: none;
@@ -100,16 +15,6 @@ a {
 * {
     box-sizing: border-box;
 }
-
-/* @media (prefers-color-scheme: dark) {
-    html {
-      color-scheme: dark;
-    }
-    body {
-      color: white;
-      background: black;
-    }
-} */
 
 p {
     font-family: 'Poppins', sans-serif;

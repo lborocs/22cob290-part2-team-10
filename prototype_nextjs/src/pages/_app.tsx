@@ -11,25 +11,19 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import { Toaster, ToastBar } from 'react-hot-toast';
 
-// put global css imports before component imports because otherwise:
-//  it will put the component css before the global css in the head,
-//  so the global will get precedence when styling a component
-//  which is bad because the components won't look how we want them to look
+import Layout from '~/components/Layout';
+import LoadingPage from '~/components/LoadingPage';
+import useUserStore from '~/store/userStore';
+import useColorMode from '~/store/colorMode';
+import type { AppPage } from '~/types';
+
 import '@fortawesome/fontawesome-svg-core/styles.css';
-// TODO: remove BS
-// import 'bootstrap/dist/css/bootstrap.min.css';
 // Roboto is MUI default font
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import '~/styles/globals.css';
-
-import Layout from '~/components/Layout';
-import LoadingPage from '~/components/LoadingPage';
-import useUserStore from '~/store/userStore';
-import useColorMode from '~/store/colorMode';
-import type { AppPage } from '~/types';
 
 // https://fontawesome.com/v5/docs/web/use-with/react#getting-font-awesome-css-to-work
 config.autoAddCss = false;
@@ -79,8 +73,8 @@ declare module '@mui/material/Button' {
   interface ButtonPropsColorOverrides extends ColorOverrides { }
 }
 
-declare module '@mui/material/IconButton' {
-  interface IconButtonPropsColorOverrides extends ColorOverrides { }
+declare module '@mui/material/ButtonGroup' {
+  interface ButtonGroupPropsColorOverrides extends ColorOverrides { }
 }
 
 declare module '@mui/material/Chip' {
@@ -91,14 +85,24 @@ declare module '@mui/material/CircularProgress' {
   interface CircularProgressPropsColorOverrides extends ColorOverrides { }
 }
 
+declare module '@mui/material/FormLabel' {
+  interface FormLabelPropsColorOverrides extends ColorOverrides { }
+}
+
+declare module '@mui/material/IconButton' {
+  interface IconButtonPropsColorOverrides extends ColorOverrides { }
+}
+
+declare module '@mui/material/InputBase' {
+  interface InputBasePropsColorOverrides extends ColorOverrides { }
+}
+
 declare module '@mui/material/TextField' {
   interface TextFieldPropsColorOverrides extends ColorOverrides { }
 }
 
 export const commonThemeOptions: ThemeOptions = {
   palette: {
-    // https://mui.com/material-ui/customization/palette/#accessibility
-    contrastThreshold: 4.5,
     light: {
       main: grey[200],
       dark: grey[400],
@@ -109,7 +113,6 @@ export const commonThemeOptions: ThemeOptions = {
       light: grey[700],
       contrastText: '#fff',
     },
-
     makeItAllOrange: {
       light: '#f4dc49',
       main: '#e2ba39',
@@ -117,17 +120,34 @@ export const commonThemeOptions: ThemeOptions = {
     },
     makeItAllGrey: {
       main: '#d3d3d3',
+      contrastText: '#000',
     },
     primary: {
-      main: '#e2ba39',
+      main: '#e2ba39', // makeItAllOrange.main
     },
     secondary: {
-      main: '#d3d3d3',
+      main: '#d3d3d3', // makeItAllGrey.main
     },
   },
   components: {
     MuiButton: {
-      // TODO?: textTransform: 'none',
+      styleOverrides: {
+        root: {
+          // textTransform: 'none',
+        },
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        root: ({ ownerState, theme }) => ({
+          // same caretColor as input color
+          caretColor: ownerState.color && theme.palette[ownerState.color].main,
+          '&.Mui-error': {
+            // red caret on error
+            caretColor: 'red',
+          },
+        }),
+      },
     },
   },
 };
@@ -135,16 +155,13 @@ export const commonThemeOptions: ThemeOptions = {
 export const lightThemeOptions: ThemeOptions = {
   palette: {
     mode: 'light',
-    background: {
-      paper: '#d3d3d3',
-    },
     primary: {
       light: '#e2ba39', // makeItAllOrange.main
       main: '#ffa726', // makeItAllOrange.dark
-      // TODO: decide whether to use makeItAllOrange (default primary)
+      // TODO: decide whether to use makeItAllOrange.main as primary.main
       // or not, sometimes its fine, sometimes it's too light
     },
-    contrast: commonThemeOptions.palette?.dark,
+    contrast: commonThemeOptions.palette!.dark,
   },
   components: {
     MuiAppBar: {
@@ -153,6 +170,25 @@ export const lightThemeOptions: ThemeOptions = {
           backgroundColor: '#fff',
         },
       },
+    },
+    MuiButton: {
+      variants: [
+        // makeItAllGrey is too light
+        {
+          props: { variant: 'outlined', color: 'secondary' },
+          style: {
+            color: grey[700],
+            borderColor: grey[700],
+          },
+        },
+        {
+          props: { variant: 'text', color: 'secondary' },
+          style: {
+            color: grey[700],
+            borderColor: grey[700],
+          },
+        },
+      ],
     },
   },
 };
@@ -218,7 +254,7 @@ export default function App({
 
         <Box sx={{
           bgcolor: 'background.default',
-          height: '100vh',
+          minHeight: '100vh',
         }}>
           {noAuth ? (
             <Component {...pageProps} />

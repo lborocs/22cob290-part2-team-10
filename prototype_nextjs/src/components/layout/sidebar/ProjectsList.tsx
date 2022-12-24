@@ -22,8 +22,6 @@ import DebouncedTextField from '~/components/DebouncedTextField';
 import { NextLinkComposed } from '~/components/Link';
 import type { ResponseSchema as GetProjectsResponse } from '~/pages/api/projects/get-assigned-projects';
 
-import styles from '~/styles/layout/sidebar/ProjectsList.module.css';
-
 /**
  * Using memoization for better performance.
  *
@@ -80,6 +78,7 @@ export default function ProjectsList() {
         debounceTimeoutMs={600}
         onSearchSubmit={onSearchSubmit}
         resetResults={resetResults}
+        type="search"
         id="query"
         label="Search by project name"
         variant="outlined"
@@ -218,13 +217,28 @@ function ProjectListItem({ project }: { project: GetProjectsResponse[number] }) 
 
   const renderLink = (
     <ListItemButton
-      className={`${styles.projectLink} ${active ? styles.active : ''}`}
-      component={NextLinkComposed}
-      to={{
-        pathname: url,
+      sx={{
+        whiteSpace: 'nowrap',
+        overflowX: 'hidden',
+        textOverflow: 'ellipsis',
+
+        ':hover': {
+          bgcolor: '#e2ba3990', // darker makeItAllOrange.main
+          color: 'white',
+        },
+        ...(active && {
+          bgcolor: 'makeItAllOrange.main',
+          color: 'white',
+          ':hover': {
+            bgcolor: 'makeItAllOrange.main', // darker makeItAllOrange.main
+            color: 'white',
+          },
+        }),
       }}
+      component={NextLinkComposed}
+      to={url}
     >
-      <ListItemText>{project.name}</ListItemText>
+      <ListItemText primary={project.name} />
     </ListItemButton>
   );
 
