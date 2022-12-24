@@ -219,7 +219,7 @@ export default function TextAvatarEditor() {
           <ActionedSplitButton
             options={resetButtonOptions}
             variant="contained"
-            color="contrast"
+            color="warning"
             size="small"
             disabled={isSaving}
             sx={{ marginLeft: 1 }}
@@ -227,7 +227,8 @@ export default function TextAvatarEditor() {
             dropDownButtonProps={{
               'aria-label': 'select reset strategy',
               sx: {
-                paddingX: 0,
+                paddingX: 0.5,
+                minWidth: '0 !important',
               },
             }}
             menuItemProps={{
