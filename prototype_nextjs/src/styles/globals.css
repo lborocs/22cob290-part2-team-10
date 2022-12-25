@@ -31,3 +31,9 @@ a:focus {
     text-decoration: none;
     transition: all 0.4s;
 }
+
+@media (prefers-reduced-motion) {
+    .MuiTabs-indicator {
+        transition: none;
+    }
+}

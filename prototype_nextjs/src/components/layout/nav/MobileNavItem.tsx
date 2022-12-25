@@ -1,9 +1,16 @@
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 
-import { navButtonSx } from '~/components/layout/nav/NavItem';
+import { NextLinkComposed } from '~/components/Link';
+
+const navButtonSx = (active: boolean) => ({
+  fontSize: '14px',
+  color: active ? 'primary.main' : undefined,
+  '&:hover': {
+    color: 'primary.main',
+  },
+});
 
 export default function MobileNavItem({
   page,
@@ -17,12 +24,15 @@ export default function MobileNavItem({
   const active = router.pathname.startsWith(url);
 
   return (
-    <Link href={url}>
-      <MenuItem onClick={handleCloseNavMenu} sx={navButtonSx(active)}>
-        <Typography variant="button" color="inherit">
-          {children}
-        </Typography>
-      </MenuItem>
-    </Link>
+    <MenuItem
+      onClick={handleCloseNavMenu}
+      sx={navButtonSx(active)}
+      component={NextLinkComposed}
+      to={url}
+    >
+      <Typography variant="button" color="inherit">
+        {children}
+      </Typography>
+    </MenuItem>
   );
 }

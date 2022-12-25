@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 
+import ThemeSwitcher from '~/components/layout/ThemeSwitcher';
 import Nav from '~/components/layout/nav/Nav';
 
 /**
@@ -42,7 +43,7 @@ const faAlignLeftSvg = (
   </svg>
 );
 
-// TODO: navbar sticky to top? if so then blur
+// TODO?: navbar sticky to top? if so then blur
 export default function NavigationBar({ noSidebar, toggleSidebar, title }: {
   noSidebar: boolean
   toggleSidebar: () => void
@@ -53,6 +54,7 @@ export default function NavigationBar({ noSidebar, toggleSidebar, title }: {
       onClick={toggleSidebar}
       variant="contained"
       color="makeItAllGrey"
+      aria-label="Toggle Sidebar"
       sx={(theme) => ({
         paddingX: 1.5,
         height: `calc(1.5rem + ${theme.spacing(1.5)})`,
@@ -66,11 +68,12 @@ export default function NavigationBar({ noSidebar, toggleSidebar, title }: {
       <Box
         display={{
           xs: 'none',
-          md: 'inline-block',
+          md: 'inline',
         }}
         marginLeft={{
           md: 1,
         }}
+        component="span"
       >
         Toggle Sidebar
       </Box>
@@ -81,17 +84,20 @@ export default function NavigationBar({ noSidebar, toggleSidebar, title }: {
     <AppBar position="static">
       <Toolbar>
         {/* left */}
-        <Box width="100%" display="flex">
+        <Box width="100%" height="100%" display="flex" alignItems="center">
           {renderToggleSidebarButton}
         </Box>
         {/* middle */}
-        <Box width="100%" display="flex">
-          <Box marginX="auto">
-            {title}
+        {title && (
+          <Box width="100%" height="100%" display="flex" alignItems="center">
+            <Box marginX="auto">
+              {title}
+            </Box>
           </Box>
-        </Box>
+        )}
         {/* right */}
-        <Box width="100%" display="flex" justifyContent="flex-end">
+        <Box width="100%" height="100%" display="flex" alignItems="center" justifyContent="flex-end">
+          <ThemeSwitcher sx={{ marginRight: 1.5 }} />
           <Nav />
         </Box>
       </Toolbar>
