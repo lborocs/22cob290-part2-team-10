@@ -6,8 +6,6 @@ import Typography from '@mui/material/Typography';
 import { NextLinkComposed } from '~/components/Link';
 import type { AppPage } from '~/types';
 
-// TODO: update paragraph text
-
 /**
  * We can't use `pages/404` because we use `{ notFound: true }` when the user isn't signed
  *  in to redirect to the sign in page and have improved prop typing. If we used `pages/404`,
@@ -53,9 +51,10 @@ const Custom404: AppPage = () => (
         color: theme.palette.mode === 'dark' ? '#888' : '#444',
       })}
     >
-      It seems you spelled something wrong in the URL.
-      Can you double check the URL.
-      Try again aaaaaaaaaaaaaaaaaa
+      Sorry, the webpage you are trying to access is not available.
+      It may have been moved or removed, or there may be a typo in the URL.
+      If you believe this is a broken link, please let us know so we can fix it.
+      Thank you for your patience.
     </Typography>
 
     <Button
