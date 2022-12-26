@@ -50,8 +50,8 @@ type DetailsFormData = {
 export default function UserDetailsSection({
   inviter,
 }: UserDetailsSectionProps) {
-  const { setName, user } = useUserStore();
-  const { name, email, isManager } = user;
+  const setName = useUserStore((state) => state.setName);
+  const { name, email, isManager } = useUserStore((state) => state.user);
 
   const handleSubmit: React.ComponentProps<typeof Formik<DetailsFormData>>['onSubmit']
     = async (values, { resetForm }) => {
