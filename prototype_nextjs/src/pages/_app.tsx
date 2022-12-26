@@ -98,13 +98,13 @@ declare module '@mui/material/TextField' {
 export const commonThemeOptions: ThemeOptions = {
   palette: {
     light: {
-      main: grey[200],
-      dark: grey[400],
+      main: grey[50],
+      dark: grey[300],
       contrastText: '#000',
     },
     dark: {
       main: grey[900],
-      light: grey[700],
+      dark: grey[800], // it's actually lighter but using dark for hover
       contrastText: '#fff',
     },
     makeItAllOrange: {
@@ -126,9 +126,9 @@ export const commonThemeOptions: ThemeOptions = {
   components: {
     MuiButton: {
       styleOverrides: {
-        root: {
+        root: ({ ownerState, theme }) => ({
           // textTransform: 'none',
-        },
+        }),
       },
     },
     MuiInputBase: {
@@ -246,7 +246,7 @@ export default function App({
 
         <ThemedToaster />
 
-        <Box minHeight="100vh">
+        <Box height="100vh">
           {noAuth ? (
             <Component {...pageProps} />
           ) : (
