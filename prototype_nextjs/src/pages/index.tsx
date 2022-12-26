@@ -28,8 +28,6 @@ type SignInFormData = {
   password: string
 };
 
-// FIXME: when holding a key, UI freezes until it is released
-// maybe this issue https://github.com/jaredpalmer/formik/issues/1026
 const SignInPage: AppPage = () => {
   const router = useRouter();
 
