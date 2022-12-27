@@ -86,6 +86,7 @@ export default function TextAvatarEditor() {
       updateTextAvatarCss(values);
     };
 
+  // FIXME: the button's text wraps on mobile
   // TODO: show colours of previous & default
   const resetButtonOptions = useMemo<ActionedSplitButtonProps['options']>(() => (
     [

@@ -28,6 +28,8 @@ type SignInFormData = {
   password: string
 };
 
+// https://youtube.com/watch?v=WJvmUKCYlN0&si=EnSIkaIECMiOmarE&t=184
+// TODO: use moving(?) aurora gradient for bg behind paper
 const SignInPage: AppPage = () => {
   const router = useRouter();
 
@@ -161,7 +163,6 @@ const SignInPage: AppPage = () => {
             >
               <div className={styles.inputGrid}>
                 <EmailField
-                  id="email"
                   name="email"
                   variant="outlined"
                   size="small"
@@ -173,7 +174,6 @@ const SignInPage: AppPage = () => {
                   required
                 />
                 <PasswordField
-                  id="password"
                   name="password"
                   variant="outlined"
                   size="small"
