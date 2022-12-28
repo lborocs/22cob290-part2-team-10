@@ -9,6 +9,9 @@ import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 export type ResponseSchema = z.infer<typeof TextAvatarSchema>;
 
+// TODO: cache (https://stackoverflow.blog/2022/12/20/best-practices-to-increase-the-speed-for-next-js-apps/)
+// or maybe not? cos its quite funky when they change their text avatar colours
+// ^ need to revisit code that changed text avatar colours
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseSchema | ErrorResponse>,

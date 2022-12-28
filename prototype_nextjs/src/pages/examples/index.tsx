@@ -44,12 +44,6 @@ const StyledListSubheader = ({ children, ...props }: ListSubheaderProps) => (
   </ListSubheader>
 );
 
-// TODO: hover text not blue
-// maybe use MUI+NextJS Link (components/Link)
-// instead of ListItemButton
-// and wrap it in ListItemText?
-// might have it width 100
-// could just use `sx` to set hover color to blue
 const BulletListItemLink = ({
   href,
   children,
@@ -123,8 +117,7 @@ export default function ExamplesPage() {
             </section>
 
             <section>
-              {/* TODO: rename header? */}
-              <ExampleList header="Page">
+              <ExampleList header="User">
                 <BulletListItemLink href="/examples/user_ssr">
                   Getting user from <code>user</code> prop from SSR <small><strong>(not recommended)</strong></small>
                 </BulletListItemLink>

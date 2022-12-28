@@ -1,3 +1,4 @@
+import { styled } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -5,6 +6,13 @@ import Toolbar from '@mui/material/Toolbar';
 
 import ThemeSwitcher from '~/components/layout/ThemeSwitcher';
 import Nav from '~/components/layout/nav/Nav';
+
+const NavBarBox = styled(Box)({
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+  alignItems: 'center',
+});
 
 /**
  * - Material UI's `FormatAlignLeftIcon` doesn't look great
@@ -84,22 +92,22 @@ export default function NavigationBar({ noSidebar, toggleSidebar, title }: {
     <AppBar position="static">
       <Toolbar>
         {/* left */}
-        <Box width="100%" height="100%" display="flex" alignItems="center">
+        <NavBarBox alignItems="center">
           {renderToggleSidebarButton}
-        </Box>
+        </NavBarBox>
         {/* middle */}
         {title && (
-          <Box width="100%" height="100%" display="flex" alignItems="center">
+          <NavBarBox alignItems="center">
             <Box marginX="auto">
               {title}
             </Box>
-          </Box>
+          </NavBarBox>
         )}
         {/* right */}
-        <Box width="100%" height="100%" display="flex" alignItems="center" justifyContent="flex-end">
+        <NavBarBox justifyContent="end">
           <ThemeSwitcher sx={{ marginRight: 1.5 }} />
           <Nav />
-        </Box>
+        </NavBarBox>
       </Toolbar>
     </AppBar>
   );

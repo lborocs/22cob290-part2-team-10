@@ -231,6 +231,7 @@ export default function App({
 
   useEffect(() => {
     // TODO: get mode from localStorage, if null then use preference
+    // take inspiration from https://getbootstrap.com/docs/5.3/customize/color-modes/#javascript
     setColorMode(prefersDarkMode ? 'dark' : 'light');
   }, [prefersDarkMode, setColorMode]);
 
