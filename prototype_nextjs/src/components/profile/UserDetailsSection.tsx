@@ -100,18 +100,20 @@ export default function UserDetailsSection({
 
   return (
     <Stack spacing={1}>
+      {/* chip bar */}
       <Stack
         direction="row"
-        flexWrap="wrap"
+        flexWrap={{
+          xs: 'nowrap',
+          sm: 'wrap',
+        }}
+        overflow="auto"
         paddingX={1}
         columnGap={{
           xs: 0.75,
           md: 1,
         }}
-        rowGap={{
-          xs: 0.75,
-          md: 1,
-        }}
+        rowGap={1}
       >
         {inviter
           ? (
@@ -149,6 +151,7 @@ export default function UserDetailsSection({
             <Chip icon={<BadgeIcon />} label="Admin" />
           )}
       </Stack>
+      {/* details form */}
       <Formik
         initialValues={{
           name,

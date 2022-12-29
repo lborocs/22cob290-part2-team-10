@@ -29,13 +29,12 @@ const ProfilePage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps
         <title>Profile - Make-It-All</title>
       </Head>
 
-      <Stack direction={{ xs: 'column', sm: 'row' }} component="section">
-        <Box
-          display="flex"
-          justifyContent="center"
-          paddingBottom={{ xs: 4, sm: 0 }}
-          paddingRight={{ sm: 4 }}
-        >
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        spacing={{ xs: 3, sm: 2.5 }}
+        component="section"
+      >
+        <Box display="flex" justifyContent="center">
           <TextAvatarEditor />
         </Box>
         <Box flexGrow={1}>
