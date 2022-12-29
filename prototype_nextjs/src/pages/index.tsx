@@ -2,10 +2,11 @@ import { useEffect } from 'react';
 import type { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import Image from 'next/image';
+import Image, { type ImageLoader } from 'next/image';
 import { useRouter } from 'next/router';
 import { unstable_getServerSession } from 'next-auth/next';
 import { signIn } from 'next-auth/react';
+import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Paper from '@mui/material/Paper';
@@ -21,17 +22,41 @@ import type { AppPage } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 import styles from '~/styles/SignIn.module.css';
-import makeItAllLogo from '~/../public/make_it_all.png';
+import makeItAllLogo from '~/../public/assets/make_it_all.png';
+/**
+ * https://meshgradient.in/
+ * #000000
+ * #262626
+ * #292929
+ * #000000
+ * #63
+ */
+import darkBg from '~/../public/assets/signin/mesh-63.png';
+import darkBgMobile from '~/../public/assets/signin/mesh-63-mobile.png';
+
+/**
+ * Serve a different background image if on mobile cos big one doesn't look great
+ *
+ * https://github.com/vercel/next.js/discussions/32196?sort=top#discussioncomment-1761941
+ */
+const bgImageLoader: ImageLoader = ({ src, width, quality }) => {
+  // approx width that should work on most phones and tablets
+  if (width <= 2000) {
+    // return 'https://www.shutterstock.com/image-photo/barcelona-feb-23-lionel-messi-600w-1900547713.jpg';
+    return `/_next/image?url=${darkBgMobile.src}&w=${width}&q=${quality}`;
+  }
+
+  return `/_next/image?url=${darkBg.src}&w=${width}&q=${quality}`;
+};
 
 type SignInFormData = {
   email: string
   password: string
 };
 
-// https://youtube.com/watch?v=WJvmUKCYlN0&si=EnSIkaIECMiOmarE&t=184
-// TODO: use moving(?) aurora gradient for bg behind paper
 const SignInPage: AppPage = () => {
   const router = useRouter();
+  const theme = useTheme();
 
   // handle using this as signIn page for auth flow
   const { callbackUrl } = router.query;
@@ -86,7 +111,6 @@ const SignInPage: AppPage = () => {
 
   useEffect(() => {
     if (callbackUrl) {
-      // TODO: add close icon
       const toastId = toast.error((t) => (
         <span onClick={() => toast.dismiss(t.id)} style={{ cursor: 'pointer' }}>
           You need to sign in first.
@@ -103,20 +127,39 @@ const SignInPage: AppPage = () => {
   }, [callbackUrl]);
 
   return (
-    <main>
+    <Box
+      position="relative"
+      height={1}
+      className={styles[`main-${theme.palette.mode}`]}
+      component="main"
+    >
       <Head>
         <title>Sign In - Make-It-All</title>
       </Head>
 
+      {theme.palette.mode === 'dark' && (
+        <Box position="absolute" width={1} height={1}>
+          <Image
+            src={darkBg}
+            alt="dark background gradient"
+            quality={100}
+            sizes="100vw"
+            priority
+            fill
+            style={{
+              objectFit: 'cover',
+            }}
+            loader={bgImageLoader}
+          />
+        </Box>
+      )}
+
       <Paper sx={(theme) => ({
         position: 'absolute',
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
+        inset: 0,
         margin: 'auto',
         height: 'fit-content',
-        bgcolor: theme.palette.mode === 'light' ? '#d3d3d3' : undefined,
+        bgcolor: theme.palette.mode === 'light' ? theme.palette.makeItAllGrey.main : undefined,
         width: {
           xs: '85vw',
           sm: '70vw',
@@ -128,12 +171,15 @@ const SignInPage: AppPage = () => {
           xs: 3,
           md: 8,
         },
+        boxShadow: theme.palette.mode === 'light' ? 3 : undefined,
+        borderRadius: 3,
       })}>
         <Box marginBottom={2.5}>
           <Image
             className={styles.logo}
             src={makeItAllLogo}
             alt="Make-It-All Logo"
+            quality={100}
             priority
           />
         </Box>
@@ -208,7 +254,7 @@ const SignInPage: AppPage = () => {
           )}
         </Formik>
       </Paper>
-    </main>
+    </Box>
   );
 };
 
