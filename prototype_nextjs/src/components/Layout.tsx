@@ -30,7 +30,6 @@ interface DefaultSidebar extends BaseSidebar {
 type Sidebar = CustomSidebar | DefaultSidebar;
 
 export type PageLayout = {
-  title?: React.ReactNode
   sidebar: Sidebar
 };
 
@@ -42,7 +41,6 @@ export interface LayoutProps extends PageLayout {
  * Pages can use `flexGrow: 1` to take up the rest of the available space
  */
 export default function Layout({
-  title,
   sidebar,
   children,
 }: LayoutProps) {
@@ -88,7 +86,6 @@ export default function Layout({
         <NavigationBar
           noSidebar={noSidebar}
           toggleSidebar={toggleSidebar}
-          title={title}
         />
         {children}
       </Stack>

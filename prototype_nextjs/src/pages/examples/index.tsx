@@ -142,7 +142,7 @@ export default function ExamplesPage() {
                   Custom sidebar
                 </BulletListItemLink>
                 <BulletListItemLink href="/examples/no_sidebar">
-                  No sidebar (with title)
+                  No sidebar
                 </BulletListItemLink>
               </ExampleList>
             </section>
