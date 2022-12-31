@@ -180,7 +180,6 @@ To use our defined layout (sidebar and nav in top), you need to [add the propert
 | Prop                   | Type                                                     | Description                                  |
 |------------------------|----------------------------------------------------------|----------------------------------------------|
 | layout                 | `PageLayout`                                             | Basically `Layout`'s props                   |
-| layout.title           | `ReactNode?`                                             | Title to display in the centre of the navbar |
 | layout.sidebar         | `Sidebar`                                                |                                              |
 | layout.sidebar.type    | `SidebarType`                                            |                                              |
 | layout.sidebar.content | `ReactNode?` (only needed if `sidebarType` === `CUSTOM`) |                                              |
