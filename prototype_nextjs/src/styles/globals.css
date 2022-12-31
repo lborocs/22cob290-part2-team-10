@@ -7,7 +7,9 @@ body {
     /* font-family: Roboto; */
 }
 
-* {
+*,
+*:before,
+*:after {
     box-sizing: border-box;
 }
 
@@ -21,6 +23,6 @@ a:focus {
 
 @media (prefers-reduced-motion) {
     .MuiTabs-indicator {
-        transition: none;
+        transition-duration: 0s;
     }
 }
