@@ -30,7 +30,7 @@ export default function MobileNavItem({
       component={NextLinkComposed}
       to={url}
     >
-      <Typography variant="button" color="inherit">
+      <Typography variant="button" color="inherit" component="span">
         {children}
       </Typography>
     </MenuItem>

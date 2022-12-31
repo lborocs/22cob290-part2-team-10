@@ -1,3 +1,5 @@
+import type { UrlObject } from 'url';
+
 /**
  * @note Chrome doesn't allow to copy from non-https (sci-project is http)
  *
@@ -28,4 +30,15 @@ export function copyToClipboard(content: string): Promise<void> {
       textArea.remove();
     });
   }
+}
+
+/**
+ * Extracts the pathname from a `href`. See
+ * [`NextLink`](https://nextjs.org/docs/api-reference/next/link)'s `href`
+ *
+ * @param href
+ * @returns The pathname
+ */
+export function extractPathname(href: UrlObject | string): string {
+  return typeof href === 'string' ? href : href.pathname!;
 }
