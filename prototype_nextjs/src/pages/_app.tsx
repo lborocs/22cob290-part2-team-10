@@ -161,7 +161,7 @@ export const lightThemeOptions: ThemeOptions = {
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: '#fff',
+          backgroundColor: '#fafafa',
         },
       },
     },
