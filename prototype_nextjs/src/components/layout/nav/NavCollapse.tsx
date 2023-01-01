@@ -40,13 +40,14 @@ export default function NavCollapse({
       in={open}
       id={collapseId}
       collapsedSize={0}
+      easing="ease"
+      timeout={350}
       sx={{
         display: { xs: 'block', lg: 'none' },
       }}
     >
       <List
         sx={{
-          paddingX: 2,
           paddingTop: 0,
         }}
         onClick={closeCollapse}
