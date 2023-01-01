@@ -7,7 +7,7 @@ import type { PageLayout } from '~/components/Layout';
 /**
  * Workaround so we don't have to use `Layout` in every page.
  *
- * Works by adding these properties to the default export (`Component` in `_app`)
+ * Works by adding these properties to the default export (passed to `_app` as `Component` prop)
  *  of the page.
  *
  * @note using the layout requires `noAuth` to be falsy
