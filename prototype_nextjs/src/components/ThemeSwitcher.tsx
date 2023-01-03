@@ -1,4 +1,4 @@
-import { useId, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { styled, useColorScheme } from '@mui/material/styles';
 import Box, { type BoxProps } from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -71,8 +71,14 @@ export default function ThemeSwitcher(props: BoxProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const menuOpen = anchorEl !== null;
 
-  // `mode` is always undefined on the server
-  if (!mode) return (
+  // see https://github.com/pacocoursey/next-themes#avoid-hydration-mismatch
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted || !mode) return (
     <Box {...props} component={Skeleton}>
       <ResponsiveStyledButton
         variant="outlined"
