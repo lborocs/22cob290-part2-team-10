@@ -28,7 +28,7 @@ export type StyledCloseButtonDialogProps = DialogProps & {
  *
  * @param dialogTitle The title of the dialog
  * @param noCloseButton
- * @returns
+ * @see https://mui.com/material-ui/react-dialog/
  */
 export default function StyledCloseButtonDialog({
   dialogTitle,

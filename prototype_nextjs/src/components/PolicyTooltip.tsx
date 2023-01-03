@@ -16,6 +16,11 @@ const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
   },
 }));
 
+/**
+ * A tooltip with a list of password policy requirements.#
+ *
+ * @see https://mui.com/material-ui/react-tooltip/
+ */
 export default function PolicyTooltip() {
   return (
     <BootstrapTooltip

@@ -7,7 +7,7 @@ import { NextLinkComposed } from '~/components/Link';
 /**
  * Custom 500 page that is pretty much a clone of the 404, with different text content.
  *
- * [Documentation](https://nextjs.org/docs/advanced-features/custom-error-page#customizing-the-500-page)
+ * @see https://nextjs.org/docs/advanced-features/custom-error-page#customizing-the-500-page
  */
 const Custom500 = () => (
   <Stack

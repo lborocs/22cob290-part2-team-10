@@ -202,6 +202,11 @@ interface MyAppProps extends AppProps {
   Component: AppProps['Component'] & AppPage
 }
 
+/**
+ * The root component of the app. It is used to initialize pages.
+ *
+ * @see https://nextjs.org/docs/advanced-features/custom-app
+ */
 export default function App({
   Component,
   pageProps,
