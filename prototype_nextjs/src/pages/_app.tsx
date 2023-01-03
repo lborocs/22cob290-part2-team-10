@@ -1,11 +1,10 @@
-import { type CSSProperties, useEffect, useMemo } from 'react';
+import { type CSSProperties, useMemo } from 'react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { SessionProvider, useSession } from 'next-auth/react';
 import { deepmerge } from '@mui/utils';
 import { type ThemeOptions, createTheme, useTheme, ThemeProvider } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import { config } from '@fortawesome/fontawesome-svg-core';
@@ -14,7 +13,7 @@ import { Toaster, ToastBar } from 'react-hot-toast';
 import Layout from '~/components/Layout';
 import LoadingPage from '~/components/LoadingPage';
 import useUserStore from '~/store/userStore';
-import useColorMode from '~/store/colorMode';
+import useThemeMode from '~/store/themeMode';
 import type { AppPage } from '~/types';
 
 import '@fortawesome/fontawesome-svg-core/styles.css';
@@ -205,7 +204,7 @@ interface MyAppProps extends AppProps {
 
 export default function App({
   Component,
-  pageProps: { session, ...pageProps },
+  pageProps,
 }: MyAppProps) {
   if (pageProps.user) {
     useUserStore.setState((state) => ({
@@ -213,32 +212,22 @@ export default function App({
     }));
   }
 
-  const mode = useColorMode((state) => state.mode);
-  const setColorMode = useColorMode((state) => state.setColorMode);
+  const { paletteMode } = useThemeMode();
 
   const theme = useMemo(
     () => createTheme(
       deepmerge(
         commonThemeOptions,
-        mode === 'dark' ? darkThemeOptions : lightThemeOptions
+        paletteMode === 'dark' ? darkThemeOptions : lightThemeOptions
       )
     ),
-    [mode]
+    [paletteMode]
   );
-
-  // TODO: store current mode in localstorage somehow like how next-themes does
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-
-  useEffect(() => {
-    // TODO: get mode from localStorage, if null then use preference
-    // take inspiration from https://getbootstrap.com/docs/5.3/customize/color-modes/#javascript
-    setColorMode(prefersDarkMode ? 'dark' : 'light');
-  }, [prefersDarkMode, setColorMode]);
 
   const { noAuth, layout } = Component;
 
   return (
-    <SessionProvider session={session}>
+    <SessionProvider session={pageProps.session}>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
@@ -278,6 +267,8 @@ function ThemedToaster() {
   const lightToastStyle: CSSProperties = {
   };
 
+  const themedToastStyle = theme.palette.mode === 'dark' ? darkToastStyle : lightToastStyle;
+
   return (
     <Toaster
       toastOptions={{
@@ -291,7 +282,7 @@ function ThemedToaster() {
         <ToastBar
           style={{
             ...t.style,
-            ...theme.palette.mode === 'dark' ? darkToastStyle : lightToastStyle,
+            ...themedToastStyle,
           }}
           toast={t}
         />
