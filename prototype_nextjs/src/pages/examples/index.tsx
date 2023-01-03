@@ -12,7 +12,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import { NextLinkComposed } from '~/components/Link';
-import ThemeSwitcher from '~/components/layout/ThemeSwitcher';
+import ThemeSwitcher from '~/components/ThemeSwitcher';
 
 const ExampleList = ({
   header,
@@ -32,12 +32,7 @@ const ExampleList = ({
 );
 
 const StyledListSubheader = ({ children, ...props }: ListSubheaderProps) => (
-  <ListSubheader
-    sx={(theme) => ({
-      bgcolor: theme.palette.mode === 'dark' ? undefined : 'white',
-    })}
-    {...props}
-  >
+  <ListSubheader {...props}>
     <Typography variant="h5" component="h2" paddingY={0.5}>
       {children}
     </Typography>
@@ -95,11 +90,10 @@ export default function ExamplesPage() {
 
       <Paper
         elevation={4}
-        sx={(theme) => ({
-          bgcolor: theme.palette.mode === 'dark' ? undefined : 'white',
+        sx={{
           marginTop: 2,
           p: 2,
-        })}
+        }}
       >
         <nav>
           <List

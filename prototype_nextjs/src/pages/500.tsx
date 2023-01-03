@@ -35,7 +35,10 @@ const Custom500 = () => (
 
     <Typography
       sx={(theme) => ({
-        color: theme.palette.mode === 'dark' ? '#888' : '#444',
+        color: '#444',
+        [theme.getColorSchemeSelector('dark')]: {
+          color: '#888',
+        },
       })}
     >
       {`

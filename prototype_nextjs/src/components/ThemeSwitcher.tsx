@@ -1,5 +1,5 @@
 import { useEffect, useId, useState } from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, useColorScheme } from '@mui/material/styles';
 import Box, { type BoxProps } from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
@@ -12,8 +12,6 @@ import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness';
 import type { Entries } from 'type-fest';
-
-import useThemeMode, { type ThemeMode } from '~/store/themeMode';
 
 const ResponsiveStyledButton = styled(Button)(({ theme }) => theme.unstable_sx({
   textTransform: 'none',
@@ -30,8 +28,10 @@ const ResponsiveIconButton = styled(IconButton)(({ theme }) => theme.unstable_sx
   },
 }));
 
+type ModeType = NonNullable<ReturnType<typeof useColorScheme>['mode']>;
+
 type Modes = {
-  [mode in ThemeMode]: {
+  [mode in ModeType]: {
     label: string
     buttonIcon: React.ReactNode
     menuIcon: React.ReactNode
@@ -62,7 +62,8 @@ const modes: Modes = {
  *  needed if just using 1 button so just used 2 lol.
  */
 export default function ThemeSwitcher(props: BoxProps) {
-  const { storedMode, setStoredMode } = useThemeMode();
+  // it includes system, really nice :)
+  const { mode, setMode } = useColorScheme();
 
   const buttonId = useId();
   const menuId = useId();
@@ -77,7 +78,7 @@ export default function ThemeSwitcher(props: BoxProps) {
     setMounted(true);
   }, []);
 
-  if (!mounted) return (
+  if (!mounted || !mode) return (
     <Box {...props} component={Skeleton}>
       <ResponsiveStyledButton
         variant="outlined"
@@ -99,8 +100,8 @@ export default function ThemeSwitcher(props: BoxProps) {
     setAnchorEl(null);
   };
 
-  const handleMenuItemClick = (mode: ThemeMode) => {
-    setStoredMode(mode);
+  const handleMenuItemClick = (mode: ModeType) => {
+    setMode(mode);
     setAnchorEl(null);
   };
 
@@ -111,7 +112,7 @@ export default function ThemeSwitcher(props: BoxProps) {
           onClick={handleClick}
           variant="outlined"
           color="contrast"
-          startIcon={modes[storedMode].buttonIcon}
+          startIcon={modes[mode].buttonIcon}
           id={buttonId}
           aria-label="open theme switcher"
           aria-controls={menuOpen ? menuId : undefined}
@@ -130,7 +131,7 @@ export default function ThemeSwitcher(props: BoxProps) {
         // aria-haspopup="true"
         // aria-expanded={menuOpen ? true : undefined}
         >
-          {modes[storedMode].buttonIcon}
+          {modes[mode].buttonIcon}
         </ResponsiveIconButton>
       </Box>
 
@@ -143,11 +144,11 @@ export default function ThemeSwitcher(props: BoxProps) {
           'aria-labelledby': buttonId,
         }}
       >
-        {(Object.entries(modes) as Entries<typeof modes>).map(([mode, { label, menuIcon }]) => (
+        {(Object.entries(modes) as Entries<typeof modes>).map(([_mode, { label, menuIcon }]) => (
           <MenuItem
-            key={mode}
-            onClick={() => handleMenuItemClick(mode)}
-            selected={storedMode === mode}
+            key={_mode}
+            onClick={() => handleMenuItemClick(_mode)}
+            selected={mode === _mode}
           >
             <ListItemIcon>
               {menuIcon}

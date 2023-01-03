@@ -6,7 +6,6 @@ import Image, { type ImageLoader } from 'next/image';
 import { useRouter } from 'next/router';
 import { unstable_getServerSession } from 'next-auth/next';
 import { signIn } from 'next-auth/react';
-import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Paper from '@mui/material/Paper';
@@ -56,7 +55,6 @@ type SignInFormData = {
 
 const SignInPage: AppPage = () => {
   const router = useRouter();
-  const theme = useTheme();
 
   // handle using this as signIn page for auth flow
   const { callbackUrl } = router.query;
@@ -111,8 +109,8 @@ const SignInPage: AppPage = () => {
               id: 'signInFailed',
               position: 'top-center',
             });
-            // setFieldError('email', resp.error);
-            // setFieldError('password', resp.error);
+          // setFieldError('email', resp.error);
+          // setFieldError('password', resp.error);
         }
       } else {
         toast.dismiss();
@@ -141,36 +139,47 @@ const SignInPage: AppPage = () => {
     <Box
       position="relative"
       height={1}
-      className={styles[`main-${theme.palette.mode}`]}
       component="main"
+      sx={(theme) => ({
+        [theme.getColorSchemeSelector('light')]: {
+          bgcolor: theme.vars.palette.makeItAllGrey.main,
+        },
+      })}
     >
       <Head>
         <title>Sign In - Make-It-All</title>
       </Head>
 
-      {theme.palette.mode === 'dark' && (
-        <Box position="absolute" width={1} height={1}>
-          <Image
-            src={darkBg}
-            alt="dark background gradient"
-            quality={100}
-            sizes="100vw"
-            priority
-            fill
-            style={{
-              objectFit: 'cover',
-            }}
-            loader={bgImageLoader}
-          />
-        </Box>
-      )}
+      <Box
+        position="absolute"
+        width={1}
+        height={1}
+        sx={(theme) => ({
+          display: 'none',
+          [theme.getColorSchemeSelector('dark')]: {
+            display: 'block',
+          },
+        })}
+      >
+        <Image
+          src={darkBg}
+          alt="dark background gradient"
+          quality={100}
+          sizes="100vw"
+          priority
+          fill
+          style={{
+            objectFit: 'cover',
+          }}
+          loader={bgImageLoader}
+        />
+      </Box>
 
       <Paper sx={(theme) => ({
         position: 'absolute',
         inset: 0,
         margin: 'auto',
         height: 'fit-content',
-        bgcolor: theme.palette.mode === 'light' ? theme.palette.makeItAllGrey.main : undefined,
         width: {
           xs: '85vw',
           sm: '70vw',
@@ -182,8 +191,11 @@ const SignInPage: AppPage = () => {
           xs: 3,
           md: 8,
         },
-        boxShadow: theme.palette.mode === 'light' ? 3 : undefined,
         borderRadius: 3,
+        [theme.getColorSchemeSelector('light')]: {
+          bgcolor: theme.vars.palette.makeItAllGrey.main,
+          boxShadow: 3,
+        },
       })}>
         <Box marginBottom={2.5}>
           <Image

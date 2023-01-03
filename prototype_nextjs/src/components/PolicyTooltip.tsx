@@ -9,10 +9,10 @@ const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
 ))(({ theme }) => ({
   [`& .${tooltipClasses.arrow}`]: {
-    color: theme.palette.common.black,
+    color: theme.vars.palette.common.black,
   },
   [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: theme.vars.palette.common.black,
   },
 }));
 

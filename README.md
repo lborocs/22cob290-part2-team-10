@@ -16,6 +16,7 @@
   - [TODO (not from feedback)](#todo-not-from-feedback)
   - [How it works (Overview)](#how-it-works-overview)
   - [Architecture (?)](#architecture-)
+    - [MUI](#mui)
     - [Docker](#docker)
   - [How we need to code](#how-we-need-to-code)
     - [Layout/Sidebar](#layoutsidebar)
@@ -131,10 +132,28 @@ TODO
 
 - Package Manager: pnpm
 - UI: React.Js
+- Component Library: MUI Material UI
 - Full stack framework (handles routing, SSR, etc.): Next.Js
 - Database: MySQL
 - Database ORM: Prisma
 - HTTP Client: axios
+- Containerisation: Docker
+- Deployment: GCP
+
+#### MUI
+
+We are using an _experimental_ version of MUI's theming that supports
+[CSS variables](https://mui.com/material-ui/experimental-api/css-theme-variables/overview/).
+Despite it being "experimental", it has a lot of
+[benefits](https://mui.com/material-ui/experimental-api/css-theme-variables/overview/#advantages)
+such as:
+
+- Prevents dark-mode SSR flickering
+- Color scheme is automatically synced between browser tabs
+
+The MUI docs explains how using it is
+[different](https://mui.com/material-ui/experimental-api/css-theme-variables/overview/#mental-model)
+to the standard use of MUI.
 
 #### Docker
 
@@ -217,7 +236,7 @@ Example of using `useUserStore` (number 2):
 import useUserStore from '~/store/userStore';
 
 export default function ExamplePage() {
-  // the component will re-render whenever `name` changes
+  // this component will re-render whenever `name` changes
   const name = useUserStore((state) => state.user.name);
 
   return (

@@ -48,7 +48,10 @@ const Custom404: AppPage = () => (
 
     <Typography
       sx={(theme) => ({
-        color: theme.palette.mode === 'dark' ? '#888' : '#444',
+        color: '#444',
+        [theme.getColorSchemeSelector('dark')]: {
+          color: '#888',
+        },
       })}
     >
       Sorry, the webpage you are trying to access is not available.
