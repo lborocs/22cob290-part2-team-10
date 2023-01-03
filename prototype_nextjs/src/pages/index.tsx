@@ -93,15 +93,26 @@ const SignInPage: AppPage = () => {
             setFieldError('password', '');
             break;
 
-          case 'AccessDenied': // left the company
+          case 'AccessDenied': { // left the company
+            const errorMsg = 'You no longer have access to this website';
             toast.dismiss();
-            setFieldError('email', 'You no longer have access to this website');
+            toast.error(errorMsg, {
+              id: 'signInFailed',
+              position: 'top-center',
+            });
+            setFieldError('email', errorMsg);
             break;
+          }
 
           default: // shouldn't happen
             console.error(resp);
-            setFieldError('email', resp.error);
-            setFieldError('password', resp.error);
+            toast.dismiss();
+            toast.error(resp.error, {
+              id: 'signInFailed',
+              position: 'top-center',
+            });
+            // setFieldError('email', resp.error);
+            // setFieldError('password', resp.error);
         }
       } else {
         toast.dismiss();
