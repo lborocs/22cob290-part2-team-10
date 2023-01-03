@@ -1,11 +1,13 @@
-import { useId, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Button, { type ButtonProps } from '@mui/material/Button';
+import Box, { type BoxProps } from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Skeleton from '@mui/material/Skeleton';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness';
@@ -13,44 +15,53 @@ import type { Entries } from 'type-fest';
 
 import useThemeMode, { type ThemeMode } from '~/store/themeMode';
 
-const StyledButton = styled(Button)(({ theme }) => theme.unstable_sx({
+const ResponsiveStyledButton = styled(Button)(({ theme }) => theme.unstable_sx({
   textTransform: 'none',
-  minWidth: 0,
-  '& .MuiButton-startIcon': {
-    marginRight: {
-      xs: 0,
-      md: 1,
-    },
-    marginLeft: {
-      xs: 0,
-      md: -0.5,
-    },
+  display: {
+    xs: 'none',
+    md: 'inline-flex',
+  },
+}));
+
+const ResponsiveIconButton = styled(IconButton)(({ theme }) => theme.unstable_sx({
+  display: {
+    xs: 'inline-flex',
+    md: 'none',
   },
 }));
 
 type Modes = {
   [mode in ThemeMode]: {
     label: string
-    icon: React.ReactNode
+    buttonIcon: React.ReactNode
+    menuIcon: React.ReactNode
   }
 };
 
 const modes: Modes = {
   system: {
     label: 'OS Default',
-    icon: <SettingsBrightnessIcon />,
+    buttonIcon: <SettingsBrightnessIcon />,
+    menuIcon: <SettingsBrightnessIcon />,
   },
   light: {
     label: 'Light',
-    icon: <LightModeOutlinedIcon />,
+    buttonIcon: <LightModeOutlinedIcon />,
+    menuIcon: <LightModeOutlinedIcon />,
   },
   dark: {
     label: 'Dark',
-    icon: <DarkModeOutlinedIcon />,
+    buttonIcon: <DarkModeOutlinedIcon />,
+    menuIcon: <DarkModeOutlinedIcon />,
   },
 };
 
-export default function ThemeSwitcher(props: ButtonProps) {
+/**
+ * Want the button to look like an `Outlined Button` when the text is visible,
+ *  and like an `IconButton` when the text isn't. Too much styling customization
+ *  needed if just using 1 button so just used 2 lol.
+ */
+export default function ThemeSwitcher(props: BoxProps) {
   const { storedMode, setStoredMode } = useThemeMode();
 
   const buttonId = useId();
@@ -58,6 +69,31 @@ export default function ThemeSwitcher(props: ButtonProps) {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const menuOpen = anchorEl !== null;
+
+  // see https://github.com/pacocoursey/next-themes#avoid-hydration-mismatch
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return (
+    <>
+      <Box {...props}>
+        <Skeleton>
+          <ResponsiveStyledButton
+            variant="outlined"
+            startIcon={<SettingsBrightnessIcon />}
+          >
+            Theme
+          </ResponsiveStyledButton>
+          <ResponsiveIconButton>
+            <SettingsBrightnessIcon />
+          </ResponsiveIconButton>
+        </Skeleton>
+      </Box>
+    </>
+  );
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -74,28 +110,33 @@ export default function ThemeSwitcher(props: ButtonProps) {
 
   return (
     <>
-      <StyledButton
-        onClick={handleClick}
-        variant="outlined"
-        color="contrast"
-        startIcon={modes[storedMode].icon}
-        id={buttonId}
-        aria-label="open theme switcher"
-        aria-controls={menuOpen ? menuId : undefined}
-        aria-haspopup="true"
-        aria-expanded={menuOpen ? true : undefined}
-        {...props}
-      >
-        <Box
-          display={{
-            xs: 'none',
-            md: 'inline',
-          }}
-          component="span"
+      <Box {...props}>
+        <ResponsiveStyledButton
+          onClick={handleClick}
+          variant="outlined"
+          color="contrast"
+          startIcon={modes[storedMode].buttonIcon}
+          id={buttonId}
+          aria-label="open theme switcher"
+          aria-controls={menuOpen ? menuId : undefined}
+          aria-haspopup="true"
+          aria-expanded={menuOpen ? true : undefined}
         >
           Theme
-        </Box>
-      </StyledButton>
+        </ResponsiveStyledButton>
+        {/* TODO: sort out id & aria props :/ might have to use useMediaQuery(minWidth: theme.breakpoints.md) or some sort of useBreakpoint */}
+        <ResponsiveIconButton
+          onClick={handleClick}
+          color="contrast"
+        // id={buttonId}
+        // aria-label="open theme switcher"
+        // aria-controls={menuOpen ? menuId : undefined}
+        // aria-haspopup="true"
+        // aria-expanded={menuOpen ? true : undefined}
+        >
+          {modes[storedMode].buttonIcon}
+        </ResponsiveIconButton>
+      </Box>
 
       <Menu
         open={menuOpen}
@@ -106,14 +147,14 @@ export default function ThemeSwitcher(props: ButtonProps) {
           'aria-labelledby': buttonId,
         }}
       >
-        {(Object.entries(modes) as Entries<typeof modes>).map(([mode, { label, icon }]) => (
+        {(Object.entries(modes) as Entries<typeof modes>).map(([mode, { label, menuIcon }]) => (
           <MenuItem
             key={mode}
             onClick={() => handleMenuItemClick(mode)}
             selected={storedMode === mode}
           >
             <ListItemIcon>
-              {icon}
+              {menuIcon}
             </ListItemIcon>
             <ListItemText>
               {label}

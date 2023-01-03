@@ -147,7 +147,7 @@ export default function NavigationBar({
         </NavBarBox>
         {/* right */}
         <NavBarBox justifyContent="end">
-          <ThemeSwitcher sx={{ marginRight: 1.5 }} />
+          <ThemeSwitcher marginRight={{ xs: 0.5, md: 1.5 }} />
 
           <Box
             display={{ xs: 'none', lg: 'block' }}
