@@ -3,7 +3,6 @@ import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { SessionProvider, useSession } from 'next-auth/react';
 import { deepmerge } from '@mui/utils';
-import { type ThemeOptions, createTheme, useTheme, ThemeProvider } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,7 +12,7 @@ import { Toaster, ToastBar } from 'react-hot-toast';
 import Layout from '~/components/Layout';
 import LoadingPage from '~/components/LoadingPage';
 import useUserStore from '~/store/userStore';
-import useThemeMode from '~/store/themeMode';
+// import useThemeMode from '~/store/themeMode';
 import type { AppPage } from '~/types';
 
 import '@fortawesome/fontawesome-svg-core/styles.css';
@@ -23,6 +22,20 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import '~/styles/globals.css';
+
+import {
+  type ThemeOptions, createTheme, useTheme, ThemeProvider,
+
+  type CssVarsThemeOptions,
+  type ColorSystemOptions,
+  experimental_extendTheme as extendTheme,
+  // useColorScheme,
+  Experimental_CssVarsProvider as CssVarsProvider,
+} from '@mui/material/styles';
+
+// https://mui.com/material-ui/experimental-api/css-theme-variables/usage/#typescript
+import type { } from '@mui/material/themeCssVarsAugmentation';
+import { any } from 'zod';
 
 // https://fontawesome.com/v5/docs/web/use-with/react#getting-font-awesome-css-to-work
 config.autoAddCss = false;
@@ -198,6 +211,112 @@ export const darkThemeOptions: ThemeOptions = {
   },
 };
 
+export const commonPalette: ColorSystemOptions['palette'] = {
+  light: {
+    main: grey[50],
+    dark: grey[300],
+    contrastText: '#000',
+  },
+  dark: {
+    main: grey[900],
+    dark: grey[800], // the color is actually lighter but using dark for hover
+    contrastText: '#fff',
+  },
+  makeItAllOrange: {
+    light: '#f4dc49',
+    main: '#e2ba39',
+    dark: '#ffa726', // default palette.warning.main
+  },
+  makeItAllGrey: {
+    main: '#d3d3d3',
+    contrastText: '#000',
+  },
+  primary: {
+    main: '#e2ba39', // makeItAllOrange.main
+  },
+  secondary: {
+    main: '#d3d3d3', // makeItAllGrey.main
+  },
+};
+
+export const cssVarsTheme = extendTheme({
+  colorSchemes: {
+    light: {
+      palette: {
+        ...commonPalette,
+        primary: {
+          light: '#e2ba39', // makeItAllOrange.main
+          main: '#ffa726', // makeItAllOrange.dark
+          // TODO: decide whether to use makeItAllOrange.main as primary.main
+          // or not, sometimes its fine, sometimes it's too light
+        },
+        contrast: commonPalette.dark,
+      },
+    },
+    dark: {
+      palette: {
+        ...commonPalette,
+        contrast: commonPalette.light,
+        text: {
+          primary: 'rgba(255, 255, 255, 0.9)',
+          secondary: 'rgba(255, 255, 255, 0.9)',
+        },
+      },
+    },
+  },
+  components: {
+    MuiAppBar: {
+      styleOverrides: {
+        root: ({ ownerState, theme }) => ({
+          [theme.getColorSchemeSelector('light')]: {
+            backgroundColor: '#fafafa',
+          },
+        }),
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: ({ ownerState, theme }) => ({
+          // textTransform: 'none',
+        }),
+      },
+      variants: [
+        // makeItAllGrey is too light in light mode
+        {
+          props: { variant: 'outlined', color: 'secondary' },
+          style: ({ theme }) => ({
+            [theme.getColorSchemeSelector('light')]: {
+              color: grey[700],
+              borderColor: grey[700],
+            },
+          }),
+        },
+        {
+          props: { variant: 'text', color: 'secondary' },
+          style: ({ theme }) => ({
+            [theme.getColorSchemeSelector('light')]: {
+              color: grey[700],
+              borderColor: grey[700],
+            },
+          }),
+        },
+      ],
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        root: ({ ownerState, theme }) => ({
+          // same caretColor as input color
+          caretColor: ownerState.color && theme.palette[ownerState.color].main,
+          '&.Mui-error': {
+            // red caret on error
+            caretColor: 'red',
+          },
+        }),
+      },
+    },
+  },
+});
+
 interface MyAppProps extends AppProps {
   Component: AppProps['Component'] & AppPage
 }
@@ -217,17 +336,17 @@ export default function App({
     }));
   }
 
-  const { paletteMode } = useThemeMode();
+  // const { paletteMode } = useThemeMode();
 
-  const theme = useMemo(
-    () => createTheme(
-      deepmerge(
-        commonThemeOptions,
-        paletteMode === 'dark' ? darkThemeOptions : lightThemeOptions
-      )
-    ),
-    [paletteMode]
-  );
+  // const theme = useMemo(
+  //   () => createTheme(
+  //     deepmerge(
+  //       commonThemeOptions,
+  //       paletteMode === 'dark' ? darkThemeOptions : lightThemeOptions
+  //     )
+  //   ),
+  //   [paletteMode]
+  // );
 
   const { noAuth, layout } = Component;
 
@@ -236,7 +355,8 @@ export default function App({
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-      <ThemeProvider theme={theme}>
+      <CssVarsProvider theme={cssVarsTheme}>
+        {/* <ThemeProvider theme={theme}> */}
         <CssBaseline />
 
         <ThemedToaster />
@@ -256,24 +376,13 @@ export default function App({
             </Auth>
           )}
         </Box>
-      </ThemeProvider>
+        {/* </ThemeProvider> */}
+      </CssVarsProvider>
     </SessionProvider>
   );
 }
 
 function ThemedToaster() {
-  const theme = useTheme();
-
-  const darkToastStyle: CSSProperties = {
-    backgroundColor: '#333',
-    color: '#fff',
-  };
-
-  const lightToastStyle: CSSProperties = {
-  };
-
-  const themedToastStyle = theme.palette.mode === 'dark' ? darkToastStyle : lightToastStyle;
-
   return (
     <Toaster
       toastOptions={{
@@ -284,13 +393,21 @@ function ThemedToaster() {
       }}
     >
       {(t) => (
-        <ToastBar
-          style={{
-            ...t.style,
-            ...themedToastStyle,
-          }}
-          toast={t}
-        />
+        <Box
+          sx={(theme) => ({
+            [theme.getColorSchemeSelector('dark')]: {
+              '> *': {
+                backgroundColor: '#333',
+                color: '#fff',
+              },
+            },
+          })}
+        >
+          <ToastBar
+            style={t.style}
+            toast={t}
+          />
+        </Box>
       )}
     </Toaster>
   );
