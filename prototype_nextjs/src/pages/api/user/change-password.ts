@@ -14,6 +14,38 @@ export type ResponseSchema = {
   success: boolean
 };
 
+/**
+ * Change the password of the signed in user. The current password must be provided.
+ * The new password _can_ be the same as the current password, but this should not be the case
+ * as the client should not allow the user to submit the same password as the current password.
+ *
+ * @param req Request object with a JSON body containing the current password and the new password. See {@link RequestSchema}.
+ * @param res Response object with a JSON body containing the success status. See {@link ResponseSchema}.
+ * @example
+ * ```ts
+ * const { data } = await axios.post('/api/user/change-password', {
+ *   currentPassword: 'correctPassword',
+ *   newPassword: 'newPassword123!',
+ * });
+ * console.log(data); // { success: true }
+ * ```
+ * @example
+ * ```ts
+ * const { data } = await axios.post('/api/user/change-password', {
+ *  currentPassword: 'wrongPassword',
+ *  newPassword: 'newPassword123!',
+ * });
+ * console.log(data); // { success: false }
+ * ```
+ * @example
+ * ```ts
+ * const { data } = await axios.post('/api/user/change-password', {
+ *  currentPassword: 'password',
+ *  newPassword: 'invalidPassword',
+ * });
+ * console.log(data); // { success: false }
+ * ```
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseSchema | ErrorResponse>,

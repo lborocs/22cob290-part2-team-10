@@ -9,6 +9,17 @@ export type ResponseSchema = {
   user: SessionUser
 };
 
+/**
+ * Get the signed in user from the session.
+ * See {@link authOptions ~/pages/api/auth/[...nextauth].ts}.
+ *
+ * @param res Response object with a JSON body containing the user. See {@link ResponseSchema}.
+ * @example
+ * ```ts
+ * const { data } = await axios.get('/api/user/get-user-from-session');
+ * console.log(data.user); // { id: '...', email: '...', name: '...', ... }
+ * ```
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseSchema | ErrorResponse>,

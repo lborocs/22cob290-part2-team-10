@@ -24,6 +24,23 @@ export type ResponseSchema = FailedResponse | {
   user: SessionUser
 };
 
+/**
+ * Sign in a user.
+ * The user is identified by their email and password.
+ * If the user is found, a session is created.
+ * The session is used to identify the user in future.
+ *
+ * @param req Request object with a JSON body containing the email and the password. See {@link RequestSchema}.
+ * @param res Response object with a JSON body containing the user. See {@link ResponseSchema}.
+ * @example
+ * ```ts
+ * const { data } = await axios.post('/api/user/sign-in', {
+ *   email: 'example@make-it-all.co.uk',
+ *   password: 'password',
+ * });
+ * console.log(data); // { success: true, user: { email: 'example@make-it-all.co.uk', ... } }
+ * ```
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseSchema | { error: string }>,
