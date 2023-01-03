@@ -10,7 +10,7 @@ import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import type { UrlObject } from 'url';
 
 import TextAvatar from '~/components/TextAvatar';
-import ThemeSwitcher from '~/components/layout/ThemeSwitcher';
+import ThemeSwitcher from '~/components/ThemeSwitcher';
 import NavCollapse from '~/components/layout/nav/NavCollapse';
 import NavTabs from '~/components/layout/nav/NavTabs';
 import useUserStore from '~/store/userStore';
@@ -111,7 +111,7 @@ export default function NavigationBar({
         height: `calc(1.5rem + ${theme.spacing(1.5)})`,
         minWidth: 0,
         ':hover': {
-          bgcolor: theme.palette.makeItAllOrange.main,
+          bgcolor: theme.vars.palette.makeItAllOrange.main,
         },
       })}
     >

@@ -64,17 +64,22 @@ function NavTab({ label, href }: PageData) {
         typography: theme.typography.button,
         paddingX: 2,
         paddingY: 1.5,
-        color: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.6)', // taken from Tab
         minWidth: '90px', // taken from Tab
+
+        color: 'rgba(0, 0, 0, 0.6)', // taken from Tab (light mode)
+        // using `where` for 0 specificity
+        [`:where(${theme.getColorSchemeSelector('dark')})`]: {
+          color: 'rgba(255, 255, 255, 0.7)', // taken from Tab (dark mode)
+        },
         ':hover': {
-          // color: theme.palette.contrast.main,
-          color: theme.palette.primary.main,
+          // color: theme.vars.palette.contrast.main,
+          color: theme.vars.palette.primary.main,
         },
 
         // indicator
         '::after': {
           content: '""',
-          bgcolor: theme.palette.primary.main,
+          bgcolor: theme.vars.palette.primary.main,
           position: 'absolute',
           left: theme.spacing(2),
           right: theme.spacing(2),
@@ -87,9 +92,8 @@ function NavTab({ label, href }: PageData) {
         },
 
         // active
-        // using `where` for 0 specificity because of media-query below
         '&:where([aria-selected="true"])': {
-          color: theme.palette.primary.main,
+          color: theme.vars.palette.primary.main,
           '::after': {
             transform: 'scaleY(1)',
             // transition growing:

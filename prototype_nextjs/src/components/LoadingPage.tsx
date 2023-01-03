@@ -1,8 +1,7 @@
 import CircularProgress, { type CircularProgressProps } from '@mui/material/CircularProgress';
-import Stack from '@mui/material/Stack';
+import Stack, { type StackProps } from '@mui/material/Stack';
 
-export type LoadingPageProps = {
-  dark?: boolean
+export type LoadingPageProps = StackProps & {
   size?: CircularProgressProps['size']
 };
 
@@ -14,8 +13,8 @@ export type LoadingPageProps = {
  * @param size spinner size
  */
 export default function LoadingPage({
-  dark = true,
   size = 32,
+  ...props
 }: LoadingPageProps) {
   return (
     <Stack
@@ -23,11 +22,11 @@ export default function LoadingPage({
       width="100%"
       justifyContent="center"
       alignItems="center"
-      bgcolor={(theme) => (dark ? theme.palette.dark.main : undefined)}
+      {...props}
     >
       <CircularProgress
         size={size}
-        color={dark ? 'light' : 'dark'}
+        color="contrast"
       />
     </Stack>
   );
