@@ -63,6 +63,6 @@ export default function StyledCloseButtonDialog({
         </Stack>
       )}
       {children}
-    </StyledDialog >
+    </StyledDialog>
   );
 }

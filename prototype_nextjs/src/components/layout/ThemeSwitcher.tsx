@@ -78,21 +78,17 @@ export default function ThemeSwitcher(props: BoxProps) {
   }, []);
 
   if (!mounted) return (
-    <>
-      <Box {...props}>
-        <Skeleton>
-          <ResponsiveStyledButton
-            variant="outlined"
-            startIcon={<SettingsBrightnessIcon />}
-          >
-            Theme
-          </ResponsiveStyledButton>
-          <ResponsiveIconButton>
-            <SettingsBrightnessIcon />
-          </ResponsiveIconButton>
-        </Skeleton>
-      </Box>
-    </>
+    <Box {...props} component={Skeleton}>
+      <ResponsiveStyledButton
+        variant="outlined"
+        startIcon={<SettingsBrightnessIcon />}
+      >
+        Theme
+      </ResponsiveStyledButton>
+      <ResponsiveIconButton>
+        <SettingsBrightnessIcon />
+      </ResponsiveIconButton>
+    </Box>
   );
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {

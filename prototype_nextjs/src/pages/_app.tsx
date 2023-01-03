@@ -207,7 +207,7 @@ export default function App({
   pageProps,
 }: MyAppProps) {
   if (pageProps.user) {
-    useUserStore.setState((state) => ({
+    useUserStore.setState(() => ({
       user: pageProps.user,
     }));
   }
