@@ -13,6 +13,22 @@ export type ResponseSchema = {
   success: boolean
 };
 
+/**
+ * Change the text avatar of the signed in user.
+ * The text avatar is a combination of a background color and a foreground color.
+ * See {@link TextAvatarSchema}.
+ *
+ * @param req Request object with a JSON body containing the background color and the foreground color. See {@link RequestSchema}.
+ * @param res Response object with a JSON body containing the success status. See {@link ResponseSchema}.
+ * @example
+ * ```ts
+ * const { data } = await axios.post('/api/user/change-text-avatar', {
+ *   'avatar-bg': '#000000',
+ *   'avatar-fg': '#ffffff',
+ * });
+ * console.log(data); // { success: true }
+ * ```
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseSchema | ErrorResponse>,

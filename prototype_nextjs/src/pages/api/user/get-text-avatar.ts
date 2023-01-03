@@ -9,9 +9,18 @@ import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 export type ResponseSchema = z.infer<typeof TextAvatarSchema>;
 
-// TODO: cache (https://stackoverflow.blog/2022/12/20/best-practices-to-increase-the-speed-for-next-js-apps/)
-// or maybe not? cos its quite funky when they change their text avatar colours
-// ^ need to revisit code that changed text avatar colours
+/**
+ * Get the text avatar of the signed in user.
+ * The text avatar is a combination of a background color and a foreground color.
+ * See {@link TextAvatarSchema}.
+ *
+ * @param res Response object with a JSON body containing the background color and the foreground color. See {@link ResponseSchema}.
+ * @example
+ * ```ts
+ * const { data } = await axios.get('/api/user/get-text-avatar');
+ * console.log(data); // { 'avatar-bg': '#000000', 'avatar-fg': '#ffffff' }
+ * ```
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseSchema | ErrorResponse>,

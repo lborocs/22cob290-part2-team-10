@@ -14,7 +14,22 @@ export type ResponseSchema = Prisma.ProjectGetPayload<{
   },
 }>[];
 
-// TODO: cache (https://stackoverflow.blog/2022/12/20/best-practices-to-increase-the-speed-for-next-js-apps/)
+/**
+ * Get all projects the user has access to.
+ * If the user is a manager, all projects are returned.
+ * Otherwise, only projects the user has access to are returned.
+ *
+ * `Cache-Control: s-maxage=60, stale-while-revalidate=299`
+ * (1 minute cache with 5 minutes stale-while-revalidate)
+ *
+ * @param req Request object. No body is required.
+ * @param res Response object with a JSON body containing the projects. See {@link ResponseSchema}.
+ * @example
+ * ```ts
+ * const { data: projects } = await axios.get('/api/projects/get-assigned-projects');
+ * console.log(projects); // [{ id: 1, name: 'Project 1' }, { id: 2, name: 'Project 2' }]
+ * ```
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseSchema | ErrorResponse>,
@@ -50,5 +65,7 @@ export default async function handler(
     });
   }
 
-  res.status(200).json(projects);
+  res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=299')
+    .status(200)
+    .json(projects);
 }
