@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from 'react';
+import { useId, useState } from 'react';
 import { styled, useColorScheme } from '@mui/material/styles';
 import Box, { type BoxProps } from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -12,8 +12,6 @@ import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness';
 import type { Entries } from 'type-fest';
-
-import useThemeMode, { type ThemeMode } from '~/store/themeMode';
 
 const ResponsiveStyledButton = styled(Button)(({ theme }) => theme.unstable_sx({
   textTransform: 'none',
@@ -33,7 +31,6 @@ const ResponsiveIconButton = styled(IconButton)(({ theme }) => theme.unstable_sx
 type ModeType = NonNullable<ReturnType<typeof useColorScheme>['mode']>;
 
 type Modes = {
-  // [mode in ThemeMode]: {
   [mode in ModeType]: {
     label: string
     buttonIcon: React.ReactNode
@@ -59,7 +56,12 @@ const modes: Modes = {
   },
 };
 
-export default function ThemeSwitcherCssvars(props: BoxProps) {
+/**
+ * Want the button to look like an `Outlined Button` when the text is visible,
+ *  and like an `IconButton` when the text isn't. Too much styling customization
+ *  needed if just using 1 button so just used 2 lol.
+ */
+export default function ThemeSwitcher(props: BoxProps) {
   // it includes system, really nice :)
   const { mode, setMode } = useColorScheme();
 
@@ -141,112 +143,6 @@ export default function ThemeSwitcherCssvars(props: BoxProps) {
             key={_mode}
             onClick={() => handleMenuItemClick(_mode)}
             selected={mode === _mode}
-          >
-            <ListItemIcon>
-              {menuIcon}
-            </ListItemIcon>
-            <ListItemText>
-              {label}
-            </ListItemText>
-          </MenuItem>
-        ))}
-      </Menu>
-    </>
-  );
-}
-
-/**
- * Want the button to look like an `Outlined Button` when the text is visible,
- *  and like an `IconButton` when the text isn't. Too much styling customization
- *  needed if just using 1 button so just used 2 lol.
- */
-export function ThemeSwitcher(props: BoxProps) {
-  const { storedMode, setStoredMode } = useThemeMode();
-
-  const buttonId = useId();
-  const menuId = useId();
-
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const menuOpen = anchorEl !== null;
-
-  // see https://github.com/pacocoursey/next-themes#avoid-hydration-mismatch
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return (
-    <Box {...props} component={Skeleton}>
-      <ResponsiveStyledButton
-        variant="outlined"
-        startIcon={<SettingsBrightnessIcon />}
-      >
-        Theme
-      </ResponsiveStyledButton>
-      <ResponsiveIconButton>
-        <SettingsBrightnessIcon />
-      </ResponsiveIconButton>
-    </Box>
-  );
-
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleMenuItemClick = (mode: ThemeMode) => {
-    setStoredMode(mode);
-    setAnchorEl(null);
-  };
-
-  return (
-    <>
-      <Box {...props}>
-        <ResponsiveStyledButton
-          onClick={handleClick}
-          variant="outlined"
-          color="contrast"
-          startIcon={modes[storedMode].buttonIcon}
-          id={buttonId}
-          aria-label="open theme switcher"
-          aria-controls={menuOpen ? menuId : undefined}
-          aria-haspopup="true"
-          aria-expanded={menuOpen ? true : undefined}
-        >
-          Theme
-        </ResponsiveStyledButton>
-        {/* TODO: sort out id & aria props :/ might have to use useMediaQuery(minWidth: theme.breakpoints.md) or some sort of useBreakpoint */}
-        <ResponsiveIconButton
-          onClick={handleClick}
-          color="contrast"
-        // id={buttonId}
-        // aria-label="open theme switcher"
-        // aria-controls={menuOpen ? menuId : undefined}
-        // aria-haspopup="true"
-        // aria-expanded={menuOpen ? true : undefined}
-        >
-          {modes[storedMode].buttonIcon}
-        </ResponsiveIconButton>
-      </Box>
-
-      <Menu
-        open={menuOpen}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        id={menuId}
-        MenuListProps={{
-          'aria-labelledby': buttonId,
-        }}
-      >
-        {(Object.entries(modes) as Entries<typeof modes>).map(([mode, { label, menuIcon }]) => (
-          <MenuItem
-            key={mode}
-            onClick={() => handleMenuItemClick(mode)}
-            selected={storedMode === mode}
           >
             <ListItemIcon>
               {menuIcon}

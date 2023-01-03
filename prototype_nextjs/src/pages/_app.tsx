@@ -1,18 +1,23 @@
-import { type CSSProperties, useMemo } from 'react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { SessionProvider, useSession } from 'next-auth/react';
-import { deepmerge } from '@mui/utils';
+import {
+  type ColorSystemOptions,
+  experimental_extendTheme as extendTheme,
+  Experimental_CssVarsProvider as CssVarsProvider,
+} from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import { Toaster, ToastBar } from 'react-hot-toast';
 
+// see https://mui.com/material-ui/experimental-api/css-theme-variables/usage/#typescript
+import type { } from '@mui/material/themeCssVarsAugmentation';
+
 import Layout from '~/components/Layout';
 import LoadingPage from '~/components/LoadingPage';
 import useUserStore from '~/store/userStore';
-// import useThemeMode from '~/store/themeMode';
 import type { AppPage } from '~/types';
 
 import '@fortawesome/fontawesome-svg-core/styles.css';
@@ -23,25 +28,14 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import '~/styles/globals.css';
 
-import {
-  type ThemeOptions, createTheme, useTheme, ThemeProvider,
-
-  type CssVarsThemeOptions,
-  type ColorSystemOptions,
-  experimental_extendTheme as extendTheme,
-  // useColorScheme,
-  Experimental_CssVarsProvider as CssVarsProvider,
-} from '@mui/material/styles';
-
-// https://mui.com/material-ui/experimental-api/css-theme-variables/usage/#typescript
-import type { } from '@mui/material/themeCssVarsAugmentation';
-import { any } from 'zod';
-
 // https://fontawesome.com/v5/docs/web/use-with/react#getting-font-awesome-css-to-work
 config.autoAddCss = false;
 
-// https://mui.com/material-ui/customization/theming/#custom-variables
-// https://mui.com/material-ui/customization/palette/#adding-new-colors
+/**
+ * @see https://mui.com/material-ui/customization/theming/#custom-variables
+ * @see https://mui.com/material-ui/customization/palette/#adding-new-colors
+ * @see https://mui.com/material-ui/experimental-api/css-theme-variables/customization/#typescript
+ */
 declare module '@mui/material/styles' {
   interface Theme {
   }
@@ -49,7 +43,6 @@ declare module '@mui/material/styles' {
   interface Palette {
     light: Palette['primary'];
     dark: Palette['primary'];
-
     contrast: Palette['primary']; // contrast to theme
     makeItAllGrey: Palette['primary'];
     makeItAllOrange: Palette['primary'];
@@ -107,111 +100,7 @@ declare module '@mui/material/TextField' {
   interface TextFieldPropsColorOverrides extends ColorOverrides { }
 }
 
-export const commonThemeOptions: ThemeOptions = {
-  palette: {
-    light: {
-      main: grey[50],
-      dark: grey[300],
-      contrastText: '#000',
-    },
-    dark: {
-      main: grey[900],
-      dark: grey[800], // it's actually lighter but using dark for hover
-      contrastText: '#fff',
-    },
-    makeItAllOrange: {
-      light: '#f4dc49',
-      main: '#e2ba39',
-      dark: '#ffa726', // default palette.warning.main
-    },
-    makeItAllGrey: {
-      main: '#d3d3d3',
-      contrastText: '#000',
-    },
-    primary: {
-      main: '#e2ba39', // makeItAllOrange.main
-    },
-    secondary: {
-      main: '#d3d3d3', // makeItAllGrey.main
-    },
-  },
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: ({ ownerState, theme }) => ({
-          // textTransform: 'none',
-        }),
-      },
-    },
-    MuiInputBase: {
-      styleOverrides: {
-        root: ({ ownerState, theme }) => ({
-          // same caretColor as input color
-          caretColor: ownerState.color && theme.palette[ownerState.color].main,
-          '&.Mui-error': {
-            // red caret on error
-            caretColor: 'red',
-          },
-        }),
-      },
-    },
-  },
-};
-
-export const lightThemeOptions: ThemeOptions = {
-  palette: {
-    mode: 'light',
-    primary: {
-      light: '#e2ba39', // makeItAllOrange.main
-      main: '#ffa726', // makeItAllOrange.dark
-      // TODO: decide whether to use makeItAllOrange.main as primary.main
-      // or not, sometimes its fine, sometimes it's too light
-    },
-    contrast: commonThemeOptions.palette!.dark,
-  },
-  components: {
-    MuiAppBar: {
-      styleOverrides: {
-        root: {
-          backgroundColor: '#fafafa',
-        },
-      },
-    },
-    MuiButton: {
-      variants: [
-        // makeItAllGrey is too light
-        {
-          props: { variant: 'outlined', color: 'secondary' },
-          style: {
-            color: grey[700],
-            borderColor: grey[700],
-          },
-        },
-        {
-          props: { variant: 'text', color: 'secondary' },
-          style: {
-            color: grey[700],
-            borderColor: grey[700],
-          },
-        },
-      ],
-    },
-  },
-};
-
-export const darkThemeOptions: ThemeOptions = {
-  palette: {
-    mode: 'dark',
-    contrast: commonThemeOptions.palette?.light,
-  },
-  typography: {
-    allVariants: {
-      color: 'rgba(255, 255, 255, 0.9)',
-    },
-  },
-};
-
-export const commonPalette: ColorSystemOptions['palette'] = {
+const commonPalette: ColorSystemOptions['palette'] = {
   light: {
     main: grey[50],
     dark: grey[300],
@@ -239,7 +128,7 @@ export const commonPalette: ColorSystemOptions['palette'] = {
   },
 };
 
-export const cssVarsTheme = extendTheme({
+const theme = extendTheme({
   colorSchemes: {
     light: {
       palette: {
@@ -306,7 +195,7 @@ export const cssVarsTheme = extendTheme({
       styleOverrides: {
         root: ({ ownerState, theme }) => ({
           // same caretColor as input color
-          caretColor: ownerState.color && theme.palette[ownerState.color].main,
+          caretColor: ownerState.color && theme.vars.palette[ownerState.color].main,
           '&.Mui-error': {
             // red caret on error
             caretColor: 'red',
@@ -336,18 +225,6 @@ export default function App({
     }));
   }
 
-  // const { paletteMode } = useThemeMode();
-
-  // const theme = useMemo(
-  //   () => createTheme(
-  //     deepmerge(
-  //       commonThemeOptions,
-  //       paletteMode === 'dark' ? darkThemeOptions : lightThemeOptions
-  //     )
-  //   ),
-  //   [paletteMode]
-  // );
-
   const { noAuth, layout } = Component;
 
   return (
@@ -355,8 +232,7 @@ export default function App({
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-      <CssVarsProvider theme={cssVarsTheme}>
-        {/* <ThemeProvider theme={theme}> */}
+      <CssVarsProvider theme={theme}>
         <CssBaseline />
 
         <ThemedToaster />
@@ -376,7 +252,6 @@ export default function App({
             </Auth>
           )}
         </Box>
-        {/* </ThemeProvider> */}
       </CssVarsProvider>
     </SessionProvider>
   );
