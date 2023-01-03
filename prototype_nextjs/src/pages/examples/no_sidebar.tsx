@@ -21,11 +21,6 @@ const ExamplePage: AppPage = () => {
 };
 
 ExamplePage.layout = {
-  title: (
-    <Typography variant="h6" component="h1">
-      Look no sidebar!
-    </Typography>
-  ),
   sidebar: {
     type: SidebarType.NONE,
   },

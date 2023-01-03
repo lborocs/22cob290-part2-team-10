@@ -1,9 +1,47 @@
+import { useId, useState } from 'react';
+import Link from 'next/link';
+import { styled } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
+import MenuIcon from '@mui/icons-material/Menu';
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
+import type { UrlObject } from 'url';
 
-import Nav from '~/components/layout/nav/Nav';
+import TextAvatar from '~/components/TextAvatar';
+import ThemeSwitcher from '~/components/layout/ThemeSwitcher';
+import NavCollapse from '~/components/layout/nav/NavCollapse';
+import NavTabs from '~/components/layout/nav/NavTabs';
+import useUserStore from '~/store/userStore';
+
+export type PageData = {
+  label: string // page
+  href: UrlObject | string
+};
+// TODO: look at using icons, AT LEAST for mobile nav if menu (probably not for desktop)
+
+const userPages: PageData[] = [
+  { label: 'Home', href: '/home' },
+  { label: 'Forum', href: '/forum' },
+  { label: 'Projects', href: '/projects' },
+  { label: 'Dashboard', href: '/dashboard' },
+];
+const managerPages: PageData[] = [
+  { label: 'Home', href: '/home' },
+  { label: 'Forum', href: '/forum' },
+  { label: 'Projects', href: '/projects' },
+  { label: 'Dashboard', href: '/dashboard' },
+  { label: 'Staff', href: '/staff' },
+];
+
+const NavBarBox = styled(Box)({
+  // width: '100%',
+  flexBasis: '100%',
+  height: '100%',
+  display: 'flex',
+  alignItems: 'center',
+});
 
 /**
  * - Material UI's `FormatAlignLeftIcon` doesn't look great
@@ -42,17 +80,32 @@ const faAlignLeftSvg = (
   </svg>
 );
 
-// TODO: navbar sticky to top? if so then blur
-export default function NavigationBar({ noSidebar, toggleSidebar, title }: {
+export type NavigationBarProps = {
   noSidebar: boolean
   toggleSidebar: () => void
-  title: React.ReactNode
-}) {
-  const renderToggleSidebarButton = !noSidebar && (
+};
+
+// TODO?: navbar sticky to top? if so then blur after scoll
+export default function NavigationBar({
+  noSidebar,
+  toggleSidebar,
+}: NavigationBarProps) {
+  const isManager = useUserStore((state) => state.user.isManager);
+  const pages = isManager ? managerPages : userPages;
+
+  const collapseId = useId();
+
+  const [isCollapseOpen, setIsCollapseOpen] = useState(false);
+
+  const handleToggleCollapse = () => setIsCollapseOpen((open) => !open);
+  const handleCloseCollapse = () => setIsCollapseOpen(false);
+
+  const toggleSidebarButton = !noSidebar && (
     <Button
       onClick={toggleSidebar}
       variant="contained"
       color="makeItAllGrey"
+      aria-label="Toggle Sidebar"
       sx={(theme) => ({
         paddingX: 1.5,
         height: `calc(1.5rem + ${theme.spacing(1.5)})`,
@@ -66,11 +119,12 @@ export default function NavigationBar({ noSidebar, toggleSidebar, title }: {
       <Box
         display={{
           xs: 'none',
-          md: 'inline-block',
+          md: 'inline',
         }}
         marginLeft={{
           md: 1,
         }}
+        component="span"
       >
         Toggle Sidebar
       </Box>
@@ -78,23 +132,59 @@ export default function NavigationBar({ noSidebar, toggleSidebar, title }: {
   );
 
   return (
-    <AppBar position="static">
+    <AppBar
+      position="static"
+      elevation={2}
+    >
       <Toolbar>
         {/* left */}
-        <Box width="100%" display="flex">
-          {renderToggleSidebarButton}
-        </Box>
+        <NavBarBox>
+          {toggleSidebarButton}
+        </NavBarBox>
         {/* middle */}
-        <Box width="100%" display="flex">
-          <Box marginX="auto">
-            {title}
-          </Box>
-        </Box>
+        <NavBarBox justifyContent="center">
+          <NavTabs pages={pages} />
+        </NavBarBox>
         {/* right */}
-        <Box width="100%" display="flex" justifyContent="flex-end">
-          <Nav />
-        </Box>
+        <NavBarBox justifyContent="end">
+          <ThemeSwitcher marginRight={{ xs: 0.5, md: 1.5 }} />
+
+          <Box
+            display={{ xs: 'none', lg: 'block' }}
+          >
+            <Link href="/profile">
+              <TextAvatar />
+            </Link>
+          </Box>
+
+          {/* TODO: change nav button to be same size width as toggle sidebar button (when only icon)
+          might have to use custom svg (which will make animating transition easier)
+           */}
+          <Button
+            variant="contained"
+            color="contrast"
+            onClick={handleToggleCollapse}
+            aria-controls={collapseId}
+            aria-expanded={isCollapseOpen}
+            aria-label={`${isCollapseOpen ? 'collapse' : 'open'} navigation menu`}
+            sx={(theme) => ({
+              paddingX: 1.5,
+              height: `calc(1.5rem + ${theme.spacing(1.5)})`,
+              minWidth: 0,
+              display: { xs: 'block', lg: 'none' },
+            })}
+          >
+            {/* TODO: animate transition */}
+            {isCollapseOpen ? <MenuOpenIcon /> : <MenuIcon />}
+          </Button>
+        </NavBarBox>
       </Toolbar>
+      <NavCollapse
+        pages={pages.concat({ label: 'Profile', href: '/profile' })}
+        collapseId={collapseId}
+        open={isCollapseOpen}
+        closeCollapse={handleCloseCollapse}
+      />
     </AppBar>
   );
 }

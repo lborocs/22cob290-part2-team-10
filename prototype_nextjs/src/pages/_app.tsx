@@ -1,11 +1,10 @@
-import { type CSSProperties, useEffect, useMemo } from 'react';
+import { type CSSProperties, useMemo } from 'react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { SessionProvider, useSession } from 'next-auth/react';
 import { deepmerge } from '@mui/utils';
 import { type ThemeOptions, createTheme, useTheme, ThemeProvider } from '@mui/material/styles';
 import { grey } from '@mui/material/colors';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import { config } from '@fortawesome/fontawesome-svg-core';
@@ -14,7 +13,7 @@ import { Toaster, ToastBar } from 'react-hot-toast';
 import Layout from '~/components/Layout';
 import LoadingPage from '~/components/LoadingPage';
 import useUserStore from '~/store/userStore';
-import useColorMode from '~/store/colorMode';
+import useThemeMode from '~/store/themeMode';
 import type { AppPage } from '~/types';
 
 import '@fortawesome/fontawesome-svg-core/styles.css';
@@ -98,13 +97,13 @@ declare module '@mui/material/TextField' {
 export const commonThemeOptions: ThemeOptions = {
   palette: {
     light: {
-      main: grey[200],
-      dark: grey[400],
+      main: grey[50],
+      dark: grey[300],
       contrastText: '#000',
     },
     dark: {
       main: grey[900],
-      light: grey[700],
+      dark: grey[800], // it's actually lighter but using dark for hover
       contrastText: '#fff',
     },
     makeItAllOrange: {
@@ -126,9 +125,9 @@ export const commonThemeOptions: ThemeOptions = {
   components: {
     MuiButton: {
       styleOverrides: {
-        root: {
+        root: ({ ownerState, theme }) => ({
           // textTransform: 'none',
-        },
+        }),
       },
     },
     MuiInputBase: {
@@ -161,7 +160,7 @@ export const lightThemeOptions: ThemeOptions = {
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: '#fff',
+          backgroundColor: '#fafafa',
         },
       },
     },
@@ -205,39 +204,30 @@ interface MyAppProps extends AppProps {
 
 export default function App({
   Component,
-  pageProps: { session, ...pageProps },
+  pageProps,
 }: MyAppProps) {
   if (pageProps.user) {
-    useUserStore.setState((state) => ({
+    useUserStore.setState(() => ({
       user: pageProps.user,
     }));
   }
 
-  const mode = useColorMode((state) => state.mode);
-  const setColorMode = useColorMode((state) => state.setColorMode);
+  const { paletteMode } = useThemeMode();
 
   const theme = useMemo(
     () => createTheme(
       deepmerge(
         commonThemeOptions,
-        mode === 'dark' ? darkThemeOptions : lightThemeOptions
+        paletteMode === 'dark' ? darkThemeOptions : lightThemeOptions
       )
     ),
-    [mode]
+    [paletteMode]
   );
-
-  // TODO: store current mode in localstorage somehow like how next-themes does
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-
-  useEffect(() => {
-    // TODO: get mode from localStorage, if null then use preference
-    setColorMode(prefersDarkMode ? 'dark' : 'light');
-  }, [prefersDarkMode, setColorMode]);
 
   const { noAuth, layout } = Component;
 
   return (
-    <SessionProvider session={session}>
+    <SessionProvider session={pageProps.session}>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
@@ -246,7 +236,7 @@ export default function App({
 
         <ThemedToaster />
 
-        <Box minHeight="100vh">
+        <Box height="100vh">
           {noAuth ? (
             <Component {...pageProps} />
           ) : (
@@ -277,6 +267,8 @@ function ThemedToaster() {
   const lightToastStyle: CSSProperties = {
   };
 
+  const themedToastStyle = theme.palette.mode === 'dark' ? darkToastStyle : lightToastStyle;
+
   return (
     <Toaster
       toastOptions={{
@@ -290,7 +282,7 @@ function ThemedToaster() {
         <ToastBar
           style={{
             ...t.style,
-            ...theme.palette.mode === 'dark' ? darkToastStyle : lightToastStyle,
+            ...themedToastStyle,
           }}
           toast={t}
         />

@@ -16,16 +16,21 @@ export type PasswordFieldProps = TextFieldProps & {
 };
 
 /**
- * A reusable form input field for the user's password.
+ * A convenience wrapper around `TextField` for password input.
  *
- * - Customisable as it's a `forwardRef` component
- * - Correct `autocomplete` of `current-password`
- * - policyTooltip
+ * Features:
+ * - Toggle password visibility capability
+ * - Password policy tooltip
+ *
+ * Defaults:
+ * - label of `Password`
+ * - autoComplete of `current-password`
  */
 export default forwardRef(function PasswordField({
   label = 'Password',
   autoComplete = 'current-password',
   policyTooltip,
+  InputProps,
   ...props
 }: PasswordFieldProps, ref: React.ForwardedRef<HTMLInputElement>) {
   const [showPassword, setShowPassword] = useState(false);
@@ -62,6 +67,7 @@ export default forwardRef(function PasswordField({
             </Stack>
           </InputAdornment>
         ),
+        ...InputProps,
       }}
       ref={ref}
       {...props}

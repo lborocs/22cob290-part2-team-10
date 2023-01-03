@@ -50,8 +50,8 @@ type DetailsFormData = {
 export default function UserDetailsSection({
   inviter,
 }: UserDetailsSectionProps) {
-  const { setName, user } = useUserStore();
-  const { name, email, isManager } = user;
+  const setName = useUserStore((state) => state.setName);
+  const { name, email, isManager } = useUserStore((state) => state.user);
 
   const handleSubmit: React.ComponentProps<typeof Formik<DetailsFormData>>['onSubmit']
     = async (values, { resetForm }) => {
@@ -100,18 +100,20 @@ export default function UserDetailsSection({
 
   return (
     <Stack spacing={1}>
+      {/* chip bar */}
       <Stack
         direction="row"
-        flexWrap="wrap"
+        flexWrap={{
+          xs: 'nowrap',
+          sm: 'wrap',
+        }}
+        overflow="auto"
         paddingX={1}
         columnGap={{
           xs: 0.75,
           md: 1,
         }}
-        rowGap={{
-          xs: 0.75,
-          md: 1,
-        }}
+        rowGap={1}
       >
         {inviter
           ? (
@@ -149,6 +151,7 @@ export default function UserDetailsSection({
             <Chip icon={<BadgeIcon />} label="Admin" />
           )}
       </Stack>
+      {/* details form */}
       <Formik
         initialValues={{
           name,

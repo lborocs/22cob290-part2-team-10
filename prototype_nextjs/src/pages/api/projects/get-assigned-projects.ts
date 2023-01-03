@@ -14,6 +14,7 @@ export type ResponseSchema = Prisma.ProjectGetPayload<{
   },
 }>[];
 
+// TODO: cache (https://stackoverflow.blog/2022/12/20/best-practices-to-increase-the-speed-for-next-js-apps/)
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseSchema | ErrorResponse>,

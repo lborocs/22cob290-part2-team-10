@@ -19,6 +19,9 @@ import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 import styles from '~/styles/Profile.module.css';
 
+// https://search.muz.li/ZjI5OThkOTQ4?utm_source=muz.li-insp&utm_medium=article&utm_campaign=%2Finspiration%2Fprofile-page%2F
+
+// TODO: use dynamic imports for modals
 const ProfilePage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ inviter }) => {
   return (
     <Box flexGrow={1} component="main">
@@ -26,13 +29,12 @@ const ProfilePage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps
         <title>Profile - Make-It-All</title>
       </Head>
 
-      <Stack direction={{ xs: 'column', sm: 'row' }} component="section">
-        <Box
-          display="flex"
-          justifyContent="center"
-          paddingBottom={{ xs: 4, sm: 0 }}
-          paddingRight={{ sm: 4 }}
-        >
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        spacing={{ xs: 3, sm: 2.5 }}
+        component="section"
+      >
+        <Box display="flex" justifyContent="center">
           <TextAvatarEditor />
         </Box>
         <Box flexGrow={1}>

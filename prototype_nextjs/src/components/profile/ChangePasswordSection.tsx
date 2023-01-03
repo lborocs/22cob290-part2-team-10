@@ -21,6 +21,25 @@ import type { RequestSchema as ChangePwPayload, ResponseSchema as ChangePwRespon
 
 import styles from '~/styles/Profile.module.css';
 
+const ChangePasswordFormSchema = ChangePasswordSchema
+  .extend({
+    confirm: z.string(), // matching `currentPassword` is sufficient validation
+  })
+  .refine(
+    ({ currentPassword, newPassword }) => (newPassword ? currentPassword !== newPassword : true),
+    {
+      message: 'Use a new password',
+      path: ['newPassword'],
+    }
+  )
+  .refine(
+    ({ newPassword, confirm }) => newPassword === confirm,
+    {
+      message: 'Passwords do not match',
+      path: ['confirm'],
+    }
+  );
+
 type ChangePwFormData = {
   currentPassword: string
   newPassword: string
@@ -98,26 +117,7 @@ export default function ChangePasswordSection() {
               newPassword: '',
               confirm: '',
             }}
-            validate={withZodSchema(
-              ChangePasswordSchema
-                .extend({
-                  confirm: z.string(), // matching `currentPassword` is sufficient validation
-                })
-                .refine(
-                  ({ currentPassword, newPassword }) => (newPassword ? currentPassword !== newPassword : true),
-                  {
-                    message: 'Use a new password',
-                    path: ['newPassword'],
-                  }
-                )
-                .refine(
-                  ({ newPassword, confirm }) => newPassword === confirm,
-                  {
-                    message: 'Passwords do not match',
-                    path: ['confirm'],
-                  }
-                )
-            )}
+            validate={withZodSchema(ChangePasswordFormSchema)}
             onSubmit={handleSubmit}
           >
             {({

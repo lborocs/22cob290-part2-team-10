@@ -47,12 +47,12 @@ export default function ProjectsList() {
   const [filteredProjects, setFilteredProjects] = useState<Projects>([]);
 
   const onSearchSubmit = useCallback(
-    (query: string) => projects && setFilteredProjects(filterProjects(query, projects)),
+    (query: string) => setFilteredProjects(filterProjects(query, projects!)),
     [projects]
   );
 
   const resetResults = useCallback(
-    () => projects && setFilteredProjects(projects),
+    () => setFilteredProjects(projects!),
     [projects]
   );
 
@@ -80,7 +80,6 @@ export default function ProjectsList() {
         onSearchSubmit={onSearchSubmit}
         resetResults={resetResults}
         type="search"
-        id="query"
         label="Search by project name"
         variant="outlined"
         disabled={projects === undefined}

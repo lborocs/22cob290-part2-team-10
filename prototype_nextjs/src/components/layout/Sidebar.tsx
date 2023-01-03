@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 
 import { commonThemeOptions, lightThemeOptions } from '~/pages/_app';
 import styles from '~/styles/layout/Sidebar.module.css';
-import makeItAllLogo from '~/../public/company-logo.png';
+import makeItAllLogo from '~/../public/assets/company-logo.png';
 
 export type SidebarProps = {
   show: boolean
@@ -15,6 +15,7 @@ export type SidebarProps = {
 };
 
 // TODO?: make sidebar sticky? (have its scroll separate to the page)
+// TODO: make act like Drawer on mobile
 export default function Sidebar({ show, content }: SidebarProps) {
   // override app theme for sidebar - at least until configured sidebar colours in dark mode
   const theme = useMemo(
@@ -40,6 +41,7 @@ export default function Sidebar({ show, content }: SidebarProps) {
               src={makeItAllLogo}
               alt="Company logo"
               className={styles.companyLogo}
+              quality={100}
               priority
             />
           </Link>
