@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
@@ -16,7 +17,7 @@ import {
   updateTextAvatarStore,
   updateTextAvatarCss,
 } from '~/lib/textAvatar';
-import ActionedSplitButton, { type ActionedSplitButtonProps } from '~/components/ActionedSplitButton';
+import ActionedSplitButton, { type Option } from '~/components/ActionedSplitButton';
 import CircularColorInput from '~/components/CircularColorInput';
 import TextAvatarComponent from '~/components/TextAvatar';
 import StyledCloseButtonDialog from '~/components/StyledCloseButtonDialog';
@@ -87,27 +88,50 @@ export default function TextAvatarEditor() {
       []
     );
 
-  // FIXME: the button's text wraps on mobile
   // TODO: show colours of previous & default
-  const resetButtonOptions = useMemo<ActionedSplitButtonProps['options']>(() => (
+  const resetButtonOptions = useMemo<Option[]>(() => (
     [
       {
-        content: (
+        actionButtonContent: (
           <>
-            Reset to previous
+            <Box
+              display={{ xs: 'none', sm: 'inline' }}
+              component="span"
+            >
+              Reset to previous
+            </Box>
+            <Box
+              display={{ xs: 'inline', sm: 'none' }}
+              component="span"
+            >
+              Previous
+            </Box>
           </>
         ),
+        menuItemContent: 'Reset to previous',
         actionButtonProps: {
           form: 'text-avatar-form',
           type: 'reset',
         },
       },
       {
-        content: (
+        actionButtonContent: (
           <>
-            Reset to default
+            <Box
+              display={{ xs: 'none', sm: 'inline' }}
+              component="span"
+            >
+              Reset to default
+            </Box>
+            <Box
+              display={{ xs: 'inline', sm: 'none' }}
+              component="span"
+            >
+              Default
+            </Box>
           </>
         ),
+        menuItemContent: 'Reset to default',
         action: resetToSystemDefault,
       },
     ]
