@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Button from '@mui/material/Button';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
@@ -23,8 +23,6 @@ import StyledCloseButtonDialog from '~/components/StyledCloseButtonDialog';
 
 import styles from '~/styles/profile/TextAvatarEditor.module.css';
 
-// FIXME: on exit when clicking outside dialog/close button, text avatar css isn't updated
-
 /**
  * Component providing functionality for the user to change the colours of their text avatar.
  */
@@ -41,7 +39,7 @@ export default function TextAvatarEditor() {
 
   const formikRef = useRef<FormikProps<TextAvatar>>(null);
 
-  // using SWR like useEffect(..., [])
+  // using SWR like useEffect(..., []) for async data fetching while loading component
   useSWR('defaultTextAvatar', async () => {
     const textAvatar = await getTextAvatarFromStore();
 
@@ -60,31 +58,34 @@ export default function TextAvatarEditor() {
     updateTextAvatarCss(systemDefault);
   }, []);
 
-  const cancelAndClose = () => {
+  const cancelAndClose = useCallback(() => {
     updateTextAvatarCss(defaultTextAvatar);
     handleClose();
-  };
+  }, [defaultTextAvatar]);
 
   const handleSubmit: React.ComponentProps<typeof Formik<TextAvatar>>['onSubmit']
-    = async (values, { resetForm }) => {
-      const success = await updateTextAvatarStore(values);
+    = useCallback(
+      async (values, { resetForm }) => {
+        const success = await updateTextAvatarStore(values);
 
-      if (success) {
-        setDefaultTextAvatar(values);
+        if (success) {
+          setDefaultTextAvatar(values);
 
-        toast.success('Saved.', {
-          position: 'bottom-center',
-        });
-        handleClose();
-      } else { // shouldn't happen
-        toast.error('Please try again', {
-          position: 'bottom-center',
-        });
-      }
+          toast.success('Saved.', {
+            position: 'bottom-center',
+          });
+          handleClose();
+        } else { // shouldn't happen
+          toast.error('Please try again', {
+            position: 'bottom-center',
+          });
+        }
 
-      resetForm({ values });
-      updateTextAvatarCss(values);
-    };
+        resetForm({ values });
+        updateTextAvatarCss(values);
+      },
+      []
+    );
 
   // FIXME: the button's text wraps on mobile
   // TODO: show colours of previous & default
@@ -114,7 +115,7 @@ export default function TextAvatarEditor() {
 
   return (
     <div>
-      {/* TODO: on hover show like a pencil to signify that it's editable */}
+      {/* TODO?: on hover show like a pencil to signify that it's editable */}
       <TextAvatarComponent
         className={styles.textAvatar}
         size="120px"
@@ -126,7 +127,7 @@ export default function TextAvatarEditor() {
 
       <StyledCloseButtonDialog
         open={showDialog}
-        onClose={handleClose}
+        onClose={cancelAndClose}
         maxWidth="xs"
         fullWidth
         dialogTitle="Avatar"
