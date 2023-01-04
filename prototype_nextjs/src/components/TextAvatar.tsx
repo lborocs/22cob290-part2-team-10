@@ -1,4 +1,5 @@
 import { forwardRef } from 'react';
+import clsx from 'clsx';
 import useSWR from 'swr';
 
 import { getTextAvatarFromStore, updateTextAvatarCss } from '~/lib/textAvatar';
@@ -33,10 +34,9 @@ export default forwardRef(function LoadingButton({
 
   return (
     <span
-      className={`${styles.textAvatar} ${className ?? ''}`}
+      className={clsx(styles.textAvatar, className)}
       style={{
         width: size,
-        lineHeight: size,
         ...style,
       }}
       ref={ref}

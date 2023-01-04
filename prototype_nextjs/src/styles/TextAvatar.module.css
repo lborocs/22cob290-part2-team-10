@@ -4,10 +4,11 @@
     aspect-ratio: 1;
     border-radius: 50%;
     color: var(--avatar-fg);
-    /* line-height: 40px; */
-    text-align: center;
     background: var(--avatar-bg);
-    display: inline-block;
 
     font-size: large;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
