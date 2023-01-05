@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import Button from '@mui/material/Button';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
@@ -55,6 +55,8 @@ type ChangePwFormData = {
  *  - Now, the `state` is local to just this component so only this component re-renders
  */
 export default function ChangePasswordSection() {
+  const formId = useId();
+
   const [showDialog, setShowDialog] = useState(false);
 
   const [changingPw, setChangingPw] = useState(false);
@@ -138,7 +140,7 @@ export default function ChangePasswordSection() {
               return (
                 <Stack
                   gap={1.5}
-                  id="change-pw-form"
+                  id={formId}
                   component="form"
                   onSubmit={handleSubmit}
                   noValidate
@@ -203,7 +205,7 @@ export default function ChangePasswordSection() {
           </Button>
           <LoadingButton
             type="submit"
-            form="change-pw-form"
+            form={formId}
             variant="contained"
             color="secondary"
             size="small"
