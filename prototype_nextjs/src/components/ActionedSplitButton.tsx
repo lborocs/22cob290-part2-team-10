@@ -15,6 +15,18 @@ function getSx(sx?: SxProps<Theme>) {
     : [sx];
 }
 
+/**
+ * Removes the `sx` prop from the given props.
+ */
+function withoutSx(props: any) {
+  if (props && props.sx) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { sx, ...rest } = props;
+    return rest;
+  }
+  return props;
+}
+
 type Props<T> = Omit<T, 'onClick' | 'children'>;
 
 type DropDownButtonProps = Omit<Props<ButtonProps>,
@@ -126,11 +138,11 @@ export default function ActionedSplitButton({
         <Button
           onClick={handleClick}
           sx={[
-            ...getSx(dropDownButtonSx),
+            ...getSx(actionButtonSx),
             ...getSx(selectedOption.actionButtonProps?.sx),
           ]}
           {...actionButtonProps}
-          {...selectedOption.actionButtonProps}
+          {...withoutSx(selectedOption.actionButtonProps)}
         >
           {selectedOption.content ?? selectedOption.actionButtonContent}
         </Button>
@@ -141,11 +153,11 @@ export default function ActionedSplitButton({
           aria-haspopup="menu"
           onClick={handleToggleMenu}
           sx={[
-            ...getSx(actionButtonSx),
-            ...getSx(selectedOption.actionButtonProps?.sx),
+            ...getSx(dropDownButtonSx),
+            ...getSx(selectedOption.dropDownButtonProps?.sx),
           ]}
           {...dropDownButtonProps}
-          {...selectedOption.dropDownButtonProps}
+          {...withoutSx(selectedOption.dropDownButtonProps)}
         >
           <ArrowDropDownIcon />
         </Button>
@@ -167,28 +179,21 @@ export default function ActionedSplitButton({
         onClose={handleCloseMenu}
         {...menuProps}
       >
-        {options.map((option, index) => {
-          const {
-            sx: optionMenuItemSx,
-            ...optionMenuItemProps
-          } = option.menuItemProps ?? { sx: [] };
-
-          return (
-            <MenuItem
-              key={index}
-              selected={selectedIndex === index}
-              onClick={() => handleMenuItemClick(index)}
-              sx={[
-                ...getSx(menuItemSx),
-                ...getSx(optionMenuItemSx),
-              ]}
-              {...menuItemProps}
-              {...optionMenuItemProps}
-            >
-              {option.content ?? option.menuItemContent}
-            </MenuItem>
-          );
-        })}
+        {options.map((option, index) => (
+          <MenuItem
+            key={index}
+            selected={selectedIndex === index}
+            onClick={() => handleMenuItemClick(index)}
+            sx={[
+              ...getSx(menuItemSx),
+              ...getSx(option.menuItemProps?.sx),
+            ]}
+            {...menuItemProps}
+            {...withoutSx(option.menuItemProps)}
+          >
+            {option.content ?? option.menuItemContent}
+          </MenuItem>
+        ))}
       </Menu>
     </>
   );
