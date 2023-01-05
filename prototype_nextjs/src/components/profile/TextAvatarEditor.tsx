@@ -31,12 +31,12 @@ export default function TextAvatarEditor() {
 
   const [showDialog, setShowDialog] = useState(false);
 
+  // The system default text avatar is the text avatar that is used when the user
+  // first visits the page.
   const systemDefault = useMemo(() => getDefaultTextAvatar(), []);
 
   // default as in default values for the form (what is currently set in store)
-  // maybe initial is a better name?
-  // The default text avatar is the text avatar that is used when the user
-  // first visits the page.
+  // maybe initial is a better name? don't think so
   const [defaultTextAvatar, setDefaultTextAvatar] = useState<TextAvatar>();
 
   // can't use formikRef.current.isSubmitting because this component wouldn't re-render on submit (only the form would)
@@ -99,7 +99,7 @@ export default function TextAvatarEditor() {
         className={styles.textAvatar}
         size="120px"
         style={{
-          fontSize: '3em',
+          fontSize: '3rem',
         }}
         onClick={handleOpen}
       />
@@ -122,7 +122,7 @@ export default function TextAvatarEditor() {
               updateTextAvatarCss(values);
             }}
             innerRef={formikRef}
-            enableReinitialize
+            enableReinitialize // defaultTextAvatar is set after the component is mounted
           >
             {({
               values,

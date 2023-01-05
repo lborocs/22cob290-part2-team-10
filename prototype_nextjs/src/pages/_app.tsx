@@ -174,8 +174,8 @@ const theme = extendTheme({
           props: { variant: 'outlined', color: 'secondary' },
           style: ({ theme }) => ({
             [theme.getColorSchemeSelector('light')]: {
-              color: grey[700],
-              borderColor: grey[700],
+              color: theme.vars.palette.grey[700],
+              borderColor: theme.vars.palette.grey[700],
             },
           }),
         },
@@ -183,8 +183,8 @@ const theme = extendTheme({
           props: { variant: 'text', color: 'secondary' },
           style: ({ theme }) => ({
             [theme.getColorSchemeSelector('light')]: {
-              color: grey[700],
-              borderColor: grey[700],
+              color: theme.vars.palette.grey[700],
+              borderColor: theme.vars.palette.grey[700],
             },
           }),
         },
@@ -196,8 +196,8 @@ const theme = extendTheme({
           // same caretColor as input color
           caretColor: ownerState.color && theme.vars.palette[ownerState.color].main,
           '&.Mui-error': {
-            // red caret on error
-            caretColor: 'red',
+            // error color caret on error
+            caretColor: theme.vars.palette.error.main,
           },
         }),
       },

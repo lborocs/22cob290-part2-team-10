@@ -19,8 +19,8 @@ const StyledTextAvatar = styled(
 )(({ theme, textAvatar }) => ({
   backgroundColor: textAvatar?.['avatar-bg'],
   color: textAvatar?.['avatar-fg'],
-  width: theme.spacing(4.5),
-  height: theme.spacing(4.5),
+  width: '4.5ch',
+  height: '4.5ch',
   fontSize: '0.9rem',
 }));
 
@@ -100,11 +100,6 @@ export default function TextAvatarResetButton({
             <ListItemText primary="Reset to default" secondary="The default text avatar colours" />
           </>
         ),
-        menuItemProps: {
-          sx: {
-
-          },
-        },
         action: resetToSystemDefault,
       },
     ]

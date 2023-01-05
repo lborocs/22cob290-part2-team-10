@@ -149,9 +149,7 @@ export default function NavigationBar({
         <NavBarBox justifyContent="end">
           <ThemeSwitcher marginRight={{ xs: 0.5, md: 1.5 }} />
 
-          <Box
-            display={{ xs: 'none', lg: 'block' }}
-          >
+          <Box display={{ xs: 'none', lg: 'block' }}>
             <Link href="/profile">
               <TextAvatar />
             </Link>
