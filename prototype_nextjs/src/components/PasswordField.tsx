@@ -1,7 +1,7 @@
 import { forwardRef, useState } from 'react';
-
+import { styled } from '@mui/material/styles';
 import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
+import IconButton, { type IconButtonProps } from '@mui/material/IconButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import Stack from '@mui/material/Stack';
 import TextField, { type TextFieldProps } from '@mui/material/TextField';
@@ -13,7 +13,14 @@ import PolicyTooltip from '~/components/PolicyTooltip';
 
 export type PasswordFieldProps = TextFieldProps & {
   policyTooltip?: boolean
+  toggleButtonProps?: IconButtonProps
 };
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+  '.Mui-error .MuiIconButton-root': {
+    color: theme.vars.palette.error.main,
+  },
+})) as typeof TextField;
 
 /**
  * A convenience wrapper around `TextField` for password input.
@@ -29,8 +36,15 @@ export type PasswordFieldProps = TextFieldProps & {
 export default forwardRef(function PasswordField({
   label = 'Password',
   autoComplete = 'current-password',
-  policyTooltip,
+  color = 'primary',
   InputProps,
+  policyTooltip,
+  toggleButtonProps: {
+    sx: toggleButtonSx,
+    ...toggleButtonProps
+  } = {
+    sx: [],
+  },
   ...props
 }: PasswordFieldProps, ref: React.ForwardedRef<HTMLInputElement>) {
   const [showPassword, setShowPassword] = useState(false);
@@ -38,10 +52,11 @@ export default forwardRef(function PasswordField({
   const togglePassword = () => setShowPassword((show) => !show);
 
   return (
-    <TextField
+    <StyledTextField
       type={showPassword ? 'text' : 'password'}
       label={label}
       autoComplete={autoComplete}
+      color={color}
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">
@@ -54,16 +69,21 @@ export default forwardRef(function PasswordField({
                 <IconButton
                   onClick={togglePassword}
                   edge="end"
-                  sx={(theme) => {
-                    const inputColor = theme.vars.palette[props.color ?? 'primary'].main;
+                  sx={[
+                    (theme) => {
+                      const inputColor = theme.vars.palette[color].main;
 
-                    return {
-                      color: showPassword ? inputColor : 'inherit',
-                      '&:hover': {
-                        color: showPassword ? 'inherit' : inputColor,
-                      },
-                    };
-                  }}
+                      return {
+                        color: showPassword ? inputColor : 'inherit',
+                        '&:hover': {
+                          color: showPassword ? 'inherit' : inputColor,
+                        },
+                      };
+                    },
+                    // https://mui.com/system/getting-started/the-sx-prop/#passing-the-sx-prop
+                    ...(Array.isArray(toggleButtonSx) ? toggleButtonSx : [toggleButtonSx]),
+                  ]}
+                  {...toggleButtonProps}
                 >
                   {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
                 </IconButton>
