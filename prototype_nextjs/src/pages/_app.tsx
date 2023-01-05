@@ -148,7 +148,6 @@ const theme = extendTheme({
         contrast: commonPalette.light,
         text: {
           primary: 'rgba(255, 255, 255, 0.9)',
-          secondary: 'rgba(255, 255, 255, 0.9)',
         },
       },
     },
