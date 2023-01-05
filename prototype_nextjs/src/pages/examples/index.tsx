@@ -100,7 +100,7 @@ export default function ExamplesPage() {
             dense
             component={Stack}
             divider={<Divider />}
-            spacing={1}
+            gap={1}
           >
             <section>
               <ExampleList header="Template">

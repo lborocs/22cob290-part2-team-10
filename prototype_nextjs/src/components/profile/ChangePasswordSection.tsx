@@ -136,8 +136,10 @@ export default function ChangePasswordSection() {
               if (dirty) setIsValid(isValid);
 
               return (
-                <form
+                <Stack
+                  gap={1.5}
                   id="change-pw-form"
+                  component="form"
                   onSubmit={handleSubmit}
                   noValidate
                 >
@@ -147,45 +149,43 @@ export default function ChangePasswordSection() {
                     name="email"
                     defaultValue={email}
                   />
-                  <Stack spacing={1.5}>
-                    <PasswordField
-                      name="currentPassword"
-                      label="Current Password"
-                      placeholder="Enter current password"
-                      value={values.currentPassword}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={touched.currentPassword && !!errors.currentPassword}
-                      helperText={(touched.currentPassword && errors.currentPassword) || ' '}
-                      disabled={isSubmitting}
-                      policyTooltip
-                    />
-                    <PasswordField
-                      name="newPassword"
-                      label="New Password"
-                      placeholder="Enter new password"
-                      autoComplete="new-password"
-                      value={values.newPassword}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={touched.newPassword && !!errors.newPassword}
-                      helperText={(touched.newPassword && errors.newPassword) || ' '}
-                      disabled={isSubmitting}
-                    />
-                    <PasswordField
-                      name="confirm"
-                      label="Confirm Password"
-                      placeholder="Enter new password again"
-                      autoComplete="new-password"
-                      value={values.confirm}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      error={touched.confirm && !!errors.confirm}
-                      helperText={(touched.confirm && errors.confirm) || ' '}
-                      disabled={isSubmitting}
-                    />
-                  </Stack>
-                </form>
+                  <PasswordField
+                    name="currentPassword"
+                    label="Current Password"
+                    placeholder="Enter current password"
+                    value={values.currentPassword}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.currentPassword && !!errors.currentPassword}
+                    helperText={(touched.currentPassword && errors.currentPassword) || ' '}
+                    disabled={isSubmitting}
+                    policyTooltip
+                  />
+                  <PasswordField
+                    name="newPassword"
+                    label="New Password"
+                    placeholder="Enter new password"
+                    autoComplete="new-password"
+                    value={values.newPassword}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.newPassword && !!errors.newPassword}
+                    helperText={(touched.newPassword && errors.newPassword) || ' '}
+                    disabled={isSubmitting}
+                  />
+                  <PasswordField
+                    name="confirm"
+                    label="Confirm Password"
+                    placeholder="Enter new password again"
+                    autoComplete="new-password"
+                    value={values.confirm}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.confirm && !!errors.confirm}
+                    helperText={(touched.confirm && errors.confirm) || ' '}
+                    disabled={isSubmitting}
+                  />
+                </Stack>
               );
             }}
           </Formik>

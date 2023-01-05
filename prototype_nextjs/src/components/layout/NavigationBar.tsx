@@ -142,7 +142,7 @@ export default function NavigationBar({
           {toggleSidebarButton}
         </NavBarBox>
         {/* middle */}
-        <NavBarBox justifyContent="center">
+        <NavBarBox justifyContent="center" maxWidth={{ xs: 0, lg: 'unset' }}>
           <NavTabs pages={pages} />
         </NavBarBox>
         {/* right */}

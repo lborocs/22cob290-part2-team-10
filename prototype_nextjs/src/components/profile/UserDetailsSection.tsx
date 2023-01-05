@@ -99,7 +99,7 @@ export default function UserDetailsSection({
     };
 
   return (
-    <Stack spacing={1}>
+    <Stack gap={1}>
       {/* chip bar */}
       <Stack
         direction="row"
@@ -172,12 +172,12 @@ export default function UserDetailsSection({
         }) => (
           <Stack
             paddingTop={1}
-            spacing={2}
+            gap={2}
             component="form"
             onSubmit={handleSubmit}
             noValidate
           >
-            <Stack spacing={1}>
+            <Stack gap={1}>
               <TextField
                 label="Name"
                 name="name"
