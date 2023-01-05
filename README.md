@@ -499,9 +499,10 @@ from the
 | Name                                                                                  | Minor Version | Purpose                                                                                                |
 |---------------------------------------------------------------------------------------|---------------|--------------------------------------------------------------------------------------------------------|
 | [TypeScript](https://www.typescriptlang.org/)                                         | 4.9           | Programming language                                                                                   |
-| [ESLint](https://eslint.org/)                                                         | 8.30          | Static code analysis                                                                                   |
+| [ESLint](https://eslint.org/)                                                         | 8.31          | Static code analysis                                                                                   |
+| [Typescript ESLint](https://typescript-eslint.io/)                                    | 5.48          | ESLint Typescript support                                                                              |
 | [React](https://reactjs.org/)                                                         | 18.2          | UI library                                                                                             |
-| [Next.Js](https://nextjs.org/)                                                        | 13.0          | Full stack framework                                                                                   |
+| [Next.Js](https://nextjs.org/)                                                        | 13.1          | Full stack framework                                                                                   |
 | [NextAuth.js](https://next-auth.js.org/)                                              | 4.17          | Authentication                                                                                         |
 | [sharp](https://nextjs.org/docs/messages/sharp-missing-in-production)                 | 0.31          | Next.Js Image Optimization (not used explicitly by us)                                                 |
 | [MUI Material UI](https://mui.com/)                                                   | 5.11          | Component Library ([#40][iMui])                                                                        |
@@ -511,7 +512,7 @@ from the
 | [Roboto](https://mui.com/material-ui/getting-started/installation/#roboto-font)       | 4.5           | MUI default font                                                                                       |
 | [react-hot-toast](https://react-hot-toast.com/)                                       | 2.4           | Toasts                                                                                                 |
 | [Axios](https://axios-http.com/)                                                      | 1.2           | HTTP client (use instead of the `fetch` API)                                                           |
-| [zustand](https://github.com/pmndrs/zustand)                                          | 4.1           | State management                                                                                       |
+| [zustand](https://github.com/pmndrs/zustand)                                          | 4.2           | State management                                                                                       |
 | [Prisma](https://www.prisma.io/)                                                      | 4.8           | Database ORM ([#12][iPrisma])                                                                          |
 | [ts-node](https://typestrong.org/ts-node/)                                            | 10.9          | Run code to [seed Prisma database](https://www.prisma.io/docs/guides/database/seed-database)           |
 | [node.bcrypt.js](https://github.com/kelektiv/node.bcrypt.js)                          | 5.1           | Hashing user passwords                                                                                 |
