@@ -1,10 +1,19 @@
-import { useCallback, useState, useId } from 'react';
-
+import { useCallback, useState, useId, useMemo } from 'react';
+import type { SxProps, Theme } from '@mui/material/styles';
 import Button, { type ButtonProps } from '@mui/material/Button';
 import ButtonGroup, { type ButtonGroupProps } from '@mui/material/ButtonGroup';
 import Menu, { type MenuProps } from '@mui/material/Menu';
 import MenuItem, { type MenuItemProps } from '@mui/material/MenuItem';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+
+// https://mui.com/system/getting-started/the-sx-prop/#passing-the-sx-prop
+function getSx(sx?: SxProps<Theme>) {
+  if (!sx) return [];
+
+  return Array.isArray(sx)
+    ? sx
+    : [sx];
+}
 
 type Props<T> = Omit<T, 'onClick' | 'children'>;
 
@@ -67,10 +76,19 @@ export type ActionedSplitButtonProps = Props<ButtonGroupProps> & {
 export default function ActionedSplitButton({
   options,
   defaultIndex = 0,
-  actionButtonProps,
-  dropDownButtonProps,
+  actionButtonProps: {
+    sx: actionButtonSx,
+    ...actionButtonProps
+  } = { sx: [] },
+  dropDownButtonProps: {
+    sx: dropDownButtonSx,
+    ...dropDownButtonProps
+  } = { sx: [] },
   menuProps,
-  menuItemProps,
+  menuItemProps: {
+    sx: menuItemSx,
+    ...menuItemProps
+  } = { sx: [] },
   ...props
 }: ActionedSplitButtonProps) {
   const menuId = useId();
@@ -78,7 +96,9 @@ export default function ActionedSplitButton({
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedIndex, setSelectedIndex] = useState(defaultIndex);
 
-  const open = Boolean(anchorEl);
+  const selectedOption = useMemo(() => options[selectedIndex], [options, selectedIndex]);
+
+  const open = anchorEl !== null;
 
   const handleOpenMenu = (event: React.MouseEvent) => setAnchorEl(event.currentTarget.parentElement);
   const handleCloseMenu = useCallback(() => setAnchorEl(null), []);
@@ -92,7 +112,7 @@ export default function ActionedSplitButton({
 
   const handleClick = () => {
     handleCloseMenu();
-    options[selectedIndex].action?.();
+    selectedOption.action?.();
   };
 
   const handleMenuItemClick = (index: number) => {
@@ -105,10 +125,14 @@ export default function ActionedSplitButton({
       <ButtonGroup {...props}>
         <Button
           onClick={handleClick}
+          sx={[
+            ...getSx(dropDownButtonSx),
+            ...getSx(selectedOption.actionButtonProps?.sx),
+          ]}
           {...actionButtonProps}
-          {...options[selectedIndex].actionButtonProps}
+          {...selectedOption.actionButtonProps}
         >
-          {options[selectedIndex].content ?? options[selectedIndex].actionButtonContent}
+          {selectedOption.content ?? selectedOption.actionButtonContent}
         </Button>
         <Button
           aria-controls={open ? menuId : undefined}
@@ -116,8 +140,12 @@ export default function ActionedSplitButton({
           aria-label="select option"
           aria-haspopup="menu"
           onClick={handleToggleMenu}
+          sx={[
+            ...getSx(actionButtonSx),
+            ...getSx(selectedOption.actionButtonProps?.sx),
+          ]}
           {...dropDownButtonProps}
-          {...options[selectedIndex].dropDownButtonProps}
+          {...selectedOption.dropDownButtonProps}
         >
           <ArrowDropDownIcon />
         </Button>
@@ -139,17 +167,28 @@ export default function ActionedSplitButton({
         onClose={handleCloseMenu}
         {...menuProps}
       >
-        {options.map((option, index) => (
-          <MenuItem
-            key={index}
-            selected={selectedIndex === index}
-            onClick={() => handleMenuItemClick(index)}
-            {...menuItemProps}
-            {...option.menuItemProps}
-          >
-            {option.content ?? option.menuItemContent}
-          </MenuItem>
-        ))}
+        {options.map((option, index) => {
+          const {
+            sx: optionMenuItemSx,
+            ...optionMenuItemProps
+          } = option.menuItemProps ?? { sx: [] };
+
+          return (
+            <MenuItem
+              key={index}
+              selected={selectedIndex === index}
+              onClick={() => handleMenuItemClick(index)}
+              sx={[
+                ...getSx(menuItemSx),
+                ...getSx(optionMenuItemSx),
+              ]}
+              {...menuItemProps}
+              {...optionMenuItemProps}
+            >
+              {option.content ?? option.menuItemContent}
+            </MenuItem>
+          );
+        })}
       </Menu>
     </>
   );
