@@ -31,7 +31,7 @@ const ProfilePage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps
 
       <Stack
         direction={{ xs: 'column', sm: 'row' }}
-        spacing={{ xs: 3, sm: 2.5 }}
+        gap={{ xs: 3, sm: 2.5 }}
         component="section"
       >
         <Box display="flex" justifyContent="center">

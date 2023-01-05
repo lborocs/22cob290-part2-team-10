@@ -24,7 +24,7 @@ const Custom404: AppPage = () => (
     justifyContent="center"
     height={1}
     maxWidth="sm"
-    spacing={1}
+    gap={1}
     marginX="auto"
     paddingX={4}
     component="main"

@@ -17,9 +17,12 @@ const StyledDialog = styled(Dialog)(({ theme }) => theme.unstable_sx({
   },
 }));
 
+export type OnCloseReason = Parameters<NonNullable<DialogProps['onClose']>>[1] | 'closeButtonClick';
+
 export type StyledCloseButtonDialogProps = DialogProps & {
   dialogTitle: React.ReactNode
   noCloseButton?: boolean
+  onClose?: (event: React.SyntheticEvent, reason: OnCloseReason) => void
 };
 
 /**
@@ -54,8 +57,7 @@ export default function StyledCloseButtonDialog({
           </DialogTitle>
           <IconButton
             edge="end"
-            // @ts-expect-error it works so :shrug:
-            onClick={() => props.onClose?.()}
+            onClick={(event) => props.onClose?.(event, 'closeButtonClick')}
             aria-label="close"
           >
             <CloseIcon />

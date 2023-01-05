@@ -81,7 +81,7 @@ export default function Layout({
         paddingX={{ xs: 1.75, md: 2, lg: 2.5 }}
         paddingTop={1.5}
         paddingBottom={1}
-        spacing={3}
+        gap={3}
       >
         <NavigationBar
           noSidebar={noSidebar}
