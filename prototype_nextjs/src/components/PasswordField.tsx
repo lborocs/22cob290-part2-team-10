@@ -54,11 +54,15 @@ export default forwardRef(function PasswordField({
                 <IconButton
                   onClick={togglePassword}
                   edge="end"
-                  sx={{
-                    color: showPassword ? 'primary.main' : 'inherit',
-                    '&:hover': {
-                      color: showPassword ? 'inherit' : 'primary.main',
-                    },
+                  sx={(theme) => {
+                    const inputColor = theme.vars.palette[props.color ?? 'primary'].main;
+
+                    return {
+                      color: showPassword ? inputColor : 'inherit',
+                      '&:hover': {
+                        color: showPassword ? 'inherit' : inputColor,
+                      },
+                    };
                   }}
                 >
                   {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
