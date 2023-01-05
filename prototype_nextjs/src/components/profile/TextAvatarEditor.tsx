@@ -49,7 +49,8 @@ export default function TextAvatarEditor() {
   const systemDefault = useMemo(() => getDefaultTextAvatar(), []);
 
   // default as in default values for the form (what is currently set in store)
-  const [defaultTextAvatar, setDefaultTextAvatar] = useState<TextAvatar>(null as unknown as TextAvatar);
+  // maybe initial is a better name?
+  const [defaultTextAvatar, setDefaultTextAvatar] = useState<TextAvatar>();
 
   // can't use formikRef.current.isSubmitting because this component wouldn't re-render on submit (only the form would)
   // so the LoadingButton doesn't enter it's loading state - it won't visually change
@@ -76,7 +77,7 @@ export default function TextAvatarEditor() {
   }, [systemDefault]);
 
   const cancelAndClose = useCallback(() => {
-    updateTextAvatarCss(defaultTextAvatar);
+    updateTextAvatarCss(defaultTextAvatar!);
     handleClose();
   }, [defaultTextAvatar]);
 
@@ -128,8 +129,8 @@ export default function TextAvatarEditor() {
             Reset to previous
             <StyledAvatar
               sx={{
-                bgcolor: defaultTextAvatar['avatar-bg'],
-                color: defaultTextAvatar['avatar-fg'],
+                bgcolor: defaultTextAvatar?.['avatar-bg'],
+                color: defaultTextAvatar?.['avatar-fg'],
               }}
             >
               A
@@ -197,10 +198,10 @@ export default function TextAvatarEditor() {
       >
         <DialogContent dividers>
           <Formik
-            initialValues={defaultTextAvatar}
+            initialValues={defaultTextAvatar!}
             onSubmit={handleSubmit}
             onReset={() => {
-              updateTextAvatarCss(defaultTextAvatar);
+              updateTextAvatarCss(defaultTextAvatar!);
             }}
             validate={(values) => { // basically onChange
               updateTextAvatarCss(values);
@@ -220,7 +221,7 @@ export default function TextAvatarEditor() {
 
               return (
                 <Stack
-                  spacing={1}
+                  gap={1}
                   component="form"
                   id="text-avatar-form"
                   onSubmit={handleSubmit}
