@@ -1,4 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
+import { styled } from '@mui/material/styles';
+import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import DialogContent from '@mui/material/DialogContent';
@@ -24,11 +26,27 @@ import StyledCloseButtonDialog from '~/components/StyledCloseButtonDialog';
 
 import styles from '~/styles/profile/TextAvatarEditor.module.css';
 
+const StyledMenuItemContent = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: theme.spacing(1),
+  width: '100%',
+}));
+
+const StyledAvatar = styled(Avatar)(({ theme }) => ({
+  width: theme.spacing(3.5),
+  height: theme.spacing(3.5),
+  fontSize: '0.9rem',
+})) as typeof Avatar;
+
 /**
  * Component providing functionality for the user to change the colours of their text avatar.
  */
 export default function TextAvatarEditor() {
   const [showDialog, setShowDialog] = useState(false);
+
+  const systemDefault = useMemo(() => getDefaultTextAvatar(), []);
 
   // default as in default values for the form (what is currently set in store)
   const [defaultTextAvatar, setDefaultTextAvatar] = useState<TextAvatar>(null as unknown as TextAvatar);
@@ -52,12 +70,10 @@ export default function TextAvatarEditor() {
 
   // system default as in what they had before changing any settings
   const resetToSystemDefault = useCallback(() => {
-    const systemDefault = getDefaultTextAvatar();
-
     formikRef.current!.setValues(systemDefault);
 
     updateTextAvatarCss(systemDefault);
-  }, []);
+  }, [systemDefault]);
 
   const cancelAndClose = useCallback(() => {
     updateTextAvatarCss(defaultTextAvatar);
@@ -88,7 +104,6 @@ export default function TextAvatarEditor() {
       []
     );
 
-  // TODO: show colours of previous & default
   const resetButtonOptions = useMemo<Option[]>(() => (
     [
       {
@@ -108,7 +123,19 @@ export default function TextAvatarEditor() {
             </Box>
           </>
         ),
-        menuItemContent: 'Reset to previous',
+        menuItemContent: (
+          <StyledMenuItemContent>
+            Reset to previous
+            <StyledAvatar
+              sx={{
+                bgcolor: defaultTextAvatar['avatar-bg'],
+                color: defaultTextAvatar['avatar-fg'],
+              }}
+            >
+              A
+            </StyledAvatar>
+          </StyledMenuItemContent>
+        ),
         actionButtonProps: {
           form: 'text-avatar-form',
           type: 'reset',
@@ -131,11 +158,23 @@ export default function TextAvatarEditor() {
             </Box>
           </>
         ),
-        menuItemContent: 'Reset to default',
+        menuItemContent: (
+          <StyledMenuItemContent>
+            Reset to default
+            <StyledAvatar
+              sx={{
+                bgcolor: systemDefault['avatar-bg'],
+                color: systemDefault['avatar-fg'],
+              }}
+            >
+              A
+            </StyledAvatar>
+          </StyledMenuItemContent>
+        ),
         action: resetToSystemDefault,
       },
     ]
-  ), [resetToSystemDefault]);
+  ), [defaultTextAvatar, systemDefault, resetToSystemDefault]);
 
   return (
     <div>
@@ -258,6 +297,7 @@ export default function TextAvatarEditor() {
             }}
             menuItemProps={{
               dense: true,
+              selected: false,
             }}
           />
           <LoadingButton
