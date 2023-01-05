@@ -527,6 +527,7 @@ from the
 | [lorem-ipsum](https://github.com/knicklabs/lorem-ipsum.js)                            | 2.0           | Generating placeholder text (for seeding)                                                              |
 | [usehooks-ts](https://usehooks-ts.com/)                                               | 2.9           | Utility React hooks                                                                                    |
 | [type-fest](https://github.com/sindresorhus/type-fest)                                | 3.5           | Utility TypeScript types                                                                               |
+| [clsx](https://github.com/lukeed/clsx)                                                | 1.2           | Utility library for constructing classnames                                                            |
 | ...                                                                                   |               |                                                                                                        |
 
 <!-- https://stackoverflow.com/a/42424860 -->

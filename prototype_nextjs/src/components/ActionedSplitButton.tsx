@@ -13,18 +13,33 @@ type DropDownButtonProps = Omit<Props<ButtonProps>,
   | 'aria-expanded'
 >;
 
+type BaseOption = {
+  action?(): void
+  actionButtonProps?: Props<ButtonProps>
+  dropDownButtonProps?: DropDownButtonProps
+  menuItemProps?: Props<MenuItemProps>
+};
+
+type SameContentOption = BaseOption & {
+  content: React.ReactNode
+  actionButtonContent?: never
+  menuItemContent?: never
+};
+
+type CustomContentOption = BaseOption & {
+  content?: never
+  actionButtonContent: React.ReactNode
+  menuItemContent: React.ReactNode
+};
+
+export type Option = SameContentOption | CustomContentOption;
+
 export type ActionedSplitButtonProps = Props<ButtonGroupProps> & {
-  options: {
-    content: React.ReactNode,
-    action?(): void
-    actionButtonProps?: Props<ButtonProps>,
-    dropDownButtonProps?: DropDownButtonProps,
-    menuItemProps?: Props<MenuItemProps>,
-  }[]
+  options: Option[]
   defaultIndex?: number
-  actionButtonProps?: Props<ButtonProps>,
-  dropDownButtonProps?: DropDownButtonProps,
-  menuProps?: Omit<MenuProps, 'open' | 'onClose' | 'id'>,
+  actionButtonProps?: Props<ButtonProps>
+  dropDownButtonProps?: DropDownButtonProps
+  menuProps?: Omit<MenuProps, 'open' | 'onClose' | 'id'>
   menuItemProps?: Props<MenuItemProps>
 };
 
@@ -32,9 +47,9 @@ export type ActionedSplitButtonProps = Props<ButtonGroupProps> & {
  * A wrapper around a `ButtonGroup` that allows configuration
  *   of each option.
  *
- * Tried to give **as much as possible** freedom by basically letting you customize
- *   all inner components through both this component's props and most components through
- *   `options`.
+ * Tried to give **as much as possible** freedom & customization by basically letting you
+ *   customize all inner components through both this component's props and most components
+ *   through `options`.
  *
  * Can specify form-related actions for buttons e.g. `type="submit"` by using
  *   `options[].actionButtonProps.type: 'submit'`.
@@ -93,7 +108,7 @@ export default function ActionedSplitButton({
           {...actionButtonProps}
           {...options[selectedIndex].actionButtonProps}
         >
-          {options[selectedIndex].content}
+          {options[selectedIndex].content ?? options[selectedIndex].actionButtonContent}
         </Button>
         <Button
           aria-controls={open ? menuId : undefined}
@@ -132,7 +147,7 @@ export default function ActionedSplitButton({
             {...menuItemProps}
             {...option.menuItemProps}
           >
-            {option.content}
+            {option.content ?? option.menuItemContent}
           </MenuItem>
         ))}
       </Menu>

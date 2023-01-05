@@ -1,4 +1,7 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
+import { styled } from '@mui/material/styles';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
@@ -16,14 +19,26 @@ import {
   updateTextAvatarStore,
   updateTextAvatarCss,
 } from '~/lib/textAvatar';
-import ActionedSplitButton, { type ActionedSplitButtonProps } from '~/components/ActionedSplitButton';
+import ActionedSplitButton, { type Option } from '~/components/ActionedSplitButton';
 import CircularColorInput from '~/components/CircularColorInput';
 import TextAvatarComponent from '~/components/TextAvatar';
 import StyledCloseButtonDialog from '~/components/StyledCloseButtonDialog';
 
 import styles from '~/styles/profile/TextAvatarEditor.module.css';
 
-// FIXME: on exit when clicking outside dialog/close button, text avatar css isn't updated
+const StyledMenuItemContent = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: theme.spacing(1),
+  width: '100%',
+}));
+
+const StyledAvatar = styled(Avatar)(({ theme }) => ({
+  width: theme.spacing(3.5),
+  height: theme.spacing(3.5),
+  fontSize: '0.9rem',
+})) as typeof Avatar;
 
 /**
  * Component providing functionality for the user to change the colours of their text avatar.
@@ -31,8 +46,11 @@ import styles from '~/styles/profile/TextAvatarEditor.module.css';
 export default function TextAvatarEditor() {
   const [showDialog, setShowDialog] = useState(false);
 
+  const systemDefault = useMemo(() => getDefaultTextAvatar(), []);
+
   // default as in default values for the form (what is currently set in store)
-  const [defaultTextAvatar, setDefaultTextAvatar] = useState<TextAvatar>(null as unknown as TextAvatar);
+  // maybe initial is a better name?
+  const [defaultTextAvatar, setDefaultTextAvatar] = useState<TextAvatar>();
 
   // can't use formikRef.current.isSubmitting because this component wouldn't re-render on submit (only the form would)
   // so the LoadingButton doesn't enter it's loading state - it won't visually change
@@ -41,7 +59,7 @@ export default function TextAvatarEditor() {
 
   const formikRef = useRef<FormikProps<TextAvatar>>(null);
 
-  // using SWR like useEffect(..., [])
+  // using SWR like useEffect(..., []) for async data fetching while loading component
   useSWR('defaultTextAvatar', async () => {
     const textAvatar = await getTextAvatarFromStore();
 
@@ -53,48 +71,71 @@ export default function TextAvatarEditor() {
 
   // system default as in what they had before changing any settings
   const resetToSystemDefault = useCallback(() => {
-    const systemDefault = getDefaultTextAvatar();
-
     formikRef.current!.setValues(systemDefault);
 
     updateTextAvatarCss(systemDefault);
-  }, []);
+  }, [systemDefault]);
 
-  const cancelAndClose = () => {
-    updateTextAvatarCss(defaultTextAvatar);
+  const cancelAndClose = useCallback(() => {
+    updateTextAvatarCss(defaultTextAvatar!);
     handleClose();
-  };
+  }, [defaultTextAvatar]);
 
   const handleSubmit: React.ComponentProps<typeof Formik<TextAvatar>>['onSubmit']
-    = async (values, { resetForm }) => {
-      const success = await updateTextAvatarStore(values);
+    = useCallback(
+      async (values, { resetForm }) => {
+        const success = await updateTextAvatarStore(values);
 
-      if (success) {
-        setDefaultTextAvatar(values);
+        if (success) {
+          setDefaultTextAvatar(values);
 
-        toast.success('Saved.', {
-          position: 'bottom-center',
-        });
-        handleClose();
-      } else { // shouldn't happen
-        toast.error('Please try again', {
-          position: 'bottom-center',
-        });
-      }
+          toast.success('Saved.', {
+            position: 'bottom-center',
+          });
+          handleClose();
+        } else { // shouldn't happen
+          toast.error('Please try again', {
+            position: 'bottom-center',
+          });
+        }
 
-      resetForm({ values });
-      updateTextAvatarCss(values);
-    };
+        resetForm({ values });
+        updateTextAvatarCss(values);
+      },
+      []
+    );
 
-  // FIXME: the button's text wraps on mobile
-  // TODO: show colours of previous & default
-  const resetButtonOptions = useMemo<ActionedSplitButtonProps['options']>(() => (
+  const resetButtonOptions = useMemo<Option[]>(() => (
     [
       {
-        content: (
+        actionButtonContent: (
           <>
-            Reset to previous
+            <Box
+              display={{ xs: 'none', sm: 'inline' }}
+              component="span"
+            >
+              Reset to previous
+            </Box>
+            <Box
+              display={{ xs: 'inline', sm: 'none' }}
+              component="span"
+            >
+              Previous
+            </Box>
           </>
+        ),
+        menuItemContent: (
+          <StyledMenuItemContent>
+            Reset to previous
+            <StyledAvatar
+              sx={{
+                bgcolor: defaultTextAvatar?.['avatar-bg'],
+                color: defaultTextAvatar?.['avatar-fg'],
+              }}
+            >
+              A
+            </StyledAvatar>
+          </StyledMenuItemContent>
         ),
         actionButtonProps: {
           form: 'text-avatar-form',
@@ -102,19 +143,43 @@ export default function TextAvatarEditor() {
         },
       },
       {
-        content: (
+        actionButtonContent: (
           <>
-            Reset to default
+            <Box
+              display={{ xs: 'none', sm: 'inline' }}
+              component="span"
+            >
+              Reset to default
+            </Box>
+            <Box
+              display={{ xs: 'inline', sm: 'none' }}
+              component="span"
+            >
+              Default
+            </Box>
           </>
+        ),
+        menuItemContent: (
+          <StyledMenuItemContent>
+            Reset to default
+            <StyledAvatar
+              sx={{
+                bgcolor: systemDefault['avatar-bg'],
+                color: systemDefault['avatar-fg'],
+              }}
+            >
+              A
+            </StyledAvatar>
+          </StyledMenuItemContent>
         ),
         action: resetToSystemDefault,
       },
     ]
-  ), [resetToSystemDefault]);
+  ), [defaultTextAvatar, systemDefault, resetToSystemDefault]);
 
   return (
     <div>
-      {/* TODO: on hover show like a pencil to signify that it's editable */}
+      {/* TODO?: on hover show like a pencil to signify that it's editable */}
       <TextAvatarComponent
         className={styles.textAvatar}
         size="120px"
@@ -126,17 +191,17 @@ export default function TextAvatarEditor() {
 
       <StyledCloseButtonDialog
         open={showDialog}
-        onClose={handleClose}
+        onClose={cancelAndClose}
         maxWidth="xs"
         fullWidth
         dialogTitle="Avatar"
       >
         <DialogContent dividers>
           <Formik
-            initialValues={defaultTextAvatar}
+            initialValues={defaultTextAvatar!}
             onSubmit={handleSubmit}
             onReset={() => {
-              updateTextAvatarCss(defaultTextAvatar);
+              updateTextAvatarCss(defaultTextAvatar!);
             }}
             validate={(values) => { // basically onChange
               updateTextAvatarCss(values);
@@ -156,7 +221,7 @@ export default function TextAvatarEditor() {
 
               return (
                 <Stack
-                  spacing={1}
+                  gap={1}
                   component="form"
                   id="text-avatar-form"
                   onSubmit={handleSubmit}
@@ -233,6 +298,7 @@ export default function TextAvatarEditor() {
             }}
             menuItemProps={{
               dense: true,
+              selected: false,
             }}
           />
           <LoadingButton
