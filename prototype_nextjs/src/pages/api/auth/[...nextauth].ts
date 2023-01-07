@@ -1,11 +1,69 @@
 import NextAuth, { type NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import axios from 'axios';
+import type { z } from 'zod';
 
 import prisma from '~/lib/prisma';
+import { isCorrectPassword } from '~/lib/user';
+import SignInSchema from '~/schemas/user/signIn';
 import type { SessionUser } from '~/types';
-import type { RequestSchema as SignInPayload, ResponseSchema as SignInResponse } from '~/pages/api/user/signIn';
 import type { ResponseSchema as GetUserFromSessionResponse } from '~/pages/api/user/get-user-from-session';
+
+/**
+ * Get a user from the database.
+ * The user is identified by their email and password.
+ * If the user is not found, null is returned.
+ *
+ * @param credentials The email and password of the user. See {@link SignInSchema}.
+ * @returns The user. See {@link SessionUser}.
+ */
+async function getUser(credentials: z.infer<typeof SignInSchema>): Promise<SessionUser | null> {
+  const safeParseResult = SignInSchema.safeParse(credentials);
+
+  if (!safeParseResult.success) {
+    return null;
+  }
+
+  const { email, password } = safeParseResult.data;
+
+  const user = await prisma.user.findUnique({
+    where: {
+      email: email.toLowerCase(),
+    },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      hashedPassword: true,
+      isManager: true,
+    },
+  });
+
+  if (!user) return null;
+
+  if (!await isCorrectPassword(password, user.hashedPassword)) return null;
+
+  return {
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    image: null,
+    isManager: user.isManager,
+  };
+}
+
+async function hasLeftCompany(userId: string): Promise<boolean | undefined> {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+    select: {
+      leftCompany: true,
+    },
+  });
+
+  return user?.leftCompany;
+}
 
 export const authOptions: NextAuthOptions = {
   // Configure one or more authentication providers
@@ -45,15 +103,9 @@ export const authOptions: NextAuthOptions = {
           return data.user;
         }
 
-        const payload: SignInPayload = {
-          email: credentials!.email,
-          password: credentials!.password,
-        };
+        const user = await getUser(credentials!);
 
-        const { data } = await axios.post<SignInResponse>(`${process.env.NEXTAUTH_URL}/api/user/signIn`, payload);
-
-        if (data.success) return data.user;
-        // throw new Error(data.reason);
+        if (user) return user;
         return null;
       },
     }),
@@ -65,16 +117,7 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     async signIn({ user, account }) {
-      const { leftCompany } = await prisma.user.findUniqueOrThrow({
-        where: {
-          id: user.id,
-        },
-        select: {
-          leftCompany: true,
-        },
-      });
-
-      const isAllowedToSignIn = !leftCompany;
+      const isAllowedToSignIn = !await hasLeftCompany(user.id);
 
       if (isAllowedToSignIn) return true;
 
