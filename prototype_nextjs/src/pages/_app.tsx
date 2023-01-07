@@ -167,21 +167,19 @@ export default function App({
 
         <ThemedToaster />
 
-        <Box height="100vh">
-          {noAuth ? (
-            <Component {...pageProps} />
-          ) : (
-            <Auth>
-              {layout ? (
-                <Layout {...layout}>
-                  <Component {...pageProps} />
-                </Layout>
-              ) : (
+        {noAuth ? (
+          <Component {...pageProps} />
+        ) : (
+          <Auth>
+            {layout ? (
+              <Layout {...layout}>
                 <Component {...pageProps} />
-              )}
-            </Auth>
-          )}
-        </Box>
+              </Layout>
+            ) : (
+              <Component {...pageProps} />
+            )}
+          </Auth>
+        )}
       </CssVarsProvider>
     </SessionProvider>
   );

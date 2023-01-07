@@ -138,7 +138,7 @@ const SignInPage: AppPage = () => {
   return (
     <Box
       position="relative"
-      height={1}
+      height="100vh"
       component="main"
       sx={(theme) => ({
         [theme.getColorSchemeSelector('light')]: {

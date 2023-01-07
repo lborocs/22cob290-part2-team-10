@@ -13,7 +13,7 @@ const Custom500 = () => (
   <Stack
     alignItems="center"
     justifyContent="center"
-    height={1}
+    height="100vh"
     maxWidth="sm"
     gap={1}
     marginX="auto"
