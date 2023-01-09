@@ -31,8 +31,8 @@ export default function NavTabs({ pages }: NavTabsProps) {
       height={1}
       display={{ xs: 'none', lg: 'flex' }}
       component="nav"
-      aria-label="website navigation"
-      role="tablist"
+      role="navigation"
+      aria-label="main"
     >
       {pages.map((page) => (
         <NavTab
@@ -55,9 +55,7 @@ function NavTab({ label, href }: PageData) {
 
   return (
     <ButtonBase
-      aria-label={label}
-      aria-selected={active}
-      role="tab"
+      data-active={active}
       component={NextLinkComposed}
       to={href}
       sx={(theme) => ({
@@ -92,7 +90,7 @@ function NavTab({ label, href }: PageData) {
         },
 
         // active
-        '&:where([aria-selected="true"])': {
+        '&:where([data-active="true"])': {
           color: theme.vars.palette.primary.main,
           '::after': {
             transform: 'scaleY(1)',
