@@ -41,7 +41,11 @@ export default function PolicyTooltip() {
         </Typography>
       }
     >
-      <IconButton>
+      <IconButton
+        sx={{
+          cursor: 'help',
+        }}
+      >
         <InfoIcon />
       </IconButton>
     </BootstrapTooltip>
