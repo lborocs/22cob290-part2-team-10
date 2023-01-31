@@ -258,7 +258,7 @@ so that we don't repeatedly set the user in each page: instead we just set the u
 - [Prettier](https://prettier.io/) (formatting) has been set up because it's a waste of time debating code format
   - If using VSCode, install the Prettier plugin and you just have to save a file to run the formatter
   - See https://prettier.io/docs/en/editors.html if not using VSCode
-  - Thoguh there should be a GitHub action set up to format code when you make a pull request
+  - A git pre-commit hook has been set up to automatically format changed files using [pretty-quick](https://prettier.io/docs/en/precommit.html#option-2-pretty-quickhttpsgithubcomazzpretty-quick)
 - ESLint (code style) has been set up
   - **Make sure your editor/IDE has ESLint support enabled, e.g. VSCode has the ESLint extension**
 
@@ -504,7 +504,9 @@ from the
 | [TypeScript](https://www.typescriptlang.org/)                                         | 4.9           | Programming language                                                                                   |
 | [ESLint](https://eslint.org/)                                                         | 8.31          | Static code analysis                                                                                   |
 | [Typescript ESLint](https://typescript-eslint.io/)                                    | 5.48          | ESLint Typescript support                                                                              |
-| [Prettier](https://prettier.io/)                                                      | 2.8           | Code formatting                                                                                        |
+| [Prettier](https://prettier.io/)                                                      | 2.8           | Code formatting ([#56][iPrettier])                                                                     |
+| [husky](https://github.com/typicode/husky)                                            | 8.0           | Git hooks                                                                                              |
+| [pretty-quick](https://github.com/azz/pretty-quick)                                   | 3.1           | Run prettier on changed files as part of pre-commit Git hook                                           |
 | [React](https://reactjs.org/)                                                         | 18.2          | UI library                                                                                             |
 | [Next.Js](https://nextjs.org/)                                                        | 13.1          | Full stack framework                                                                                   |
 | [NextAuth.js](https://next-auth.js.org/)                                              | 4.17          | Authentication                                                                                         |
@@ -541,3 +543,4 @@ from the
 [iHashids]: https://github.com/lborocs/22cob290-part2-team-10/issues/16
 [iJwt]: https://github.com/lborocs/22cob290-part2-team-10/issues/19
 [iMui]: https://github.com/lborocs/22cob290-part2-team-10/issues/40
+[iPrettier]: https://github.com/lborocs/22cob290-part2-team-10/issues/56
