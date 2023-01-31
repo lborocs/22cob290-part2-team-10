@@ -23,7 +23,7 @@
       - [Examples](#examples)
     - [User](#user)
     - [Client-side state management](#client-side-state-management)
-    - [Code Style](#code-style)
+    - [Code Style/Formatting](#code-styleformatting)
       - [Absolute Imports](#absolute-imports)
       - [Import Order](#import-order)
   - [Pages](#pages-1)
@@ -253,11 +253,14 @@ export default function ExamplePage() {
 We are using zustand in a way that is essentially dependency injection - we inject the user in `_app.jsx`. We do this
 so that we don't repeatedly set the user in each page: instead we just set the user in one place - in `_app.jsx`.
 
-#### Code Style
+#### Code Style/Formatting
 
-- Dara has set up a too strict but decent ESLint config (basically a code style)
+- [Prettier](https://prettier.io/) (formatting) has been set up because it's a waste of time debating code format
+  - If using VSCode, install the Prettier plugin and you just have to save a file to run the formatter
+  - See https://prettier.io/docs/en/editors.html if not using VSCode
+  - Thoguh there should be a GitHub action set up to format code when you make a pull request
+- ESLint (code style) has been set up
   - **Make sure your editor/IDE has ESLint support enabled, e.g. VSCode has the ESLint extension**
-  - This is important because we're being marked on the quality of our code
 
 ##### Absolute Imports
 
@@ -501,6 +504,7 @@ from the
 | [TypeScript](https://www.typescriptlang.org/)                                         | 4.9           | Programming language                                                                                   |
 | [ESLint](https://eslint.org/)                                                         | 8.31          | Static code analysis                                                                                   |
 | [Typescript ESLint](https://typescript-eslint.io/)                                    | 5.48          | ESLint Typescript support                                                                              |
+| [Prettier](https://prettier.io/)                                                      | 2.8           | Code formatting                                                                                        |
 | [React](https://reactjs.org/)                                                         | 18.2          | UI library                                                                                             |
 | [Next.Js](https://nextjs.org/)                                                        | 13.1          | Full stack framework                                                                                   |
 | [NextAuth.js](https://next-auth.js.org/)                                              | 4.17          | Authentication                                                                                         |
