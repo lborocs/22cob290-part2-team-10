@@ -7,6 +7,7 @@ import { unstable_getServerSession } from 'next-auth/next';
 import { signOut } from 'next-auth/react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import Stack from '@mui/material/Stack';
 
@@ -29,7 +30,13 @@ const ProfilePage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ inviter }) => {
   return (
-    <Box flexGrow={1} component="main">
+    <Container
+      component="main"
+      fixed
+      sx={{
+        flexGrow: 1,
+      }}
+    >
       <Head>
         <title>Profile - Make-It-All</title>
       </Head>
@@ -70,7 +77,7 @@ const ProfilePage: AppPage<
       >
         Sign Out
       </Button>
-    </Box>
+    </Container>
   );
 };
 
