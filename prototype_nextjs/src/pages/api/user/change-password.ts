@@ -11,7 +11,7 @@ import { authOptions } from '~/pages/api/auth/[...nextauth]';
 export type RequestSchema = z.infer<typeof ChangePasswordSchema>;
 
 export type ResponseSchema = {
-  success: boolean
+  success: boolean;
 };
 
 /**
@@ -48,7 +48,7 @@ export type ResponseSchema = {
  */
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseSchema | ErrorResponse>,
+  res: NextApiResponse<ResponseSchema | ErrorResponse>
 ) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
@@ -83,7 +83,7 @@ export default async function handler(
     },
   });
 
-  if (!await isCorrectPassword(currentPassword, hashedPassword)) {
+  if (!(await isCorrectPassword(currentPassword, hashedPassword))) {
     return res.status(200).json({
       success: false,
     });

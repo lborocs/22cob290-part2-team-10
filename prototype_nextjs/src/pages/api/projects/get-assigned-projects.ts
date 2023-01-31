@@ -9,9 +9,9 @@ import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 export type ResponseSchema = Prisma.ProjectGetPayload<{
   select: {
-    id: true,
-    name: true,
-  },
+    id: true;
+    name: true;
+  };
 }>[];
 
 /**
@@ -32,7 +32,7 @@ export type ResponseSchema = Prisma.ProjectGetPayload<{
  */
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseSchema | ErrorResponse>,
+  res: NextApiResponse<ResponseSchema | ErrorResponse>
 ) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method Not Allowed' });
@@ -44,7 +44,7 @@ export default async function handler(
     return res.status(401).json({ error: 'You must be signed in.' });
   }
 
-  const user = (session.user as SessionUser);
+  const user = session.user as SessionUser;
 
   let projects: ResponseSchema;
 
@@ -65,7 +65,8 @@ export default async function handler(
     });
   }
 
-  res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=299')
+  res
+    .setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=299')
     .status(200)
     .json(projects);
 }

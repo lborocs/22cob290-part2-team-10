@@ -1,6 +1,9 @@
 import IconButton from '@mui/material/IconButton';
 import InfoIcon from '@mui/icons-material/Info';
-import Tooltip, { type TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
+import Tooltip, {
+  type TooltipProps,
+  tooltipClasses,
+} from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 
@@ -28,9 +31,12 @@ export default function PolicyTooltip() {
       aria-label="display password policy"
       title={
         <Typography variant="caption">
-          At least 1 uppercase<br />
-          At least 1 lowercase<br />
-          At least 1 number<br />
+          At least 1 uppercase
+          <br />
+          At least 1 lowercase
+          <br />
+          At least 1 number
+          <br />
           At least 1 special symbol
         </Typography>
       }

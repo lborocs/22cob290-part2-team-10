@@ -49,8 +49,8 @@ const bgImageLoader: ImageLoader = ({ src, width, quality }) => {
 };
 
 type SignInFormData = {
-  email: string
-  password: string
+  email: string;
+  password: string;
 };
 
 const SignInPage: AppPage = () => {
@@ -58,76 +58,84 @@ const SignInPage: AppPage = () => {
 
   // handle using this as signIn page for auth flow
   const { callbackUrl } = router.query;
-  const nextUrl = callbackUrl as string | undefined ?? '/home';
+  const nextUrl = (callbackUrl as string | undefined) ?? '/home';
 
-  const handleSubmit: React.ComponentProps<typeof Formik<SignInFormData>>['onSubmit']
-    = async ({ email, password }, { setFieldError }) => {
-      // Unfocus the focused element so that an error from backend doesn't almost immediately
-      // disappear if they submitted the form while focused on an element (i.e. pressed enter).
-      // Because touched will immediately update to true when they unfocus from the element
-      document.querySelector<HTMLInputElement>(':focus')?.blur();
+  const handleSubmit: React.ComponentProps<
+    typeof Formik<SignInFormData>
+  >['onSubmit'] = async ({ email, password }, { setFieldError }) => {
+    // Unfocus the focused element so that an error from backend doesn't almost immediately
+    // disappear if they submitted the form while focused on an element (i.e. pressed enter).
+    // Because touched will immediately update to true when they unfocus from the element
+    document.querySelector<HTMLInputElement>(':focus')?.blur();
 
-      toast.dismiss('signInFailed');
+    toast.dismiss('signInFailed');
 
-      const resp = (await signIn('credentials', {
-        redirect: false,
-        email,
-        password,
-        callbackUrl: nextUrl,
-      }))!;
+    const resp = (await signIn('credentials', {
+      redirect: false,
+      email,
+      password,
+      callbackUrl: nextUrl,
+    }))!;
 
-      // unspecific signin feedback because spec letter says:
-      // "We would like suitable aspects of data protection considered so the sys‐
-      // tem cannot be exploited to target specific individual"
-      if (resp.error) {
-        // https://next-auth.js.org/configuration/pages#error-codes
-        switch (resp.error) {
-          case 'CredentialsSignin': // failed signin
-            toast.error('Could not sign in, please check your credentials.', {
-              id: 'signInFailed',
-              position: 'top-center',
-            });
-            setFieldError('email', '');
-            setFieldError('password', '');
-            break;
+    // unspecific signin feedback because spec letter says:
+    // "We would like suitable aspects of data protection considered so the sys‐
+    // tem cannot be exploited to target specific individual"
+    if (resp.error) {
+      // https://next-auth.js.org/configuration/pages#error-codes
+      switch (resp.error) {
+        case 'CredentialsSignin': // failed signin
+          toast.error('Could not sign in, please check your credentials.', {
+            id: 'signInFailed',
+            position: 'top-center',
+          });
+          setFieldError('email', '');
+          setFieldError('password', '');
+          break;
 
-          case 'AccessDenied': { // left the company
-            const errorMsg = 'You no longer have access to this website';
-            toast.dismiss();
-            toast.error(errorMsg, {
-              id: 'signInFailed',
-              position: 'top-center',
-            });
-            setFieldError('email', errorMsg);
-            break;
-          }
-
-          default: // shouldn't happen
-            console.error(resp);
-            toast.dismiss();
-            toast.error(resp.error, {
-              id: 'signInFailed',
-              position: 'top-center',
-            });
-          // setFieldError('email', resp.error);
-          // setFieldError('password', resp.error);
+        case 'AccessDenied': {
+          // left the company
+          const errorMsg = 'You no longer have access to this website';
+          toast.dismiss();
+          toast.error(errorMsg, {
+            id: 'signInFailed',
+            position: 'top-center',
+          });
+          setFieldError('email', errorMsg);
+          break;
         }
-      } else {
-        toast.dismiss();
-        router.push(resp.url!);
+
+        default: // shouldn't happen
+          console.error(resp);
+          toast.dismiss();
+          toast.error(resp.error, {
+            id: 'signInFailed',
+            position: 'top-center',
+          });
+        // setFieldError('email', resp.error);
+        // setFieldError('password', resp.error);
       }
-    };
+    } else {
+      toast.dismiss();
+      router.push(resp.url!);
+    }
+  };
 
   useEffect(() => {
     if (callbackUrl) {
-      const toastId = toast.error((t) => (
-        <span onClick={() => toast.dismiss(t.id)} style={{ cursor: 'pointer' }}>
-          You need to sign in first.
-        </span>
-      ), {
-        id: 'needToSignIn',
-        duration: Infinity,
-      });
+      const toastId = toast.error(
+        (t) => (
+          <span
+            onClick={() => toast.dismiss(t.id)}
+            style={{ cursor: 'pointer' }}
+          >
+            You need to sign in first.
+          </span>
+        ),
+        {
+          id: 'needToSignIn',
+          duration: Infinity,
+        }
+      );
 
       return () => {
         toast.dismiss(toastId);
@@ -175,28 +183,30 @@ const SignInPage: AppPage = () => {
         />
       </Box>
 
-      <Paper sx={(theme) => ({
-        position: 'absolute',
-        inset: 0,
-        margin: 'auto',
-        height: 'fit-content',
-        width: {
-          xs: '85vw',
-          sm: '70vw',
-          md: '50vw',
-          lg: '45vw',
-          xl: '35vw',
-        },
-        padding: {
-          xs: 3,
-          md: 8,
-        },
-        borderRadius: 3,
-        [theme.getColorSchemeSelector('light')]: {
-          bgcolor: theme.vars.palette.makeItAllGrey.main,
-          boxShadow: 3,
-        },
-      })}>
+      <Paper
+        sx={(theme) => ({
+          position: 'absolute',
+          inset: 0,
+          margin: 'auto',
+          height: 'fit-content',
+          width: {
+            xs: '85vw',
+            sm: '70vw',
+            md: '50vw',
+            lg: '45vw',
+            xl: '35vw',
+          },
+          padding: {
+            xs: 3,
+            md: 8,
+          },
+          borderRadius: 3,
+          [theme.getColorSchemeSelector('light')]: {
+            bgcolor: theme.vars.palette.makeItAllGrey.main,
+            boxShadow: 3,
+          },
+        })}
+      >
         <Box marginBottom={2.5}>
           <Image
             className={styles.logo}
@@ -285,7 +295,11 @@ const SignInPage: AppPage = () => {
 SignInPage.noAuth = true;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await unstable_getServerSession(context.req, context.res, authOptions);
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
 
   // if signed in, redirect to home page or callbackUrl
   if (session && session.user) {

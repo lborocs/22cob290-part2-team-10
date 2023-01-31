@@ -9,10 +9,10 @@ import type { PageData } from '~/components/layout/NavigationBar';
 import { extractPathname } from '~/utils';
 
 export type NavCollapseProps = {
-  pages: PageData[]
-  open: boolean
-  closeCollapse(): void
-  collapseId: string
+  pages: PageData[];
+  open: boolean;
+  closeCollapse(): void;
+  collapseId: string;
 };
 
 /**

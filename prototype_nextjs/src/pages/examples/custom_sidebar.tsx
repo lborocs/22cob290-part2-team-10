@@ -9,8 +9,8 @@ import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 type Store = {
-  name: string
-  setName: (name: string) => void
+  name: string;
+  setName: (name: string) => void;
 };
 
 const useStore = create<Store>((set) => ({
@@ -34,10 +34,7 @@ const ExamplePage: AppPage = () => {
       <Typography component="span" marginRight={1}>
         Enter a name:
       </Typography>
-      <input
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
+      <input value={name} onChange={(e) => setName(e.target.value)} />
     </main>
   );
 };
@@ -54,13 +51,11 @@ function Sidebar() {
         <li>Arsenal</li>
         <li>Man City</li>
         <li>???</li>
-        <li>{'Doesn\'t Matter'}</li>
-        <li>{'Don\'t care'}</li>
+        <li>{"Doesn't Matter"}</li>
+        <li>{"Don't care"}</li>
       </ol>
 
-      <Typography>
-        name = {name}
-      </Typography>
+      <Typography>name = {name}</Typography>
     </div>
   );
 }
@@ -73,7 +68,11 @@ ExamplePage.layout = {
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await unstable_getServerSession(context.req, context.res, authOptions);
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
 
   if (!session || !session.user) {
     return { notFound: true };

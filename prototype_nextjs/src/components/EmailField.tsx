@@ -11,7 +11,10 @@ export type EmailFieldProps = TextFieldProps;
  * - autoComplete of `username`
  * - label of `Email address`
  */
-export default forwardRef(function EmailField(props: EmailFieldProps, ref: React.ForwardedRef<HTMLInputElement>) {
+export default forwardRef(function EmailField(
+  props: EmailFieldProps,
+  ref: React.ForwardedRef<HTMLInputElement>
+) {
   return (
     <TextField
       type="email"

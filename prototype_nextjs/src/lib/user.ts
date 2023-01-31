@@ -15,4 +15,5 @@ export const hashPassword = (raw: string) => bcrypt.hash(raw, saltRounds);
  * @param hash The hashed password
  * @returns
  */
-export const isCorrectPassword = (password: string, hash: string) => bcrypt.compare(password, hash);
+export const isCorrectPassword = (password: string, hash: string) =>
+  bcrypt.compare(password, hash);

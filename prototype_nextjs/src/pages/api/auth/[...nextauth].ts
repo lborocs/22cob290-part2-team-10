@@ -17,7 +17,9 @@ import type { ResponseSchema as GetUserFromSessionResponse } from '~/pages/api/u
  * @param credentials The email and password of the user. See {@link SignInSchema}.
  * @returns The user. See {@link SessionUser}.
  */
-async function getUser(credentials: z.infer<typeof SignInSchema>): Promise<SessionUser | null> {
+async function getUser(
+  credentials: z.infer<typeof SignInSchema>
+): Promise<SessionUser | null> {
   const safeParseResult = SignInSchema.safeParse(credentials);
 
   if (!safeParseResult.success) {
@@ -41,7 +43,7 @@ async function getUser(credentials: z.infer<typeof SignInSchema>): Promise<Sessi
 
   if (!user) return null;
 
-  if (!await isCorrectPassword(password, user.hashedPassword)) return null;
+  if (!(await isCorrectPassword(password, user.hashedPassword))) return null;
 
   return {
     id: user.id,
@@ -94,12 +96,14 @@ export const authOptions: NextAuthOptions = {
          */
         if (credentials!.refetchUser) {
           const { data } = await axios.get<GetUserFromSessionResponse>(
-            `${process.env.NEXTAUTH_URL}/api/user/get-user-from-session`, {
-            headers: {
-              // because we're making the request from the server, we basically pretend to be the user making the request
-              cookie: req.headers!.cookie,
-            },
-          });
+            `${process.env.NEXTAUTH_URL}/api/user/get-user-from-session`,
+            {
+              headers: {
+                // because we're making the request from the server, we basically pretend to be the user making the request
+                cookie: req.headers!.cookie,
+              },
+            }
+          );
           return data.user;
         }
 
@@ -117,7 +121,7 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     async signIn({ user, account }) {
-      const isAllowedToSignIn = !await hasLeftCompany(user.id);
+      const isAllowedToSignIn = !(await hasLeftCompany(user.id));
 
       if (isAllowedToSignIn) return true;
 

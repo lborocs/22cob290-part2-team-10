@@ -12,8 +12,8 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import PolicyTooltip from '~/components/PolicyTooltip';
 
 export type PasswordFieldProps = TextFieldProps & {
-  policyTooltip?: boolean
-  toggleButtonProps?: IconButtonProps
+  policyTooltip?: boolean;
+  toggleButtonProps?: IconButtonProps;
 };
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
@@ -33,20 +33,20 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
  * - label of `Password`
  * - autoComplete of `current-password`
  */
-export default forwardRef(function PasswordField({
-  label = 'Password',
-  autoComplete = 'current-password',
-  color = 'primary',
-  InputProps,
-  policyTooltip,
-  toggleButtonProps: {
-    sx: toggleButtonSx,
-    ...toggleButtonProps
-  } = {
-    sx: [],
-  },
-  ...props
-}: PasswordFieldProps, ref: React.ForwardedRef<HTMLInputElement>) {
+export default forwardRef(function PasswordField(
+  {
+    label = 'Password',
+    autoComplete = 'current-password',
+    color = 'primary',
+    InputProps,
+    policyTooltip,
+    toggleButtonProps: { sx: toggleButtonSx, ...toggleButtonProps } = {
+      sx: [],
+    },
+    ...props
+  }: PasswordFieldProps,
+  ref: React.ForwardedRef<HTMLInputElement>
+) {
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePassword = () => setShowPassword((show) => !show);
@@ -62,10 +62,15 @@ export default forwardRef(function PasswordField({
           <InputAdornment position="end">
             <Stack
               direction="row"
-              divider={<Divider orientation="vertical" variant="middle" flexItem />}
+              divider={
+                <Divider orientation="vertical" variant="middle" flexItem />
+              }
             >
               {policyTooltip && <PolicyTooltip />}
-              <Tooltip title={showPassword ? 'Hide password' : 'Show password'} describeChild>
+              <Tooltip
+                title={showPassword ? 'Hide password' : 'Show password'}
+                describeChild
+              >
                 <IconButton
                   onClick={togglePassword}
                   edge="end"
@@ -81,7 +86,9 @@ export default forwardRef(function PasswordField({
                       };
                     },
                     // https://mui.com/system/getting-started/the-sx-prop/#passing-the-sx-prop
-                    ...(Array.isArray(toggleButtonSx) ? toggleButtonSx : [toggleButtonSx]),
+                    ...(Array.isArray(toggleButtonSx)
+                      ? toggleButtonSx
+                      : [toggleButtonSx]),
                   ]}
                   {...toggleButtonProps}
                 >

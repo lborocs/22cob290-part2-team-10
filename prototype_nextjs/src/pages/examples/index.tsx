@@ -3,7 +3,9 @@ import Head from 'next/head';
 import Divider from '@mui/material/Divider';
 import MuiLink from '@mui/material/Link';
 import List, { type ListProps } from '@mui/material/List';
-import ListSubheader, { type ListSubheaderProps } from '@mui/material/ListSubheader';
+import ListSubheader, {
+  type ListSubheaderProps,
+} from '@mui/material/ListSubheader';
 import ListItem, { type ListItemProps } from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
@@ -18,8 +20,10 @@ const ExampleList = ({
   header,
   listStyle = 'disc',
   ...props
-}: ListProps & { header: React.ReactNode, listStyle?: CSSProperties['listStyle'] }
-) => (
+}: ListProps & {
+  header: React.ReactNode;
+  listStyle?: CSSProperties['listStyle'];
+}) => (
   <List
     subheader={<StyledListSubheader>{header}</StyledListSubheader>}
     dense
@@ -52,13 +56,11 @@ const BulletListItemLink = ({
     }}
     {...props}
   >
-    <ListItemButton
-      component={NextLinkComposed}
-      to={href}
-    >
+    <ListItemButton component={NextLinkComposed} to={href}>
       <ListItemText>
-        <MuiLink component="span"
-        // only using MuiLink for styling
+        <MuiLink
+          component="span"
+          // only using MuiLink for styling
         >
           {children}
         </MuiLink>
@@ -85,7 +87,9 @@ export default function ExamplesPage() {
         Examples
       </Typography>
       <Typography variant="caption">
-        {'Note: You need to be signed in (it\'ll redirect you to the sign in page)'}
+        {
+          "Note: You need to be signed in (it'll redirect you to the sign in page)"
+        }
       </Typography>
 
       <Paper
@@ -96,12 +100,7 @@ export default function ExamplesPage() {
         }}
       >
         <nav>
-          <List
-            dense
-            component={Stack}
-            divider={<Divider />}
-            gap={1}
-          >
+          <List dense component={Stack} divider={<Divider />} gap={1}>
             <section>
               <ExampleList header="Template">
                 <BulletListItemLink href="/examples/page_template">
@@ -113,10 +112,16 @@ export default function ExamplesPage() {
             <section>
               <ExampleList header="User">
                 <BulletListItemLink href="/examples/user_ssr">
-                  Getting user from <code>user</code> prop from SSR <small><strong>(not recommended)</strong></small>
+                  Getting user from <code>user</code> prop from SSR{' '}
+                  <small>
+                    <strong>(not recommended)</strong>
+                  </small>
                 </BulletListItemLink>
                 <BulletListItemLink href="/examples/user_userstore">
-                  Getting user from <code>userStore</code> <small><strong>(recommended)</strong></small>
+                  Getting user from <code>userStore</code>{' '}
+                  <small>
+                    <strong>(recommended)</strong>
+                  </small>
                 </BulletListItemLink>
               </ExampleList>
             </section>

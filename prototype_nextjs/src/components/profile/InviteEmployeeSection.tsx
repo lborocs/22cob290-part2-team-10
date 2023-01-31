@@ -54,7 +54,10 @@ export default function InviteEmployeeSection() {
 
   const fetchInviteUrl = async (config?: AxiosRequestConfig) => {
     try {
-      const { data } = await axios.get<InviteUrlResponse>('/api/user/get-invite-url', config);
+      const { data } = await axios.get<InviteUrlResponse>(
+        '/api/user/get-invite-url',
+        config
+      );
       setInviteUrl(data.inviteUrl);
     } catch (e) {
       console.error(e);
@@ -75,7 +78,8 @@ export default function InviteEmployeeSection() {
     reset();
 
     // artificial delay (only in development)
-    process.env.NODE_ENV === 'development' && await new Promise((res) => setTimeout(res, 1000));
+    process.env.NODE_ENV === 'development' &&
+      (await new Promise((res) => setTimeout(res, 1000)));
 
     await fetchInviteUrl();
   };
@@ -100,33 +104,36 @@ export default function InviteEmployeeSection() {
   // ourselves
   const formControlSx: SxProps | undefined = copySucceeded
     ? {
-      '& .MuiFormHelperText-root': {
-        color: 'success.main',
-      },
-      '& .MuiOutlinedInput-root': {
-        '& fieldset': {
-          borderColor: 'success.main',
+        '& .MuiFormHelperText-root': {
+          color: 'success.main',
         },
-        '&:hover fieldset': {
-          borderColor: 'success.main',
+        '& .MuiOutlinedInput-root': {
+          '& fieldset': {
+            borderColor: 'success.main',
+          },
+          '&:hover fieldset': {
+            borderColor: 'success.main',
+          },
+          '&.Mui-focused fieldset': {
+            borderColor: 'success.main',
+          },
         },
-        '&.Mui-focused fieldset': {
-          borderColor: 'success.main',
-        },
-      },
-    }
+      }
     : undefined;
 
-  const copyIconColor: IconButtonProps['color'] = ({
-    [CopyStatus.NOT_COPIED]: undefined,
-    [CopyStatus.SUCCEEDED]: 'success',
-    [CopyStatus.FAILED]: 'error',
-  } as const)[copyStatus];
+  const copyIconColor: IconButtonProps['color'] = (
+    {
+      [CopyStatus.NOT_COPIED]: undefined,
+      [CopyStatus.SUCCEEDED]: 'success',
+      [CopyStatus.FAILED]: 'error',
+    } as const
+  )[copyStatus];
 
   const helperText = {
     [CopyStatus.NOT_COPIED]: '',
     [CopyStatus.SUCCEEDED]: 'Copied!',
-    [CopyStatus.FAILED]: copyFailedFeedback || 'Failed to copy, please try again.',
+    [CopyStatus.FAILED]:
+      copyFailedFeedback || 'Failed to copy, please try again.',
   }[copyStatus];
 
   return (
@@ -178,9 +185,7 @@ export default function InviteEmployeeSection() {
                 </InputAdornment>
               }
             />
-            <FormHelperText>
-              {helperText}
-            </FormHelperText>
+            <FormHelperText>{helperText}</FormHelperText>
           </FormControl>
         </DialogContent>
 

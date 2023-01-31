@@ -28,19 +28,26 @@ import type { ResponseSchema as GetProjectsResponse } from '~/pages/api/projects
  *
  * @see https://javascript.plainenglish.io/how-to-create-an-optimized-real-time-search-with-react-6dd4026f4fa9
  */
-const filterProjects = memoize((query: string, projects: GetProjectsResponse) => {
-  const lcQuery = query.toLowerCase();
+const filterProjects = memoize(
+  (query: string, projects: GetProjectsResponse) => {
+    const lcQuery = query.toLowerCase();
 
-  const filteredProjects = projects.filter((project) => project.name.toLowerCase().includes(lcQuery));
+    const filteredProjects = projects.filter((project) =>
+      project.name.toLowerCase().includes(lcQuery)
+    );
 
-  return filteredProjects;
-});
+    return filteredProjects;
+  }
+);
 
 export default function ProjectsList() {
-  const { data: projects, error } = useSWR('/api/projects/get-assigned-projects', async (url) => {
-    const { data } = await axios.get<GetProjectsResponse>(url);
-    return data;
-  });
+  const { data: projects, error } = useSWR(
+    '/api/projects/get-assigned-projects',
+    async (url) => {
+      const { data } = await axios.get<GetProjectsResponse>(url);
+      return data;
+    }
+  );
 
   type Projects = NonNullable<typeof projects>;
 
@@ -147,8 +154,7 @@ export default function ProjectsList() {
             '&::-webkit-scrollbar': {
               width: '0.5em',
             },
-            '&::-webkit-scrollbar-track': {
-            },
+            '&::-webkit-scrollbar-track': {},
             '&::-webkit-scrollbar-thumb': {
               backgroundColor: 'rgba(0, 0, 0, .1)',
               outline: '1px solid slategrey',
@@ -163,30 +169,25 @@ export default function ProjectsList() {
 }
 
 // TODO?: made list bg a different colour?
-function Projects({ projects }: {
-  projects: GetProjectsResponse | undefined
-}) {
-  if (!projects) return (
-    <List sx={{
-      height: '100%',
-      overflow: 'hidden',
-      marginX: 0.5,
-    }}>
-      {range(10).map((num) => (
-        <Skeleton
-          key={num}
-          width="100%"
-          animation="wave"
-        >
-          <ListItem aria-hidden="true">
-            <ListItemText>
-              this cannot be empty
-            </ListItemText>
-          </ListItem>
-        </Skeleton>
-      ))}
-    </List>
-  );
+function Projects({ projects }: { projects: GetProjectsResponse | undefined }) {
+  if (!projects)
+    return (
+      <List
+        sx={{
+          height: '100%',
+          overflow: 'hidden',
+          marginX: 0.5,
+        }}
+      >
+        {range(10).map((num) => (
+          <Skeleton key={num} width="100%" animation="wave">
+            <ListItem aria-hidden="true">
+              <ListItemText>this cannot be empty</ListItemText>
+            </ListItem>
+          </Skeleton>
+        ))}
+      </List>
+    );
 
   // TODO: look into using react-window (virtualized list) for better performance
   // https://mui.com/material-ui/react-list/#virtualized-list
@@ -200,7 +201,11 @@ function Projects({ projects }: {
   );
 }
 
-function ProjectListItem({ project }: { project: GetProjectsResponse[number] }) {
+function ProjectListItem({
+  project,
+}: {
+  project: GetProjectsResponse[number];
+}) {
   const router = useRouter();
 
   let currentProjectUrl: string | undefined;
@@ -252,7 +257,9 @@ function ProjectListItem({ project }: { project: GetProjectsResponse[number] }) 
         >
           {renderLink}
         </Tooltip>
-      ) : renderLink}
+      ) : (
+        renderLink
+      )}
     </ListItem>
   );
 }

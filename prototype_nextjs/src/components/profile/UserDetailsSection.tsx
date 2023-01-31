@@ -16,7 +16,10 @@ import toast from 'react-hot-toast';
 
 import useUserStore from '~/store/userStore';
 import ChangeNameSchema from '~/schemas/user/changeName';
-import type { RequestSchema as ChangeNamePayload, ResponseSchema as ChangeNameResponse } from '~/pages/api/user/change-name';
+import type {
+  RequestSchema as ChangeNamePayload,
+  ResponseSchema as ChangeNameResponse,
+} from '~/pages/api/user/change-name';
 
 import styles from '~/styles/Profile.module.css';
 
@@ -29,17 +32,17 @@ const PaddedChip = styled(Chip)(({ theme }) => ({
 
 type Inviter = Prisma.UserGetPayload<{
   select: {
-    email: true,
-    name: true,
-  },
+    email: true;
+    name: true;
+  };
 }>;
 
 export type UserDetailsSectionProps = {
-  inviter: Inviter | null
+  inviter: Inviter | null;
 };
 
 type DetailsFormData = {
-  name: string
+  name: string;
 };
 
 /**
@@ -53,50 +56,59 @@ export default function UserDetailsSection({
   const setName = useUserStore((state) => state.setName);
   const { name, email, isManager } = useUserStore((state) => state.user);
 
-  const handleSubmit: React.ComponentProps<typeof Formik<DetailsFormData>>['onSubmit']
-    = async (values, { resetForm }) => {
-      // see pages/index#handleSubmit
-      document.querySelector<HTMLInputElement>(':focus')?.blur();
+  const handleSubmit: React.ComponentProps<
+    typeof Formik<DetailsFormData>
+  >['onSubmit'] = async (values, { resetForm }) => {
+    // see pages/index#handleSubmit
+    document.querySelector<HTMLInputElement>(':focus')?.blur();
 
-      const payload: ChangeNamePayload = values;
+    const payload: ChangeNamePayload = values;
 
-      const updateDetails = async () => {
-        const { data } = await axios.post<ChangeNameResponse>('/api/user/change-name', payload);
+    const updateDetails = async () => {
+      const { data } = await axios.post<ChangeNameResponse>(
+        '/api/user/change-name',
+        payload
+      );
 
-        if (data.success) {
-          const { name } = values;
+      if (data.success) {
+        const { name } = values;
 
-          /**
-           * Workaround to update the user's name in the cookie/session stored on the client when they
-           *  change their name.
-           *
-           * Without this: when changing pages, their old name will still be displayed until they sign out
-           *  and sign back in
-           *
-           * @see [...nextauth].ts
-           */
-          await signIn('credentials', {
-            refetchUser: true,
-            redirect: false,
-          });
+        /**
+         * Workaround to update the user's name in the cookie/session stored on the client when they
+         *  change their name.
+         *
+         * Without this: when changing pages, their old name will still be displayed until they sign out
+         *  and sign back in
+         *
+         * @see [...nextauth].ts
+         */
+        await signIn('credentials', {
+          refetchUser: true,
+          redirect: false,
+        });
 
-          setName(name);
+        setName(name);
 
-          resetForm({ values });
-        } else { // shouldn't happen
-          console.error(data);
-          throw new Error();
-        }
-      };
+        resetForm({ values });
+      } else {
+        // shouldn't happen
+        console.error(data);
+        throw new Error();
+      }
+    };
 
-      await toast.promise(updateDetails(), {
+    await toast.promise(
+      updateDetails(),
+      {
         loading: 'Updating...',
         error: 'Please try again.',
         success: 'Details updated.',
-      }, {
+      },
+      {
         position: 'bottom-center',
-      });
-    };
+      }
+    );
+  };
 
   return (
     <Stack gap={1}>
@@ -115,41 +127,38 @@ export default function UserDetailsSection({
         }}
         rowGap={1}
       >
-        {inviter
-          ? (
-            <>
-              <PaddedChip
-                icon={<BadgeIcon />}
-                label={
-                  <Tooltip title="Role" describeChild>
-                    <span>{isManager ? 'Manager' : 'Employee'}</span>
+        {inviter ? (
+          <>
+            <PaddedChip
+              icon={<BadgeIcon />}
+              label={
+                <Tooltip title="Role" describeChild>
+                  <span>{isManager ? 'Manager' : 'Employee'}</span>
+                </Tooltip>
+              }
+            />
+            <PaddedChip
+              icon={<SendIcon />}
+              label={
+                <>
+                  Invited by:{' '}
+                  <Tooltip title={inviter.email}>
+                    <Typography
+                      variant="inherit"
+                      color="primary"
+                      fontWeight={600}
+                      component="span"
+                    >
+                      {inviter.name}
+                    </Typography>
                   </Tooltip>
-                }
-              />
-              <PaddedChip
-                icon={<SendIcon />}
-                label={
-                  <>
-                    Invited by:
-                    {' '}
-                    <Tooltip title={inviter.email}>
-                      <Typography
-                        variant="inherit"
-                        color="primary"
-                        fontWeight={600}
-                        component="span"
-                      >
-                        {inviter.name}
-                      </Typography>
-                    </Tooltip>
-                  </>
-                }
-              />
-            </>
-          )
-          : (
-            <Chip icon={<BadgeIcon />} label="Admin" />
-          )}
+                </>
+              }
+            />
+          </>
+        ) : (
+          <Chip icon={<BadgeIcon />} label="Admin" />
+        )}
       </Stack>
       {/* details form */}
       <Formik

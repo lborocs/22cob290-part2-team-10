@@ -17,33 +17,33 @@ import PasswordField from '~/components/PasswordField';
 import StyledCloseButtonDialog from '~/components/StyledCloseButtonDialog';
 import useUserStore from '~/store/userStore';
 import ChangePasswordSchema from '~/schemas/user/changePassword';
-import type { RequestSchema as ChangePwPayload, ResponseSchema as ChangePwResponse } from '~/pages/api/user/change-password';
+import type {
+  RequestSchema as ChangePwPayload,
+  ResponseSchema as ChangePwResponse,
+} from '~/pages/api/user/change-password';
 
 import styles from '~/styles/Profile.module.css';
 
-const ChangePasswordFormSchema = ChangePasswordSchema
-  .extend({
-    confirm: z.string(), // matching `currentPassword` is sufficient validation
-  })
+const ChangePasswordFormSchema = ChangePasswordSchema.extend({
+  confirm: z.string(), // matching `currentPassword` is sufficient validation
+})
   .refine(
-    ({ currentPassword, newPassword }) => (newPassword ? currentPassword !== newPassword : true),
+    ({ currentPassword, newPassword }) =>
+      newPassword ? currentPassword !== newPassword : true,
     {
       message: 'Use a new password',
       path: ['newPassword'],
     }
   )
-  .refine(
-    ({ newPassword, confirm }) => newPassword === confirm,
-    {
-      message: 'Passwords do not match',
-      path: ['confirm'],
-    }
-  );
+  .refine(({ newPassword, confirm }) => newPassword === confirm, {
+    message: 'Passwords do not match',
+    path: ['confirm'],
+  });
 
 type ChangePwFormData = {
-  currentPassword: string
-  newPassword: string
-  confirm: string
+  currentPassword: string;
+  newPassword: string;
+  confirm: string;
 };
 
 /**
@@ -67,29 +67,33 @@ export default function ChangePasswordSection() {
   const handleOpen = () => setShowDialog(true);
   const handleClose = () => setShowDialog(false);
 
-  const handleSubmit: React.ComponentProps<typeof Formik<ChangePwFormData>>['onSubmit']
-    = async (values, { setFieldError }) => {
-      const { currentPassword, newPassword } = values;
+  const handleSubmit: React.ComponentProps<
+    typeof Formik<ChangePwFormData>
+  >['onSubmit'] = async (values, { setFieldError }) => {
+    const { currentPassword, newPassword } = values;
 
-      // see pages/index#handleSubmit
-      document.querySelector<HTMLInputElement>(':focus')?.blur();
+    // see pages/index#handleSubmit
+    document.querySelector<HTMLInputElement>(':focus')?.blur();
 
-      const payload: ChangePwPayload = {
-        currentPassword,
-        newPassword,
-      };
-
-      const { data } = await axios.post<ChangePwResponse>('/api/user/change-password', payload);
-
-      if (data.success) {
-        toast.success('Password changed.', {
-          position: 'bottom-center',
-        });
-        handleClose();
-      } else {
-        setFieldError('currentPassword', 'Incorrect password');
-      }
+    const payload: ChangePwPayload = {
+      currentPassword,
+      newPassword,
     };
+
+    const { data } = await axios.post<ChangePwResponse>(
+      '/api/user/change-password',
+      payload
+    );
+
+    if (data.success) {
+      toast.success('Password changed.', {
+        position: 'bottom-center',
+      });
+      handleClose();
+    } else {
+      setFieldError('currentPassword', 'Incorrect password');
+    }
+  };
 
   return (
     <div>
@@ -159,7 +163,9 @@ export default function ChangePasswordSection() {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     error={touched.currentPassword && !!errors.currentPassword}
-                    helperText={(touched.currentPassword && errors.currentPassword) || ' '}
+                    helperText={
+                      (touched.currentPassword && errors.currentPassword) || ' '
+                    }
                     disabled={isSubmitting}
                     policyTooltip
                   />
@@ -172,7 +178,9 @@ export default function ChangePasswordSection() {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     error={touched.newPassword && !!errors.newPassword}
-                    helperText={(touched.newPassword && errors.newPassword) || ' '}
+                    helperText={
+                      (touched.newPassword && errors.newPassword) || ' '
+                    }
                     disabled={isSubmitting}
                   />
                   <PasswordField
