@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 
 // TODO: ForumSidebar
 export default function ForumSidebar() {
-
   return (
     <Box
       sx={{

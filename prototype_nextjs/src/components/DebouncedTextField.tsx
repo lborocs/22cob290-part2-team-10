@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
 import TextField, { type TextFieldProps } from '@mui/material/TextField';
 
-export type DebouncedTextFieldProps = Omit<TextFieldProps, 'value' | 'onChange' | 'defaultValue'> & {
-  debounceTimeoutMs: number
-  initialValue?: string
-  onSearchSubmit(value: string): void
-  resetResults(): void
+export type DebouncedTextFieldProps = Omit<
+  TextFieldProps,
+  'value' | 'onChange' | 'defaultValue'
+> & {
+  debounceTimeoutMs: number;
+  initialValue?: string;
+  onSearchSubmit(value: string): void;
+  resetResults(): void;
 };
 
 /**

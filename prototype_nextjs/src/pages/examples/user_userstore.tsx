@@ -29,8 +29,7 @@ const ExamplePage: AppPage = () => {
       </Head>
 
       <Typography variant="h4" marginBottom={2} component="h1">
-        Using
-        {' '}
+        Using{' '}
         <code
           style={{
             color: 'crimson',
@@ -38,17 +37,14 @@ const ExamplePage: AppPage = () => {
           }}
         >
           useUserStore
-        </code>
-        {' '}
+        </code>{' '}
         prop
       </Typography>
 
       <Typography variant="h5" component="p">
         Email: {email}
       </Typography>
-      <Typography>
-        Name: {name}
-      </Typography>
+      <Typography>Name: {name}</Typography>
 
       <div>
         <form onSubmit={changeName}>
@@ -64,7 +60,11 @@ const ExamplePage: AppPage = () => {
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await unstable_getServerSession(context.req, context.res, authOptions);
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
 
   // not signed in, will be handled by _app
   // return `notFound: true` as a hacky way to have non-null page props for typescript

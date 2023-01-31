@@ -5,9 +5,9 @@ import Typography from '@mui/material/Typography';
 import { NextLinkComposed } from '~/components/Link';
 
 export type ErrorPageProps = {
-  title: string
-  buttonContent?: React.ReactNode
-  buttonUrl: string
+  title: string;
+  buttonContent?: React.ReactNode;
+  buttonUrl: string;
 };
 
 /**

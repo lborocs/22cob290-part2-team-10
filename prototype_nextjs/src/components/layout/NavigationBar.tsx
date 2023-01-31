@@ -16,8 +16,8 @@ import NavTabs from '~/components/layout/nav/NavTabs';
 import useUserStore from '~/store/userStore';
 
 export type PageData = {
-  label: string // page
-  href: UrlObject | string
+  label: string; // page
+  href: UrlObject | string;
 };
 // TODO: look at using icons, AT LEAST for mobile nav if menu (probably not for desktop)
 
@@ -81,8 +81,8 @@ const faAlignLeftSvg = (
 );
 
 export type NavigationBarProps = {
-  noSidebar: boolean
-  toggleSidebar: () => void
+  noSidebar: boolean;
+  toggleSidebar: () => void;
 };
 
 // TODO?: navbar sticky to top? if so then blur after scoll
@@ -132,15 +132,10 @@ export default function NavigationBar({
   );
 
   return (
-    <AppBar
-      position="static"
-      elevation={2}
-    >
+    <AppBar position="static" elevation={2}>
       <Toolbar>
         {/* left */}
-        <NavBarBox>
-          {toggleSidebarButton}
-        </NavBarBox>
+        <NavBarBox>{toggleSidebarButton}</NavBarBox>
         {/* middle */}
         <NavBarBox justifyContent="center" maxWidth={{ xs: 0, lg: 'unset' }}>
           <NavTabs pages={pages} />
@@ -164,7 +159,9 @@ export default function NavigationBar({
             onClick={handleToggleCollapse}
             aria-controls={collapseId}
             aria-expanded={isCollapseOpen}
-            aria-label={`${isCollapseOpen ? 'collapse' : 'open'} navigation menu`}
+            aria-label={`${
+              isCollapseOpen ? 'collapse' : 'open'
+            } navigation menu`}
             sx={(theme) => ({
               paddingX: 1.5,
               height: `calc(1.5rem + ${theme.spacing(1.5)})`,

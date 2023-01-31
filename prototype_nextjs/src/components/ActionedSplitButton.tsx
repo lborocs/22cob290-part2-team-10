@@ -10,9 +10,7 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 function getSx(sx?: SxProps<Theme>) {
   if (!sx) return [];
 
-  return Array.isArray(sx)
-    ? sx
-    : [sx];
+  return Array.isArray(sx) ? sx : [sx];
 }
 
 /**
@@ -29,39 +27,39 @@ function withoutSx(props: any) {
 
 type Props<T> = Omit<T, 'onClick' | 'children'>;
 
-type DropDownButtonProps = Omit<Props<ButtonProps>,
-  | 'aria-controls'
-  | 'aria-expanded'
+type DropDownButtonProps = Omit<
+  Props<ButtonProps>,
+  'aria-controls' | 'aria-expanded'
 >;
 
 type BaseOption = {
-  action?(): void
-  actionButtonProps?: Props<ButtonProps>
-  dropDownButtonProps?: DropDownButtonProps
-  menuItemProps?: Props<MenuItemProps>
+  action?(): void;
+  actionButtonProps?: Props<ButtonProps>;
+  dropDownButtonProps?: DropDownButtonProps;
+  menuItemProps?: Props<MenuItemProps>;
 };
 
 type SameContentOption = BaseOption & {
-  content: React.ReactNode
-  actionButtonContent?: never
-  menuItemContent?: never
+  content: React.ReactNode;
+  actionButtonContent?: never;
+  menuItemContent?: never;
 };
 
 type CustomContentOption = BaseOption & {
-  content?: never
-  actionButtonContent: React.ReactNode
-  menuItemContent: React.ReactNode
+  content?: never;
+  actionButtonContent: React.ReactNode;
+  menuItemContent: React.ReactNode;
 };
 
 export type Option = SameContentOption | CustomContentOption;
 
 export type ActionedSplitButtonProps = Props<ButtonGroupProps> & {
-  options: Option[]
-  defaultIndex?: number
-  actionButtonProps?: Props<ButtonProps>
-  dropDownButtonProps?: DropDownButtonProps
-  menuProps?: Omit<MenuProps, 'open' | 'onClose' | 'id'>
-  menuItemProps?: Props<MenuItemProps>
+  options: Option[];
+  defaultIndex?: number;
+  actionButtonProps?: Props<ButtonProps>;
+  dropDownButtonProps?: DropDownButtonProps;
+  menuProps?: Omit<MenuProps, 'open' | 'onClose' | 'id'>;
+  menuItemProps?: Props<MenuItemProps>;
 };
 
 /**
@@ -88,19 +86,12 @@ export type ActionedSplitButtonProps = Props<ButtonGroupProps> & {
 export default function ActionedSplitButton({
   options,
   defaultIndex = 0,
-  actionButtonProps: {
-    sx: actionButtonSx,
-    ...actionButtonProps
-  } = { sx: [] },
-  dropDownButtonProps: {
-    sx: dropDownButtonSx,
-    ...dropDownButtonProps
-  } = { sx: [] },
+  actionButtonProps: { sx: actionButtonSx, ...actionButtonProps } = { sx: [] },
+  dropDownButtonProps: { sx: dropDownButtonSx, ...dropDownButtonProps } = {
+    sx: [],
+  },
   menuProps,
-  menuItemProps: {
-    sx: menuItemSx,
-    ...menuItemProps
-  } = { sx: [] },
+  menuItemProps: { sx: menuItemSx, ...menuItemProps } = { sx: [] },
   ...props
 }: ActionedSplitButtonProps) {
   const menuId = useId();
@@ -108,11 +99,15 @@ export default function ActionedSplitButton({
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedIndex, setSelectedIndex] = useState(defaultIndex);
 
-  const selectedOption = useMemo(() => options[selectedIndex], [options, selectedIndex]);
+  const selectedOption = useMemo(
+    () => options[selectedIndex],
+    [options, selectedIndex]
+  );
 
   const open = anchorEl !== null;
 
-  const handleOpenMenu = (event: React.MouseEvent) => setAnchorEl(event.currentTarget.parentElement);
+  const handleOpenMenu = (event: React.MouseEvent) =>
+    setAnchorEl(event.currentTarget.parentElement);
   const handleCloseMenu = useCallback(() => setAnchorEl(null), []);
 
   const handleToggleMenu = useCallback(
@@ -184,10 +179,7 @@ export default function ActionedSplitButton({
             key={index}
             selected={selectedIndex === index}
             onClick={() => handleMenuItemClick(index)}
-            sx={[
-              ...getSx(menuItemSx),
-              ...getSx(option.menuItemProps?.sx),
-            ]}
+            sx={[...getSx(menuItemSx), ...getSx(option.menuItemProps?.sx)]}
             {...menuItemProps}
             {...withoutSx(option.menuItemProps)}
           >

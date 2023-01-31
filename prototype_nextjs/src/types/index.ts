@@ -15,20 +15,20 @@ import type { PageLayout } from '~/components/Layout';
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type AppPage<Props = {}> = NextPage<Props> & {
-  noAuth?: boolean
-  layout?: PageLayout
+  noAuth?: boolean;
+  layout?: PageLayout;
 };
 
 export interface SessionUser extends User {
-  id: string
-  name: string
-  email: string
-  image: null
-  isManager: boolean
+  id: string;
+  name: string;
+  email: string;
+  image: null;
+  isManager: boolean;
 }
 
 export type ErrorResponse = {
-  error: string
+  error: string;
 };
 
 export enum ProjectRole {

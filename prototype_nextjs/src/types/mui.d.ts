@@ -1,4 +1,4 @@
-import type { } from '@mui/material';
+import type {} from '@mui/material';
 
 /**
  * @see https://mui.com/material-ui/customization/theming/#custom-variables
@@ -6,8 +6,7 @@ import type { } from '@mui/material';
  * @see https://mui.com/material-ui/experimental-api/css-theme-variables/customization/#typescript
  */
 declare module '@mui/material/styles' {
-  interface Theme {
-  }
+  interface Theme {}
 
   interface Palette {
     light: Palette['primary'];
@@ -25,8 +24,7 @@ declare module '@mui/material/styles' {
   }
 
   // allow configuration using `createTheme`
-  interface ThemeOptions {
-  }
+  interface ThemeOptions {}
 }
 
 interface ColorOverrides {
@@ -38,33 +36,33 @@ interface ColorOverrides {
 }
 
 declare module '@mui/material/Button' {
-  interface ButtonPropsColorOverrides extends ColorOverrides { }
+  interface ButtonPropsColorOverrides extends ColorOverrides {}
 }
 
 declare module '@mui/material/ButtonGroup' {
-  interface ButtonGroupPropsColorOverrides extends ColorOverrides { }
+  interface ButtonGroupPropsColorOverrides extends ColorOverrides {}
 }
 
 declare module '@mui/material/Chip' {
-  interface ChipPropsColorOverrides extends ColorOverrides { }
+  interface ChipPropsColorOverrides extends ColorOverrides {}
 }
 
 declare module '@mui/material/CircularProgress' {
-  interface CircularProgressPropsColorOverrides extends ColorOverrides { }
+  interface CircularProgressPropsColorOverrides extends ColorOverrides {}
 }
 
 declare module '@mui/material/FormLabel' {
-  interface FormLabelPropsColorOverrides extends ColorOverrides { }
+  interface FormLabelPropsColorOverrides extends ColorOverrides {}
 }
 
 declare module '@mui/material/IconButton' {
-  interface IconButtonPropsColorOverrides extends ColorOverrides { }
+  interface IconButtonPropsColorOverrides extends ColorOverrides {}
 }
 
 declare module '@mui/material/InputBase' {
-  interface InputBasePropsColorOverrides extends ColorOverrides { }
+  interface InputBasePropsColorOverrides extends ColorOverrides {}
 }
 
 declare module '@mui/material/TextField' {
-  interface TextFieldPropsColorOverrides extends ColorOverrides { }
+  interface TextFieldPropsColorOverrides extends ColorOverrides {}
 }

@@ -68,29 +68,28 @@ export default function TextAvatarEditor() {
     handleClose();
   }, [defaultTextAvatar]);
 
-  const handleSubmit: React.ComponentProps<typeof Formik<TextAvatar>>['onSubmit']
-    = useCallback(
-      async (values, { resetForm }) => {
-        const success = await updateTextAvatarStore(values);
+  const handleSubmit: React.ComponentProps<
+    typeof Formik<TextAvatar>
+  >['onSubmit'] = useCallback(async (values, { resetForm }) => {
+    const success = await updateTextAvatarStore(values);
 
-        if (success) {
-          setDefaultTextAvatar(values);
+    if (success) {
+      setDefaultTextAvatar(values);
 
-          toast.success('Saved.', {
-            position: 'bottom-center',
-          });
-          handleClose();
-        } else { // shouldn't happen
-          toast.error('Please try again', {
-            position: 'bottom-center',
-          });
-        }
+      toast.success('Saved.', {
+        position: 'bottom-center',
+      });
+      handleClose();
+    } else {
+      // shouldn't happen
+      toast.error('Please try again', {
+        position: 'bottom-center',
+      });
+    }
 
-        resetForm({ values });
-        updateTextAvatarCss(values);
-      },
-      []
-    );
+    resetForm({ values });
+    updateTextAvatarCss(values);
+  }, []);
 
   return (
     <div>
@@ -118,7 +117,8 @@ export default function TextAvatarEditor() {
             onReset={() => {
               updateTextAvatarCss(defaultTextAvatar!);
             }}
-            validate={(values) => { // basically onChange
+            validate={(values) => {
+              // basically onChange
               updateTextAvatarCss(values);
             }}
             innerRef={formikRef}

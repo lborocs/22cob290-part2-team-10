@@ -54,10 +54,10 @@ const Custom404: AppPage = () => (
         },
       })}
     >
-      Sorry, the webpage you are trying to access is not available.
-      It may have been moved or removed, or there may be a typo in the URL.
-      If you believe this is a broken link, please let us know so we can fix it.
-      Thank you for your patience.
+      Sorry, the webpage you are trying to access is not available. It may have
+      been moved or removed, or there may be a typo in the URL. If you believe
+      this is a broken link, please let us know so we can fix it. Thank you for
+      your patience.
     </Typography>
 
     <Button

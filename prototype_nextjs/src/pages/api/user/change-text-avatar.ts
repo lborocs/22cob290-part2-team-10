@@ -10,7 +10,7 @@ import { authOptions } from '~/pages/api/auth/[...nextauth]';
 export type RequestSchema = z.infer<typeof TextAvatarSchema>;
 
 export type ResponseSchema = {
-  success: boolean
+  success: boolean;
 };
 
 /**
@@ -31,7 +31,7 @@ export type ResponseSchema = {
  */
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseSchema | ErrorResponse>,
+  res: NextApiResponse<ResponseSchema | ErrorResponse>
 ) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });

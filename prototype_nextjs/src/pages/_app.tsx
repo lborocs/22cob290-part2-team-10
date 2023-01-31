@@ -13,7 +13,7 @@ import { config } from '@fortawesome/fontawesome-svg-core';
 import { Toaster, ToastBar } from 'react-hot-toast';
 
 // see https://mui.com/material-ui/experimental-api/css-theme-variables/usage/#typescript
-import type { } from '@mui/material/themeCssVarsAugmentation';
+import type {} from '@mui/material/themeCssVarsAugmentation';
 
 import Layout from '~/components/Layout';
 import LoadingPage from '~/components/LoadingPage';
@@ -125,7 +125,8 @@ const theme = extendTheme({
       styleOverrides: {
         root: ({ ownerState, theme }) => ({
           // same caretColor as input color
-          caretColor: ownerState.color && theme.vars.palette[ownerState.color].main,
+          caretColor:
+            ownerState.color && theme.vars.palette[ownerState.color].main,
           '&.Mui-error': {
             // error color caret on error
             caretColor: theme.vars.palette.error.main,
@@ -137,7 +138,7 @@ const theme = extendTheme({
 });
 
 interface MyAppProps extends AppProps {
-  Component: AppProps['Component'] & AppPage
+  Component: AppProps['Component'] & AppPage;
 }
 
 /**
@@ -145,10 +146,7 @@ interface MyAppProps extends AppProps {
  *
  * @see https://nextjs.org/docs/advanced-features/custom-app
  */
-export default function App({
-  Component,
-  pageProps,
-}: MyAppProps) {
+export default function App({ Component, pageProps }: MyAppProps) {
   if (pageProps.user) {
     useUserStore.setState(() => ({
       user: pageProps.user,
@@ -206,10 +204,7 @@ function ThemedToaster() {
             },
           })}
         >
-          <ToastBar
-            style={t.style}
-            toast={t}
-          />
+          <ToastBar style={t.style} toast={t} />
         </Box>
       )}
     </Toaster>

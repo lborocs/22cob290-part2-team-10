@@ -1,7 +1,7 @@
 import { type Theme, styled } from '@mui/material/styles';
 
 export type CircularColorInputProps = React.ComponentProps<'input'> & {
-  inputSize?: React.CSSProperties['width']
+  inputSize?: React.CSSProperties['width'];
 };
 
 /**
@@ -37,30 +37,33 @@ function calculateBorderColor(color: string, theme: Theme): string {
  * Custom circular color input. Because MUI doesn't have a proper implementation
  *  of `type=color`.
  */
-export default styled(function CircularColorInput({ inputSize, className, ...props }: CircularColorInputProps) {
+export default styled(function CircularColorInput({
+  inputSize,
+  className,
+  ...props
+}: CircularColorInputProps) {
   return (
     <div className={className}>
-      <input
-        type="color"
-        {...props}
-      />
+      <input type="color" {...props} />
     </div>
   );
-})(({ theme, inputSize = '2rem', value }) => theme.unstable_sx({
-  width: inputSize,
-  aspectRatio: '1',
-  overflow: 'hidden',
-  bgcolor: value as string, // needed to fill
-  borderRadius: '50%',
-  border: '0.175em solid',
-  borderColor: calculateBorderColor(value as string, theme),
+})(({ theme, inputSize = '2rem', value }) =>
+  theme.unstable_sx({
+    width: inputSize,
+    aspectRatio: '1',
+    overflow: 'hidden',
+    bgcolor: value as string, // needed to fill
+    borderRadius: '50%',
+    border: '0.175em solid',
+    borderColor: calculateBorderColor(value as string, theme),
 
-  '& input': {
-    width: '200%',
-    height: '200%',
-    // border: 0,
-    // padding: 0,
-    cursor: 'pointer',
-    transform: 'translate(-25%, -25%)',
-  },
-}));
+    '& input': {
+      width: '200%',
+      height: '200%',
+      // border: 0,
+      // padding: 0,
+      cursor: 'pointer',
+      transform: 'translate(-25%, -25%)',
+    },
+  })
+);

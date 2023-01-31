@@ -1,4 +1,7 @@
-import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import type {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from 'next';
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 import { signOut } from 'next-auth/react';
@@ -22,7 +25,9 @@ import styles from '~/styles/Profile.module.css';
 // https://search.muz.li/ZjI5OThkOTQ4?utm_source=muz.li-insp&utm_medium=article&utm_campaign=%2Finspiration%2Fprofile-page%2F
 
 // TODO: use dynamic imports for modals
-const ProfilePage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ inviter }) => {
+const ProfilePage: AppPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({ inviter }) => {
   return (
     <Box flexGrow={1} component="main">
       <Head>
@@ -70,7 +75,11 @@ const ProfilePage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await unstable_getServerSession(context.req, context.res, authOptions);
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
 
   // not signed in, will be handled by _app
   // use auth's redirection because it provides callback URL
@@ -93,14 +102,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const inviter = inviterEmail
     ? await prisma.user.findUniqueOrThrow({
-      where: {
-        email: inviterEmail,
-      },
-      select: {
-        email: true,
-        name: true,
-      },
-    })
+        where: {
+          email: inviterEmail,
+        },
+        select: {
+          email: true,
+          name: true,
+        },
+      })
     : null;
 
   return {

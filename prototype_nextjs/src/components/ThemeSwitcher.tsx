@@ -13,29 +13,33 @@ import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness';
 import type { Entries } from 'type-fest';
 
-const ResponsiveStyledButton = styled(Button)(({ theme }) => theme.unstable_sx({
-  textTransform: 'none',
-  display: {
-    xs: 'none',
-    md: 'inline-flex',
-  },
-}));
+const ResponsiveStyledButton = styled(Button)(({ theme }) =>
+  theme.unstable_sx({
+    textTransform: 'none',
+    display: {
+      xs: 'none',
+      md: 'inline-flex',
+    },
+  })
+);
 
-const ResponsiveIconButton = styled(IconButton)(({ theme }) => theme.unstable_sx({
-  display: {
-    xs: 'inline-flex',
-    md: 'none',
-  },
-}));
+const ResponsiveIconButton = styled(IconButton)(({ theme }) =>
+  theme.unstable_sx({
+    display: {
+      xs: 'inline-flex',
+      md: 'none',
+    },
+  })
+);
 
 type ModeType = NonNullable<ReturnType<typeof useColorScheme>['mode']>;
 
 type Modes = {
   [mode in ModeType]: {
-    label: string
-    buttonIcon: React.ReactNode
-    menuIcon: React.ReactNode
-  }
+    label: string;
+    buttonIcon: React.ReactNode;
+    menuIcon: React.ReactNode;
+  };
 };
 
 const modes: Modes = {
@@ -78,19 +82,20 @@ export default function ThemeSwitcher(props: BoxProps) {
     setMounted(true);
   }, []);
 
-  if (!mounted || !mode) return (
-    <Box {...props} component={Skeleton}>
-      <ResponsiveStyledButton
-        variant="outlined"
-        startIcon={<SettingsBrightnessIcon />}
-      >
-        Theme
-      </ResponsiveStyledButton>
-      <ResponsiveIconButton>
-        <SettingsBrightnessIcon />
-      </ResponsiveIconButton>
-    </Box>
-  );
+  if (!mounted || !mode)
+    return (
+      <Box {...props} component={Skeleton}>
+        <ResponsiveStyledButton
+          variant="outlined"
+          startIcon={<SettingsBrightnessIcon />}
+        >
+          Theme
+        </ResponsiveStyledButton>
+        <ResponsiveIconButton>
+          <SettingsBrightnessIcon />
+        </ResponsiveIconButton>
+      </Box>
+    );
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -125,11 +130,11 @@ export default function ThemeSwitcher(props: BoxProps) {
         <ResponsiveIconButton
           onClick={handleClick}
           color="contrast"
-        // id={buttonId}
-        // aria-label="open theme switcher"
-        // aria-controls={menuOpen ? menuId : undefined}
-        // aria-haspopup="true"
-        // aria-expanded={menuOpen ? true : undefined}
+          // id={buttonId}
+          // aria-label="open theme switcher"
+          // aria-controls={menuOpen ? menuId : undefined}
+          // aria-haspopup="true"
+          // aria-expanded={menuOpen ? true : undefined}
         >
           {modes[mode].buttonIcon}
         </ResponsiveIconButton>
@@ -144,20 +149,18 @@ export default function ThemeSwitcher(props: BoxProps) {
           'aria-labelledby': buttonId,
         }}
       >
-        {(Object.entries(modes) as Entries<typeof modes>).map(([_mode, { label, menuIcon }]) => (
-          <MenuItem
-            key={_mode}
-            onClick={() => handleMenuItemClick(_mode)}
-            selected={mode === _mode}
-          >
-            <ListItemIcon>
-              {menuIcon}
-            </ListItemIcon>
-            <ListItemText>
-              {label}
-            </ListItemText>
-          </MenuItem>
-        ))}
+        {(Object.entries(modes) as Entries<typeof modes>).map(
+          ([_mode, { label, menuIcon }]) => (
+            <MenuItem
+              key={_mode}
+              onClick={() => handleMenuItemClick(_mode)}
+              selected={mode === _mode}
+            >
+              <ListItemIcon>{menuIcon}</ListItemIcon>
+              <ListItemText>{label}</ListItemText>
+            </MenuItem>
+          )
+        )}
       </Menu>
     </>
   );

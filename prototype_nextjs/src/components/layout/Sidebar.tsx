@@ -6,8 +6,8 @@ import styles from '~/styles/layout/Sidebar.module.css';
 import makeItAllLogo from '~/../public/assets/company-logo.png';
 
 export type SidebarProps = {
-  show: boolean
-  content: React.ReactNode
+  show: boolean;
+  content: React.ReactNode;
 };
 
 // TODO?: make sidebar sticky? (have its scroll separate to the page)

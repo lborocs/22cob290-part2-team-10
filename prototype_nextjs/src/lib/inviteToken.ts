@@ -20,11 +20,15 @@ const getSecret = () => process.env.INVITE_TOKEN_SECRET as string;
  * @returns JWT invite token
  */
 export function getInviteToken(email: string): string {
-  return jwt.sign({
-    email,
-  }, getSecret(), {
-    expiresIn: '7d',
-  });
+  return jwt.sign(
+    {
+      email,
+    },
+    getSecret(),
+    {
+      expiresIn: '7d',
+    }
+  );
 }
 
 /**

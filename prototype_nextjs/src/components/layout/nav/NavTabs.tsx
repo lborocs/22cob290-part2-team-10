@@ -7,7 +7,7 @@ import { NextLinkComposed } from '~/components/Link';
 import { extractPathname } from '~/utils';
 
 export type NavTabsProps = {
-  pages: PageData[]
+  pages: PageData[];
 };
 
 /**
@@ -35,10 +35,7 @@ export default function NavTabs({ pages }: NavTabsProps) {
       aria-label="main"
     >
       {pages.map((page) => (
-        <NavTab
-          key={extractPathname(page.href)}
-          {...page}
-        />
+        <NavTab key={extractPathname(page.href)} {...page} />
       ))}
     </Stack>
   );

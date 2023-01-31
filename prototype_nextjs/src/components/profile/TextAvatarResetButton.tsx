@@ -5,10 +5,10 @@ import Box from '@mui/material/Box';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 
-import {
-  type TextAvatar,
-} from '~/lib/textAvatar';
-import ActionedSplitButton, { type Option } from '~/components/ActionedSplitButton';
+import { type TextAvatar } from '~/lib/textAvatar';
+import ActionedSplitButton, {
+  type Option,
+} from '~/components/ActionedSplitButton';
 
 const StyledTextAvatar = styled(
   ({ textAvatar, ...props }: { textAvatar?: TextAvatar } & AvatarProps) => (
@@ -25,11 +25,11 @@ const StyledTextAvatar = styled(
 }));
 
 export type TextAvatarResetButtonProps = {
-  formId: string
-  defaultTextAvatar?: TextAvatar
-  systemDefaultTextAvatar: TextAvatar
-  resetToSystemDefault: () => void
-  disabled: boolean
+  formId: string;
+  defaultTextAvatar?: TextAvatar;
+  systemDefaultTextAvatar: TextAvatar;
+  resetToSystemDefault: () => void;
+  disabled: boolean;
 };
 
 /**
@@ -42,22 +42,15 @@ export default function TextAvatarResetButton({
   resetToSystemDefault,
   ...buttonProps
 }: TextAvatarResetButtonProps) {
-
-  const resetButtonOptions = useMemo<Option[]>(() => (
-    [
+  const resetButtonOptions = useMemo<Option[]>(
+    () => [
       {
         actionButtonContent: (
           <>
-            <Box
-              display={{ xs: 'none', sm: 'inline' }}
-              component="span"
-            >
+            <Box display={{ xs: 'none', sm: 'inline' }} component="span">
               Reset to previous
             </Box>
-            <Box
-              display={{ xs: 'inline', sm: 'none' }}
-              component="span"
-            >
+            <Box display={{ xs: 'inline', sm: 'none' }} component="span">
               Previous
             </Box>
           </>
@@ -67,7 +60,10 @@ export default function TextAvatarResetButton({
             <StyledTextAvatar textAvatar={defaultTextAvatar}>
               A
             </StyledTextAvatar>
-            <ListItemText primary="Reset to previous" secondary="The previous colours of your text avatar" />
+            <ListItemText
+              primary="Reset to previous"
+              secondary="The previous colours of your text avatar"
+            />
           </>
         ),
         actionButtonProps: {
@@ -78,16 +74,10 @@ export default function TextAvatarResetButton({
       {
         actionButtonContent: (
           <>
-            <Box
-              display={{ xs: 'none', sm: 'inline' }}
-              component="span"
-            >
+            <Box display={{ xs: 'none', sm: 'inline' }} component="span">
               Reset to default
             </Box>
-            <Box
-              display={{ xs: 'inline', sm: 'none' }}
-              component="span"
-            >
+            <Box display={{ xs: 'inline', sm: 'none' }} component="span">
               Default
             </Box>
           </>
@@ -97,13 +87,17 @@ export default function TextAvatarResetButton({
             <StyledTextAvatar textAvatar={systemDefaultTextAvatar}>
               A
             </StyledTextAvatar>
-            <ListItemText primary="Reset to default" secondary="The default text avatar colours" />
+            <ListItemText
+              primary="Reset to default"
+              secondary="The default text avatar colours"
+            />
           </>
         ),
         action: resetToSystemDefault,
       },
-    ]
-  ), [formId, defaultTextAvatar, systemDefaultTextAvatar, resetToSystemDefault]);
+    ],
+    [formId, defaultTextAvatar, systemDefaultTextAvatar, resetToSystemDefault]
+  );
 
   return (
     <ActionedSplitButton

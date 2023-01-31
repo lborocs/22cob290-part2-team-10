@@ -5,24 +5,28 @@ import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import CloseIcon from '@mui/icons-material/Close';
 
-const StyledDialog = styled(Dialog)(({ theme }) => theme.unstable_sx({
-  '& .MuiPaper-root > *': {
-    paddingX: 2,
-  },
-  '& .MuiDialogActions-root': {
-    paddingY: {
-      xs: 2,
-      md: 1.5,
+const StyledDialog = styled(Dialog)(({ theme }) =>
+  theme.unstable_sx({
+    '& .MuiPaper-root > *': {
+      paddingX: 2,
     },
-  },
-}));
+    '& .MuiDialogActions-root': {
+      paddingY: {
+        xs: 2,
+        md: 1.5,
+      },
+    },
+  })
+);
 
-export type OnCloseReason = Parameters<NonNullable<DialogProps['onClose']>>[1] | 'closeButtonClick';
+export type OnCloseReason =
+  | Parameters<NonNullable<DialogProps['onClose']>>[1]
+  | 'closeButtonClick';
 
 export type StyledCloseButtonDialogProps = DialogProps & {
-  dialogTitle: React.ReactNode
-  noCloseButton?: boolean
-  onClose?: (event: React.SyntheticEvent, reason: OnCloseReason) => void
+  dialogTitle: React.ReactNode;
+  noCloseButton?: boolean;
+  onClose?: (event: React.SyntheticEvent, reason: OnCloseReason) => void;
 };
 
 /**
@@ -42,9 +46,7 @@ export default function StyledCloseButtonDialog({
   return (
     <StyledDialog {...props} disableEnforceFocus>
       {noCloseButton ? (
-        <DialogTitle sx={{ padding: 1.5 }}>
-          {dialogTitle}
-        </DialogTitle>
+        <DialogTitle sx={{ padding: 1.5 }}>{dialogTitle}</DialogTitle>
       ) : (
         <Stack
           direction="row"
@@ -52,9 +54,7 @@ export default function StyledCloseButtonDialog({
           justifyContent="space-between"
           paddingY={1.5}
         >
-          <DialogTitle sx={{ padding: 0 }}>
-            {dialogTitle}
-          </DialogTitle>
+          <DialogTitle sx={{ padding: 0 }}>{dialogTitle}</DialogTitle>
           <IconButton
             edge="end"
             onClick={(event) => props.onClose?.(event, 'closeButtonClick')}
