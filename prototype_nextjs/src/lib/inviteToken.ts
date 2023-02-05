@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 const getSecret = () => process.env.INVITE_TOKEN_SECRET as string;
 
 /**
- * Returns a JWT token that is to be used as as invite token.
+ * Returns a JWT token that is to be used as an invite token.
  *  - payload contains inviter email
  *  - can only be used once (is stored in database)
  *  - expires in a week from the date it was generated
@@ -20,11 +20,15 @@ const getSecret = () => process.env.INVITE_TOKEN_SECRET as string;
  * @returns JWT invite token
  */
 export function getInviteToken(email: string): string {
-  return jwt.sign({
-    email,
-  }, getSecret(), {
-    expiresIn: '7d',
-  });
+  return jwt.sign(
+    {
+      email,
+    },
+    getSecret(),
+    {
+      expiresIn: '7d',
+    }
+  );
 }
 
 /**

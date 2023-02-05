@@ -7,7 +7,7 @@ import type { PageLayout } from '~/components/Layout';
 /**
  * Workaround so we don't have to use `Layout` in every page.
  *
- * Works by adding these properties to the default export (`Component` in `_app`)
+ * Works by adding these properties to the default export (passed to `_app` as `Component` prop)
  *  of the page.
  *
  * @note using the layout requires `noAuth` to be falsy
@@ -15,20 +15,20 @@ import type { PageLayout } from '~/components/Layout';
  */
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type AppPage<Props = {}> = NextPage<Props> & {
-  noAuth?: boolean
-  layout?: PageLayout
+  noAuth?: boolean;
+  layout?: PageLayout;
 };
 
 export interface SessionUser extends User {
-  id: string
-  name: string
-  email: string
-  image: null
-  isManager: boolean
+  id: string;
+  name: string;
+  email: string;
+  image: null;
+  isManager: boolean;
 }
 
 export type ErrorResponse = {
-  error: string
+  error: string;
 };
 
 export enum ProjectRole {

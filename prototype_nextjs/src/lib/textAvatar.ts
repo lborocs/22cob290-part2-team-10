@@ -16,14 +16,21 @@ export const getDefaultTextAvatar = () => ({
 });
 
 export async function getTextAvatarFromStore(): Promise<TextAvatar> {
-  const { data } = await axios.get<GetTextAvatarResponse>('/api/user/get-text-avatar');
+  const { data } = await axios.get<GetTextAvatarResponse>(
+    '/api/user/get-text-avatar'
+  );
   return data;
 }
 
-export async function updateTextAvatarStore(textAvatar: TextAvatar): Promise<boolean> {
+export async function updateTextAvatarStore(
+  textAvatar: TextAvatar
+): Promise<boolean> {
   const payload: ChangeTextAvatarPayload = textAvatar;
 
-  const { data } = await axios.post<ChangeTextAvatarResponse>('/api/user/change-text-avatar', payload);
+  const { data } = await axios.post<ChangeTextAvatarResponse>(
+    '/api/user/change-text-avatar',
+    payload
+  );
 
   return data.success;
 }

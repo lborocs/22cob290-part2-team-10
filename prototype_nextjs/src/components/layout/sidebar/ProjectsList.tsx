@@ -1,96 +1,212 @@
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import { useCallback, useState } from 'react';
 import { useRouter } from 'next/router';
-import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import FormControl from 'react-bootstrap/FormControl';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
-import Tooltip from 'react-bootstrap/Tooltip';
+import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import Chip from '@mui/material/Chip';
+import CircularProgress from '@mui/material/CircularProgress';
+import Divider from '@mui/material/Divider';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import Skeleton from '@mui/material/Skeleton';
+import Stack from '@mui/material/Stack';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import axios from 'axios';
-import _ from 'lodash';
+import memoize from 'lodash/memoize';
+import range from 'lodash/range';
 import useSWR from 'swr';
 
-import LoadingPage from '~/components/LoadingPage';
 import hashids from '~/lib/hashids';
+import DebouncedTextField from '~/components/DebouncedTextField';
+import { NextLinkComposed } from '~/components/Link';
 import type { ResponseSchema as GetProjectsResponse } from '~/pages/api/projects/get-assigned-projects';
-
-import styles from '~/styles/layout/sidebar/ProjectsList.module.css';
-
-// TODO: update styling
-// TODO: style scrollbar
-
-const DEBOUNCE_TIMEOUT = 600;
-
-/**
- * Using debouncing for better performance.
- *
- * @param onSearchSubmit
- * @param resetResults
- * @see https://javascript.plainenglish.io/how-to-create-an-optimized-real-time-search-with-react-6dd4026f4fa9
- */
-function SearchBar({ onSearchSubmit, resetResults }: {
-  onSearchSubmit(query: string): void
-  resetResults(): void
-}) {
-  const [query, setQuery] = useState('');
-  const [debouncedQuery, setDebouncedQuery] = useState(query);
-
-  // update `query` after `DEBOUNCE_TIMEOUT`ms from last update of `debouncedQuery`
-  // i.e. `DEBOUNCE_TIMEOUT`ms after user stopped typing
-  useEffect(() => {
-    const timer = setTimeout(() => setQuery(debouncedQuery), DEBOUNCE_TIMEOUT);
-    return () => clearTimeout(timer);
-  }, [debouncedQuery]);
-
-  useEffect(() => {
-    if (query) {
-      onSearchSubmit(query);
-    } else {
-      resetResults();
-    }
-  }, [query, onSearchSubmit, resetResults]);
-
-  return (
-    <div className="ms-1 me-3 my-2">
-      <FloatingLabel label="Search by name" controlId="query">
-        <FormControl
-          placeholder="Query"
-          value={debouncedQuery}
-          onChange={(e) => setDebouncedQuery(e.target.value)}
-        />
-      </FloatingLabel>
-    </div>
-  );
-}
 
 /**
  * Using memoization for better performance.
  *
  * @see https://javascript.plainenglish.io/how-to-create-an-optimized-real-time-search-with-react-6dd4026f4fa9
  */
-const filterProjects = _.memoize((query: string, projects: GetProjectsResponse) => {
-  const lcQuery = query.toLowerCase();
+const filterProjects = memoize(
+  (query: string, projects: GetProjectsResponse) => {
+    const lcQuery = query.toLowerCase();
 
-  const filteredProjects = projects.filter((project) => project.name.toLowerCase().includes(lcQuery));
+    const filteredProjects = projects.filter((project) =>
+      project.name.toLowerCase().includes(lcQuery)
+    );
 
-  return filteredProjects;
-});
+    return filteredProjects;
+  }
+);
 
 export default function ProjectsList() {
-  const router = useRouter();
-
-  const { data: projects, error } = useSWR('/api/projects/get-assigned-projects', async (url) => {
-    const { data } = await axios.get<GetProjectsResponse>(url);
-    return data;
-  });
-
-  const [filteredProjects, setFilteredProjects] = useState<NonNullable<typeof projects>>([]);
-
-  // TODO: decide what to show on error
-  if (error) return null;
-
-  if (!projects) return (
-    <LoadingPage dark={false} />
+  const { data: projects, error } = useSWR(
+    '/api/projects/get-assigned-projects',
+    async (url) => {
+      const { data } = await axios.get<GetProjectsResponse>(url);
+      return data;
+    }
   );
+
+  type Projects = NonNullable<typeof projects>;
+
+  const [filteredProjects, setFilteredProjects] = useState<Projects>([]);
+
+  const onSearchSubmit = useCallback(
+    (query: string) => setFilteredProjects(filterProjects(query, projects!)),
+    [projects]
+  );
+
+  const resetResults = useCallback(
+    () => setFilteredProjects(projects!),
+    [projects]
+  );
+
+  if (error) {
+    console.error(error);
+    return (
+      <Stack height="100%" justifyContent="center">
+        <Alert
+          variant="filled"
+          severity="error"
+          sx={{
+            marginX: 0.25,
+          }}
+        >
+          Failed to load your assigned projects, please try again.
+        </Alert>
+      </Stack>
+    );
+  }
+
+  return (
+    <Stack height="100%" paddingTop={1}>
+      <DebouncedTextField
+        debounceTimeoutMs={600}
+        onSearchSubmit={onSearchSubmit}
+        resetResults={resetResults}
+        type="search"
+        label="Search by project name"
+        variant="outlined"
+        disabled={projects === undefined}
+        sx={{
+          marginLeft: 0.5,
+          marginRight: 1.5,
+          marginTop: 1,
+          '& label': {
+            color: 'black',
+          },
+          '& label.Mui-focused': {
+            color: 'black',
+          },
+          '& input': {
+            color: 'black',
+            caretColor: 'currentColor',
+          },
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: 'dark.main',
+            },
+            '&:hover fieldset': {
+              borderColor: 'dark.main',
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: 'dark.main',
+            },
+          },
+        }}
+      />
+
+      {/* for some reason the divider's lines are in line with the bottom of
+      its content instead of the center. It appears to be because of the parent's
+      height 100%. Wrapping it in a div works as a workaround
+      */}
+      <Box marginY={2.5}>
+        <Divider
+          role="presentation"
+          sx={{
+            marginLeft: 1,
+            marginRight: 1.5,
+            // divider with content colour: https://stackoverflow.com/a/71083943/17381629
+            '&::before, &::after': {
+              borderColor: 'rgba(0, 0, 0, 0.45)',
+            },
+          }}
+        >
+          <Chip
+            label="Assigned Projects"
+            color="contrast"
+            icon={projects ? undefined : <CircularProgress size="1rem" />}
+          />
+        </Divider>
+      </Box>
+
+      <Box position="relative" height="100%" marginRight={0.1}>
+        <Box
+          position="absolute"
+          sx={{
+            inset: 0,
+            overflowY: 'auto',
+            // TODO?: scrollbar styling isn't fully supported on firefox
+            // so try and figure out workaround? idk
+            // https://developer.mozilla.org/en-US/docs/Web/CSS/::-webkit-scrollbar
+            '&::-webkit-scrollbar': {
+              width: '0.5em',
+            },
+            '&::-webkit-scrollbar-track': {},
+            '&::-webkit-scrollbar-thumb': {
+              backgroundColor: 'rgba(0, 0, 0, .1)',
+              outline: '1px solid slategrey',
+            },
+          }}
+        >
+          <Projects projects={projects && filteredProjects} />
+        </Box>
+      </Box>
+    </Stack>
+  );
+}
+
+// TODO?: made list bg a different colour?
+function Projects({ projects }: { projects: GetProjectsResponse | undefined }) {
+  if (!projects)
+    return (
+      <List
+        sx={{
+          height: '100%',
+          overflow: 'hidden',
+          marginX: 0.5,
+        }}
+      >
+        {range(10).map((num) => (
+          <Skeleton key={num} width="100%" animation="wave">
+            <ListItem aria-hidden="true">
+              <ListItemText>this cannot be empty</ListItemText>
+            </ListItem>
+          </Skeleton>
+        ))}
+      </List>
+    );
+
+  // TODO: look into using react-window (virtualized list) for better performance
+  // https://mui.com/material-ui/react-list/#virtualized-list
+
+  return (
+    <List>
+      {projects.map((project) => (
+        <ProjectListItem key={project.id} project={project} />
+      ))}
+    </List>
+  );
+}
+
+function ProjectListItem({
+  project,
+}: {
+  project: GetProjectsResponse[number];
+}) {
+  const router = useRouter();
 
   let currentProjectUrl: string | undefined;
   if (router.pathname.startsWith('/projects/[id]')) {
@@ -98,50 +214,52 @@ export default function ProjectsList() {
     currentProjectUrl = `/projects/${id as string}`;
   }
 
-  const onSearchSubmit = (query: string) => setFilteredProjects(filterProjects(query, projects));
+  const url = `/projects/${hashids.encode(project.id)}`;
+  const active = currentProjectUrl === url;
 
-  const resetResults = () => setFilteredProjects(projects);
+  // TODO: some sort of like way to signify that they can hover over it for tooltip
+  // maybe underline
+  const nameIsTooLong = project.name.length > 18;
+
+  const renderLink = (
+    <ListItemButton
+      sx={{
+        whiteSpace: 'nowrap',
+        overflowX: 'hidden',
+        textOverflow: 'ellipsis',
+
+        ':hover': {
+          bgcolor: '#e2ba3990', // darker makeItAllOrange.main
+          color: 'white',
+        },
+        ...(active && {
+          bgcolor: 'makeItAllOrange.main',
+          color: 'white',
+          ':hover': {
+            bgcolor: 'makeItAllOrange.main', // darker makeItAllOrange.main
+            color: 'white',
+          },
+        }),
+      }}
+      component={NextLinkComposed}
+      to={url}
+    >
+      <ListItemText primary={project.name} />
+    </ListItemButton>
+  );
 
   return (
-    <div>
-      <p className={styles.title}>Assigned Projects:</p>
-
-      <SearchBar
-        onSearchSubmit={onSearchSubmit}
-        resetResults={resetResults}
-      />
-
-      <ol className={`list-unstyled ${styles.projectsList}`}>
-        {filteredProjects.map((project, index) => {
-          const url = `/projects/${hashids.encode(project.id)}`;
-          const active = currentProjectUrl === url;
-
-          // TODO: some sort of like way to signify that they can hover over it for tooltip
-          const nameIsTooLong = project.name.length > 18;
-
-          return (
-            <li key={index}>
-              <OverlayTrigger
-                placement="right"
-                overlay={nameIsTooLong ? (
-                  <Tooltip>
-                    {project.name}
-                  </Tooltip>
-                ) : (
-                  <></>
-                )}
-              >
-                <Link
-                  href={url}
-                  className={`${styles.projectLink} ${active ? styles.active : ''}`}
-                >
-                  {project.name}
-                </Link>
-              </OverlayTrigger>
-            </li>
-          );
-        })}
-      </ol>
-    </div>
+    <ListItem disablePadding>
+      {nameIsTooLong ? (
+        <Tooltip
+          placement="right"
+          title={<Typography fontSize="small">{project.name}</Typography>}
+        >
+          {renderLink}
+        </Tooltip>
+      ) : (
+        renderLink
+      )}
+    </ListItem>
   );
 }

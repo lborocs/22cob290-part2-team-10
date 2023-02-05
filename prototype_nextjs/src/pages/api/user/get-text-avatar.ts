@@ -9,9 +9,21 @@ import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 export type ResponseSchema = z.infer<typeof TextAvatarSchema>;
 
+/**
+ * Get the text avatar of the signed in user.
+ * The text avatar is a combination of a background color and a foreground color.
+ * See {@link TextAvatarSchema}.
+ *
+ * @param res Response object with a JSON body containing the background color and the foreground color. See {@link ResponseSchema}.
+ * @example
+ * ```ts
+ * const { data } = await axios.get('/api/user/get-text-avatar');
+ * console.log(data); // { 'avatar-bg': '#000000', 'avatar-fg': '#ffffff' }
+ * ```
+ */
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseSchema | ErrorResponse>,
+  res: NextApiResponse<ResponseSchema | ErrorResponse>
 ) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method Not Allowed' });

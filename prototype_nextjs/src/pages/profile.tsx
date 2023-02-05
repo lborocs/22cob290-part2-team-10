@@ -1,17 +1,21 @@
-import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import type {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from 'next';
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 import { signOut } from 'next-auth/react';
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import { Toaster } from 'react-hot-toast';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Unstable_Grid2';
+import Stack from '@mui/material/Stack';
 
 import prisma from '~/lib/prisma';
 import { getEmailFromToken } from '~/lib/inviteToken';
 import { SidebarType } from '~/components/Layout';
 import TextAvatarEditor from '~/components/profile/TextAvatarEditor';
-import UserDetails from '~/components/profile/UserDetails';
+import UserDetailsSection from '~/components/profile/UserDetailsSection';
 import ChangePasswordSection from '~/components/profile/ChangePasswordSection';
 import InviteEmployeeSection from '~/components/profile/InviteEmployeeSection';
 import type { AppPage, SessionUser } from '~/types';
@@ -19,59 +23,70 @@ import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 import styles from '~/styles/Profile.module.css';
 
-const ProfilePage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ inviter }) => {
+// https://search.muz.li/ZjI5OThkOTQ4?utm_source=muz.li-insp&utm_medium=article&utm_campaign=%2Finspiration%2Fprofile-page%2F
+
+// TODO: use dynamic imports for modals
+const ProfilePage: AppPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({ inviter }) => {
   return (
-    <main className="flex-grow-1">
+    <Container
+      component="main"
+      fixed
+      sx={{
+        flexGrow: 1,
+      }}
+    >
       <Head>
         <title>Profile - Make-It-All</title>
       </Head>
 
-      <Toaster />
-
-      <section>
-        <Row>
-          <Col sm="auto" className="d-flex justify-content-center pb-4 pe-md-4">
-            <TextAvatarEditor />
-          </Col>
-          <Col>
-            {inviter && (
-              <small>Invited by: {inviter.name} ({inviter.email})</small>
-            )}
-            <UserDetails />
-          </Col>
-        </Row>
-      </section>
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        gap={{ xs: 3, sm: 2.5 }}
+        component="section"
+      >
+        <Box display="flex" justifyContent="center">
+          <TextAvatarEditor />
+        </Box>
+        <Box flexGrow={1}>
+          <UserDetailsSection inviter={inviter} />
+        </Box>
+      </Stack>
 
       <br />
       <br />
 
-      <section>
-        <Row xs={1} sm={2}>
-          <Col>
-            <ChangePasswordSection />
-          </Col>
-          <Col>
-            <InviteEmployeeSection />
-          </Col>
-        </Row>
-      </section>
+      <Grid container columns={{ xs: 1, sm: 2 }} component="section">
+        <Grid xs={1} sm={1}>
+          <ChangePasswordSection />
+        </Grid>
+        <Grid xs={1} sm={1}>
+          <InviteEmployeeSection />
+        </Grid>
+      </Grid>
 
       <br />
       <br />
 
       <Button
-        variant="danger"
+        variant="contained"
+        color="error"
         className={styles.button}
         onClick={() => signOut({ callbackUrl: '/' })}
       >
         Sign Out
       </Button>
-    </main >
+    </Container>
   );
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await unstable_getServerSession(context.req, context.res, authOptions);
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
 
   // not signed in, will be handled by _app
   // use auth's redirection because it provides callback URL
@@ -94,14 +109,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const inviter = inviterEmail
     ? await prisma.user.findUniqueOrThrow({
-      where: {
-        email: inviterEmail,
-      },
-      select: {
-        email: true,
-        name: true,
-      },
-    })
+        where: {
+          email: inviterEmail,
+        },
+        select: {
+          email: true,
+          name: true,
+        },
+      })
     : null;
 
   return {

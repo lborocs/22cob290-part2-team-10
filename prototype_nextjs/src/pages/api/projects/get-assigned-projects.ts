@@ -9,14 +9,30 @@ import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 export type ResponseSchema = Prisma.ProjectGetPayload<{
   select: {
-    id: true,
-    name: true,
-  },
+    id: true;
+    name: true;
+  };
 }>[];
 
+/**
+ * Get all projects the user has access to.
+ * If the user is a manager, all projects are returned.
+ * Otherwise, only projects the user has access to are returned.
+ *
+ * `Cache-Control: s-maxage=60, stale-while-revalidate=299`
+ * (1 minute cache with 5 minutes stale-while-revalidate)
+ *
+ * @param req Request object. No body is required.
+ * @param res Response object with a JSON body containing the projects. See {@link ResponseSchema}.
+ * @example
+ * ```ts
+ * const { data: projects } = await axios.get('/api/projects/get-assigned-projects');
+ * console.log(projects); // [{ id: 1, name: 'Project 1' }, { id: 2, name: 'Project 2' }]
+ * ```
+ */
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseSchema | ErrorResponse>,
+  res: NextApiResponse<ResponseSchema | ErrorResponse>
 ) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method Not Allowed' });
@@ -28,7 +44,7 @@ export default async function handler(
     return res.status(401).json({ error: 'You must be signed in.' });
   }
 
-  const user = (session.user as SessionUser);
+  const user = session.user as SessionUser;
 
   let projects: ResponseSchema;
 
@@ -49,5 +65,8 @@ export default async function handler(
     });
   }
 
-  res.status(200).json(projects);
+  res
+    .setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=299')
+    .status(200)
+    .json(projects);
 }

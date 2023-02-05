@@ -10,12 +10,25 @@ import { authOptions } from '~/pages/api/auth/[...nextauth]';
 export type RequestSchema = z.infer<typeof ChangeNameSchema>;
 
 export type ResponseSchema = {
-  success: boolean
+  success: boolean;
 };
 
+/**
+ * Change the name of the signed in user.
+ *
+ * @param req Request object with a JSON body containing the new name. See {@link RequestSchema}.
+ * @param res Response object with a JSON body containing the success status. See {@link ResponseSchema}.
+ * @example
+ * ```ts
+ * const { data } = await axios.post('/api/projects/get-assigned-projects', {
+ *   name: 'John Doe',
+ * });
+ * console.log(data); // { success: true }
+ * ```
+ */
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseSchema | ErrorResponse>,
+  res: NextApiResponse<ResponseSchema | ErrorResponse>
 ) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });

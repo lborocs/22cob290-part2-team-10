@@ -1,4 +1,5 @@
 import { forwardRef } from 'react';
+import clsx from 'clsx';
 import useSWR from 'swr';
 
 import { getTextAvatarFromStore, updateTextAvatarCss } from '~/lib/textAvatar';
@@ -6,16 +7,16 @@ import useUserStore from '~/store/userStore';
 
 import styles from '~/styles/TextAvatar.module.css';
 
-export interface TextAvatarProps extends React.ComponentPropsWithoutRef<'span'> {
-  size?: string
+export interface TextAvatarProps
+  extends React.ComponentPropsWithoutRef<'span'> {
+  size?: string;
 }
 
-export default forwardRef(function LoadingButton({
-  size = '40px',
-  className,
-  style,
-  ...props
-}: TextAvatarProps, ref: React.ForwardedRef<HTMLButtonElement>) {
+// TODO: https://mui.com/material-ui/react-avatar/#main-content
+export default forwardRef(function LoadingButton(
+  { size = '40px', className, style, ...props }: TextAvatarProps,
+  ref: React.ForwardedRef<HTMLButtonElement>
+) {
   const username = useUserStore((state) => state.user.name);
 
   // only show first 3 names
@@ -32,10 +33,9 @@ export default forwardRef(function LoadingButton({
 
   return (
     <span
-      className={`${styles.textAvatar} ${className ?? ''}`}
+      className={clsx(styles.textAvatar, className)}
       style={{
         width: size,
-        lineHeight: size,
         ...style,
       }}
       ref={ref}

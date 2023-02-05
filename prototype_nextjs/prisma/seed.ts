@@ -1,6 +1,8 @@
 import { PrismaClient, type Prisma } from '@prisma/client';
 import * as dotenv from 'dotenv';
-import _ from 'lodash';
+import capitalize from 'lodash/capitalize';
+import random from 'lodash/random';
+import range from 'lodash/range';
 import { LoremIpsum } from 'lorem-ipsum';
 
 import { hashPassword } from '../src/lib/user';
@@ -34,20 +36,26 @@ const lorem = new LoremIpsum({
  *
  * [Source](https://stackoverflow.com/a/9035732)
  */
-function randomTimeMs(start: Date = new Date(2022, 1, 1), end: Date = new Date()): number {
+function randomTimeMs(
+  start: Date = new Date(2022, 1, 1),
+  end: Date = new Date()
+): number {
   const startTime = start.getTime();
   const endTime = end.getTime();
 
   const diff = endTime - startTime;
 
-  return startTime + (Math.random() * diff);
+  return startTime + Math.random() * diff;
 }
 
 const testPassword = hashPassword.bind(null, 'TestPassword123!');
 
 const adminInviteToken = getInviteToken.bind(null, 'admin@make-it-all.co.uk');
 
-const managerInviteToken = getInviteToken.bind(null, 'manager@make-it-all.co.uk');
+const managerInviteToken = getInviteToken.bind(
+  null,
+  'manager@make-it-all.co.uk'
+);
 
 const getUserData = async (): Promise<Prisma.UserCreateInput[]> => [
   {
@@ -100,58 +108,63 @@ const getUserData = async (): Promise<Prisma.UserCreateInput[]> => [
 
 // TODO: seed user's todo list
 
-const projectData: Prisma.ProjectCreateInput[] = _.range(1, 11).map<Prisma.ProjectCreateInput>((num) => ({
-  name: `Project ${num}`,
-  leader: {
-    connect: {
-      email: 'leader@make-it-all.co.uk',
-    },
-  },
-  members: {
-    connect: [
-      {
-        email: 'alice@make-it-all.co.uk',
-      },
-      {
-        email: 'jane@make-it-all.co.uk',
-      },
-    ],
-  },
-  tasks: {
-    create: [],
-  },
-}) satisfies Prisma.ProjectCreateInput).concat([
-  {
-    name: 'ONLY Manager, John & Jane should see this',
-    leader: {
-      connect: {
-        email: 'john@make-it-all.co.uk',
-      },
-    },
-    members: {
-      connect: [
-        {
-          email: 'jane@make-it-all.co.uk',
+const projectData: Prisma.ProjectCreateInput[] = range(1, 11)
+  .map<Prisma.ProjectCreateInput>(
+    (num) =>
+      ({
+        name: `Project ${num}`,
+        leader: {
+          connect: {
+            email: 'leader@make-it-all.co.uk',
+          },
         },
-      ],
-    },
-  },
-  {
-    name: 'VERYYYYYYYYYYYYYYYYYYYYYYYYYYYYY LONGGGGGGGGGGGGGGGGGGGGGGGGGGGG NAME',
-    leader: {
-      connect: {
-        email: 'john@make-it-all.co.uk',
+        members: {
+          connect: [
+            {
+              email: 'alice@make-it-all.co.uk',
+            },
+            {
+              email: 'jane@make-it-all.co.uk',
+            },
+          ],
+        },
+        tasks: {
+          create: [],
+        },
+      } satisfies Prisma.ProjectCreateInput)
+  )
+  .concat([
+    {
+      name: 'ONLY Manager, John & Jane should see this',
+      leader: {
+        connect: {
+          email: 'john@make-it-all.co.uk',
+        },
+      },
+      members: {
+        connect: [
+          {
+            email: 'jane@make-it-all.co.uk',
+          },
+        ],
       },
     },
-    members: {
-      connect: [
-        {
-          email: 'alice@make-it-all.co.uk',
+    {
+      name: 'VERYYYYYYYYYYYYYYYYYYYYYYYYYYYYY LONGGGGGGGGGGGGGGGGGGGGGGGGGGGG NAME',
+      leader: {
+        connect: {
+          email: 'john@make-it-all.co.uk',
         },
-      ],
+      },
+      members: {
+        connect: [
+          {
+            email: 'alice@make-it-all.co.uk',
+          },
+        ],
+      },
     },
-  },
-]);
+  ]);
 
 const taskData: Prisma.ProjectTaskCreateInput[] = [
   {
@@ -160,7 +173,7 @@ const taskData: Prisma.ProjectTaskCreateInput[] = [
         id: 1,
       },
     },
-    title: 'Alice\'s Task',
+    title: "Alice's Task",
     description: 'desc',
     stage: 'TODO',
     deadline: new Date(2023, 2, 10),
@@ -181,7 +194,7 @@ const taskData: Prisma.ProjectTaskCreateInput[] = [
         id: 1,
       },
     },
-    title: 'Manager\'s Task',
+    title: "Manager's Task",
     description: 'Alice SHOULD see this',
     stage: 'COMPLETED',
     deadline: new Date(randomTimeMs(new Date(), new Date(2023, 11, 31))),
@@ -219,7 +232,7 @@ const taskData: Prisma.ProjectTaskCreateInput[] = [
         id: 1,
       },
     },
-    title: 'Jane\'s Task',
+    title: "Jane's Task",
     description: 'Alice SHOULD NOT see this',
     stage: 'IN_PROGRESS',
     deadline: new Date(randomTimeMs(new Date(), new Date(2023, 11, 31))),
@@ -360,7 +373,7 @@ const postData: Prisma.PostCreateInput[] = [
             },
           },
           title: 'A post by John',
-          summary: 'john\'s post, posted today*',
+          summary: "john's post, posted today*",
           content: 'Oh hello there!\n* the day db was seeded',
         },
       ],
@@ -371,16 +384,18 @@ const postData: Prisma.PostCreateInput[] = [
 // TODO: makeRandomProject (will have to get the current users and pick random users to assign to it)
 
 async function makeRandomUser(): Promise<Prisma.UserCreateInput> {
-  const firstName = _.capitalize(lorem.generateWords(1));
-  const lastName = _.capitalize(lorem.generateWords(1));
+  const firstName = capitalize(lorem.generateWords(1));
+  const lastName = capitalize(lorem.generateWords(1));
   const name = `${firstName} ${lastName}`;
 
   const email = `${firstName}@make-it-all.co.uk`.toLowerCase();
 
-  const numberOfPosts = _.random(1, 11);
-  const posts = await Promise.all(_.range(numberOfPosts).map(makeRandomPost.bind(undefined, email)));
+  const numberOfPosts = random(1, 11);
+  const posts = await Promise.all(
+    range(numberOfPosts).map(makeRandomPost.bind(undefined, email))
+  );
 
-  const isManager = _.random() > 0.3;
+  const isManager = random() > 0.3;
 
   return {
     email,
@@ -394,25 +409,27 @@ async function makeRandomUser(): Promise<Prisma.UserCreateInput> {
   };
 }
 
-async function makeRandomPost(authorEmail: string): Promise<Prisma.PostUncheckedCreateWithoutAuthorInput> {
+async function makeRandomPost(
+  authorEmail: string
+): Promise<Prisma.PostUncheckedCreateWithoutAuthorInput> {
   const title = lorem.generateSentences(1);
   const summary = lorem.generateSentences(1);
-  const content = lorem.generateParagraphs(_.random(1, 5));
+  const content = lorem.generateParagraphs(random(1, 5));
 
-  const topics = lorem.generateWords(_.random(1, 10)).split(' ');
+  const topics = lorem.generateWords(random(1, 10)).split(' ');
 
   async function getUpvoters(): Promise<string[]> {
     const users = await getUserData();
     const nUsers = users.length;
 
-    const nUpvotes = _.random(0, nUsers - 1);
+    const nUpvotes = random(0, nUsers - 1);
     const upVotedUsers = new Set<string>(); // emails
 
-    _.range(0, nUpvotes).forEach(() => {
+    range(0, nUpvotes).forEach(() => {
       let email: string;
 
       do {
-        email = users[_.random(0, nUsers - 1)].email;
+        email = users[random(0, nUsers - 1)].email;
       } while (upVotedUsers.has(email));
 
       upVotedUsers.add(email);
@@ -422,7 +439,7 @@ async function makeRandomPost(authorEmail: string): Promise<Prisma.PostUnchecked
   }
   const upvoters = await getUpvoters();
 
-  const adminEdited = _.random() > 0.2;
+  const adminEdited = random() > 0.2;
 
   return {
     upvoters: {
@@ -431,16 +448,14 @@ async function makeRandomPost(authorEmail: string): Promise<Prisma.PostUnchecked
       })),
     },
     topics: {
-      connectOrCreate: topics.map(
-        (name) => ({
-          where: {
-            name,
-          },
-          create: {
-            name,
-          },
-        })
-      ),
+      connectOrCreate: topics.map((name) => ({
+        where: {
+          name,
+        },
+        create: {
+          name,
+        },
+      })),
     },
     history: {
       create: [
@@ -454,18 +469,22 @@ async function makeRandomPost(authorEmail: string): Promise<Prisma.PostUnchecked
           summary,
           content,
         },
-      ].concat(adminEdited ? [
-        {
-          editor: {
-            connect: {
-              email: 'admin@make-it-all.co.uk',
-            },
-          },
-          title: `ADMIN edited: ${title}`,
-          summary,
-          content,
-        },
-      ] : []),
+      ].concat(
+        adminEdited
+          ? [
+              {
+                editor: {
+                  connect: {
+                    email: 'admin@make-it-all.co.uk',
+                  },
+                },
+                title: `ADMIN edited: ${title}`,
+                summary,
+                content,
+              },
+            ]
+          : []
+      ),
     },
   };
 }
@@ -473,102 +492,117 @@ async function makeRandomPost(authorEmail: string): Promise<Prisma.PostUnchecked
 async function main() {
   console.log('Start seeding ...');
 
-  await prisma.$transaction(async () => {
-    // users
+  await prisma.$transaction(
+    async () => {
+      // users
 
-    for (const u of await getUserData()) {
-      const user = await prisma.user.create({
-        data: u,
-      });
+      for (const u of await getUserData()) {
+        const user = await prisma.user.create({
+          data: u,
+        });
 
-      console.log(`Created user with id: ${user.id} (name: ${user.name}), invited by email: ${getEmailFromToken(user.inviteToken)}`);
+        console.log(
+          `Created user with id: ${user.id} (name: ${
+            user.name
+          }), invited by email: ${getEmailFromToken(user.inviteToken)}`
+        );
+      }
+
+      // random users + random posts
+      for (const i of range(5)) {
+        const data = await makeRandomUser();
+        const user = await prisma.user.create({
+          data,
+          include: {
+            _count: {
+              select: {
+                posts: true,
+              },
+            },
+          },
+        });
+
+        console.log(
+          `Created random user with id: ${user.id} (name: ${user.name}), with ${user._count.posts} posts`
+        );
+      }
+
+      console.log();
+      // projects
+
+      for (const p of projectData) {
+        const project = await prisma.project.create({
+          data: p,
+        });
+
+        console.log(
+          `Created project with id: ${project.id} (name: ${project.name})`
+        );
+      }
+
+      console.log();
+
+      for (const t of taskData) {
+        const projectTask = await prisma.projectTask.create({
+          data: t,
+          include: {
+            project: {
+              select: {
+                name: true,
+              },
+            },
+            assignee: {
+              select: {
+                email: true,
+              },
+            },
+            permitted: {
+              select: {
+                email: true,
+              },
+            },
+          },
+        });
+        const permittedEmails = projectTask.permitted.map((user) => user.email);
+
+        console.log(
+          `Created task with id: ${projectTask.id}, under project named: ${projectTask.project.name}, ` +
+            `assigned to user: ${
+              projectTask.assignee.email
+            }. Permitted emails: ${JSON.stringify(permittedEmails)}`
+        );
+      }
+
+      console.log();
+      // forum
+
+      for (const p of postData) {
+        const post = await prisma.post.create({
+          data: p,
+          include: {
+            author: {
+              select: {
+                name: true,
+              },
+            },
+            history: {
+              orderBy: {
+                date: 'desc',
+              },
+              take: 1,
+            },
+          },
+        });
+
+        console.log(
+          `Created post with id: ${post.id} (title: ${post.history[0].title}), authored by name: ${post.author.name}`
+        );
+      }
+    },
+    {
+      timeout: 15_000, // 15 seconds timeout
     }
-
-    // random users + random posts
-    for (const i of _.range(5)) {
-      const data = await makeRandomUser();
-      const user = await prisma.user.create({
-        data,
-        include: {
-          _count: {
-            select: {
-              posts: true,
-            },
-          },
-        },
-      });
-
-      console.log(`Created random user with id: ${user.id} (name: ${user.name}), with ${user._count.posts} posts`);
-    }
-
-    console.log();
-    // projects
-
-    for (const p of projectData) {
-      const project = await prisma.project.create({
-        data: p,
-      });
-
-      console.log(`Created project with id: ${project.id} (name: ${project.name})`);
-    }
-
-    console.log();
-
-    for (const t of taskData) {
-      const projectTask = await prisma.projectTask.create({
-        data: t,
-        include: {
-          project: {
-            select: {
-              name: true,
-            },
-          },
-          assignee: {
-            select: {
-              email: true,
-            },
-          },
-          permitted: {
-            select: {
-              email: true,
-            },
-          },
-        },
-      });
-      const permittedEmails = projectTask.permitted.map((user) => user.email);
-
-      console.log(
-        `Created task with id: ${projectTask.id}, under project named: ${projectTask.project.name}, `
-        + `assigned to user: ${projectTask.assignee.email}. Permitted emails: ${JSON.stringify(permittedEmails)}`
-      );
-    }
-
-    console.log();
-    // forum
-
-    for (const p of postData) {
-      const post = await prisma.post.create({
-        data: p,
-        include: {
-          author: {
-            select: {
-              name: true,
-            },
-          },
-          history: {
-            orderBy: {
-              date: 'desc',
-            },
-            take: 1,
-          },
-        },
-      });
-
-      console.log(`Created post with id: ${post.id} (title: ${post.history[0].title}), authored by name: ${post.author.name}`);
-    }
-  }, {
-    timeout: 15_000, // 15 seconds timeout
-  });
+  );
 
   console.log('Seeding finished.');
 }

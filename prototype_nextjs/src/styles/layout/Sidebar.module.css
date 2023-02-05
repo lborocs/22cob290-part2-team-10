@@ -1,9 +1,6 @@
 .sidebar {
     min-width: 250px;
     max-width: 250px;
-    background-color: var(--sidebar-background);
-    filter: brightness(var(--sidebar-brightness));
-    color: var(--sidebar-text);
     transition: all 0.3s;
 
     display: flex;
@@ -22,12 +19,6 @@
 .companyLogo {
     max-width: 100%;
     height: auto;
-}
-
-.sidebarContent {
-    padding-top: 20px;
-    /* border-bottom: 1px solid #47748b; */
-    flex-grow: 1;
 }
 
 /* default hide sidebar (on big screens) */

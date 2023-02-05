@@ -6,12 +6,23 @@ import type { ErrorResponse, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 export type ResponseSchema = {
-  user: SessionUser
+  user: SessionUser;
 };
 
+/**
+ * Get the signed in user from the session.
+ * See {@link authOptions ~/pages/api/auth/[...nextauth].ts}.
+ *
+ * @param res Response object with a JSON body containing the user. See {@link ResponseSchema}.
+ * @example
+ * ```ts
+ * const { data } = await axios.get('/api/user/get-user-from-session');
+ * console.log(data.user); // { id: '...', email: '...', name: '...', ... }
+ * ```
+ */
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseSchema | ErrorResponse>,
+  res: NextApiResponse<ResponseSchema | ErrorResponse>
 ) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method Not Allowed' });

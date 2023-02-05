@@ -1,34 +1,154 @@
 import type { AppProps } from 'next/app';
+import Head from 'next/head';
 import { SessionProvider, useSession } from 'next-auth/react';
+import {
+  type ColorSystemOptions,
+  experimental_extendTheme as extendTheme,
+  Experimental_CssVarsProvider as CssVarsProvider,
+} from '@mui/material/styles';
+import { grey } from '@mui/material/colors';
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
 import { config } from '@fortawesome/fontawesome-svg-core';
-import { ThemeProvider } from 'next-themes';
+import { Toaster, ToastBar } from 'react-hot-toast';
 
-// put global css imports before component imports because otherwise:
-//  it will put the component css before the global css in the head,
-//  so the global will get precedence when styling a component
-//  which is bad because the components won't look how we want them to look
-import '@fortawesome/fontawesome-svg-core/styles.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '~/styles/globals.css';
+// see https://mui.com/material-ui/experimental-api/css-theme-variables/usage/#typescript
+import type {} from '@mui/material/themeCssVarsAugmentation';
 
 import Layout from '~/components/Layout';
 import LoadingPage from '~/components/LoadingPage';
 import useUserStore from '~/store/userStore';
 import type { AppPage } from '~/types';
 
+import '@fortawesome/fontawesome-svg-core/styles.css';
+// Roboto is MUI default font
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+import '~/styles/globals.css';
+
 // https://fontawesome.com/v5/docs/web/use-with/react#getting-font-awesome-css-to-work
 config.autoAddCss = false;
 
+const commonPalette: ColorSystemOptions['palette'] = {
+  light: {
+    main: grey[50],
+    dark: grey[300],
+    contrastText: '#000',
+  },
+  dark: {
+    main: grey[900],
+    dark: grey[800], // the color is actually lighter but using dark for hover
+    contrastText: '#fff',
+  },
+  makeItAllOrange: {
+    light: '#f4dc49',
+    main: '#e2ba39',
+    dark: '#ffa726', // default palette.warning.main
+  },
+  makeItAllGrey: {
+    main: '#d3d3d3',
+    contrastText: '#000',
+  },
+  primary: {
+    main: '#e2ba39', // makeItAllOrange.main
+  },
+  secondary: {
+    main: '#d3d3d3', // makeItAllGrey.main
+  },
+};
+
+const theme = extendTheme({
+  colorSchemes: {
+    light: {
+      palette: {
+        ...commonPalette,
+        primary: {
+          light: '#e2ba39', // makeItAllOrange.main
+          main: '#ffa726', // makeItAllOrange.dark
+          // TODO: decide whether to use makeItAllOrange.main as primary.main
+          // or not, sometimes its fine, sometimes it's too light
+        },
+        contrast: commonPalette.dark,
+      },
+    },
+    dark: {
+      palette: {
+        ...commonPalette,
+        contrast: commonPalette.light,
+        text: {
+          primary: 'rgba(255, 255, 255, 0.9)',
+        },
+      },
+    },
+  },
+  components: {
+    MuiAppBar: {
+      styleOverrides: {
+        root: ({ ownerState, theme }) => ({
+          [theme.getColorSchemeSelector('light')]: {
+            backgroundColor: '#fafafa',
+          },
+        }),
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: ({ ownerState, theme }) => ({
+          // textTransform: 'none',
+        }),
+      },
+      variants: [
+        // makeItAllGrey is too light in light mode
+        {
+          props: { variant: 'outlined', color: 'secondary' },
+          style: ({ theme }) => ({
+            [theme.getColorSchemeSelector('light')]: {
+              color: theme.vars.palette.grey[700],
+              borderColor: theme.vars.palette.grey[700],
+            },
+          }),
+        },
+        {
+          props: { variant: 'text', color: 'secondary' },
+          style: ({ theme }) => ({
+            [theme.getColorSchemeSelector('light')]: {
+              color: theme.vars.palette.grey[700],
+              borderColor: theme.vars.palette.grey[700],
+            },
+          }),
+        },
+      ],
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        root: ({ ownerState, theme }) => ({
+          // same caretColor as input color
+          caretColor:
+            ownerState.color && theme.vars.palette[ownerState.color].main,
+          '&.Mui-error': {
+            // error color caret on error
+            caretColor: theme.vars.palette.error.main,
+          },
+        }),
+      },
+    },
+  },
+});
+
 interface MyAppProps extends AppProps {
-  Component: AppProps['Component'] & AppPage
+  Component: AppProps['Component'] & AppPage;
 }
 
-export default function App({
-  Component,
-  pageProps: { session, ...pageProps },
-}: MyAppProps) {
+/**
+ * The root component of the app. It is used to initialize pages.
+ *
+ * @see https://nextjs.org/docs/advanced-features/custom-app
+ */
+export default function App({ Component, pageProps }: MyAppProps) {
   if (pageProps.user) {
-    useUserStore.setState((state) => ({
+    useUserStore.setState(() => ({
       user: pageProps.user,
     }));
   }
@@ -36,8 +156,15 @@ export default function App({
   const { noAuth, layout } = Component;
 
   return (
-    <SessionProvider session={session}>
-      <ThemeProvider>
+    <SessionProvider session={pageProps.session}>
+      <Head>
+        <meta name="viewport" content="initial-scale=1, width=device-width" />
+      </Head>
+      <CssVarsProvider theme={theme} defaultMode="system">
+        <CssBaseline />
+
+        <ThemedToaster />
+
         {noAuth ? (
           <Component {...pageProps} />
         ) : (
@@ -51,8 +178,36 @@ export default function App({
             )}
           </Auth>
         )}
-      </ThemeProvider>
+      </CssVarsProvider>
     </SessionProvider>
+  );
+}
+
+function ThemedToaster() {
+  return (
+    <Toaster
+      toastOptions={{
+        duration: 6000,
+        success: {
+          duration: 5000,
+        },
+      }}
+    >
+      {(t) => (
+        <Box
+          sx={(theme) => ({
+            [theme.getColorSchemeSelector('dark')]: {
+              '> *': {
+                backgroundColor: '#333',
+                color: '#fff',
+              },
+            },
+          })}
+        >
+          <ToastBar style={t.style} toast={t} />
+        </Box>
+      )}
+    </Toaster>
   );
 }
 
@@ -62,9 +217,9 @@ function Auth({ children }: { children: React.ReactNode }) {
 
   if (status === 'loading') {
     return (
-      <div className="vh-100 vw-100">
+      <Box height="100vh" width="100vw">
         <LoadingPage />
-      </div>
+      </Box>
     );
   }
 

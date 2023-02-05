@@ -17,10 +17,10 @@ export const SPECIAL_SYMBOL_REGEX = /(.*\W)/;
 /**
  * User email has to be a Make-It-All work email address.
  */
-export const EmailSchema = z.string()
+export const EmailSchema = z
+  .string()
   .regex(/@make-it-all.co.uk$/i, 'Invalid Make-It-All email')
-  .email('Not an email')
-  ;
+  .email('Enter a valid email');
 
 /**
  * Password has to conform to password policy:
@@ -31,18 +31,19 @@ export const EmailSchema = z.string()
  * - At least 1 number
  * - At least 1 special symbol
  */
-export const PasswordSchema = z.string()
+export const PasswordSchema = z
+  .string()
   .regex(SPECIAL_SYMBOL_REGEX, 'No special symbol')
   .regex(NUMBER_REGEX, 'No number')
   .regex(UPPERCASE_REGEX, 'No uppercase letter')
   .regex(LOWERCASE_REGEX, 'No lowercase letter')
   .max(MAX_PASSWORD_LENGTH, 'Too long')
-  .min(MIN_PASSWORD_LENGTH, 'Too short')
-  ;
+  .min(MIN_PASSWORD_LENGTH, 'Too short');
 
 // no trailing & leading spaces regex: https://stackoverflow.com/a/38935454
 export function nameSchema() {
-  return z.string()
+  return z
+    .string()
     .regex(/^[a-z][a-z ]*[a-z]$/i, 'Invalid name')
     .min(1, 'Name is required');
 }

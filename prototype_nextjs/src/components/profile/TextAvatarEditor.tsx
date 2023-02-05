@@ -1,9 +1,10 @@
-import { useRef, useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import CloseButton from 'react-bootstrap/CloseButton';
-import Form from 'react-bootstrap/Form';
-import Modal from 'react-bootstrap/Modal';
-import Row from 'react-bootstrap/Row';
+import { useCallback, useId, useMemo, useRef, useState } from 'react';
+import Button from '@mui/material/Button';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import InputLabel from '@mui/material/InputLabel';
+import LoadingButton from '@mui/lab/LoadingButton';
+import Stack from '@mui/material/Stack';
 import { Formik, type FormikProps } from 'formik';
 import toast from 'react-hot-toast';
 import useSWR from 'swr';
@@ -15,8 +16,10 @@ import {
   updateTextAvatarStore,
   updateTextAvatarCss,
 } from '~/lib/textAvatar';
+import CircularColorInput from '~/components/CircularColorInput';
 import TextAvatarComponent from '~/components/TextAvatar';
-import LoadingButton from '~/components/LoadingButton';
+import StyledCloseButtonDialog from '~/components/StyledCloseButtonDialog';
+import TextAvatarResetButton from '~/components/profile/TextAvatarResetButton';
 
 import styles from '~/styles/profile/TextAvatarEditor.module.css';
 
@@ -24,10 +27,17 @@ import styles from '~/styles/profile/TextAvatarEditor.module.css';
  * Component providing functionality for the user to change the colours of their text avatar.
  */
 export default function TextAvatarEditor() {
-  const [showModal, setShowModal] = useState(false);
+  const formId = useId();
+
+  const [showDialog, setShowDialog] = useState(false);
+
+  // The system default text avatar is the text avatar that is used when the user
+  // first visits the page.
+  const systemDefault = useMemo(() => getDefaultTextAvatar(), []);
 
   // default as in default values for the form (what is currently set in store)
-  const [defaultTextAvatar, setDefaultTextAvatar] = useState<TextAvatar>(null as unknown as TextAvatar);
+  // maybe initial is a better name? don't think so
+  const [defaultTextAvatar, setDefaultTextAvatar] = useState<TextAvatar>();
 
   // can't use formikRef.current.isSubmitting because this component wouldn't re-render on submit (only the form would)
   // so the LoadingButton doesn't enter it's loading state - it won't visually change
@@ -36,90 +46,83 @@ export default function TextAvatarEditor() {
 
   const formikRef = useRef<FormikProps<TextAvatar>>(null);
 
-  // using SWR like useEffect(..., [])
+  // using SWR like useEffect(..., []) for async data fetching while loading component
   useSWR('defaultTextAvatar', async () => {
     const textAvatar = await getTextAvatarFromStore();
 
     setDefaultTextAvatar(textAvatar);
   });
 
-  // system default as in what they had before changing any settings
-  const resetToSystemDefault = () => {
-    const systemDefault = getDefaultTextAvatar();
+  const handleOpen = () => setShowDialog(true);
+  const handleClose = () => setShowDialog(false);
 
+  // system default as in what they had before changing any settings
+  const resetToSystemDefault = useCallback(() => {
     formikRef.current!.setValues(systemDefault);
 
     updateTextAvatarCss(systemDefault);
-  };
+  }, [systemDefault]);
 
-  const cancelAndClose = () => {
-    updateTextAvatarCss(defaultTextAvatar);
-    onHide();
-  };
+  const cancelAndClose = useCallback(() => {
+    updateTextAvatarCss(defaultTextAvatar!);
+    handleClose();
+  }, [defaultTextAvatar]);
 
-  const onHide = () => setShowModal(false);
+  const handleSubmit: React.ComponentProps<
+    typeof Formik<TextAvatar>
+  >['onSubmit'] = useCallback(async (values, { resetForm }) => {
+    const success = await updateTextAvatarStore(values);
 
-  const handleSubmit: React.ComponentProps<typeof Formik<TextAvatar>>['onSubmit']
-    = async (values, { resetForm }) => {
-      const success = await updateTextAvatarStore(values);
+    if (success) {
+      setDefaultTextAvatar(values);
 
-      if (success) {
-        setDefaultTextAvatar(values);
+      toast.success('Saved.', {
+        position: 'bottom-center',
+      });
+      handleClose();
+    } else {
+      // shouldn't happen
+      toast.error('Please try again', {
+        position: 'bottom-center',
+      });
+    }
 
-        toast.success('Saved.', {
-          position: 'bottom-center',
-        });
-        onHide();
-      } else { // shouldn't happen
-        toast.error('Please try again', {
-          position: 'bottom-center',
-        });
-      }
-
-      resetForm({ values });
-      updateTextAvatarCss(values);
-    };
+    resetForm({ values });
+    updateTextAvatarCss(values);
+  }, []);
 
   return (
     <div>
-      {/* TODO: on hover show like a pencil to signify that it's editable */}
+      {/* TODO?: on hover show like a pencil to signify that it's editable */}
       <TextAvatarComponent
         className={styles.textAvatar}
         size="120px"
         style={{
-          fontSize: '3em',
+          fontSize: '3rem',
         }}
-        onClick={() => setShowModal(true)}
+        onClick={handleOpen}
       />
 
-      <Modal
-        show={showModal}
-        onHide={onHide}
-        backdrop="static"
-        keyboard={false}
-        centered
+      <StyledCloseButtonDialog
+        open={showDialog}
+        onClose={cancelAndClose}
+        maxWidth="xs"
+        fullWidth
+        dialogTitle="Avatar"
       >
-        <Modal.Header>
-          <Modal.Title>Avatar</Modal.Title>
-          <CloseButton
-            onClick={cancelAndClose}
-          />
-        </Modal.Header>
-
-        <Modal.Body>
+        <DialogContent dividers>
           <Formik
-            initialValues={{
-              ...defaultTextAvatar,
-            }}
+            initialValues={defaultTextAvatar!}
             onSubmit={handleSubmit}
             onReset={() => {
-              updateTextAvatarCss(defaultTextAvatar);
+              updateTextAvatarCss(defaultTextAvatar!);
             }}
-            validate={(values) => { // basically onChange
+            validate={(values) => {
+              // basically onChange
               updateTextAvatarCss(values);
             }}
             innerRef={formikRef}
-            enableReinitialize
+            enableReinitialize // defaultTextAvatar is set after the component is mounted
           >
             {({
               values,
@@ -132,75 +135,87 @@ export default function TextAvatarEditor() {
               setIsSaving(isSubmitting);
 
               return (
-                <Form
-                  id="text-avatar-form"
+                <Stack
+                  gap={1}
+                  component="form"
+                  id={formId}
                   onSubmit={handleSubmit}
                   onReset={handleReset}
                 >
-                  <Form.Group as={Row} controlId="avatar-bg">
-                    <Form.Label column>Background colour</Form.Label>
-                    <Form.Control
-                      type="color"
+                  <Stack direction="row" justifyContent="space-between">
+                    <InputLabel
+                      color="contrast"
+                      htmlFor="avatar-bg"
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                      }}
+                    >
+                      Background colour
+                    </InputLabel>
+                    <CircularColorInput
                       name="avatar-bg"
                       value={values['avatar-bg']}
                       onChange={handleChange}
                       onBlur={handleBlur}
                     />
-                  </Form.Group>
-                  <Form.Group as={Row} className="mt-1" controlId="avatar-fg">
-                    <Form.Label column>Text colour</Form.Label>
-                    <Form.Control
-                      type="color"
+                  </Stack>
+                  <Stack direction="row" justifyContent="space-between">
+                    <InputLabel
+                      htmlFor="avatar-fg"
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                      }}
+                    >
+                      Text colour
+                    </InputLabel>
+                    <CircularColorInput
                       name="avatar-fg"
                       value={values['avatar-fg']}
                       onChange={handleChange}
                       onBlur={handleBlur}
                     />
-                  </Form.Group>
-                </Form>
+                  </Stack>
+                </Stack>
               );
             }}
           </Formik>
-        </Modal.Body>
+        </DialogContent>
 
-        <Modal.Footer>
+        <DialogActions>
           <Button
-            variant="secondary"
-            size="sm"
+            variant="contained"
+            color="secondary"
+            size="small"
             onClick={cancelAndClose}
+            disabled={isSaving}
+            disableElevation
           >
             Close
           </Button>
-          <Button
-            variant="warning"
-            size="sm"
-            onClick={resetToSystemDefault}
-          >
-            Reset to default
-          </Button>
-          <Button
-            type="reset"
-            form="text-avatar-form"
-            variant="warning"
-            size="sm"
-          >
-            Reset
-          </Button>
+
+          <TextAvatarResetButton
+            formId={formId}
+            defaultTextAvatar={defaultTextAvatar}
+            systemDefaultTextAvatar={systemDefault}
+            resetToSystemDefault={resetToSystemDefault}
+            disabled={isSaving}
+          />
+
           <LoadingButton
             type="submit"
-            form="text-avatar-form"
-            variant="primary"
-            size="sm"
-            isLoading={isSaving}
-            loadingContent="Saving"
-            style={{
-              width: '5.7em',
-            }}
+            form={formId}
+            variant="contained"
+            color="success"
+            size="small"
+            loading={isSaving}
+            disableElevation
           >
             Save
           </LoadingButton>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </StyledCloseButtonDialog>
     </div>
   );
 }

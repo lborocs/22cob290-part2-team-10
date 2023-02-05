@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+cd prototype_nextjs
+pnpm pretty-quick --staged --verbose --pattern "**/*.{js,jsx,ts,tsx,css,cjs,mjs}"
