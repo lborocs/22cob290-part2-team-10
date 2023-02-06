@@ -1,31 +1,62 @@
-import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import type {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from 'next';
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
-import { signIn } from 'next-auth/react';
+
+// import { signUp } from 'next-auth/react';
+
 import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 import type { z } from 'zod';
-import Image from 'next/image';
+import Link from 'next/link';
+import Image, { type ImageLoader } from 'next/image';
+import { useRouter } from 'next/router';
+import { signIn } from 'next-auth/react';
+import Box from '@mui/material/Box';
+import LoadingButton from '@mui/lab/LoadingButton';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import { withZodSchema } from 'formik-validator-zod';
+// import toast from 'react-hot-toast';
 
 import SignUpSchema from '~/schemas/user/signup';
 import type { AppPage } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import type { ResponseSchema as SignUpResponse } from '~/pages/api/user/signUp';
-import { Formik, Field, Form, ErrorMessage } from "formik";
-import FloatingNameField from '~/components/FloatingNameField';
-import FloatingTokenField from '~/components/FloatingTokenField';
-import FloatingEmailField from '~/components/FloatingEmailField';
-import FloatingPasswordField from '~/components/FloatingPasswordField';
-import LoadingButton from '~/components/LoadingButton';
-import SignInSchema from '~/schemas/user/signIn';
-import { withZodSchema } from 'formik-validator-zod';
+import { Formik, Field, Form, ErrorMessage } from 'formik';
+
+// import FloatingNameField from '~/components/FloatingNameField';
+// import FloatingTokenField from '~/components/FloatingTokenField';
+// import FloatingEmailField from '~/components/FloatingEmailField';
+// import FloatingPasswordField from '~/components/FloatingPasswordField';
+
+import NameField from '~/components/NameField';
+import EmailField from '~/components/EmailField';
+import PasswordField from '~/components/PasswordField';
+import TokenField from '~/components/TokenField';
+
+// import LoadingButton from '~/components/LoadingButton';
+
+// import SignInSchema from '~/schemas/user/signIn';
+
 import styles from '~/styles/SignIn.module.css';
 
-import makeItAllLogo from '~/../public/make_it_all.png';
+import makeItAllLogo from '~/../public/assets/make_it_all.png';
 
+import darkBg from '~/../public/assets/signin/mesh-63.png';
+import darkBgMobile from '~/../public/assets/signin/mesh-63-mobile.png';
 
+const bgImageLoader: ImageLoader = ({ src, width, quality }) => {
+  // approx width that should work on most phones and tablets
+  if (width <= 2000) {
+    // return 'https://www.shutterstock.com/image-photo/barcelona-feb-23-lionel-messi-600w-1900547713.jpg';
+    return `/_next/image?url=${darkBgMobile.src}&w=${width}&q=${quality}`;
+  }
 
-
+  return `/_next/image?url=${darkBg.src}&w=${width}&q=${quality}`;
+};
 
 // signup?invite=${inviteToken}
 
@@ -33,12 +64,19 @@ type SignUpFormData = z.infer<typeof SignUpSchema>;
 
 // TODO: SignupPage
 // TODO: use Formik and SignUpSchema for client-side validation
-const SignupPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ inviteToken }) => {
+const SignupPage: AppPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({ inviteToken }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = Object.fromEntries(new FormData(e.currentTarget)) as SignUpFormData;
+    const formData = Object.fromEntries(
+      new FormData(e.currentTarget)
+    ) as SignUpFormData;
 
-    const { data } = await axios.post<SignUpResponse>('api/user/signUp', formData);
+    const { data } = await axios.post<SignUpResponse>(
+      'api/user/signUp',
+      formData
+    );
 
     if (data.success) {
       toast.success('Accounted created!');
@@ -69,31 +107,224 @@ const SignupPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>
     }
   };
 
+  // return (
+  //   // <main className={styles.main}>
+  //   <Box
+  //   position="relative"
+  //   height="100vh"
+  //   component="main"
+  //   sx={(theme) => ({
+  //     [theme.getColorSchemeSelector('light')]: {
+  //       bgcolor: theme.vars.palette.makeItAllGrey.main,
+  //     },
+  //   })}
+  //   >
+  // <Head>
+  //       <title>Signup - Make-It-All</title>
+  //     </Head>
+
+  //     <Box
+  //       position="absolute"
+  //       width={1}
+  //       height={1}
+  //       sx={(theme) => ({
+  //         display: 'none',
+  //         [theme.getColorSchemeSelector('dark')]: {
+  //           display: 'block',
+  //         },
+  //       })}
+  //     ></Box>
+
+  //     {/* TODO */}
+  //     {/* <Toaster
+  //       position="top-center"
+  //     /> */}
+  //     {/* <p>
+  //       token = {String(inviteToken)}
+  //     </p> */}
+
+  //     <div className={styles.wrapper}>
+  //       <Image
+  //         className={`mb-3 ${styles.logo}`}
+  //         src={makeItAllLogo}
+  //         alt="Make-It-All Logo"
+  //         priority
+  //       />
+
+  //       <Formik
+  //         initialValues={{
+  //           email: '',
+  //           password: '',
+  //         }}
+  //         validate={withZodSchema(SignUpSchema)}
+  //         onSubmit={handleSubmit}
+  //       >
+  //         {({
+
+  //           values,
+  //           errors,
+  //           touched,
+  //           handleChange,
+  //           handleBlur,
+  //           handleSubmit,
+  //           isSubmitting,
+  //           isValid,
+  //         }) => (
+  //           <Form
+  //             onSubmit={handleSubmit}
+  //             className={styles.formGrid}
+  //             noValidate
+  //           >
+  //             <div>
+  //               <TokenField
+  //                 name='inviteToken'
+  //                 controlId='inviteToken'
+  //                 value={values.inviteToken}
+  //                 onChange={handleChange}
+  //                 onBlur={handleBlur}
+  //                 isInvalid={touched.inviteToken && errors.inviteToken !== undefined}
+  //                 feedbackTooltip
+  //                 onlyFeedbackOutline={errors.inviteToken?.length === 0}
+  //               />
+  //             </div>
+
+  //             <div>
+  //               <NameField
+  //                 name='name'
+  //                 controlId='name'
+  //                 value={values.name}
+  //                 onChange={handleChange}
+  //                 onBlur={handleBlur}
+  //                 isInvalid={touched.name && errors.name !== undefined}
+  //                 feedbackTooltip
+  //                 onlyFeedbackOutline={errors.name?.length === 0}
+  //               />
+  //             </div>
+
+  //             <div>
+  //               <EmailField
+  //                 name="email"
+  //                 controlId="email"
+  //                 feedback={touched.email ? errors.email : undefined}
+  //                 value={values.email}
+  //                 onChange={handleChange}
+  //                 onBlur={handleBlur}
+  //                 isInvalid={touched.email && errors.email !== undefined}
+  //                 feedbackTooltip
+  //                 onlyFeedbackOutline={errors.email?.length === 0}
+  //               />
+  //             </div>
+  //             <div>
+  //               <PasswordField
+  //                 name="password"
+  //                 controlId="password"
+  //                 feedback={touched.password ? errors.password : undefined}
+  //                 value={values.password}
+  //                 onChange={handleChange}
+  //                 onBlur={handleBlur}
+  //                 isInvalid={touched.password && errors.password !== undefined}
+  //                 feedbackTooltip
+  //                 onlyFeedbackOutline={errors.password?.length === 0}
+  //                 policyTooltip
+  //               />
+  //             </div>
+  //             <div>
+
+  //               <div className={styles.links}>
+  //               <LoadingButton
+  //                   type="submit"
+  //                   variant="contained"
+  //                   loading={isSubmitting}
+  //                   disabled={!isValid}
+  //                   className={styles.signInBtn}
+  //                 >
+  //                   Sign Up
+  //                 </LoadingButton>
+  //               </div>
+
+  //             </div>
+  //           </Form>
+  //         )}
+  //       </Formik>
+  //     </div>
+
+  //   {/* </main> */}
+  //   </Box>
+  // );
+
   return (
-    <main className={styles.main}>
+    <Box
+      position="relative"
+      height="100vh"
+      component="main"
+      sx={(theme) => ({
+        [theme.getColorSchemeSelector('light')]: {
+          bgcolor: theme.vars.palette.makeItAllGrey.main,
+        },
+      })}
+    >
       <Head>
-        <title>Signup - Make-It-All</title>
+        <title>Sign In - Make-It-All</title>
       </Head>
 
-      {/* TODO */}
-      <Toaster
-        position="top-center"
-      />
-      {/* <p>
-        token = {String(inviteToken)}
-      </p> */}
-
-
-
-
-
-      <div className={styles.wrapper}>
+      <Box
+        position="absolute"
+        width={1}
+        height={1}
+        sx={(theme) => ({
+          display: 'none',
+          [theme.getColorSchemeSelector('dark')]: {
+            display: 'block',
+          },
+        })}
+      >
         <Image
-          className={`mb-3 ${styles.logo}`}
-          src={makeItAllLogo}
-          alt="Make-It-All Logo"
+          src={darkBg}
+          alt="dark background gradient"
+          quality={100}
+          sizes="100vw"
           priority
+          fill
+          style={{
+            objectFit: 'cover',
+          }}
+          loader={bgImageLoader}
         />
+      </Box>
+
+      <Paper
+        sx={(theme) => ({
+          position: 'absolute',
+          inset: 0,
+          margin: 'auto',
+          height: 'fit-content',
+          width: {
+            xs: '85vw',
+            sm: '70vw',
+            md: '50vw',
+            lg: '45vw',
+            xl: '35vw',
+          },
+          padding: {
+            xs: 3,
+            md: 8,
+          },
+          borderRadius: 3,
+          [theme.getColorSchemeSelector('light')]: {
+            bgcolor: theme.vars.palette.makeItAllGrey.main,
+            boxShadow: 3,
+          },
+        })}
+      >
+        <Box marginBottom={2.5}>
+          <Image
+            className={styles.logo}
+            src={makeItAllLogo}
+            alt="Make-It-All Logo"
+            quality={100}
+            priority
+          />
+        </Box>
 
         <Formik
           initialValues={{
@@ -104,7 +335,6 @@ const SignupPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>
           onSubmit={handleSubmit}
         >
           {({
-
             values,
             errors,
             touched,
@@ -114,163 +344,81 @@ const SignupPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>
             isSubmitting,
             isValid,
           }) => (
-            <Form
+            <form
               onSubmit={handleSubmit}
               className={styles.formGrid}
               noValidate
             >
-              <div>
-                <FloatingTokenField
-                  name='inviteToken'
-                  controlId='inviteToken'
-                  value={values.inviteToken}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  isInvalid={touched.inviteToken && errors.inviteToken !== undefined}
-                  feedbackTooltip
-                  onlyFeedbackOutline={errors.inviteToken?.length === 0}
-                />
-              </div>
-
-              <div>
-                <FloatingNameField
-                  name='name'
-                  controlId='name'
+              <div className={styles.inputGrid}>
+                <NameField
+                  name="name"
+                  variant="outlined"
+                  size="small"
                   value={values.name}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  isInvalid={touched.name && errors.name !== undefined}
-                  feedbackTooltip
-                  onlyFeedbackOutline={errors.name?.length === 0}
+                  error={touched.name && errors.name !== undefined}
+                  helperText={errors.name || 'Please enter your full name'}
+                  required
                 />
-              </div>
-
-
-              <div>
-                <FloatingEmailField
+                <EmailField
                   name="email"
-                  controlId="email"
-                  feedback={touched.email ? errors.email : undefined}
+                  variant="outlined"
+                  size="small"
                   value={values.email}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  isInvalid={touched.email && errors.email !== undefined}
-                  feedbackTooltip
-                  onlyFeedbackOutline={errors.email?.length === 0}
+                  error={touched.email && errors.email !== undefined}
+                  helperText={errors.email || 'Please enter your work email'}
+                  required
                 />
-              </div>
-              <div>
-                <FloatingPasswordField
+                <PasswordField
                   name="password"
-                  controlId="password"
-                  feedback={touched.password ? errors.password : undefined}
+                  variant="outlined"
+                  size="small"
                   value={values.password}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  isInvalid={touched.password && errors.password !== undefined}
-                  feedbackTooltip
-                  onlyFeedbackOutline={errors.password?.length === 0}
+                  error={touched.password && errors.password !== undefined}
+                  helperText={errors.password || 'Please enter your password'}
                   policyTooltip
+                  required
+                />
+                <TokenField
+                  name="token"
+                  variant="outlined"
+                  size="small"
+                  value={values.token}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.token && errors.token !== undefined}
+                  helperText={errors.token || 'Please enter your invite token'}
+                  required
                 />
               </div>
               <div>
                 <div className={styles.links}>
+                  <Link href="/..">
+                    <Typography fontWeight={500} color="contrast.main">
+                      Back to Login
+                    </Typography>
+                  </Link>
                   <LoadingButton
-                    variant="secondary"
                     type="submit"
-                    isLoading={isSubmitting}
+                    variant="contained"
+                    loading={isSubmitting}
                     disabled={!isValid}
                     className={styles.signInBtn}
                   >
-                    Sign Up
+                    Sign in
                   </LoadingButton>
                 </div>
               </div>
-            </Form>
+            </form>
           )}
         </Formik>
-      </div>
-
-
-
-      {/* <Formik
-        initialValues={{ inviteToken: '', email: '', name: '', password: '' }}
-        validate={values => {
-          const errors = {};
-          if (!values.email) {
-            errors.email = 'Required';
-          } else if (
-            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-          ) {
-            errors.email = 'Invalid email address';
-          }
-          if (!values.password) {
-            errors.password = 'Required';
-          } else if (
-            !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,64}$/i.test(values.password)
-          ) {
-            errors.password = `
-           Invalid Password. Please ensure password is at least 12 characters long,
-           at least 1 uppercase,
-           at least 1 lowercase,
-           at least 1 number
-           and at least 1 special symbol`;
-          }
-          return errors;
-        }}
-        onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
-            setSubmitting(false);
-          }, 400);
-        }}
-      >
-        {({ isSubmitting }) => (
-          <Form>
-            <Field type="email" name="email" />
-            <ErrorMessage name="email" component="div" />
-            <Field type="password" name="password" />
-            <ErrorMessage name="password" component="div" />
-            <button type="submit" disabled={isSubmitting}>
-              Submit
-            </button>
-          </Form>
-        )}
-      </Formik> */}
-
-
-
-
-      {/* previous form implemented without formik */}
-      {/* <form
-        onSubmit={handleSubmit}
-      >
-        <input
-          name="inviteToken"
-          title="Invite token"
-          placeholder="Enter invite token"
-          defaultValue={inviteToken ?? undefined}
-        />
-        <input
-          name="email"
-          title="Email"
-          placeholder="Enter email"
-        />
-        <input
-          name="name"
-          title="Name"
-          placeholder="Enter name"
-        />
-        <input
-          name="password"
-          title="Password"
-          placeholder="Enter password"
-        />
-        <button type="submit">
-          Sign up
-        </button>
-      </form> */}
-    </main>
+      </Paper>
+    </Box>
   );
 };
 
@@ -278,7 +426,11 @@ const SignupPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>
 SignupPage.noAuth = true;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await unstable_getServerSession(context.req, context.res, authOptions);
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
 
   // TODO: decide what to do if they're already signed in
   // ?: toast saying they're already signed in
@@ -292,7 +444,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   //   };
   // }
 
-  const inviteToken = context.query?.invite as string | undefined ?? null;
+  const inviteToken = (context.query?.invite as string | undefined) ?? null;
 
   return {
     props: {
