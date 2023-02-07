@@ -168,7 +168,7 @@ $staff = get_managed_staff($email);
 
                       // TODO: make clickable so they can see more about the project, whether by changing page or
                       // by showing a modal
-                      //i
+                      
                       echo <<<HTML
                         <li class="list-group-item">
                           <p
