@@ -16,6 +16,7 @@ import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
+import SearchAppBar from './dashboardcomp/Searchbar';
 
 /*
 "There should also be a manager’s dashboard so that the managers or team lead‐
@@ -35,22 +36,22 @@ const DashboardPage: AppPage<
         <title>Dashboard - Make-It-All</title>
       </Head>
       {/* TODO */}
-      <h1>Manager dashboard</h1>
-      <div>
-      <Table/>
 
-     
-      <Stack spacing={5} direction="row">
-      <Button variant="contained" startIcon={<AddIcon />}>Add Project</Button>
-     
-    </Stack>
-   
-    </div>
-      
+      <div>
+        <SearchAppBar />
+      </div>
+      <div>
+        <Table />
+
+        <Stack spacing={5} direction="row">
+          <Button variant="contained" startIcon={<AddIcon />}>
+            Add Project
+          </Button>
+        </Stack>
+      </div>
     </main>
   );
 };
-
 
 DashboardPage.layout = {
   sidebar: {
