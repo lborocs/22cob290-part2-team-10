@@ -119,7 +119,7 @@ const SignupPage: AppPage<
       })}
     >
       <Head>
-        <title>Sign In - Make-It-All</title>
+        <title>Sign Up - Make-It-All</title>
       </Head>
 
       <Box
