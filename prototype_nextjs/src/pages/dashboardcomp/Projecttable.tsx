@@ -14,7 +14,7 @@ interface Column {
     | 'dateAssigned'
     | 'deadline'
     | 'projectLeader'
-    | 'progress';
+    | 'daysleft';
   label: string;
   minWidth?: number;
   align?: 'right';
@@ -39,8 +39,8 @@ const columns: readonly Column[] = [
     format: (value: number) => value.toLocaleString('en-US'),
   },
   {
-    id: 'progress',
-    label: 'Progress',
+    id: 'daysleft',
+    label: 'days left',
     minWidth: 170,
     align: 'right',
     format: (value: number) => value.toFixed(2),
@@ -52,7 +52,7 @@ interface Data {
   dateAssigned: string;
   deadline: string;
   projectLeader: string;
-  progress: number;
+  daysleft: number;
 }
 
 function createData(
@@ -60,9 +60,9 @@ function createData(
   dateAssigned: string,
   deadline: string,
   projectLeader: string,
-  progress: number
+  daysleft: number
 ): Data {
-  return { projectName, dateAssigned, deadline, projectLeader, progress };
+  return { projectName, dateAssigned, deadline, projectLeader, daysleft };
 }
 
 const rows = [
