@@ -16,7 +16,7 @@ import { PrismaClient } from '@prisma/client';
 // eslint-disable-next-line no-empty-pattern
 const add_project: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ projects, user }) => {
+> = ({ projects }) => {
   return (
     <main>
       <Head>
@@ -27,9 +27,9 @@ const add_project: AppPage<
         {projects.map((item) => (
           <li key="item.id">
             <span>
-              <strong>{item.name} </strong>
+              <strong>{item.name}</strong>
             </span>
-            <span>{item.leaderId}</span>
+            <span>{item.leader.name}</span>
           </li>
         ))}
       </ul>
@@ -56,15 +56,19 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const user = session.user as SessionUser;
 
-  const projects = await prisma.project.findMany();
-  const users = await prisma.user.findMany();
+  const projects = await prisma.project.findMany({
+    include: {
+      leader: true,
+    },
+  });
+  //const users = await prisma.user.findMany();
 
   return {
     props: {
       session,
       user,
       projects,
-      users,
+      //users,
     },
   };
 }
