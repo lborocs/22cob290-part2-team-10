@@ -18,6 +18,7 @@ import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import SearchAppBar from './dashboardcomp/Searchbar';
 import { PrismaClient } from '@prisma/client';
+import ProjectTable from './dashboardcomp/Background';
 
 /*
 "There should also be a manager’s dashboard so that the managers or team lead‐
