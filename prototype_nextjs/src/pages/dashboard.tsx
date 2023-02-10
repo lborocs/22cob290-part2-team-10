@@ -17,6 +17,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import SearchAppBar from './dashboardcomp/Searchbar';
+import { PrismaClient } from '@prisma/client';
 
 /*
 "There should also be a manager’s dashboard so that the managers or team lead‐
@@ -74,11 +75,17 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   // TODO: get all projects if manager
   // else, get all projects where leader
+  const projects = await prisma.project.findMany({
+    include: {
+      leader: true,
+    },
+  });
 
   return {
     props: {
       session,
       user,
+      projects,
     },
   };
 }
