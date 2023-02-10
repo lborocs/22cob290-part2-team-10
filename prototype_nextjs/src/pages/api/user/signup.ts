@@ -62,15 +62,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       emailFromToken == null ||
       emailFromTokenExists.length == 0
     ) {
-      res.status(400).json({ message: 'Could not complete the request' }); // if invalid request to create a new user, for example if token not valid or email used before then send 400 error response
+      res.status(400).json({ message: 'Error: Check email entered.' }); // if invalid request to create a new user, for example if token not valid or email used before then send 400 error response
     } else {
       const createdUser = await prisma.user.create({
         data,
       });
-      res.status(200).json(createdUser);
+      // console.log(createdUser);
+      res.status(200).json(createdUser); //send response containing the created user information
       // res.json(400);
     }
   } else {
-    res.status(400).json({ message: 'Could not complete the request' });
+    res.status(400).json({ message: 'Error: Invalid invite token was given.' });
   }
 };

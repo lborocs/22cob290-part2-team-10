@@ -8,6 +8,7 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { withZodSchema } from 'formik-validator-zod';
 import type z from 'zod';
+import toast from 'react-hot-toast';
 
 import SignUpSchema from '~/schemas/user/signup';
 
@@ -151,12 +152,26 @@ export default function SignupPage() {
           validate={withZodSchema(SignUpSchema)}
           onSubmit={(values, { setSubmitting }) => {
             setTimeout(() => {
-              const createUserResponse = createUser(values);
+              const createUserResponse = createUser(values)
+                .then((response) => {
+                  console.log(response);
+                  if ('message' in response) {
+                    toast(response.message); //this gives notification to user that an error has occured in processing the creation of a new user
+                  } else {
+                    toast(
+                      `You have successfully created an account for ${response.name}. Redirecting in 3 seconds...`
+                    ); //notification for successful creation of user
+                    setTimeout(() => window.location.replace('..'), 3000);
+                  }
+                })
+                .catch((err) => {
+                  // console.log('error');
+                });
               //   JSON.stringify(values, null, 2)
               // );
               setSubmitting(false);
               // console.log(data);
-              console.log(createUserResponse);
+              // console.log(createUserResponse);
               // console.log(JSON.stringify(values, null, 2));
             }, 400);
           }}
