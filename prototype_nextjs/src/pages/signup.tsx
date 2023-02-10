@@ -1,45 +1,23 @@
-import type {
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next';
 import Head from 'next/head';
-import { unstable_getServerSession } from 'next-auth/next';
 
-// import { signUp } from 'next-auth/react';
-
-import axios from 'axios';
-import toast, { Toaster } from 'react-hot-toast';
-import type { z } from 'zod';
 import Link from 'next/link';
 import Image, { type ImageLoader } from 'next/image';
-import { useRouter } from 'next/router';
-import { signIn } from 'next-auth/react';
 import Box from '@mui/material/Box';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { withZodSchema } from 'formik-validator-zod';
-// import toast from 'react-hot-toast';
+import z from 'zod';
 
 import SignUpSchema from '~/schemas/user/signup';
-import type { AppPage } from '~/types';
-import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import type { ResponseSchema as SignUpResponse } from '~/pages/api/user/signUp';
-import { Formik, Field, Form, ErrorMessage } from 'formik';
 
-// import FloatingNameField from '~/components/FloatingNameField';
-// import FloatingTokenField from '~/components/FloatingTokenField';
-// import FloatingEmailField from '~/components/FloatingEmailField';
-// import FloatingPasswordField from '~/components/FloatingPasswordField';
+import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { PrismaClient } from '@prisma/client';
 
 import NameField from '~/components/NameField';
 import EmailField from '~/components/EmailField';
 import PasswordField from '~/components/PasswordField';
 import TokenField from '~/components/TokenField';
-
-// import LoadingButton from '~/components/LoadingButton';
-
-// import SignInSchema from '~/schemas/user/signIn';
 
 import styles from '~/styles/SignIn.module.css';
 
@@ -47,6 +25,10 @@ import makeItAllLogo from '~/../public/assets/make_it_all.png';
 
 import darkBg from '~/../public/assets/signin/mesh-63.png';
 import darkBgMobile from '~/../public/assets/signin/mesh-63-mobile.png';
+import { values } from 'lodash';
+import { useState } from 'react';
+
+const prisma = new PrismaClient();
 
 const bgImageLoader: ImageLoader = ({ src, width, quality }) => {
   // approx width that should work on most phones and tablets
@@ -58,56 +40,31 @@ const bgImageLoader: ImageLoader = ({ src, width, quality }) => {
   return `/_next/image?url=${darkBg.src}&w=${width}&q=${quality}`;
 };
 
-// signup?invite=${inviteToken}
+export default function SignupPage({ data }) {
+  // const [formData, setFormData] = useState({});
+  async function createUser(formData: z.infer<typeof SignUpSchema>) {
+    // console.log(formData);
+    const response = await fetch('/api/user/signup', {
+      method: 'POST',
+      body: JSON.stringify(formData),
+    });
 
-type SignUpFormData = z.infer<typeof SignUpSchema>;
-
-// TODO: SignupPage
-// TODO: use Formik and SignUpSchema for client-side validation
-const SignupPage: AppPage<
-  InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ inviteToken }) => {
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = Object.fromEntries(
-      new FormData(e.currentTarget)
-    ) as SignUpFormData;
-
-    const { data } = await axios.post<SignUpResponse>(
-      'api/user/signUp',
-      formData
-    );
-
-    if (data.success) {
-      toast.success('Accounted created!');
-
-      await signIn('credentials', {
-        email: formData.email,
-        password: formData.password,
-        callbackUrl: '/home',
-      });
-    } else {
-      switch (data.reason) {
-        case 'ALREADY_EXISTS':
-          toast.error('You already have an account!');
-          break;
-
-        case 'INVALID_TOKEN':
-          toast.error('Your invite token is invalid!');
-          break;
-
-        case 'USED_TOKEN':
-          toast.error('Your invite token has already been used!');
-          break;
-
-        default: // should never happen
-          console.error(data);
-          toast.error('Sign up failed, please try again later.');
-      }
-    }
-  };
-
+    return await response.json();
+  }
   return (
+    // <div className={styles.container}>
+    //   <Head>
+    //     <title>Sign Up</title>
+    //   </Head>
+    //   <main className={styles.main}>
+    //     <ul>
+    //       {data.map((item) => (
+    //         <li key="item.id">{item.title}</li>
+    //       ))}
+    //     </ul>
+    //   </main>
+    // </div>
+
     <Box
       position="relative"
       height="100vh"
@@ -180,14 +137,27 @@ const SignupPage: AppPage<
             priority
           />
         </Box>
-
         <Formik
           initialValues={{
+            name: '',
             email: '',
             password: '',
+            inviteToken: '',
           }}
+          // validate={withZodSchema(SignUpSchema)}
+          // onSubmit={handleSubmit}
           validate={withZodSchema(SignUpSchema)}
-          onSubmit={handleSubmit}
+          onSubmit={(values, { setSubmitting }) => {
+            setTimeout(() => {
+              const createUserResponse = createUser(values);
+              //   JSON.stringify(values, null, 2)
+              // );
+              setSubmitting(false);
+              // console.log(data);
+              console.log(createUserResponse);
+              // console.log(JSON.stringify(values, null, 2));
+            }, 400);
+          }}
         >
           {({
             values,
@@ -240,14 +210,18 @@ const SignupPage: AppPage<
                   required
                 />
                 <TokenField
-                  name="token"
+                  name="inviteToken"
                   variant="outlined"
                   size="small"
-                  value={values.token}
+                  value={values.inviteToken}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  error={touched.token && errors.token !== undefined}
-                  helperText={errors.token || 'Please enter your invite token'}
+                  error={
+                    touched.inviteToken && errors.inviteToken !== undefined
+                  }
+                  helperText={
+                    errors.inviteToken || 'Please enter your invite token'
+                  }
                   required
                 />
               </div>
@@ -275,37 +249,16 @@ const SignupPage: AppPage<
       </Paper>
     </Box>
   );
-};
-
-// The user does not need to be logged in to access the SignupPage
+}
 SignupPage.noAuth = true;
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
-
-  // TODO: decide what to do if they're already signed in
-  // ?: toast saying they're already signed in
-  // if signed in, redirect to home page
-  // if (session && session.user) {
-  //   return {
-  //     redirect: {
-  //       destination: '/home',
-  //       permanent: false,
-  //     },
-  //   };
-  // }
-
-  const inviteToken = (context.query?.invite as string | undefined) ?? null;
+/////used for testing////////
+export async function getServerSideProps() {
+  const users = await prisma.user.findMany();
 
   return {
     props: {
-      inviteToken,
+      data: users,
     },
   };
 }
-
-export default SignupPage;

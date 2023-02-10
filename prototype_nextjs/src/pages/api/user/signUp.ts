@@ -1,130 +1,44 @@
+import { PrismaClient } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import type { z } from 'zod';
+// import { ok } from 'assert';
 
-import prisma from '~/lib/prisma';
-import { getEmailFromTokenIfValid } from '~/lib/inviteToken';
+// import * as dotenv from 'dotenv';
 import { hashPassword } from '~/lib/user';
-import SignUpSchema from '~/schemas/user/signup';
+import {
+  getInviteToken,
+  getEmailFromToken,
+  getEmailFromTokenIfValid,
+} from '~/lib/inviteToken';
 
-export type ErrorReason =
-  | 'ALREADY_EXISTS'
-  | 'INVALID_TOKEN'
-  | 'USED_TOKEN'
-  ;
+const prisma = new PrismaClient();
 
-export type RequestSchema = z.infer<typeof SignUpSchema>;
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+  const data = JSON.parse(req.body);
+  const hashedPassword = hashPassword.bind(null, data['password']);
+  data['hashedPassword'] = await hashedPassword();
+  delete data['password'];
+  console.log(data);
 
-type FailedResponse = {
-  success: false
-  reason: ErrorReason
-};
-
-export type ResponseSchema = FailedResponse | {
-  success: true
-};
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<ResponseSchema | { error: string }>,
-) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
-  }
-
-  const safeParseResult = SignUpSchema.safeParse(req.body);
-
-  if (!safeParseResult.success) {
-    res.status(400).json({
-      success: false,
-      reason: '',
-      issues: safeParseResult.error.issues,
-    } as unknown as ResponseSchema);
-    return;
-  }
-
-  const { inviteToken, email, name, password } = safeParseResult.data;
-
-  const exists = await prisma.user.count({
+  const sameEmail = await prisma.user.findMany({
     where: {
-      email,
-    },
-  }) > 0;
-
-  if (exists) return res.status(200).json({
-    success: false,
-    reason: 'ALREADY_EXISTS',
-  });
-
-  // on first run of prod, admin has to create their account
-  if (inviteToken === process.env.ADMIN_INVITE_TOKEN) {
-    const adminExists = await prisma.user.count({
-      where: {
-        isAdmin: true,
+      email: {
+        equals: data['email'],
       },
-    }) > 0;
+    },
+  });
 
-    if (adminExists) return res.status(200).json({
-      success: false,
-      reason: 'USED_TOKEN',
-    });
+  const emailFromToken = getEmailFromTokenIfValid(data.inviteToken);
+  console.log(data.inviteToken);
+  console.log(emailFromToken);
 
-    await prisma.user.create({
-      data: {
-        email: email.toLowerCase(),
-        name,
-        hashedPassword: await hashPassword(password),
-        isAdmin: true,
-        isManager: true,
-      },
+  //validation of creatign a new user on the server side
+  if (sameEmail.length > 0 || emailFromToken == null) {
+    res.status(400).json({ message: 'Could not complete the request' }); // if invalid request to create a new user, for example if token not valid or email used before then send 400 error response
+  } else {
+    const createdUser = await prisma.user.create({
+      data,
     });
-
-    return res.status(200).json({
-      success: true,
-    });
+    res.status(200).json(createdUser);
+    // res.json(400);
   }
-
-  const inviterEmail = getEmailFromTokenIfValid(inviteToken);
-
-  if (!inviterEmail) return res.status(200).json({
-    success: false,
-    reason: 'INVALID_TOKEN',
-  });
-
-  const inviter = await prisma.user.findUnique({
-    where: {
-      email: inviterEmail,
-    },
-    select: {
-      leftCompany: true,
-    },
-  });
-
-  if (inviter === null || inviter.leftCompany) return res.status(200).json({
-    success: false,
-    reason: 'INVALID_TOKEN',
-  });
-
-  const tokenAlreadyUsed = await prisma.user.count({
-    where: {
-      inviteToken,
-    },
-  }) > 0;
-
-  if (tokenAlreadyUsed) return res.status(200).json({
-    success: false,
-    reason: 'USED_TOKEN',
-  });
-
-  await prisma.user.create({
-    data: {
-      email: email.toLowerCase(),
-      name,
-      hashedPassword: await hashPassword(password),
-      inviteToken,
-    },
-  });
-
-  res.status(200).json({
-    success: true,
-  });
-}
+};
