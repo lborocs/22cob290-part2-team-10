@@ -7,12 +7,13 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { withZodSchema } from 'formik-validator-zod';
-import z from 'zod';
+import type z from 'zod';
 
 import SignUpSchema from '~/schemas/user/signup';
 
 import { Formik, Field, Form, ErrorMessage } from 'formik';
-import { PrismaClient } from '@prisma/client';
+
+// import { PrismaClient } from '@prisma/client';
 
 import NameField from '~/components/NameField';
 import EmailField from '~/components/EmailField';
@@ -25,10 +26,11 @@ import makeItAllLogo from '~/../public/assets/make_it_all.png';
 
 import darkBg from '~/../public/assets/signin/mesh-63.png';
 import darkBgMobile from '~/../public/assets/signin/mesh-63-mobile.png';
-import { values } from 'lodash';
-import { useState } from 'react';
 
-const prisma = new PrismaClient();
+// import { values } from 'lodash';
+// import { useState } from 'react';
+
+// const prisma = new PrismaClient();
 
 const bgImageLoader: ImageLoader = ({ src, width, quality }) => {
   // approx width that should work on most phones and tablets
@@ -40,7 +42,7 @@ const bgImageLoader: ImageLoader = ({ src, width, quality }) => {
   return `/_next/image?url=${darkBg.src}&w=${width}&q=${quality}`;
 };
 
-export default function SignupPage({ data }) {
+export default function SignupPage() {
   // const [formData, setFormData] = useState({});
   async function createUser(formData: z.infer<typeof SignUpSchema>) {
     // console.log(formData);
@@ -253,12 +255,12 @@ export default function SignupPage({ data }) {
 SignupPage.noAuth = true;
 
 /////used for testing////////
-export async function getServerSideProps() {
-  const users = await prisma.user.findMany();
+// export async function getServerSideProps() {
+//   const users = await prisma.user.findMany();
 
-  return {
-    props: {
-      data: users,
-    },
-  };
-}
+//   return {
+//     props: {
+//       data: users,
+//     },
+//   };
+// }
