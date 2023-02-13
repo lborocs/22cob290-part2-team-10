@@ -14,8 +14,6 @@ import SignUpSchema from '~/schemas/user/signup';
 
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 
-// import { PrismaClient } from '@prisma/client';
-
 import NameField from '~/components/NameField';
 import EmailField from '~/components/EmailField';
 import PasswordField from '~/components/PasswordField';
@@ -28,13 +26,9 @@ import makeItAllLogo from '~/../public/assets/make_it_all.png';
 import darkBg from '~/../public/assets/signin/mesh-63.png';
 import darkBgMobile from '~/../public/assets/signin/mesh-63-mobile.png';
 
-// import { values } from 'lodash';
-// import { useState } from 'react';
-
-// const prisma = new PrismaClient();
-
 const bgImageLoader: ImageLoader = ({ src, width, quality }) => {
-  // approx width that should work on most phones and tablets
+  //function to help with responsive image
+  // the approx width that should work on most phones and tablets is used
   if (width <= 2000) {
     // return 'https://www.shutterstock.com/image-photo/barcelona-feb-23-lionel-messi-600w-1900547713.jpg';
     return `/_next/image?url=${darkBgMobile.src}&w=${width}&q=${quality}`;
@@ -44,9 +38,12 @@ const bgImageLoader: ImageLoader = ({ src, width, quality }) => {
 };
 
 export default function SignupPage() {
-  // const [formData, setFormData] = useState({});
+  /*
+  This code is a Next.js component that is responsible for creating a sign-up page. The component uses
+  Material-UI and Formik libraries to create a form for users to input their information to sign up.
+  */
   async function createUser(formData: z.infer<typeof SignUpSchema>) {
-    // console.log(formData);
+    //function for sending user information to the server
     const response = await fetch('/api/user/signup', {
       method: 'POST',
       body: JSON.stringify(formData),
@@ -55,19 +52,10 @@ export default function SignupPage() {
     return await response.json();
   }
   return (
-    // <div className={styles.container}>
-    //   <Head>
-    //     <title>Sign Up</title>
-    //   </Head>
-    //   <main className={styles.main}>
-    //     <ul>
-    //       {data.map((item) => (
-    //         <li key="item.id">{item.title}</li>
-    //       ))}
-    //     </ul>
-    //   </main>
-    // </div>
-
+    /*
+    a Material-UI Box component is returned as the main container for the
+    page and includes the necessary form fields and validation using Formik
+    */
     <Box
       position="relative"
       height="100vh"
@@ -147,10 +135,9 @@ export default function SignupPage() {
             password: '',
             inviteToken: '',
           }}
-          // validate={withZodSchema(SignUpSchema)}
-          // onSubmit={handleSubmit}
-          validate={withZodSchema(SignUpSchema)}
+          validate={withZodSchema(SignUpSchema)} //uses schema defined in SignupSchema in order validate the input into the form
           onSubmit={(values, { setSubmitting }) => {
+            // when all data has been input, onSubmit is called to send the data to the function that handles submission
             setTimeout(() => {
               const createUserResponse = createUser(values)
                 .then((response) => {
@@ -165,14 +152,9 @@ export default function SignupPage() {
                   }
                 })
                 .catch((err) => {
-                  // console.log('error');
+                  //used for testing
                 });
-              //   JSON.stringify(values, null, 2)
-              // );
               setSubmitting(false);
-              // console.log(data);
-              // console.log(createUserResponse);
-              // console.log(JSON.stringify(values, null, 2));
             }, 400);
           }}
         >
@@ -268,14 +250,3 @@ export default function SignupPage() {
   );
 }
 SignupPage.noAuth = true;
-
-/////used for testing////////
-// export async function getServerSideProps() {
-//   const users = await prisma.user.findMany();
-
-//   return {
-//     props: {
-//       data: users,
-//     },
-//   };
-// }
