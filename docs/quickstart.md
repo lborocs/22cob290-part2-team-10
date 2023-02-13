@@ -10,7 +10,7 @@ cd prototype_nextjs
 
 > **You need to have [pnpm](https://pnpm.io/) installed**
 
-1. Install dependencies
+2. Install dependencies
 
 ```
 pnpm install
@@ -19,7 +19,7 @@ pnpm install
 3. Setup local development database
 
 ```
-npm run migrate:dev
+pnpm migrate:dev
 ```
 
 > Note it may give an error like `email` failed unique constant. This is because some users are generated
@@ -32,7 +32,7 @@ npm run migrate:dev
 4. Run
 
 ```
-npm run dev
+pnpm dev
 ```
 
 5. Open `http://localhost:3000/` in your browser
@@ -41,5 +41,5 @@ npm run dev
 ## Shorthand
 
 ```
-cd prototype_nextjs && pnpm i && npm run migrate:dev && npm run dev
+cd prototype_nextjs && pnpm i && pnpm migrate:dev && pnpm dev
 ```
