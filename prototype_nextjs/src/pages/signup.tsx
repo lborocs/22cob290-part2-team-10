@@ -7,17 +7,19 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { withZodSchema } from 'formik-validator-zod';
-import type z from 'zod';
+import type { z } from 'zod';
 import toast from 'react-hot-toast';
 
-import SignUpSchema from '~/schemas/user/signup';
+import { Formik } from 'formik';
 
-import { Formik, Field, Form, ErrorMessage } from 'formik';
+import SignUpSchema from '~/schemas/user/signup';
 
 import NameField from '~/components/NameField';
 import EmailField from '~/components/EmailField';
 import PasswordField from '~/components/PasswordField';
 import TokenField from '~/components/TokenField';
+
+import type { SignupResponse } from '~/pages/api/user/signup';
 
 import styles from '~/styles/SignIn.module.css';
 
@@ -37,19 +39,24 @@ const bgImageLoader: ImageLoader = ({ src, width, quality }) => {
   return `/_next/image?url=${darkBg.src}&w=${width}&q=${quality}`;
 };
 
+// TODO: get inviteToken from query param (getServerSideProps)
+
 export default function SignupPage() {
   /*
   This code is a Next.js component that is responsible for creating a sign-up page. The component uses
   Material-UI and Formik libraries to create a form for users to input their information to sign up.
   */
   async function createUser(formData: z.infer<typeof SignUpSchema>) {
-    //function for sending user information to the server
+    // function for sending user information to the server
     const response = await fetch('/api/user/signup', {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      },
       body: JSON.stringify(formData),
     });
 
-    return await response.json();
+    return (await response.json()) as SignupResponse;
   }
   return (
     /*
@@ -135,24 +142,24 @@ export default function SignupPage() {
             password: '',
             inviteToken: '',
           }}
-          validate={withZodSchema(SignUpSchema)} //uses schema defined in SignupSchema in order validate the input into the form
+          validate={withZodSchema(SignUpSchema)} // uses schema defined in SignupSchema in order to validate the input into the form
           onSubmit={(values, { setSubmitting }) => {
             // when all data has been input, onSubmit is called to send the data to the function that handles submission
             setTimeout(() => {
-              const createUserResponse = createUser(values)
+              createUser(values)
                 .then((response) => {
-                  console.log(response);
+                  console.log('response =', response);
                   if ('message' in response) {
-                    toast(response.message); //this gives notification to user that an error has occured in processing the creation of a new user
+                    toast.error(response.message); // this gives notification to user that an error has occured in processing the creation of a new user
                   } else {
-                    toast(
+                    toast.success(
                       `You have successfully created an account for ${response.name}. Redirecting in 3 seconds...`
-                    ); //notification for successful creation of user
+                    ); // notification for successful creation of user
                     setTimeout(() => window.location.replace('..'), 3000);
                   }
                 })
                 .catch((err) => {
-                  //used for testing
+                  // used for testing
                 });
               setSubmitting(false);
             }, 400);
