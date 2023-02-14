@@ -1,7 +1,4 @@
-import type {
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next';
+import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 import Typography from '@mui/material/Typography';
@@ -9,9 +6,7 @@ import Typography from '@mui/material/Typography';
 import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
-const ExamplePage: AppPage<
-  InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({
+const ExamplePage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   user,
   /* the rest of your props */
 }) => {
@@ -23,7 +18,8 @@ const ExamplePage: AppPage<
         <title>User SSR - Examples</title>
       </Head>
       <Typography variant="h4" marginBottom={2} component="h1">
-        Using{' '}
+        Using
+        {' '}
         <code
           style={{
             color: 'crimson',
@@ -31,21 +27,22 @@ const ExamplePage: AppPage<
           }}
         >
           user
-        </code>{' '}
+        </code>
+        {' '}
         prop
       </Typography>
-      <Typography variant="h5">Email: {email}</Typography>
-      <Typography>Name: {name}</Typography>
+      <Typography variant="h5">
+        Email: {email}
+      </Typography>
+      <Typography>
+        Name: {name}
+      </Typography>
     </main>
   );
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
+  const session = await unstable_getServerSession(context.req, context.res, authOptions);
 
   // not signed in, will be handled by _app
   // return `notFound: true` as a hacky way to have non-null page props for typescript

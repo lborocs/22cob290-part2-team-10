@@ -1,7 +1,4 @@
-import type {
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-} from 'next';
+import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 import Typography from '@mui/material/Typography';
@@ -12,9 +9,7 @@ import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 //! remove next line if you have any props
 // eslint-disable-next-line no-empty-pattern
-const Page: AppPage<
-  InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({}) => {
+const Page: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ }) => {
   return (
     <main>
       <Head>
@@ -36,11 +31,7 @@ Page.layout = {
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
+  const session = await unstable_getServerSession(context.req, context.res, authOptions);
 
   if (!session || !session.user) {
     return { notFound: true };

@@ -1,252 +1,129 @@
+import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
 import Head from 'next/head';
-
-import Link from 'next/link';
-import Image, { type ImageLoader } from 'next/image';
-import Box from '@mui/material/Box';
-import LoadingButton from '@mui/lab/LoadingButton';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import { withZodSchema } from 'formik-validator-zod';
-import type z from 'zod';
-import toast from 'react-hot-toast';
+import { unstable_getServerSession } from 'next-auth/next';
+import { signIn } from 'next-auth/react';
+import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
+import type { z } from 'zod';
 
 import SignUpSchema from '~/schemas/user/signup';
+import type { AppPage } from '~/types';
+import { authOptions } from '~/pages/api/auth/[...nextauth]';
+import type { ResponseSchema as SignUpResponse } from '~/pages/api/user/signUp';
 
-import { Formik, Field, Form, ErrorMessage } from 'formik';
+// signup?invite=${inviteToken}
 
-import NameField from '~/components/NameField';
-import EmailField from '~/components/EmailField';
-import PasswordField from '~/components/PasswordField';
-import TokenField from '~/components/TokenField';
+type SignUpFormData = z.infer<typeof SignUpSchema>;
 
-import styles from '~/styles/SignIn.module.css';
+// TODO: SignupPage
+// TODO: use Formik and SignUpSchema for client-side validation
+const SignupPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ inviteToken }) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = Object.fromEntries(new FormData(e.currentTarget)) as SignUpFormData;
 
-import makeItAllLogo from '~/../public/assets/make_it_all.png';
+    const { data } = await axios.post<SignUpResponse>('api/user/signUp', formData);
 
-import darkBg from '~/../public/assets/signin/mesh-63.png';
-import darkBgMobile from '~/../public/assets/signin/mesh-63-mobile.png';
+    if (data.success) {
+      toast.success('Accounted created!');
 
-const bgImageLoader: ImageLoader = ({ src, width, quality }) => {
-  //function to help with responsive image
-  // the approx width that should work on most phones and tablets is used
-  if (width <= 2000) {
-    // return 'https://www.shutterstock.com/image-photo/barcelona-feb-23-lionel-messi-600w-1900547713.jpg';
-    return `/_next/image?url=${darkBgMobile.src}&w=${width}&q=${quality}`;
-  }
+      await signIn('credentials', {
+        email: formData.email,
+        password: formData.password,
+        callbackUrl: '/home',
+      });
+    } else {
+      switch (data.reason) {
+        case 'ALREADY_EXISTS':
+          toast.error('You already have an account!');
+          break;
 
-  return `/_next/image?url=${darkBg.src}&w=${width}&q=${quality}`;
-};
+        case 'INVALID_TOKEN':
+          toast.error('Your invite token is invalid!');
+          break;
 
-export default function SignupPage() {
-  /*
-  This code is a Next.js component that is responsible for creating a sign-up page. The component uses
-  Material-UI and Formik libraries to create a form for users to input their information to sign up.
-  */
-  async function createUser(formData: z.infer<typeof SignUpSchema>) {
-    //function for sending user information to the server
-    const response = await fetch('/api/user/signup', {
-      method: 'POST',
-      body: JSON.stringify(formData),
-    });
+        case 'USED_TOKEN':
+          toast.error('Your invite token has already been used!');
+          break;
 
-    return await response.json();
-  }
+        default: // should never happen
+          console.error(data);
+          toast.error('Sign up failed, please try again later.');
+      }
+    }
+  };
+
   return (
-    /*
-    a Material-UI Box component is returned as the main container for the
-    page and includes the necessary form fields and validation using Formik
-    */
-    <Box
-      position="relative"
-      height="100vh"
-      component="main"
-      sx={(theme) => ({
-        [theme.getColorSchemeSelector('light')]: {
-          bgcolor: theme.vars.palette.makeItAllGrey.main,
-        },
-      })}
-    >
+    <main>
       <Head>
-        <title>Sign Up - Make-It-All</title>
+        <title>Signup - Make-It-All</title>
       </Head>
 
-      <Box
-        position="absolute"
-        width={1}
-        height={1}
-        sx={(theme) => ({
-          display: 'none',
-          [theme.getColorSchemeSelector('dark')]: {
-            display: 'block',
-          },
-        })}
-      >
-        <Image
-          src={darkBg}
-          alt="dark background gradient"
-          quality={100}
-          sizes="100vw"
-          priority
-          fill
-          style={{
-            objectFit: 'cover',
-          }}
-          loader={bgImageLoader}
-        />
-      </Box>
+      {/* TODO */}
+      <Toaster
+        position="top-center"
+      />
+      <p>
+        token = {String(inviteToken)}
+      </p>
 
-      <Paper
-        sx={(theme) => ({
-          position: 'absolute',
-          inset: 0,
-          margin: 'auto',
-          height: 'fit-content',
-          width: {
-            xs: '85vw',
-            sm: '70vw',
-            md: '50vw',
-            lg: '45vw',
-            xl: '35vw',
-          },
-          padding: {
-            xs: 3,
-            md: 8,
-          },
-          borderRadius: 3,
-          [theme.getColorSchemeSelector('light')]: {
-            bgcolor: theme.vars.palette.makeItAllGrey.main,
-            boxShadow: 3,
-          },
-        })}
+      <form
+        onSubmit={handleSubmit}
       >
-        <Box marginBottom={2.5}>
-          <Image
-            className={styles.logo}
-            src={makeItAllLogo}
-            alt="Make-It-All Logo"
-            quality={100}
-            priority
-          />
-        </Box>
-        <Formik
-          initialValues={{
-            name: '',
-            email: '',
-            password: '',
-            inviteToken: '',
-          }}
-          validate={withZodSchema(SignUpSchema)} //uses schema defined in SignupSchema in order validate the input into the form
-          onSubmit={(values, { setSubmitting }) => {
-            // when all data has been input, onSubmit is called to send the data to the function that handles submission
-            setTimeout(() => {
-              const createUserResponse = createUser(values)
-                .then((response) => {
-                  console.log(response);
-                  if ('message' in response) {
-                    toast(response.message); //this gives notification to user that an error has occured in processing the creation of a new user
-                  } else {
-                    toast(
-                      `You have successfully created an account for ${response.name}. Redirecting in 3 seconds...`
-                    ); //notification for successful creation of user
-                    setTimeout(() => window.location.replace('..'), 3000);
-                  }
-                })
-                .catch((err) => {
-                  //used for testing
-                });
-              setSubmitting(false);
-            }, 400);
-          }}
-        >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            isSubmitting,
-            isValid,
-          }) => (
-            <form
-              onSubmit={handleSubmit}
-              className={styles.formGrid}
-              noValidate
-            >
-              <div className={styles.inputGrid}>
-                <NameField
-                  name="name"
-                  variant="outlined"
-                  size="small"
-                  value={values.name}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.name && errors.name !== undefined}
-                  helperText={errors.name || 'Please enter your full name'}
-                  required
-                />
-                <EmailField
-                  name="email"
-                  variant="outlined"
-                  size="small"
-                  value={values.email}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.email && errors.email !== undefined}
-                  helperText={errors.email || 'Please enter your work email'}
-                  required
-                />
-                <PasswordField
-                  name="password"
-                  variant="outlined"
-                  size="small"
-                  value={values.password}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.password && errors.password !== undefined}
-                  helperText={errors.password || 'Please enter your password'}
-                  policyTooltip
-                  required
-                />
-                <TokenField
-                  name="inviteToken"
-                  variant="outlined"
-                  size="small"
-                  value={values.inviteToken}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={
-                    touched.inviteToken && errors.inviteToken !== undefined
-                  }
-                  helperText={
-                    errors.inviteToken || 'Please enter your invite token'
-                  }
-                  required
-                />
-              </div>
-              <div>
-                <div className={styles.links}>
-                  <Link href="/..">
-                    <Typography fontWeight={500} color="contrast.main">
-                      Back to Login
-                    </Typography>
-                  </Link>
-                  <LoadingButton
-                    type="submit"
-                    variant="contained"
-                    loading={isSubmitting}
-                    disabled={!isValid}
-                    className={styles.signInBtn}
-                  >
-                    Sign in
-                  </LoadingButton>
-                </div>
-              </div>
-            </form>
-          )}
-        </Formik>
-      </Paper>
-    </Box>
+        <input
+          name="inviteToken"
+          title="Invite token"
+          placeholder="Enter invite token"
+          defaultValue={inviteToken ?? undefined}
+        />
+        <input
+          name="email"
+          title="Email"
+          placeholder="Enter email"
+        />
+        <input
+          name="name"
+          title="Name"
+          placeholder="Enter name"
+        />
+        <input
+          name="password"
+          title="Password"
+          placeholder="Enter password"
+        />
+        <button type="submit">
+          Sign up
+        </button>
+      </form>
+    </main>
   );
-}
+};
+
+// The user does not need to be logged in to access the SignupPage
 SignupPage.noAuth = true;
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await unstable_getServerSession(context.req, context.res, authOptions);
+
+  // TODO: decide what to do if they're already signed in
+  // ?: toast saying they're already signed in
+  // if signed in, redirect to home page
+  // if (session && session.user) {
+  //   return {
+  //     redirect: {
+  //       destination: '/home',
+  //       permanent: false,
+  //     },
+  //   };
+  // }
+
+  const inviteToken = context.query?.invite as string | undefined ?? null;
+
+  return {
+    props: {
+      inviteToken,
+    },
+  };
+}
+
+export default SignupPage;
