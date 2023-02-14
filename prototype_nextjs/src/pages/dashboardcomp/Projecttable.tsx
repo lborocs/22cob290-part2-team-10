@@ -7,30 +7,27 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import useSWR from 'swr';
+import axios from 'axios';
+import type { ResponseSchema as GetProjectsResponse } from '~/pages/api/projects/dashboardbackend';
 
 interface Column {
-  id:
-    | 'projectName'
-    | 'dateAssigned'
-    | 'deadline'
-    | 'projectLeader'
-    | 'daysleft';
+  id: 'projectName' | 'projectLeader';
   label: string;
   minWidth?: number;
   align?: 'right';
   format?: (value: number) => string;
 }
-
 const columns: readonly Column[] = [
   { id: 'projectName', label: 'Project Name', minWidth: 170 },
-  { id: 'dateAssigned', label: 'Date Assigned', minWidth: 100 },
-  {
-    id: 'deadline',
-    label: 'deadline',
-    minWidth: 170,
-    align: 'right',
-    format: (value: number) => value.toLocaleString('en-US'),
-  },
+  //{ id: 'tasks', label: 'tasks', minWidth: 100 },
+  // {
+  //   id: 'deadline',
+  //   label: 'deadline',
+  //   minWidth: 170,
+  //   align: 'right',
+  //   format: (value: number) => value.toLocaleString('en-US'),
+  // },
   {
     id: 'projectLeader',
     label: 'Project Leader',
@@ -38,50 +35,56 @@ const columns: readonly Column[] = [
     align: 'right',
     format: (value: number) => value.toLocaleString('en-US'),
   },
-  {
-    id: 'daysleft',
-    label: 'days left',
-    minWidth: 170,
-    align: 'right',
-    format: (value: number) => value.toFixed(2),
-  },
+  // {
+  //   id: 'daysleft',
+  //   label: 'days left',
+  //   minWidth: 170,
+  //   align: 'right',
+  //   format: (value: number) => value.toFixed(2),
+  // },
 ];
 
 interface Data {
   projectName: string;
-  dateAssigned: string;
-  deadline: string;
   projectLeader: string;
-  daysleft: number;
 }
 
-function createData(
-  projectName: string,
-  dateAssigned: string,
-  deadline: string,
-  projectLeader: string,
-  daysleft: number
-): Data {
-  return { projectName, dateAssigned, deadline, projectLeader, daysleft };
+function createData(projectName: string, projectLeader: string): Data {
+  return { projectName, projectLeader };
 }
 
-const rows = [
-  createData('Project 1', '01/01/2023', '01/01/2023', 'John', 5),
-  createData('Project 2', '02/01/2023', '01/01/2023', 'Cerys', 6),
-  createData('Project 3', '03/01/2023', '01/01/2023', 'Goob', 5),
-  createData('Project 4', '04/01/2023', '01/01/2023', 'Hamm', 5),
-  createData('Project 5', '05/01/2023', '01/01/2023', 'Hanks', 7),
-  createData('Project 1', '01/01/2023', '01/01/2023', 'John', 5),
-  createData('Project 2', '02/01/2023', '01/01/2023', 'Cerys', 6),
-  createData('Project 3', '03/01/2023', '01/01/2023', 'Goob', 5),
-  createData('Project 4', '04/01/2023', '01/01/2023', 'Hamm', 5),
-  createData('Project 5', '05/01/2023', '01/01/2023', 'Hanks', 7),
-  createData('Project 3', '03/01/2023', '01/01/2023', 'Goob', 5),
-  createData('Project 4', '04/01/2023', '01/01/2023', 'Hamm', 5),
-  createData('Project 5', '05/01/2023', '01/01/2023', 'Hanks', 7),
-];
+// const rows = [
+//   createData('Project 1', '01/01/2023', '01/01/2023', 'John', 5),
+//   createData('Project 2', '02/01/2023', '01/01/2023', 'Cerys', 6),
+//   createData('Project 3', '03/01/2023', '01/01/2023', 'Goob', 5),
+//   createData('Project 4', '04/01/2023', '01/01/2023', 'Hamm', 5),
+//   createData('Project 5', '05/01/2023', '01/01/2023', 'Hanks', 7),
+//   createData('Project 1', '01/01/2023', '01/01/2023', 'John', 5),
+//   createData('Project 2', '02/01/2023', '01/01/2023', 'Cerys', 6),
+//   createData('Project 3', '03/01/2023', '01/01/2023', 'Goob', 5),
+//   createData('Project 4', '04/01/2023', '01/01/2023', 'Hamm', 5),
+//   createData('Project 5', '05/01/2023', '01/01/2023', 'Hanks', 7),
+//   createData('Project 3', '03/01/2023', '01/01/2023', 'Goob', 5),
+//   createData('Project 4', '04/01/2023', '01/01/2023', 'Hamm', 5),
+//   createData('Project 5', '05/01/2023', '01/01/2023', 'Hanks', 7),
+// ];
 
 export default function StickyHeadTable() {
+  const { data: projects, error } = useSWR(
+    '/api/projects/dashboardbackend',
+    async (url) => {
+      const { data } = await axios.get<GetProjectsResponse>(url);
+      return data;
+    }
+  );
+
+  const rows = [];
+  if (projects) {
+    for (let i = 0; i < projects.length; i++) {
+      rows.push(createData(projects[i].name, projects[i].leader.name));
+    }
+  }
+
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 

@@ -7,7 +7,6 @@ import Link from 'next/link';
 import { unstable_getServerSession } from 'next-auth/next';
 
 import hashids from '~/lib/hashids';
-import prisma from '~/lib/prisma';
 import { SidebarType } from '~/components/Layout';
 import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
@@ -17,8 +16,9 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import SearchAppBar from './dashboardcomp/Searchbar';
-import { PrismaClient } from '@prisma/client';
 import ProjectTable from './dashboardcomp/Background';
+import StickyHeadTable from './dashboardcomp/Projecttable';
+import prisma from '~/lib/prisma';
 
 /*
 "There should also be a manager’s dashboard so that the managers or team lead‐
@@ -27,24 +27,22 @@ ers can keep track of the progression of the project they are responsible for."
 */
 
 // TODO: DashboardPage
+
 const DashboardPage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({}) => {
   // TODO: new project button if manager
-
   return (
     <main>
       <Head>
         <title>Dashboard - Make-It-All</title>
       </Head>
       {/* TODO */}
-
       <div>
         <SearchAppBar />
       </div>
       <div>
-        <Table />
-
+        <StickyHeadTable />
         <Stack spacing={5} direction="row">
           <Button variant="contained" startIcon={<AddIcon />}>
             Add Project
@@ -76,9 +74,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   // TODO: get all projects if manager
   // else, get all projects where leader
+
   const projects = await prisma.project.findMany({
     include: {
       leader: true,
+      members: true,
     },
   });
 
