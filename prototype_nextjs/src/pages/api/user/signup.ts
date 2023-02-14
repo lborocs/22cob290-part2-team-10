@@ -35,7 +35,7 @@ export default async function handler(
     },
   });
 
-  const emailFromToken = getEmailFromTokenIfValid(data.inviteToken); // used to get sender's email from the invite token
+  const emailFromToken = getEmailFromTokenIfValid(user.inviteToken); // used to get sender's email from the invite token
 
   // check that a valid email is used
   if (emailFromToken != null) {
