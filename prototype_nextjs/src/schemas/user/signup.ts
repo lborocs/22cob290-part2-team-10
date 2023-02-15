@@ -11,7 +11,7 @@ const SignUpSchema = z.object({
   name: nameSchema(),
   email: EmailSchema,
   password: PasswordSchema,
-  inviteToken: z.string(),
+  inviteToken: z.string().min(1, 'Invite token is required'),
 });
 
 export default SignUpSchema;

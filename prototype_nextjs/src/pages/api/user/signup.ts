@@ -1,13 +1,17 @@
-import { PrismaClient } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { Prisma, User } from '@prisma/client';
 
+import SignUpSchema from '~/schemas/user/signup';
+import prisma from '~/lib/prisma';
 import { hashPassword } from '~/lib/user';
 import { getEmailFromTokenIfValid } from '~/lib/inviteToken';
 
-const prisma = new PrismaClient();
+export type SignupResponse = User | { message: string };
 
-// eslint-disable-next-line import/no-anonymous-default-export
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<SignupResponse>
+) {
   /*
   This is a server-side code written in Node.js and uses Next.js API to
   handle user creation. The code uses the Prisma Client library to interact
@@ -15,10 +19,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   and creates a new user in the database. Before creating a new user, it performs
   several validations to ensure that the request is valid.
   */
-  const data = JSON.parse(req.body);
-  const hashedPassword = hashPassword.bind(null, data.password);
-  data.hashedPassword = await hashedPassword();
-  delete data.password;
+  const user = SignUpSchema.parse(req.body);
+  const data: Prisma.UserCreateInput = {
+    name: user.name,
+    email: user.email,
+    inviteToken: user.inviteToken,
+    hashedPassword: await hashPassword(user.password),
+  };
 
   const emailExists = await prisma.user.findMany({
     where: {
@@ -28,11 +35,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     },
   });
 
-  data.inviteToken = data.inviteToken.split('invite=')[1]; //invite token comes like a URL, this seperates it from URL
+  const emailFromToken = getEmailFromTokenIfValid(user.inviteToken); // used to get sender's email from the invite token
 
-  const emailFromToken = getEmailFromTokenIfValid(data.inviteToken); //used to get sender's email from the invite token
-
-  //check that a valid email is used
+  // check that a valid email is used
   if (emailFromToken != null) {
     const emailFromTokenExists = await prisma.user.findMany({
       where: {
@@ -42,10 +47,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       },
     });
 
-    //validation of creatign a new user on the server side
-    //checks if the email of new user has not been used before,
-    //the email token does not point to an invalid email and
-    //the email taken from the invite token is an existing email
+    // validation of creating a new user on the server side
+    // checks if the email of new user has not been used before,
+    // the email token does not point to an invalid email and
+    // the email taken from the invite token is an existing email
     if (
       emailExists.length > 0 ||
       emailFromToken == null ||
@@ -54,15 +59,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       // if invalid request to create a new user, for example if token not valid or email used before then send 400 error response
       res.status(400).json({ message: 'Error: Check email entered.' });
     } else {
-      //if all validations pass, the code creates a new user in the database and returns a 200 OK response with the created user information
+      // if all validations pass, the code creates a new user in the database and returns a 200 OK response with the created user information
       const createdUser = await prisma.user.create({
         data,
       });
-      res.status(200).json(createdUser); //send response containing the created user information
-      // res.json(400);
+
+      res.status(200).json(createdUser); // send response containing the created user information
     }
   } else {
-    //sends a 400 Bad Request error response with a message indicating an invalid invite token was given
+    // sends a 400 Bad Request error response with a message indicating an invalid invite token was given
     res.status(400).json({ message: 'Error: Invalid invite token was given.' });
   }
-};
+}
