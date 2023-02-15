@@ -3,25 +3,19 @@ import type {
   InferGetServerSidePropsType,
 } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 import { unstable_getServerSession } from 'next-auth/next';
+import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
 
-import hashids from '~/lib/hashids';
 import { SidebarType } from '~/components/Layout';
 import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import Table from './dashboardcomp/ProjectTable';
-import * as React from 'react';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
-import SearchAppBar from './dashboardcomp/Searchbar';
-// import ProjectTable from './dashboardcomp/Background';
-import ProjectTable from './dashboardcomp/ProjectTable';
 import prisma from '~/lib/prisma';
-import BasicCard from './dashboardcomp/card';
-// TODO: use proper import
-import { TableRows } from '@mui/icons-material';
+import SearchAppBar from './dashboardcomp/Searchbar';
+import ProjectTable from './dashboardcomp/ProjectTable';
+import BasicCard, { type BasicCardProps } from './dashboardcomp/card';
 
 /*
 "There should also be a manager’s dashboard so that the managers or team lead‐
@@ -35,7 +29,7 @@ const DashboardPage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ projects }) => {
   // TODO: new project button if manager
-  const data = [
+  const data: BasicCardProps['data'] = [
     {
       title: 'Average Hours per Task',
       description: '11',
@@ -57,11 +51,15 @@ const DashboardPage: AppPage<
       </div>
       <div>
         <ProjectTable projects={projects} />
-        <Stack spacing={5} direction="row">
-          <Button variant="contained" startIcon={<AddIcon />}>
-            Add Project
-          </Button>
-        </Stack>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          sx={{
+            marginTop: 5,
+          }}
+        >
+          Add Project
+        </Button>
       </div>
       <div>
         <br></br>

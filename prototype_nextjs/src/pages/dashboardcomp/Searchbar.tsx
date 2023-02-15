@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -51,22 +51,24 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-type projectsSearchType = {
+type ProjectsSearchType = {
   name: string;
   leader: string;
   id: number;
 };
 
 export default function SearchAppBar() {
-  const sampleProjectData: projectsSearchType[] = [
+  const sampleProjectData: ProjectsSearchType[] = [
     { name: 'project', leader: 'asd', id: 1 },
     { name: 'project 2', leader: 'asd', id: 1 },
     { name: 'project 3', leader: 'asd', id: 1 },
     { name: 'project 4', leader: 'asd', id: 1 },
   ];
 
-  const [rows, setRows] = React.useState<projectsSearchType[]>([]);
-  const [searchQuery, setSearchQuery] = React.useState('');
+  const [rows, setRows] = useState<ProjectsSearchType[]>([]);
+
+  const [searchQuery, setSearchQuery] = useState('');
+
   const requestSearch = (searchVal: string) => {
     const filteredRows = sampleProjectData.filter((row) => {
       return row.name.toLowerCase().includes(searchVal.toLowerCase());
@@ -74,10 +76,12 @@ export default function SearchAppBar() {
     setRows(filteredRows);
     console.log(filteredRows);
   };
+
   const cancelSearch = () => {
     setSearchQuery('');
     requestSearch(searchQuery);
   };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">

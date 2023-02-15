@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { InferGetServerSidePropsType } from 'next';
+import Link from 'next/link';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -8,8 +9,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import type { ResponseSchema as GetProjectsResponse } from '~/pages/api/projects/dashboardbackend';
-import { getServerSideProps } from '../dashboard';
+
+import type { getServerSideProps } from '../dashboard';
+import hashids from '~/lib/hashids';
 
 interface Column {
   id: keyof Data;
@@ -59,6 +61,7 @@ const columns: readonly Column[] = [
 ];
 
 interface Data {
+  projectId: number;
   projectName: string;
   projectLeader: string;
   projectProgress: `${number} / ${number}`;
@@ -67,12 +70,13 @@ interface Data {
 }
 
 function createData(
+  projectId: Data['projectId'],
   projectName: Data['projectName'],
   projectLeader: Data['projectLeader'],
   projectProgress: Data['projectProgress'],
   noOfTasks: Data['noOfTasks']
 ): Data {
-  return { projectName, projectLeader, projectProgress, noOfTasks };
+  return { projectId, projectName, projectLeader, projectProgress, noOfTasks };
 }
 
 type Project = InferGetServerSidePropsType<
@@ -96,6 +100,7 @@ function getProjectProgress(project: Project): Data['projectProgress'] {
 export default function ProjectTable({ projects }: ProjectTableProps) {
   const rows: Data[] = projects.map((project) =>
     createData(
+      project.id,
       project.name,
       project.leader.name,
       getProjectProgress(project),
@@ -142,6 +147,21 @@ export default function ProjectTable({ projects }: ProjectTableProps) {
                   <TableRow hover role="checkbox">
                     {columns.map((column) => {
                       const value = row[column.id];
+
+                      if (column.id === 'projectName') {
+                        return (
+                          <TableCell key={column.id} align={column.align}>
+                            <Link
+                              href={`/projects/${hashids.encode(
+                                row.projectId
+                              )}`}
+                            >
+                              {value}
+                            </Link>
+                          </TableCell>
+                        );
+                      }
+
                       return (
                         <TableCell key={column.id} align={column.align}>
                           {column.format && typeof value === 'number'
