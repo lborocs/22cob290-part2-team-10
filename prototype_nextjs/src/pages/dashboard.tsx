@@ -19,6 +19,7 @@ import SearchAppBar from './dashboardcomp/Searchbar';
 import ProjectTable from './dashboardcomp/Background';
 import StickyHeadTable from './dashboardcomp/Projecttable';
 import prisma from '~/lib/prisma';
+import BasicCard from './dashboardcomp/card';
 
 /*
 "There should also be a manager’s dashboard so that the managers or team lead‐
@@ -32,6 +33,17 @@ const DashboardPage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({}) => {
   // TODO: new project button if manager
+  const data = [
+    {
+      title: 'Average Hours per Task',
+      description: '11',
+    },
+    {
+      title: 'Number of tasks',
+      description: '10',
+    },
+  ];
+
   return (
     <main>
       <Head>
@@ -48,6 +60,11 @@ const DashboardPage: AppPage<
             Add Project
           </Button>
         </Stack>
+      </div>
+      <div>
+        <br></br>
+
+        <BasicCard data={data} />
       </div>
     </main>
   );
