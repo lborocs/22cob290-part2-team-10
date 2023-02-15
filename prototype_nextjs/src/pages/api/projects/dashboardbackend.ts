@@ -7,6 +7,8 @@ import { whereEmployeeHasAccessToProject } from '~/lib/projects';
 import type { ErrorResponse, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import ProjectsPage from '~/pages/projects';
+import { ProjectTask } from '@prisma/client';
+import { count } from 'console';
 
 export type ResponseSchema = Prisma.ProjectGetPayload<{
   select: {
@@ -76,7 +78,7 @@ export default async function handler(
       },
     });
   }
-
+  const total = await prisma.projectTask.findMany({});
   res
     .setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=299')
     .status(200)

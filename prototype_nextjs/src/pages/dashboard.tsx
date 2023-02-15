@@ -10,16 +10,18 @@ import hashids from '~/lib/hashids';
 import { SidebarType } from '~/components/Layout';
 import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import Table from './dashboardcomp/Projecttable';
+import Table from './dashboardcomp/ProjectTable';
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import SearchAppBar from './dashboardcomp/Searchbar';
-import ProjectTable from './dashboardcomp/Background';
-import StickyHeadTable from './dashboardcomp/Projecttable';
+// import ProjectTable from './dashboardcomp/Background';
+import ProjectTable from './dashboardcomp/ProjectTable';
 import prisma from '~/lib/prisma';
 import BasicCard from './dashboardcomp/card';
+// TODO: use proper import
+import { TableRows } from '@mui/icons-material';
 
 /*
 "There should also be a manager’s dashboard so that the managers or team lead‐
@@ -31,17 +33,17 @@ ers can keep track of the progression of the project they are responsible for."
 
 const DashboardPage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({}) => {
+> = ({ projects }) => {
   // TODO: new project button if manager
   const data = [
     {
       title: 'Average Hours per Task',
       description: '11',
     },
-    {
-      title: 'Number of tasks',
-      description: '10',
-    },
+    // {
+    //   title: 'Number of tasks',
+    //   description: '10',
+    // },
   ];
 
   return (
@@ -54,7 +56,7 @@ const DashboardPage: AppPage<
         <SearchAppBar />
       </div>
       <div>
-        <StickyHeadTable />
+        <ProjectTable projects={projects} />
         <Stack spacing={5} direction="row">
           <Button variant="contained" startIcon={<AddIcon />}>
             Add Project
@@ -96,6 +98,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     include: {
       leader: true,
       members: true,
+      tasks: {
+        select: {
+          stage: true,
+        },
+      },
     },
   });
 

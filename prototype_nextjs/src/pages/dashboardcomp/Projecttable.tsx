@@ -1,23 +1,24 @@
-import * as React from 'react';
+import { useState } from 'react';
+import type { InferGetServerSidePropsType } from 'next';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
+import TableCell, { type TableCellProps } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import useSWR from 'swr';
-import axios from 'axios';
 import type { ResponseSchema as GetProjectsResponse } from '~/pages/api/projects/dashboardbackend';
+import { getServerSideProps } from '../dashboard';
 
 interface Column {
-  id: 'projectName' | 'projectLeader';
+  id: keyof Data;
   label: string;
   minWidth?: number;
-  align?: 'right';
+  align?: TableCellProps['align'];
   format?: (value: number) => string;
 }
+
 const columns: readonly Column[] = [
   { id: 'projectName', label: 'Project Name', minWidth: 170 },
   //{ id: 'tasks', label: 'tasks', minWidth: 100 },
@@ -35,6 +36,19 @@ const columns: readonly Column[] = [
     align: 'right',
     format: (value: number) => value.toLocaleString('en-US'),
   },
+  {
+    id: 'projectProgress',
+    label: 'Project Progress',
+    minWidth: 170,
+    align: 'right',
+    format: (value: number) => value.toLocaleString('en-US'),
+  },
+  {
+    id: 'noOfTasks',
+    label: 'Number of Tasks',
+    align: 'right',
+    format: (value: number) => value.toLocaleString('en-US'),
+  },
   // {
   //   id: 'daysleft',
   //   label: 'days left',
@@ -47,46 +61,50 @@ const columns: readonly Column[] = [
 interface Data {
   projectName: string;
   projectLeader: string;
+  projectProgress: `${number} / ${number}`;
+  // projectProgress: string;
+  noOfTasks: number;
 }
 
-function createData(projectName: string, projectLeader: string): Data {
-  return { projectName, projectLeader };
+function createData(
+  projectName: Data['projectName'],
+  projectLeader: Data['projectLeader'],
+  projectProgress: Data['projectProgress'],
+  noOfTasks: Data['noOfTasks']
+): Data {
+  return { projectName, projectLeader, projectProgress, noOfTasks };
 }
 
-// const rows = [
-//   createData('Project 1', '01/01/2023', '01/01/2023', 'John', 5),
-//   createData('Project 2', '02/01/2023', '01/01/2023', 'Cerys', 6),
-//   createData('Project 3', '03/01/2023', '01/01/2023', 'Goob', 5),
-//   createData('Project 4', '04/01/2023', '01/01/2023', 'Hamm', 5),
-//   createData('Project 5', '05/01/2023', '01/01/2023', 'Hanks', 7),
-//   createData('Project 1', '01/01/2023', '01/01/2023', 'John', 5),
-//   createData('Project 2', '02/01/2023', '01/01/2023', 'Cerys', 6),
-//   createData('Project 3', '03/01/2023', '01/01/2023', 'Goob', 5),
-//   createData('Project 4', '04/01/2023', '01/01/2023', 'Hamm', 5),
-//   createData('Project 5', '05/01/2023', '01/01/2023', 'Hanks', 7),
-//   createData('Project 3', '03/01/2023', '01/01/2023', 'Goob', 5),
-//   createData('Project 4', '04/01/2023', '01/01/2023', 'Hamm', 5),
-//   createData('Project 5', '05/01/2023', '01/01/2023', 'Hanks', 7),
-// ];
+type Project = InferGetServerSidePropsType<
+  typeof getServerSideProps
+>['projects'][number];
 
-export default function StickyHeadTable() {
-  const { data: projects, error } = useSWR(
-    '/api/projects/dashboardbackend',
-    async (url) => {
-      const { data } = await axios.get<GetProjectsResponse>(url);
-      return data;
-    }
+export type ProjectTableProps = {
+  projects: Project[];
+};
+
+function getProjectProgress(project: Project): Data['projectProgress'] {
+  const total = project.tasks.length;
+
+  const completed = project.tasks.filter(
+    (task) => task.stage === 'COMPLETED'
+  ).length;
+
+  return `${completed} / ${total}`;
+}
+
+export default function ProjectTable({ projects }: ProjectTableProps) {
+  const rows: Data[] = projects.map((project) =>
+    createData(
+      project.name,
+      project.leader.name,
+      getProjectProgress(project),
+      project.tasks.length
+    )
   );
 
-  const rows = [];
-  if (projects) {
-    for (let i = 0; i < projects.length; i++) {
-      rows.push(createData(projects[i].name, projects[i].leader.name));
-    }
-  }
-
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
