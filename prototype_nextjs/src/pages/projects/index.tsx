@@ -2,12 +2,9 @@ import type {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from 'next';
-// import { useCallback, useState } from 'react';
 
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
-
-import * as React from 'react';
 
 import { SidebarType } from '~/components/Layout';
 import type { AppPage, SessionUser } from '~/types';
@@ -87,7 +84,6 @@ const ProjectsPage: AppPage<
             You do not have any projects assigned...
           </Typography>
         </Paper>
-        // </Box>
       );
     }
   }
@@ -99,13 +95,15 @@ const ProjectsPage: AppPage<
       </Head>
 
       <main>
-        {/* Hero unit */}
         {/* If the current user has no projects, the following function brings up a card
         that tells them they do not have any projects */}
         {hasNoProjects()}
 
+        {/* The following code renders a list of cards, one for each project that the user has access to.
+        Each card displays the project name, the project leader's name, and the number
+        of people working on the project. A "View" button on each card links to the project
+        detail page */}
         <Container sx={{ py: 5 }} maxWidth="md">
-          {/* End hero unit */}
           <Grid container spacing={4}>
             {data
               .filter((project) => hasProjectAccess(project)) /// done to filter out the projects that the current employee does not have access to
