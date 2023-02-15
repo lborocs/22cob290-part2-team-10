@@ -1,6 +1,7 @@
 import type {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
+  GetServerSideProps,
 } from 'next';
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
@@ -13,9 +14,12 @@ import { SidebarType } from '~/components/Layout';
 import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import prisma from '~/lib/prisma';
-import SearchAppBar from './dashboardcomp/Searchbar';
+import { NextLinkComposed } from '~/components/Link';
+import Searchbar from './dashboardcomp/Searchbar';
 import ProjectTable from './dashboardcomp/ProjectTable';
 import BasicCard, { type BasicCardProps } from './dashboardcomp/card';
+import useUserStore from '~/store/userStore';
+import { Prisma } from '@prisma/client';
 
 /*
 "There should also be a manager’s dashboard so that the managers or team lead‐
@@ -23,12 +27,11 @@ ers can keep track of the progression of the project they are responsible for."
 - spec letter
 */
 
-// TODO: DashboardPage
-
 const DashboardPage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ projects }) => {
-  // TODO: new project button if manager
+  const isManager = useUserStore((store) => store.user.isManager);
+
   const data: BasicCardProps['data'] = [
     {
       title: 'Average Hours per Task',
@@ -45,21 +48,24 @@ const DashboardPage: AppPage<
       <Head>
         <title>Dashboard - Make-It-All</title>
       </Head>
-      {/* TODO */}
       <div>
-        <SearchAppBar />
+        <Searchbar />
       </div>
       <div>
         <ProjectTable projects={projects} />
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          sx={{
-            marginTop: 5,
-          }}
-        >
-          Add Project
-        </Button>
+        {isManager && (
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            sx={{
+              marginTop: 5,
+            }}
+            component={NextLinkComposed}
+            to="/projects/new"
+          >
+            Add Project
+          </Button>
+        )}
       </div>
       <div>
         <br></br>
@@ -76,7 +82,7 @@ DashboardPage.layout = {
   },
 };
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
+export const getServerSideProps = (async (context) => {
   const session = await unstable_getServerSession(
     context.req,
     context.res,
@@ -89,10 +95,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const user = session.user as SessionUser;
 
-  // TODO: get all projects if manager
-  // else, get all projects where leader
-
-  const projects = await prisma.project.findMany({
+  const getPayload = {
     include: {
       leader: true,
       members: true,
@@ -102,7 +105,22 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         },
       },
     },
-  });
+  } satisfies Prisma.ProjectArgs;
+
+  let projects: Prisma.ProjectGetPayload<typeof getPayload>[];
+
+  if (user.isManager) {
+    projects = await prisma.project.findMany({
+      ...getPayload,
+    });
+  } else {
+    projects = await prisma.project.findMany({
+      ...getPayload,
+      where: {
+        leaderId: user.id,
+      },
+    });
+  }
 
   return {
     props: {
@@ -111,6 +129,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       projects,
     },
   };
-}
+}) satisfies GetServerSideProps;
 
 export default DashboardPage;
