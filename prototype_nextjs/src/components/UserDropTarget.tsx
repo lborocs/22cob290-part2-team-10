@@ -9,14 +9,14 @@ import styles from '~/styles/home.module.css';
 interface Props {
   tasks: any[];
   setTasks: React.Dispatch<React.SetStateAction<any[]>>;
-  section: string;
+  stage: string;
 }
 
 interface Item {
   id: number;
 }
 
-export default function DropTarget({ tasks, setTasks, section }: Props) {
+export default function DropTarget({ tasks, setTasks, stage }: Props) {
   const [{ isOver }, drop] = useDrop({
     accept: ItemTypes.TASK,
     drop: (item: Item) => changeSection(item.id),
@@ -27,7 +27,7 @@ export default function DropTarget({ tasks, setTasks, section }: Props) {
 
   const changeSection = (id: number) => {
     const card = tasks.filter((task) => id === task.id);
-    card[0].section = section;
+    card[0].stage = stage;
     setTasks((tasks) => [...tasks]);
   };
 
@@ -39,13 +39,13 @@ export default function DropTarget({ tasks, setTasks, section }: Props) {
     >
       <div className={styles.scroll}>
         {tasks
-          .filter((card) => card.section === section)
+          .filter((card) => card.stage === stage)
           .map((card) => (
             <Task
               key={card.id}
               id={card.id}
-              title={card.tit}
-              description={card.des}
+              title={card.title}
+              description={card.description}
               tags={card.tags}
             />
           ))}

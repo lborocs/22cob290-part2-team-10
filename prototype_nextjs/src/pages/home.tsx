@@ -32,16 +32,17 @@ import DropTarget from '~/components/UserDropTarget';
 // TODO: HomePage
 const HomePage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({}) => {
+> = ({ userTodoList }) => {
   const [open, setOpen] = useState(false);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [titleTask, setTitle] = useState('');
+  const [descriptionTask, setDescription] = useState('');
+
   const [tags, setTags] = useState('');
 
   const tagList = tags.split(',');
 
-  const [section, setSection] = useState('');
-  const [tasks, setTasks] = useState<any[]>([]);
+  const [stage, setStage] = useState('');
+  const [tasks, setTasks] = useState<any[]>(userTodoList);
 
   const handleClose = () => {
     setOpen(false);
@@ -50,13 +51,17 @@ const HomePage: AppPage<
     setTags('');
   };
 
-  const handleOpen = (section: string) => {
+  const handleOpen = (stage: string) => {
     setOpen(true);
-    setSection(section);
+    setStage(stage);
   };
 
   const handleSubmit = () => {
-    if (title.length == 0 || description.length == 0 || tags.length == 0) {
+    if (
+      titleTask.length == 0 ||
+      descriptionTask.length == 0 ||
+      tags.length == 0
+    ) {
       return;
     }
 
@@ -64,12 +69,13 @@ const HomePage: AppPage<
       ...tasks,
       {
         id: tasks.length + 1,
-        tit: title,
-        des: description,
+        title: titleTask,
+        description: descriptionTask,
         tags: tagList,
-        section,
+        stage,
       },
     ]);
+    console.log(titleTask, descriptionTask, tasks.length + 1, tagList);
     handleClose();
   };
 
@@ -86,7 +92,7 @@ const HomePage: AppPage<
             autoFocus
             label="Title"
             id="taskTitle"
-            value={title}
+            value={titleTask}
             onChange={(event) => setTitle(event.target.value)}
             fullWidth
             variant="outlined"
@@ -95,7 +101,7 @@ const HomePage: AppPage<
           <TextField
             label="Description"
             id="taskDescription"
-            value={description}
+            value={descriptionTask}
             onChange={(event) => setDescription(event.target.value)}
             fullWidth
             multiline
@@ -147,7 +153,7 @@ const HomePage: AppPage<
                 <DropTarget
                   tasks={tasks}
                   setTasks={setTasks}
-                  section="section-1"
+                  stage="section-1"
                 />
               </DndProvider>
               <CardActions className="d-grid">
@@ -171,7 +177,7 @@ const HomePage: AppPage<
                 <DropTarget
                   tasks={tasks}
                   setTasks={setTasks}
-                  section="section-2"
+                  stage="section-2"
                 />
               </DndProvider>
               <CardActions className="d-grid">
@@ -195,7 +201,7 @@ const HomePage: AppPage<
                 <DropTarget
                   tasks={tasks}
                   setTasks={setTasks}
-                  section="section-3"
+                  stage="section-3"
                 />
               </DndProvider>
               <CardActions className="d-grid">
@@ -219,7 +225,7 @@ const HomePage: AppPage<
                 <DropTarget
                   tasks={tasks}
                   setTasks={setTasks}
-                  section="section-4"
+                  stage="section-4"
                 />
               </DndProvider>
             </Card>
@@ -250,11 +256,28 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const user = session.user as SessionUser;
 
   // TODO: get their todo list from prisma
+  const userTodoList = await prisma.user.findMany({
+    where: {
+      id: user.id,
+    },
+    select: {
+      todoList: {
+        select: {
+          id: true,
+          stage: true,
+          title: true,
+          description: true,
+          tags: true,
+        },
+      },
+    },
+  });
 
   return {
     props: {
       session,
       user,
+      userTodoList,
     },
   };
 }
