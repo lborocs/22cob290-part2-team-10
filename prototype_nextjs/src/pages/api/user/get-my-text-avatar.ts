@@ -17,7 +17,7 @@ export type ResponseSchema = z.infer<typeof TextAvatarSchema>;
  * @param res Response object with a JSON body containing the background color and the foreground color. See {@link ResponseSchema}.
  * @example
  * ```ts
- * const { data } = await axios.get('/api/user/get-text-avatar');
+ * const { data } = await axios.get('/api/user/get-my-text-avatar');
  * console.log(data); // { 'avatar-bg': '#000000', 'avatar-fg': '#ffffff' }
  * ```
  */

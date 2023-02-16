@@ -2,7 +2,7 @@ import axios from 'axios';
 import type { z } from 'zod';
 
 import type TextAvatarSchema from '~/schemas/user/textAvatar';
-import type { ResponseSchema as GetTextAvatarResponse } from '~/pages/api/user/get-text-avatar';
+import type { ResponseSchema as GetTextAvatarResponse } from '~/pages/api/user/get-my-text-avatar';
 import type {
   RequestSchema as ChangeTextAvatarPayload,
   ResponseSchema as ChangeTextAvatarResponse,
@@ -17,7 +17,7 @@ export const getDefaultTextAvatar = () => ({
 
 export async function getTextAvatarFromStore(): Promise<TextAvatar> {
   const { data } = await axios.get<GetTextAvatarResponse>(
-    '/api/user/get-text-avatar'
+    '/api/user/get-my-text-avatar'
   );
   return data;
 }
