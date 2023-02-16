@@ -52,10 +52,7 @@ const ProjectsPage: AppPage<
       return (
         <Paper
           sx={(theme) => ({
-            position: 'relative',
-            inset: 0,
             margin: 'auto',
-            height: 'fit-content',
             width: {
               xs: '85vw',
               sm: '70vw',
@@ -113,16 +110,13 @@ const ProjectsPage: AppPage<
                     {/* Tooltip is used to output longer project names using a small pop up badge */}
                     <Card
                       sx={{
-                        height: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
                         '&:hover': { boxShadow: 6 },
                       }}
                     >
                       {/* A card is used to display the each project that the current user has assigned to them */}
                       <CardContent sx={{ flexGrow: 1 }}>
                         <Typography gutterBottom variant="h5" component="h2">
-                          {project.name.length < 12
+                          {project.name.length <= 12
                             ? project.name
                             : `${project.name.slice(0, 12)}...`}
                         </Typography>
