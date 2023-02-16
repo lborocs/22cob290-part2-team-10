@@ -15,6 +15,7 @@ import prisma from '~/lib/prisma';
 import { getEmailFromToken } from '~/lib/inviteToken';
 import { SidebarType } from '~/components/Layout';
 import TextAvatarEditor from '~/components/profile/TextAvatarEditor';
+import AvatarEditor from '~/components/profile/AvatarEditor';
 import UserDetailsSection from '~/components/profile/UserDetailsSection';
 import ChangePasswordSection from '~/components/profile/ChangePasswordSection';
 import InviteEmployeeSection from '~/components/profile/InviteEmployeeSection';
@@ -23,9 +24,9 @@ import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 import styles from '~/styles/Profile.module.css';
 
-// https://search.muz.li/ZjI5OThkOTQ4?utm_source=muz.li-insp&utm_medium=article&utm_campaign=%2Finspiration%2Fprofile-page%2F
+// TODO: https://search.muz.li/ZjI5OThkOTQ4?utm_source=muz.li-insp&utm_medium=article&utm_campaign=%2Finspiration%2Fprofile-page%2F
 
-// TODO: use dynamic imports for modals
+// TODO?: use dynamic imports for modals
 const ProfilePage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ inviter }) => {
@@ -48,6 +49,7 @@ const ProfilePage: AppPage<
       >
         <Box display="flex" justifyContent="center">
           <TextAvatarEditor />
+          <AvatarEditor />
         </Box>
         <Box flexGrow={1}>
           <UserDetailsSection inviter={inviter} />

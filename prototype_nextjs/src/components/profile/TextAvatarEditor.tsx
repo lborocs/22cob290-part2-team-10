@@ -12,7 +12,7 @@ import useSWR from 'swr';
 import {
   type TextAvatar,
   getDefaultTextAvatar,
-  getTextAvatarFromStore,
+  getMyTextAvatarFromStore,
   updateTextAvatarStore,
   updateTextAvatarCss,
 } from '~/lib/textAvatar';
@@ -48,7 +48,7 @@ export default function TextAvatarEditor() {
 
   // using SWR like useEffect(..., []) for async data fetching while loading component
   useSWR('defaultTextAvatar', async () => {
-    const textAvatar = await getTextAvatarFromStore();
+    const textAvatar = await getMyTextAvatarFromStore();
 
     setDefaultTextAvatar(textAvatar);
   });
