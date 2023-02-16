@@ -25,9 +25,18 @@ import {
 } from '@mui/material';
 import hashids from '~/lib/hashids';
 
+import React from 'react';
+
+interface ProgressBarProps {
+  value: number;
+  max: number;
+}
+
 const ProjectsPage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ data, user }) => {
+  data = JSON.parse(data);
+  console.log(data);
   function hasProjectAccess(
     //A function to filter out the projects that the current user
     //has access to. If the user is either the leader or a member of the project,
@@ -49,7 +58,6 @@ const ProjectsPage: AppPage<
     //function used to display a card that shows the user that they have no projects
     //assigned to them. The Card is only returned if the user has no projects
     if (data.filter((project) => hasProjectAccess(project)).length == 0) {
-      console.log('has no projects');
       return (
         <Paper
           sx={(theme) => ({
@@ -88,6 +96,77 @@ const ProjectsPage: AppPage<
     }
   }
 
+  const progressBar: React.FC<ProgressBarProps> = ({ value, max }) => {
+    // function to render a progress bar that shows the percentage of tasks that are incomplete
+    let percentage;
+    if (max != 0) {
+      percentage = Math.floor((value / max) * 100);
+    } else {
+      percentage = 0;
+    }
+
+    return (
+      <div>
+        <Tooltip
+          title={
+            percentage > 0
+              ? 'Percentage based off of the number of tasks completed'
+              : ''
+          }
+        >
+          <Paper
+            sx={(theme) => ({
+              position: 'relative',
+              inset: 0,
+              margin: 'auto',
+              height: '20px',
+              width: '90%',
+              textAlign: 'center',
+              borderRadius: 3,
+              [theme.getColorSchemeSelector('light')]: {
+                bgcolor: theme.vars.palette.makeItAllGrey.main,
+                boxShadow: 3,
+              },
+            })}
+          >
+            <div
+              style={{
+                position: 'absolute',
+                textAlign: 'center',
+                width: '100%',
+              }}
+            >
+              {max != 0 ? `${percentage}%` : 'No Tasks Assigned'}
+            </div>
+            <div
+              style={{
+                backgroundColor: 'grey',
+                height: '100%',
+                width: `${percentage}%`,
+                borderRadius: 'inherit',
+                textAlign: 'center',
+              }}
+            ></div>
+          </Paper>
+        </Tooltip>
+      </div>
+    );
+  };
+
+  function getNumberofTasks(project) {
+    // function to get the number of tasks that are incomplete for a project and the total number of tasks
+    // for a project. The function returns a JSON object with the number of incomplete tasks and the total number of tasks
+    // as the value and max properties respectively. These are then used to render the progress bar
+    const totalNumOfTasks = project.tasks.length;
+    let inCompletedTasks = 0;
+    for (let i = 0; i < project.tasks.length; i++) {
+      if (project.tasks[i].stage != 'COMPLETED') {
+        inCompletedTasks++;
+      }
+    }
+    return JSON.stringify({ value: inCompletedTasks, max: totalNumOfTasks });
+  }
+
   return (
     <>
       <Head>
@@ -98,6 +177,7 @@ const ProjectsPage: AppPage<
         {/* If the current user has no projects, the following function brings up a card
         that tells them they do not have any projects */}
         {hasNoProjects()}
+        {/* {console.log(data)} */}
 
         {/* The following code renders a list of cards, one for each project that the user has access to.
         Each card displays the project name, the project leader's name, and the number
@@ -109,39 +189,45 @@ const ProjectsPage: AppPage<
               .filter((project) => hasProjectAccess(project)) /// done to filter out the projects that the current employee does not have access to
               .map((project) => (
                 <Grid item key={project.id} xs={12} sm={6} md={4}>
-                  <Tooltip title={project.name.length > 12 ? project.name : ''}>
-                    {/* Tooltip is used to output longer project names using a small pop up badge */}
-                    <Card
-                      sx={{
-                        height: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        '&:hover': { boxShadow: 6 },
-                      }}
-                    >
-                      {/* A card is used to display the each project that the current user has assigned to them */}
-                      <CardContent sx={{ flexGrow: 1 }}>
+                  <Card
+                    sx={{
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      '&:hover': { boxShadow: 6 },
+                      paddingBottom: '10%',
+                    }}
+                  >
+                    {/* A card is used to display the each project that the current user has assigned to them */}
+                    <CardContent sx={{ flexGrow: 1 }}>
+                      <Tooltip
+                        title={project.name.length > 12 ? project.name : ''}
+                      >
+                        {/* Tooltip is used to output longer project names using a small pop up badge */}
                         <Typography gutterBottom variant="h5" component="h2">
                           {project.name.length < 12
                             ? project.name
                             : project.name.slice(0, 12) + '...'}
                         </Typography>
-                        <Typography>
-                          Project led by: {project.leader.name}
-                        </Typography>
-                        <Typography>
-                          People working on prject: {project.members.length}
-                        </Typography>
-                      </CardContent>
-                      <CardActions>
-                        <Link href={`/projects/${hashids.encode(project.id)}`}>
-                          <Button size="small" id={project.id}>
-                            View
-                          </Button>
-                        </Link>
-                      </CardActions>
-                    </Card>
-                  </Tooltip>
+                      </Tooltip>
+                      <Typography>
+                        Project led by: {project.leader.name}
+                      </Typography>
+                      <Typography>
+                        People working on prject: {project.members.length}
+                      </Typography>
+                    </CardContent>
+                    <CardActions>
+                      {/* A "View" button is used to link to the project detail page */}
+                      <Link href={`/projects/${hashids.encode(project.id)}`}>
+                        <Button size="small" id={project.id}>
+                          View
+                        </Button>
+                      </Link>
+                    </CardActions>
+                    {/* The progress bar is rendered here */}
+                    {progressBar(JSON.parse(getNumberofTasks(project)))}{' '}
+                  </Card>
                 </Grid>
               ))}
           </Grid>
@@ -178,6 +264,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     include: {
       leader: true,
       members: true,
+      tasks: true,
     },
   });
 
@@ -185,7 +272,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     props: {
       session,
       user,
-      data: projects,
+      data: JSON.stringify(projects),
     },
   };
 }
