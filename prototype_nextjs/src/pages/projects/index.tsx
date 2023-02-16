@@ -21,6 +21,7 @@ import prisma from '~/lib/prisma';
 import hashids from '~/lib/hashids';
 
 import React from 'react';
+import Link from 'next/link';
 
 interface ProgressBarProps {
   value: number;
