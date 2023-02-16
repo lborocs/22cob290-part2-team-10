@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import BadgeIcon from '@mui/icons-material/Badge';
 import SendIcon from '@mui/icons-material/Send';
 import axios from 'axios';
-import { Formik } from 'formik';
+import { type FormikConfig, Formik } from 'formik';
 import { withZodSchema } from 'formik-validator-zod';
 import type { Prisma } from '@prisma/client';
 import toast from 'react-hot-toast';
@@ -56,9 +56,10 @@ export default function UserDetailsSection({
   const setName = useUserStore((state) => state.setName);
   const { name, email, isManager } = useUserStore((state) => state.user);
 
-  const handleSubmit: React.ComponentProps<
-    typeof Formik<DetailsFormData>
-  >['onSubmit'] = async (values, { resetForm }) => {
+  const handleSubmit: FormikConfig<DetailsFormData>['onSubmit'] = async (
+    values,
+    { resetForm }
+  ) => {
     // see pages/index#handleSubmit
     document.querySelector<HTMLInputElement>(':focus')?.blur();
 

@@ -10,7 +10,7 @@ import Box from '@mui/material/Box';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import { Formik } from 'formik';
+import { type FormikConfig, Formik } from 'formik';
 import { withZodSchema } from 'formik-validator-zod';
 import toast from 'react-hot-toast';
 
@@ -60,9 +60,10 @@ const SignInPage: AppPage = () => {
   const { callbackUrl } = router.query;
   const nextUrl = (callbackUrl as string | undefined) ?? '/home';
 
-  const handleSubmit: React.ComponentProps<
-    typeof Formik<SignInFormData>
-  >['onSubmit'] = async ({ email, password }, { setFieldError }) => {
+  const handleSubmit: FormikConfig<SignInFormData>['onSubmit'] = async (
+    { email, password },
+    { setFieldError }
+  ) => {
     // Unfocus the focused element so that an error from backend doesn't almost immediately
     // disappear if they submitted the form while focused on an element (i.e. pressed enter).
     // Because touched will immediately update to true when they unfocus from the element

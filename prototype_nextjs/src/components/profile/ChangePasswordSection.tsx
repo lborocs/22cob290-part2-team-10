@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import LockResetIcon from '@mui/icons-material/LockReset';
 import axios from 'axios';
-import { Formik } from 'formik';
+import { type FormikConfig, Formik } from 'formik';
 import { withZodSchema } from 'formik-validator-zod';
 import toast from 'react-hot-toast';
 import { z } from 'zod';
@@ -67,11 +67,10 @@ export default function ChangePasswordSection() {
   const handleOpen = () => setShowDialog(true);
   const handleClose = () => setShowDialog(false);
 
-  const handleSubmit: React.ComponentProps<
-    typeof Formik<ChangePwFormData>
-  >['onSubmit'] = async (values, { setFieldError }) => {
-    const { currentPassword, newPassword } = values;
-
+  const handleSubmit: FormikConfig<ChangePwFormData>['onSubmit'] = async (
+    { currentPassword, newPassword },
+    { setFieldError }
+  ) => {
     // see pages/index#handleSubmit
     document.querySelector<HTMLInputElement>(':focus')?.blur();
 
