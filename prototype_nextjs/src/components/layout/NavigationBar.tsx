@@ -9,10 +9,11 @@ import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import type { UrlObject } from 'url';
 
-import TextAvatar from '~/components/TextAvatar';
-import ThemeSwitcher from '~/components/ThemeSwitcher';
 import NavCollapse from '~/components/layout/nav/NavCollapse';
 import NavTabs from '~/components/layout/nav/NavTabs';
+import ThemeSwitcher from '~/components/ThemeSwitcher';
+import TextAvatar from '~/components/TextAvatar';
+import SignedInUserAvatar from '~/components/avatar/SignedInUserAvatar';
 import useUserStore from '~/store/userStore';
 
 export type PageData = {
@@ -146,7 +147,9 @@ export default function NavigationBar({
 
           <Box display={{ xs: 'none', lg: 'block' }}>
             <Link href="/profile">
-              <TextAvatar />
+              {/* TODO: remove TextAvatar */}
+              {/* <TextAvatar /> */}
+              <SignedInUserAvatar />
             </Link>
           </Box>
 
