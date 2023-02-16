@@ -55,11 +55,11 @@ export function hasProjectAccess(
   project: object,
   user: SessionUser
 ) {
-  if (user.id == project.leaderId) {
+  if (user.id === project.leaderId) {
     return true;
   }
   for (let j = 0; j < project.members.length; j++) {
-    if (user.id == project.members[j].id) {
+    if (user.id === project.members[j].id) {
       return true;
     }
   }

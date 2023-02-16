@@ -24,11 +24,6 @@ import Link from 'next/link';
 import progressBar from '~/components/ProjectProgressBar';
 import hasNoProjects, { hasProjectAccess } from '~/components/NoProjectsCard';
 
-// interface ProgressBarProps {
-//   value: number;
-//   max: number;
-// }
-
 const ProjectsPage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ data, user }) => {
