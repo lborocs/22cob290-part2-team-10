@@ -2,7 +2,8 @@ import axios from 'axios';
 import type { z } from 'zod';
 
 import type TextAvatarSchema from '~/schemas/user/textAvatar';
-import type { ResponseSchema as GetTextAvatarResponse } from '~/pages/api/user/get-my-text-avatar';
+import type { ResponseSchema as GetMyTextAvatarResponse } from '~/pages/api/user/get-my-text-avatar';
+import type { ResponseSchema as GetTextAvatarResponse } from '~/pages/api/user/get-text-avatar';
 import type {
   RequestSchema as ChangeTextAvatarPayload,
   ResponseSchema as ChangeTextAvatarResponse,
@@ -15,9 +16,18 @@ export const getDefaultTextAvatar = () => ({
   'avatar-fg': '#ffffff',
 });
 
-export async function getTextAvatarFromStore(): Promise<TextAvatar> {
-  const { data } = await axios.get<GetTextAvatarResponse>(
+export async function getMyTextAvatarFromStore(): Promise<TextAvatar> {
+  const { data } = await axios.get<GetMyTextAvatarResponse>(
     '/api/user/get-my-text-avatar'
+  );
+  return data;
+}
+
+export async function getTextAvatarFromStore(
+  userId: string
+): Promise<TextAvatar | null> {
+  const { data } = await axios.get<GetTextAvatarResponse>(
+    `/api/user/get-text-avatar?userId=${encodeURIComponent(userId)}`
   );
   return data;
 }
@@ -35,6 +45,8 @@ export async function updateTextAvatarStore(
   return data.success;
 }
 
+// TODO: update these to not be global
+// this is unused tho
 export function getTextAvatarFromCss(): TextAvatar {
   return {
     'avatar-bg': document.documentElement.style.getPropertyValue('--avatar-bg'),
@@ -42,6 +54,9 @@ export function getTextAvatarFromCss(): TextAvatar {
   };
 }
 
+/**
+ * TODO: completely remove this
+ */
 export function updateTextAvatarCss(textAvatar: TextAvatar) {
   for (const key in textAvatar) {
     const colour = textAvatar[key as keyof TextAvatar];

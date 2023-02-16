@@ -2,7 +2,10 @@ import { forwardRef } from 'react';
 import clsx from 'clsx';
 import useSWR from 'swr';
 
-import { getTextAvatarFromStore, updateTextAvatarCss } from '~/lib/textAvatar';
+import {
+  getMyTextAvatarFromStore,
+  updateTextAvatarCss,
+} from '~/lib/textAvatar';
 import useUserStore from '~/store/userStore';
 
 import styles from '~/styles/TextAvatar.module.css';
@@ -13,9 +16,12 @@ export interface TextAvatarProps
 }
 
 // TODO: https://mui.com/material-ui/react-avatar/#main-content
-export default forwardRef(function LoadingButton(
+/**
+ * This is only for the signed in user
+ */
+export default forwardRef(function TextAvatar(
   { size = '40px', className, style, ...props }: TextAvatarProps,
-  ref: React.ForwardedRef<HTMLButtonElement>
+  ref: React.ForwardedRef<HTMLSpanElement>
 ) {
   const username = useUserStore((state) => state.user.name);
 
@@ -26,7 +32,7 @@ export default forwardRef(function LoadingButton(
 
   // using SWR like useEffect(..., [])
   useSWR('textAvatar', async () => {
-    const textAvatar = await getTextAvatarFromStore();
+    const textAvatar = await getMyTextAvatarFromStore();
 
     updateTextAvatarCss(textAvatar);
   });
