@@ -143,7 +143,6 @@ const HomePage: AppPage<
                 titleTypographyProps={{ fontSize: 20 }}
                 title="To Do"
               />
-
               <DndProvider backend={HTML5Backend}>
                 <DropTarget
                   tasks={tasks}
@@ -151,7 +150,6 @@ const HomePage: AppPage<
                   section="section-1"
                 />
               </DndProvider>
-
               <CardActions className="d-grid">
                 <Button
                   variant="contained"
@@ -169,7 +167,6 @@ const HomePage: AppPage<
                 titleTypographyProps={{ fontSize: 20 }}
                 title="In Progress"
               />
-
               <DndProvider backend={HTML5Backend}>
                 <DropTarget
                   tasks={tasks}
@@ -177,7 +174,6 @@ const HomePage: AppPage<
                   section="section-2"
                 />
               </DndProvider>
-
               <CardActions className="d-grid">
                 <Button
                   variant="contained"
@@ -195,7 +191,6 @@ const HomePage: AppPage<
                 titleTypographyProps={{ fontSize: 20 }}
                 title="Code Review"
               />
-
               <DndProvider backend={HTML5Backend}>
                 <DropTarget
                   tasks={tasks}
@@ -203,7 +198,6 @@ const HomePage: AppPage<
                   section="section-3"
                 />
               </DndProvider>
-
               <CardActions className="d-grid">
                 <Button
                   variant="contained"
@@ -221,7 +215,6 @@ const HomePage: AppPage<
                 titleTypographyProps={{ fontSize: 20 }}
                 title="Completed"
               />
-
               <DndProvider backend={HTML5Backend}>
                 <DropTarget
                   tasks={tasks}
