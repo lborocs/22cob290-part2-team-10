@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import type {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
@@ -25,6 +27,7 @@ import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 import styles from '~/styles/home.module.css';
+import DropTarget from '~/components/UserDropTarget';
 
 // TODO: HomePage
 const HomePage: AppPage<
@@ -137,10 +140,17 @@ const HomePage: AppPage<
           <Grid item md={3} xs={12}>
             <Card className={styles.card}>
               <CardHeader
-                className={styles.cardheader}
                 titleTypographyProps={{ fontSize: 20 }}
                 title="To Do"
               />
+
+              <DndProvider backend={HTML5Backend}>
+                <DropTarget
+                  tasks={tasks}
+                  setTasks={setTasks}
+                  section="section-1"
+                />
+              </DndProvider>
 
               <CardActions className="d-grid">
                 <Button
@@ -156,10 +166,17 @@ const HomePage: AppPage<
           <Grid item md={3} xs={12}>
             <Card className={styles.card}>
               <CardHeader
-                className={styles.cardheader}
                 titleTypographyProps={{ fontSize: 20 }}
                 title="In Progress"
               />
+
+              <DndProvider backend={HTML5Backend}>
+                <DropTarget
+                  tasks={tasks}
+                  setTasks={setTasks}
+                  section="section-2"
+                />
+              </DndProvider>
 
               <CardActions className="d-grid">
                 <Button
@@ -175,10 +192,17 @@ const HomePage: AppPage<
           <Grid item md={3} xs={12}>
             <Card className={styles.card}>
               <CardHeader
-                className={styles.cardheader}
                 titleTypographyProps={{ fontSize: 20 }}
                 title="Code Review"
               />
+
+              <DndProvider backend={HTML5Backend}>
+                <DropTarget
+                  tasks={tasks}
+                  setTasks={setTasks}
+                  section="section-3"
+                />
+              </DndProvider>
 
               <CardActions className="d-grid">
                 <Button
@@ -194,10 +218,17 @@ const HomePage: AppPage<
           <Grid item md={3} xs={12}>
             <Card className={styles.completed}>
               <CardHeader
-                className={styles.cardheader}
                 titleTypographyProps={{ fontSize: 20 }}
                 title="Completed"
               />
+
+              <DndProvider backend={HTML5Backend}>
+                <DropTarget
+                  tasks={tasks}
+                  setTasks={setTasks}
+                  section="section-4"
+                />
+              </DndProvider>
             </Card>
           </Grid>
         </Grid>

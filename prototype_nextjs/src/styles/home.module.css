@@ -42,7 +42,7 @@
 .taskcard {
     height: 220px;
     overflow: auto;
-    border: 1px solid blue;
+    border: 1px solid #e2ba39;
     overflow-wrap: break-word;
     margin-bottom: 0.5rem;
 }

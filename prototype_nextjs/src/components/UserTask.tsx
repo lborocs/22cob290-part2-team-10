@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 
 import { ItemTypes } from '~/types';
 
-import styles from '~/styles/Mui.module.css';
+import styles from '~/styles/home.module.css';
 
 interface Props {
   id: number;
@@ -18,7 +18,7 @@ interface Props {
 export default function Task({ id, title, description, tags }: Props) {
   const [{ isDragging }, drag] = useDrag({
     type: ItemTypes.TASK,
-    item: { id: id },
+    item: { id },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
