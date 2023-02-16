@@ -5,7 +5,7 @@ import DialogActions from '@mui/material/DialogActions';
 import InputLabel from '@mui/material/InputLabel';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Stack from '@mui/material/Stack';
-import { Formik, type FormikProps } from 'formik';
+import { type FormikConfig, type FormikProps, Formik } from 'formik';
 import toast from 'react-hot-toast';
 import useSWR from 'swr';
 
@@ -68,28 +68,29 @@ export default function TextAvatarEditor() {
     handleClose();
   }, [defaultTextAvatar]);
 
-  const handleSubmit: React.ComponentProps<
-    typeof Formik<TextAvatar>
-  >['onSubmit'] = useCallback(async (values, { resetForm }) => {
-    const success = await updateTextAvatarStore(values);
+  const handleSubmit: FormikConfig<TextAvatar>['onSubmit'] = useCallback(
+    async (values, { resetForm }) => {
+      const success = await updateTextAvatarStore(values);
 
-    if (success) {
-      setDefaultTextAvatar(values);
+      if (success) {
+        setDefaultTextAvatar(values);
 
-      toast.success('Saved.', {
-        position: 'bottom-center',
-      });
-      handleClose();
-    } else {
-      // shouldn't happen
-      toast.error('Please try again', {
-        position: 'bottom-center',
-      });
-    }
+        toast.success('Saved', {
+          position: 'bottom-center',
+        });
+        handleClose();
+      } else {
+        // shouldn't happen
+        toast.error('Please try again', {
+          position: 'bottom-center',
+        });
+      }
 
-    resetForm({ values });
-    updateTextAvatarCss(values);
-  }, []);
+      resetForm({ values });
+      updateTextAvatarCss(values);
+    },
+    []
+  );
 
   return (
     <div>
