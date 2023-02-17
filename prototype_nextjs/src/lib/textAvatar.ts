@@ -2,6 +2,7 @@ import axios from 'axios';
 import type { z } from 'zod';
 
 import type TextAvatarSchema from '~/schemas/user/textAvatar';
+import type { ResponseSchema as GetMyTextAvatarResponse } from '~/pages/api/user/get-my-text-avatar';
 import type { ResponseSchema as GetTextAvatarResponse } from '~/pages/api/user/get-text-avatar';
 import type {
   RequestSchema as ChangeTextAvatarPayload,
@@ -15,9 +16,18 @@ export const getDefaultTextAvatar = () => ({
   'avatar-fg': '#ffffff',
 });
 
-export async function getTextAvatarFromStore(): Promise<TextAvatar> {
+export async function getMyTextAvatarFromStore(): Promise<TextAvatar> {
+  const { data } = await axios.get<GetMyTextAvatarResponse>(
+    '/api/user/get-my-text-avatar'
+  );
+  return data;
+}
+
+export async function getTextAvatarFromStore(
+  userId: string
+): Promise<TextAvatar | null> {
   const { data } = await axios.get<GetTextAvatarResponse>(
-    '/api/user/get-text-avatar'
+    `/api/user/get-text-avatar?userId=${encodeURIComponent(userId)}`
   );
   return data;
 }
@@ -33,19 +43,4 @@ export async function updateTextAvatarStore(
   );
 
   return data.success;
-}
-
-export function getTextAvatarFromCss(): TextAvatar {
-  return {
-    'avatar-bg': document.documentElement.style.getPropertyValue('--avatar-bg'),
-    'avatar-fg': document.documentElement.style.getPropertyValue('--avatar-fg'),
-  };
-}
-
-export function updateTextAvatarCss(textAvatar: TextAvatar) {
-  for (const key in textAvatar) {
-    const colour = textAvatar[key as keyof TextAvatar];
-
-    document.documentElement.style.setProperty(`--${key}`, colour);
-  }
 }

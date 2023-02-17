@@ -1,23 +1,24 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { unstable_getServerSession } from 'next-auth/next';
+import type { z } from 'zod';
 
 import prisma from '~/lib/prisma';
+import type TextAvatarSchema from '~/schemas/user/textAvatar';
 import type { ErrorResponse, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
-export type ResponseSchema = {
-  user: SessionUser;
-};
+export type ResponseSchema = z.infer<typeof TextAvatarSchema>;
 
 /**
- * Get the signed in user from the session.
- * See {@link authOptions ~/pages/api/auth/[...nextauth].ts}.
+ * Get the text avatar of the signed in user.
+ * The text avatar is a combination of a background color and a foreground color.
+ * See {@link TextAvatarSchema}.
  *
- * @param res Response object with a JSON body containing the user. See {@link ResponseSchema}.
+ * @param res Response object with a JSON body containing the background color and the foreground color. See {@link ResponseSchema}.
  * @example
  * ```ts
- * const { data } = await axios.get('/api/user/get-user-from-session');
- * console.log(data.user); // { id: '...', email: '...', name: '...', ... }
+ * const { data } = await axios.get('/api/user/get-my-text-avatar');
+ * console.log(data); // { 'avatar-bg': '#000000', 'avatar-fg': '#ffffff' }
  * ```
  */
 export default async function handler(
@@ -36,20 +37,18 @@ export default async function handler(
 
   const userId = (session.user as SessionUser).id;
 
-  const user = await prisma.user.findUniqueOrThrow({
+  const result = await prisma.user.findUniqueOrThrow({
     where: {
       id: userId,
     },
     select: {
-      id: true,
-      email: true,
-      name: true,
-      isManager: true,
-      image: true,
+      avatarBg: true,
+      avatarFg: true,
     },
   });
 
   res.status(200).json({
-    user,
+    'avatar-bg': result.avatarBg,
+    'avatar-fg': result.avatarFg,
   });
 }

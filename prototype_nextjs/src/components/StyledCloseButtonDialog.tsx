@@ -5,7 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import CloseIcon from '@mui/icons-material/Close';
 
-const StyledDialog = styled(Dialog)(({ theme }) =>
+export const StyledDialog = styled(Dialog)(({ theme }) =>
   theme.unstable_sx({
     '& .MuiPaper-root > *': {
       paddingX: 2,

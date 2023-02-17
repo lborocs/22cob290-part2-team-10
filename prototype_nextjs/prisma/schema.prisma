@@ -19,12 +19,13 @@ model User {
   isAdmin        Boolean @default(false)
   leftCompany    Boolean @default(false)
   inviteToken    String?
+  isManager      Boolean @default(false)
   avatarBg       String  @default("#e2ba39")
   avatarFg       String  @default("#ffffff")
+  image          String?
 
   todoList UserTask[] @relation("UserTasks")
 
-  isManager        Boolean       @default(false)
   // projects
   ledProjects      Project[]     @relation("ProjectLeader")
   assignedProjects Project[]     @relation("ProjectMembers")
