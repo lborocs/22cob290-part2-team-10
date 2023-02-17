@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { forwardRef, useCallback, useState } from 'react';
 import { useRouter } from 'next/router';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
@@ -247,14 +247,18 @@ function ProjectListItem({
   );
 }
 
-function ProjectLink({
-  active,
-  url,
-  children,
-}: React.PropsWithChildren<{
-  active: boolean;
-  url: string;
-}>) {
+const ProjectLink = forwardRef(function ProjectLink(
+  {
+    active,
+    url,
+    children,
+    ...props
+  }: React.PropsWithChildren<{
+    active: boolean;
+    url: string;
+  }>,
+  ref: React.Ref<HTMLAnchorElement>
+) {
   return (
     <ListItemButton
       sx={{
@@ -277,8 +281,10 @@ function ProjectLink({
       }}
       component={NextLinkComposed}
       to={url}
+      ref={ref}
+      {...props}
     >
       {children}
     </ListItemButton>
   );
-}
+});
