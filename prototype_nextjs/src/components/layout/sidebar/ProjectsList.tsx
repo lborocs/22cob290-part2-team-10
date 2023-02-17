@@ -1,10 +1,11 @@
-import { useCallback, useState } from 'react';
+import { forwardRef, useCallback, useState } from 'react';
 import { useRouter } from 'next/router';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
 import Divider from '@mui/material/Divider';
+import InputAdornment from '@mui/material/InputAdornment';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -13,12 +14,14 @@ import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+import SearchIcon from '@mui/icons-material/Search';
 import axios from 'axios';
 import memoize from 'lodash/memoize';
 import range from 'lodash/range';
 import useSWR from 'swr';
 
 import hashids from '~/lib/hashids';
+import useUserStore from '~/store/userStore';
 import DebouncedTextField from '~/components/DebouncedTextField';
 import { NextLinkComposed } from '~/components/Link';
 import type { ResponseSchema as GetProjectsResponse } from '~/pages/api/projects/get-assigned-projects';
@@ -41,10 +44,12 @@ const filterProjects = memoize(
 );
 
 export default function ProjectsList() {
+  const userId = useUserStore((state) => state.user.id);
+
   const { data: projects, error } = useSWR(
-    '/api/projects/get-assigned-projects',
-    async (url) => {
-      const { data } = await axios.get<GetProjectsResponse>(url);
+    [userId, '/api/projects/get-assigned-projects'],
+    async ([, url]) => {
+      const { data } = await axios.get<GetProjectsResponse>(url, {});
       return data;
     }
   );
@@ -90,6 +95,13 @@ export default function ProjectsList() {
         label="Search by project name"
         variant="outlined"
         disabled={projects === undefined}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon fontSize="small" />
+            </InputAdornment>
+          ),
+        }}
         sx={{
           marginLeft: 0.5,
           marginRight: 1.5,
@@ -148,8 +160,7 @@ export default function ProjectsList() {
           sx={{
             inset: 0,
             overflowY: 'auto',
-            // TODO?: scrollbar styling isn't fully supported on firefox
-            // so try and figure out workaround? idk
+            // note: scrollbar styling isn't fully supported on firefox
             // https://developer.mozilla.org/en-US/docs/Web/CSS/::-webkit-scrollbar
             '&::-webkit-scrollbar': {
               width: '0.5em',
@@ -168,7 +179,7 @@ export default function ProjectsList() {
   );
 }
 
-// TODO?: made list bg a different colour?
+// TODO?: make list bg a different colour?
 function Projects({ projects }: { projects: GetProjectsResponse | undefined }) {
   if (!projects)
     return (
@@ -217,11 +228,41 @@ function ProjectListItem({
   const url = `/projects/${hashids.encode(project.id)}`;
   const active = currentProjectUrl === url;
 
-  // TODO: some sort of like way to signify that they can hover over it for tooltip
-  // maybe underline
   const nameIsTooLong = project.name.length > 18;
 
-  const renderLink = (
+  return (
+    <ListItem disablePadding>
+      {nameIsTooLong ? (
+        <Tooltip
+          placement="right"
+          title={<Typography fontSize="small">{project.name}</Typography>}
+        >
+          <ProjectLink active={active} url={url}>
+            <ListItemText primary={`${project.name.slice(0, 18)}...`} />
+          </ProjectLink>
+        </Tooltip>
+      ) : (
+        <ProjectLink active={active} url={url}>
+          <ListItemText primary={project.name} />
+        </ProjectLink>
+      )}
+    </ListItem>
+  );
+}
+
+const ProjectLink = forwardRef(function ProjectLink(
+  {
+    active,
+    url,
+    children,
+    ...props
+  }: React.PropsWithChildren<{
+    active: boolean;
+    url: string;
+  }>,
+  ref: React.Ref<HTMLAnchorElement>
+) {
+  return (
     <ListItemButton
       sx={{
         whiteSpace: 'nowrap',
@@ -243,23 +284,10 @@ function ProjectListItem({
       }}
       component={NextLinkComposed}
       to={url}
+      ref={ref}
+      {...props}
     >
-      <ListItemText primary={project.name} />
+      {children}
     </ListItemButton>
   );
-
-  return (
-    <ListItem disablePadding>
-      {nameIsTooLong ? (
-        <Tooltip
-          placement="right"
-          title={<Typography fontSize="small">{project.name}</Typography>}
-        >
-          {renderLink}
-        </Tooltip>
-      ) : (
-        renderLink
-      )}
-    </ListItem>
-  );
-}
+});

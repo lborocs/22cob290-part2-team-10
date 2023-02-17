@@ -1,23 +1,21 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { unstable_getServerSession } from 'next-auth/next';
 import type { z } from 'zod';
 
 import prisma from '~/lib/prisma';
 import type TextAvatarSchema from '~/schemas/user/textAvatar';
-import type { ErrorResponse, SessionUser } from '~/types';
-import { authOptions } from '~/pages/api/auth/[...nextauth]';
+import type { ErrorResponse } from '~/types';
 
-export type ResponseSchema = z.infer<typeof TextAvatarSchema>;
+export type ResponseSchema = z.infer<typeof TextAvatarSchema> | null;
 
 /**
- * Get the text avatar of the signed in user.
+ * Get the text avatar of the user with the provided ID (from the query param).
  * The text avatar is a combination of a background color and a foreground color.
  * See {@link TextAvatarSchema}.
  *
  * @param res Response object with a JSON body containing the background color and the foreground color. See {@link ResponseSchema}.
  * @example
  * ```ts
- * const { data } = await axios.get('/api/user/get-text-avatar');
+ * const { data } = await axios.get('/api/user/get-text-avatar?userId=example');
  * console.log(data); // { 'avatar-bg': '#000000', 'avatar-fg': '#ffffff' }
  * ```
  */
@@ -29,17 +27,11 @@ export default async function handler(
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  const session = await unstable_getServerSession(req, res, authOptions);
+  const id = req.query.userId as string;
 
-  if (!session || !session.user) {
-    return res.status(401).json({ error: 'You must be signed in.' });
-  }
-
-  const userId = (session.user as SessionUser).id;
-
-  const result = await prisma.user.findUniqueOrThrow({
+  const result = await prisma.user.findUnique({
     where: {
-      id: userId,
+      id,
     },
     select: {
       avatarBg: true,
@@ -47,8 +39,10 @@ export default async function handler(
     },
   });
 
-  res.status(200).json({
-    'avatar-bg': result.avatarBg,
-    'avatar-fg': result.avatarFg,
-  });
+  res.status(200).json(
+    result && {
+      'avatar-bg': result.avatarBg,
+      'avatar-fg': result.avatarFg,
+    }
+  );
 }

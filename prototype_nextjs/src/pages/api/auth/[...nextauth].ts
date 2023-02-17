@@ -38,6 +38,7 @@ async function getUser(
       name: true,
       hashedPassword: true,
       isManager: true,
+      image: true,
     },
   });
 
@@ -45,13 +46,9 @@ async function getUser(
 
   if (!(await isCorrectPassword(password, user.hashedPassword))) return null;
 
-  return {
-    id: user.id,
-    email: user.email,
-    name: user.name,
-    image: null,
-    isManager: user.isManager,
-  };
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { hashedPassword, ...rest } = user;
+  return rest;
 }
 
 async function hasLeftCompany(userId: string): Promise<boolean | undefined> {

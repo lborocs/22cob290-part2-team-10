@@ -19,12 +19,13 @@ model User {
   isAdmin        Boolean @default(false)
   leftCompany    Boolean @default(false)
   inviteToken    String?
+  isManager      Boolean @default(false)
   avatarBg       String  @default("#e2ba39")
   avatarFg       String  @default("#ffffff")
+  image          String? @db.Text
 
   todoList UserTask[] @relation("UserTasks")
 
-  isManager        Boolean       @default(false)
   // projects
   ledProjects      Project[]     @relation("ProjectLeader")
   assignedProjects Project[]     @relation("ProjectMembers")
@@ -41,17 +42,17 @@ model User {
 // ------------------------------------------
 
 model UserTask {
-  id          Int            @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   userId      String
-  user        User           @relation("UserTasks", fields: [userId], references: [id])
+  user        User          @relation("UserTasks", fields: [userId], references: [id])
   deadline    DateTime
   stage       String
   title       String
   description String
-  tags        UserTaskTags[]
+  tags        UserTaskTag[]
 }
 
-model UserTaskTags {
+model UserTaskTag {
   name  String     @id
   tasks UserTask[]
 }
@@ -74,11 +75,11 @@ model ProjectTask {
   stage       String
   title       String
   description String
+  deadline    DateTime
   tags        ProjectTaskTag[]
   assigneeId  String
   assignee    User             @relation("ProjectTaskAssignee", fields: [assigneeId], references: [id])
   permitted   User[]           @relation("ProjectTaskPermitted")
-  deadline    DateTime
 }
 
 model ProjectTaskTag {
