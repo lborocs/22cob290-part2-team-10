@@ -36,6 +36,7 @@ const overviewPage: AppPage<
 
   const [formData, setFormData] = useState({});
   const pageTitle = `${project?.name ?? 'Project'} - Make-It-All`;
+  const [title, setTitle] = useState(project.name);
 
   async function addMemberToProject(e: { preventDefault: () => void }) {
     e.preventDefault();
@@ -86,6 +87,26 @@ const overviewPage: AppPage<
     }
   }
 
+  const updateProjectTitle = async (e) => {
+    e.preventDefault();
+    const response = await fetch(
+      `/api/projects/${project.id}/updateProjectTitle`,
+      {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title }),
+      }
+    );
+
+    if (response.ok) {
+      // Reload the page to reflect the changes
+      window.location.reload();
+    } else {
+      // Handle error
+      console.log('Failed to update project title');
+    }
+  };
+
   return (
     <main>
       <Head>
@@ -108,6 +129,17 @@ const overviewPage: AppPage<
             </p>
           </div>
         ))}
+
+        <form onSubmit={updateProjectTitle}>
+          <TextField
+            label="Project Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <Button variant="contained" type="submit">
+            Update Title
+          </Button>
+        </form>
 
         <form onSubmit={addMemberToProject}>
           <div>
