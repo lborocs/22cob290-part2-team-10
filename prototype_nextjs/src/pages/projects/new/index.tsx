@@ -74,8 +74,6 @@ const addProjectPage: AppPage<
               required
               id="leader_select"
               name="leader"
-              label="Select Leader"
-              placeholder="Select user"
               onChange={(e) =>
                 setFormData({ ...formData, leaderId: e.target.value })
               }
