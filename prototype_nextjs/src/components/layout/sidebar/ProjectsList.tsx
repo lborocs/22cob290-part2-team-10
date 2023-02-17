@@ -21,6 +21,7 @@ import range from 'lodash/range';
 import useSWR from 'swr';
 
 import hashids from '~/lib/hashids';
+import useUserStore from '~/store/userStore';
 import DebouncedTextField from '~/components/DebouncedTextField';
 import { NextLinkComposed } from '~/components/Link';
 import type { ResponseSchema as GetProjectsResponse } from '~/pages/api/projects/get-assigned-projects';
@@ -43,10 +44,12 @@ const filterProjects = memoize(
 );
 
 export default function ProjectsList() {
+  const userId = useUserStore((state) => state.user.id);
+
   const { data: projects, error } = useSWR(
-    '/api/projects/get-assigned-projects',
-    async (url) => {
-      const { data } = await axios.get<GetProjectsResponse>(url);
+    [userId, '/api/projects/get-assigned-projects'],
+    async ([, url]) => {
+      const { data } = await axios.get<GetProjectsResponse>(url, {});
       return data;
     }
   );
