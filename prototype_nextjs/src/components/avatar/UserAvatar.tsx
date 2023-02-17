@@ -18,11 +18,6 @@ export default function UserAvatar({
   sx,
   ...props
 }: UserAvatarProps) {
-  // TODO: remove this placeholder
-  // if (image === null)
-  //   image =
-  //     'https://www.shutterstock.com/image-photo/barcelona-feb-23-lionel-messi-260nw-1900547713.jpg';
-
   return image ? (
     <Avatar
       alt={name}
