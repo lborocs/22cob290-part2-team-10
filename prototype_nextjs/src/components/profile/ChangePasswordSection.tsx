@@ -51,16 +51,13 @@ type ChangePwFormData = {
  *
  * It is a separate component to the rest of the `profile` page to cause less re-renders:
  *  - When the state representing the modal's open status (`showDialog`) changes, the
- *     entire page would re-render as the `state` was global to the page.
- *  - Now, the `state` is local to just this component so only this component re-renders
+ *     entire page would re-render as the state was global to the page.
+ *  - Now, the state is local to just this component so only this component re-renders
  */
 export default function ChangePasswordSection() {
   const formId = useId();
 
   const [showDialog, setShowDialog] = useState(false);
-
-  const [changingPw, setChangingPw] = useState(false);
-  const [isValid, setIsValid] = useState(false);
 
   const email = useUserStore((state) => state.user.email);
 
@@ -115,32 +112,28 @@ export default function ChangePasswordSection() {
         fullWidth
         dialogTitle="Change Password"
       >
-        <DialogContent sx={{ paddingTop: 2, paddingBottom: 0 }} dividers>
-          <Formik
-            initialValues={{
-              currentPassword: '',
-              newPassword: '',
-              confirm: '',
-            }}
-            validate={withZodSchema(ChangePasswordFormSchema)}
-            onSubmit={handleSubmit}
-          >
-            {({
-              values,
-              errors,
-              touched,
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              isSubmitting,
-              isValid,
-              dirty,
-            }) => {
-              // FIXME?: not meant to be using useState things here, but it works so idk what to do
-              setChangingPw(isSubmitting);
-              if (dirty) setIsValid(isValid);
-
-              return (
+        <Formik
+          initialValues={{
+            currentPassword: '',
+            newPassword: '',
+            confirm: '',
+          }}
+          validate={withZodSchema(ChangePasswordFormSchema)}
+          onSubmit={handleSubmit}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            isSubmitting,
+            isValid,
+            dirty,
+          }) => (
+            <>
+              <DialogContent sx={{ paddingTop: 2, paddingBottom: 0 }} dividers>
                 <Stack
                   gap={1.5}
                   id={formId}
@@ -195,36 +188,36 @@ export default function ChangePasswordSection() {
                     disabled={isSubmitting}
                   />
                 </Stack>
-              );
-            }}
-          </Formik>
-        </DialogContent>
+              </DialogContent>
 
-        <DialogActions>
-          <Button
-            variant="outlined"
-            color="secondary"
-            size="small"
-            startIcon={<CloseIcon />}
-            onClick={handleClose}
-          >
-            Close
-          </Button>
-          <LoadingButton
-            type="submit"
-            form={formId}
-            variant="contained"
-            color="secondary"
-            size="small"
-            startIcon={<LockResetIcon />}
-            loadingPosition="start"
-            loading={changingPw}
-            disabled={!isValid}
-            disableElevation
-          >
-            Change
-          </LoadingButton>
-        </DialogActions>
+              <DialogActions>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  size="small"
+                  startIcon={<CloseIcon />}
+                  onClick={handleClose}
+                >
+                  Close
+                </Button>
+                <LoadingButton
+                  type="submit"
+                  form={formId}
+                  variant="contained"
+                  color="secondary"
+                  size="small"
+                  startIcon={<LockResetIcon />}
+                  loadingPosition="start"
+                  loading={isSubmitting}
+                  disabled={!dirty || !isValid}
+                  disableElevation
+                >
+                  Change
+                </LoadingButton>
+              </DialogActions>
+            </>
+          )}
+        </Formik>
       </StyledCloseButtonDialog>
     </div>
   );
