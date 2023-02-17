@@ -16,7 +16,7 @@ import {
   updateTextAvatarStore,
 } from '~/lib/textAvatar';
 import CircularColorInput from '~/components/CircularColorInput';
-import TextAvatarResetButton from '~/components/profile/TextAvatarResetButton';
+import TextAvatarResetButton from '~/components/profile/avatar/TextAvatarResetButton';
 
 export type TextAvatarEditorProps = {
   // TODO: actionsPortalRef
@@ -65,7 +65,7 @@ export default function TextAvatarEditor({}: TextAvatarEditorProps) {
       await toast.promise(
         updateTextAvatar(),
         {
-          loading: 'Saving',
+          loading: 'Saving...',
           success: 'Saved',
           error: 'Please try again',
         },
@@ -174,7 +174,7 @@ export default function TextAvatarEditor({}: TextAvatarEditorProps) {
 
               <TextAvatarResetButton
                 // formId={formId}
-                defaultTextAvatar={initialTextAvatar}
+                initialTextAvatar={initialTextAvatar}
                 systemDefaultTextAvatar={systemDefault}
                 resetToSystemDefault={() => setValues(systemDefault)}
                 disabled={isSubmitting}

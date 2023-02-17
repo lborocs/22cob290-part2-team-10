@@ -26,18 +26,18 @@ const StyledTextAvatar = styled(
 
 export type TextAvatarResetButtonProps = {
   formId?: string;
-  defaultTextAvatar?: TextAvatar;
+  initialTextAvatar?: TextAvatar;
   systemDefaultTextAvatar: TextAvatar;
   resetToSystemDefault: () => void;
   disabled: boolean;
 };
 
 /**
- * Opinionated component that encapsulates the `ActionedSplitButton` for the dialog in `TextAvatarEditor`.
+ * Opinionated component that encapsulates the logic for `ActionedSplitButton` for `TextAvatarEditor`.
  */
 export default function TextAvatarResetButton({
   formId,
-  defaultTextAvatar,
+  initialTextAvatar,
   systemDefaultTextAvatar,
   resetToSystemDefault,
   ...buttonProps
@@ -57,7 +57,7 @@ export default function TextAvatarResetButton({
         ),
         menuItemContent: (
           <>
-            <StyledTextAvatar textAvatar={defaultTextAvatar}>
+            <StyledTextAvatar textAvatar={initialTextAvatar}>
               A
             </StyledTextAvatar>
             <ListItemText
@@ -96,7 +96,7 @@ export default function TextAvatarResetButton({
         action: resetToSystemDefault,
       },
     ],
-    [formId, defaultTextAvatar, systemDefaultTextAvatar, resetToSystemDefault]
+    [formId, initialTextAvatar, systemDefaultTextAvatar, resetToSystemDefault]
   );
 
   return (
