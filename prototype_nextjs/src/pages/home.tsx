@@ -1,4 +1,4 @@
-import { SetStateAction, useState } from 'react';
+import React, { SetStateAction, useState } from 'react';
 import type {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
@@ -36,7 +36,7 @@ import DropTarget from '~/components/UserDropTarget';
 // TODO: HomePage
 const HomePage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ userTodoList }) => {
+> = ({ user, userTodoList }) => {
   const [open, setOpen] = useState(false);
   const [titleTask, setTitle] = useState('');
   const [descriptionTask, setDescription] = useState('');
@@ -83,6 +83,27 @@ const HomePage: AppPage<
       },
     ]);
     handleClose();
+  };
+
+  const saveTask = async (e: React.SyntheticEvent) => {
+    e.preventDefault();
+
+    try {
+      await fetch('/api/user/create-user-task', {
+        method: 'POST',
+        body: JSON.stringify({
+          userId: user.id,
+          User: user,
+          title: titleTask,
+          description: descriptionTask,
+          tags: tagList,
+          deadline: deadlineTask,
+          stage,
+        }),
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -142,7 +163,14 @@ const HomePage: AppPage<
           <Button variant="contained" onClick={handleClose}>
             Cancel
           </Button>
-          <Button variant="contained" type="submit" onClick={handleSubmit}>
+          <Button
+            variant="contained"
+            type="submit"
+            onClick={function (event) {
+              handleSubmit();
+              saveTask;
+            }}
+          >
             Submit
           </Button>
         </DialogActions>
@@ -169,17 +197,10 @@ const HomePage: AppPage<
                 title="To Do"
               />
               <DndProvider backend={HTML5Backend}>
-                <DropTarget
-                  tasks={tasks}
-                  setTasks={setTasks}
-                  stage="section-1"
-                />
+                <DropTarget tasks={tasks} setTasks={setTasks} stage="TODO" />
               </DndProvider>
               <CardActions className="d-grid">
-                <Button
-                  variant="contained"
-                  onClick={() => handleOpen('section-1')}
-                >
+                <Button variant="contained" onClick={() => handleOpen('TODO')}>
                   Add Task
                 </Button>
               </CardActions>
@@ -196,13 +217,13 @@ const HomePage: AppPage<
                 <DropTarget
                   tasks={tasks}
                   setTasks={setTasks}
-                  stage="section-2"
+                  stage="IN_PROGRESS"
                 />
               </DndProvider>
               <CardActions className="d-grid">
                 <Button
                   variant="contained"
-                  onClick={() => handleOpen('section-2')}
+                  onClick={() => handleOpen('IN_PROGRESS')}
                 >
                   Add Task
                 </Button>
@@ -220,13 +241,13 @@ const HomePage: AppPage<
                 <DropTarget
                   tasks={tasks}
                   setTasks={setTasks}
-                  stage="section-3"
+                  stage="CODE_REVIEW"
                 />
               </DndProvider>
               <CardActions className="d-grid">
                 <Button
                   variant="contained"
-                  onClick={() => handleOpen('section-3')}
+                  onClick={() => handleOpen('CODE_REVIEW')}
                 >
                   Add Task
                 </Button>
@@ -244,7 +265,7 @@ const HomePage: AppPage<
                 <DropTarget
                   tasks={tasks}
                   setTasks={setTasks}
-                  stage="section-4"
+                  stage="COMPLETED"
                 />
               </DndProvider>
             </Card>
