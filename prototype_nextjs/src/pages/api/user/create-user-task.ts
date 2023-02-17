@@ -9,15 +9,7 @@ export default async function handler(
   const data = JSON.parse(req.body);
 
   const createUserTask = await prisma.userTask.create({
-    data: {
-      userId: data.userId,
-      user: data.User,
-      stage: data.stage,
-      title: data.title,
-      description: data.description,
-      deadline: data.deadline,
-      tags: data.tags,
-    },
+    data,
   });
   res.json(createUserTask);
 }

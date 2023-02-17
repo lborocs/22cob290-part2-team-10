@@ -61,7 +61,7 @@ const HomePage: AppPage<
     setStage(stage);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e: React.SyntheticEvent) => {
     if (
       titleTask.length == 0 ||
       descriptionTask.length == 0 ||
@@ -82,6 +82,9 @@ const HomePage: AppPage<
         stage,
       },
     ]);
+
+    saveTask(e);
+
     handleClose();
   };
 
@@ -89,7 +92,7 @@ const HomePage: AppPage<
     e.preventDefault();
 
     try {
-      await fetch('/api/user/create-user-task', {
+      await fetch('~/api/user/create-user-task', {
         method: 'POST',
         body: JSON.stringify({
           userId: user.id,
@@ -167,8 +170,7 @@ const HomePage: AppPage<
             variant="contained"
             type="submit"
             onClick={function (event) {
-              handleSubmit();
-              saveTask;
+              handleSubmit(event);
             }}
           >
             Submit
