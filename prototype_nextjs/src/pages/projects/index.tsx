@@ -19,28 +19,24 @@ import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import prisma from '~/lib/prisma';
 import hashids from '~/lib/hashids';
 
-import React from 'react';
-import Link from 'next/link';
-import progressBar from '~/components/ProjectProgressBar';
-import hasNoProjects, { hasProjectAccess } from '~/components/NoProjectsCard';
+import { NextLinkComposed } from '~/components/Link';
+import ProgressBar from '~/components/ProjectProgressBar';
+import NoProjectsCard, { hasProjectAccess } from '~/components/NoProjectsCard';
 
 const ProjectsPage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ data, user }) => {
-  data = JSON.parse(data);
-
-  function getNumberofTasks(project: { tasks: string | any[] }) {
+> = ({ projects }) => {
+  function getNumberofTasks(project: (typeof projects)[number]) {
     // function to get the number of tasks that are incomplete for a project and the total number of tasks
     // for a project. The function returns a JSON object with the number of incomplete tasks and the total number of tasks
     // as the value and max properties respectively. These are then used to render the progress bar
     const totalNumOfTasks = project.tasks.length;
-    let inCompletedTasks = 0;
-    for (let i = 0; i < project.tasks.length; i++) {
-      if (project.tasks[i].stage != 'COMPLETED') {
-        inCompletedTasks++;
-      }
-    }
-    return JSON.stringify({ value: inCompletedTasks, max: totalNumOfTasks });
+
+    const inCompletedTasks = project.tasks.filter(
+      (task) => task.stage !== 'COMPLETED'
+    ).length;
+
+    return { value: inCompletedTasks, max: totalNumOfTasks };
   }
 
   return (
@@ -52,7 +48,7 @@ const ProjectsPage: AppPage<
       <main>
         {/* If the current user has no projects, the following function brings up a card
         that tells them they do not have any projects */}
-        {hasNoProjects(data, user)}
+        {projects.length === 0 && <NoProjectsCard />}
 
         {/* The following code renders a list of cards, one for each project that the user has access to.
         Each card displays the project name, the project leader's name, and the number
@@ -60,7 +56,7 @@ const ProjectsPage: AppPage<
         detail page */}
         <Container sx={{ py: 5 }} maxWidth="md">
           <Grid container spacing={4}>
-            {data.map((project) => (
+            {projects.map((project) => (
               <Grid item key={project.id} xs={12} sm={6} md={4}>
                 <Card
                   sx={{
@@ -92,14 +88,16 @@ const ProjectsPage: AppPage<
                   </CardContent>
                   <CardActions>
                     {/* A "View" button is used to link to the project detail page */}
-                    <Link href={`/projects/${hashids.encode(project.id)}`}>
-                      <Button size="small" id={project.id}>
-                        View
-                      </Button>
-                    </Link>
+                    <Button
+                      size="small"
+                      component={NextLinkComposed}
+                      to={`/projects/${hashids.encode(project.id)}`}
+                    >
+                      View
+                    </Button>
                   </CardActions>
                   {/* The progress bar is rendered here */}
-                  {progressBar(JSON.parse(getNumberofTasks(project)))}{' '}
+                  <ProgressBar {...getNumberofTasks(project)} />{' '}
                 </Card>
               </Grid>
             ))}
@@ -135,7 +133,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     include: {
       leader: true,
       members: true,
-      tasks: true,
+      tasks: {
+        select: {
+          stage: true,
+        },
+      },
     },
   });
 
@@ -146,7 +148,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     props: {
       session,
       user,
-      data: JSON.stringify(projects),
+      projects,
     },
   };
 }

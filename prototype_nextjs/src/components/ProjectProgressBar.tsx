@@ -1,11 +1,12 @@
-import { Paper, Tooltip } from '@mui/material';
+import Paper from '@mui/material/Paper';
+import Tooltip from '@mui/material/Tooltip';
 
 interface ProgressBarProps {
   value: number;
   max: number;
 }
 
-const progressBar: React.FC<ProgressBarProps> = ({ value, max }) => {
+const ProgressBar: React.FC<ProgressBarProps> = ({ value, max }) => {
   // function to render a progress bar that shows the percentage of tasks that are incomplete
   let percentage;
   if (max != 0) {
@@ -55,11 +56,11 @@ const progressBar: React.FC<ProgressBarProps> = ({ value, max }) => {
               borderRadius: 'inherit',
               textAlign: 'center',
             }}
-          ></div>
+          />
         </Paper>
       </Tooltip>
     </div>
   );
 };
 
-export default progressBar;
+export default ProgressBar;
