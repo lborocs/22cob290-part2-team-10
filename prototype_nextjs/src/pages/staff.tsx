@@ -21,6 +21,7 @@ import BasicCard, { type BasicCardProps } from './dashboardcomp/card';
 import useUserStore from '~/store/userStore';
 import { Prisma } from '@prisma/client';
 import Stafftable from './staff comp/stafftable';
+import updatevalue from './api/user/staffupdate.ts';
 
 /*
   "There should also be a manager’s dashboard so that the managers or team lead‐
@@ -67,7 +68,15 @@ export const getServerSideProps = (async (context) => {
 
   const user = session.user as SessionUser;
 
-  const users = await prisma.user.findMany();
+  const users = await prisma.user.findMany({
+    select: {
+      email: true,
+      name: true,
+      leftCompany: true,
+    },
+  });
+
+  console.log(users);
 
   return {
     props: {

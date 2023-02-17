@@ -10,8 +10,9 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 
-import type { getServerSideProps } from '../dashboard';
+import type { getServerSideProps } from '../staff';
 import hashids from '~/lib/hashids';
+import AlertDialogSlide from './dialog';
 
 interface Column {
   id: keyof Data;
@@ -22,7 +23,7 @@ interface Column {
 }
 
 const columns: readonly Column[] = [
-  { id: 'UserName', label: 'User Name', minWidth: 170 },
+  { id: 'name', label: 'User Name', minWidth: 170 },
 
   {
     id: 'email',
@@ -41,17 +42,17 @@ const columns: readonly Column[] = [
 ];
 
 interface Data {
-  UserName: string;
+  name: string;
   email: string;
   status: string;
 }
 
 function createData(
-  UserName: Data['UserName'],
+  name: Data['name'],
   email: Data['email'],
   status: Data['status']
 ): Data {
-  return { UserName, email, status };
+  return { name, email, status };
 }
 
 type User = InferGetServerSidePropsType<
@@ -63,9 +64,11 @@ export type stafftableProps = {
 };
 
 export default function Stafftable({ users }: stafftableProps) {
+  console.log(users);
   const rows: Data[] = users.map((user) =>
-    createData(user.name, user.email, user.status)
+    createData(user.name, user.email, user.leftCompany ? 'left' : 'not_left')
   );
+  console.log('rows =', rows);
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -103,16 +106,16 @@ export default function Stafftable({ users }: stafftableProps) {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
                 return (
-                  <TableRow hover role="checkbox">
+                  <TableRow hover role="checkbox" key={row.email}>
                     {columns.map((column) => {
                       const value = row[column.id];
 
-                      if (column.id === 'UserName') {
+                      if (column.id === 'name') {
                         return (
-                          <TableCell
-                            key={column.id}
-                            align={column.align}
-                          ></TableCell>
+                          <TableCell key={column.id} align={column.align}>
+                            {value}
+                            <AlertDialogSlide />
+                          </TableCell>
                         );
                       }
 
