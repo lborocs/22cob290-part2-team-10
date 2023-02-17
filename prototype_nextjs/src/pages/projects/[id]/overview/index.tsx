@@ -13,6 +13,7 @@ import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -37,6 +38,8 @@ const overviewPage: AppPage<
   const [formData, setFormData] = useState({});
   const pageTitle = `${project?.name ?? 'Project'} - Make-It-All`;
   const [title, setTitle] = useState(project.name);
+
+  const router = useRouter();
 
   async function addMemberToProject(e: { preventDefault: () => void }) {
     e.preventDefault();
@@ -106,6 +109,19 @@ const overviewPage: AppPage<
       console.log('Failed to update project title');
     }
   };
+
+  async function deleteProject() {
+    const response = await fetch(`/api/projects/${project.id}/delete`, {
+      method: 'DELETE',
+    });
+    if (response.ok) {
+      // Redirect to projects page
+      router.push('/projects');
+    } else {
+      // Handle error
+      console.log('Failed to delete project');
+    }
+  }
 
   return (
     <main>
@@ -190,6 +206,10 @@ const overviewPage: AppPage<
             Change leader
           </Button>
         </form>
+
+        <Button variant="contained" color="secondary" onClick={deleteProject}>
+          Delete Project
+        </Button>
       </body>
     </main>
   );
