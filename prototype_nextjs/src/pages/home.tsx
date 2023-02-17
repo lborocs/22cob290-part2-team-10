@@ -1,6 +1,4 @@
-import { useState } from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import { SetStateAction, useState } from 'react';
 import type {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
@@ -18,8 +16,14 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
-import TextField from '@mui/material/TextField';
+import TextField, { TextFieldProps } from '@mui/material/TextField';
 import DialogActions from '@mui/material/DialogActions';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import dayjs, { Dayjs } from 'dayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 import prisma from '~/lib/prisma';
 import { SidebarType } from '~/components/Layout';
@@ -36,19 +40,20 @@ const HomePage: AppPage<
   const [open, setOpen] = useState(false);
   const [titleTask, setTitle] = useState('');
   const [descriptionTask, setDescription] = useState('');
-
   const [tags, setTags] = useState('');
-
   const tagList = tags.split(',');
 
   const [stage, setStage] = useState('');
   const [tasks, setTasks] = useState<any[]>(userTodoList);
+
+  const [deadlineTask, setDeadline] = useState<Dayjs | null>(null);
 
   const handleClose = () => {
     setOpen(false);
     setTitle('');
     setDescription('');
     setTags('');
+    setDeadline(null);
   };
 
   const handleOpen = (stage: string) => {
@@ -60,7 +65,8 @@ const HomePage: AppPage<
     if (
       titleTask.length == 0 ||
       descriptionTask.length == 0 ||
-      tags.length == 0
+      tags.length == 0 ||
+      deadlineTask == null
     ) {
       return;
     }
@@ -72,10 +78,10 @@ const HomePage: AppPage<
         title: titleTask,
         description: descriptionTask,
         tags: tagList,
+        deadline: deadlineTask,
         stage,
       },
     ]);
-    console.log(titleTask, descriptionTask, tasks.length + 1, tagList);
     handleClose();
   };
 
@@ -118,6 +124,19 @@ const HomePage: AppPage<
             variant="outlined"
             margin="normal"
           />
+
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DateTimePicker
+              label="Pick Deadline"
+              value={deadlineTask}
+              onChange={(newValue: Dayjs | null) => {
+                setDeadline(newValue);
+              }}
+              renderInput={(params: TextFieldProps) => (
+                <TextField {...params} fullWidth margin="normal" />
+              )}
+            />
+          </LocalizationProvider>
         </DialogContent>
         <DialogActions>
           <Button variant="contained" onClick={handleClose}>
@@ -267,6 +286,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
           stage: true,
           title: true,
           description: true,
+          deadline: true,
           tags: true,
         },
       },

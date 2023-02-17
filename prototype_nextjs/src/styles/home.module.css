@@ -40,7 +40,7 @@
 
 /*TASKS*/
 .taskcard {
-    height: 220px;
+    height: 250px;
     overflow: auto;
     border: 1px solid #e2ba39;
     overflow-wrap: break-word;

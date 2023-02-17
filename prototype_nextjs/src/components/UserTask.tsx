@@ -2,7 +2,9 @@ import { useDrag } from 'react-dnd';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import CardActions from '@mui/material/CardActions';
 import Typography from '@mui/material/Typography';
+import dayjs, { Dayjs } from 'dayjs';
 
 import { ItemTypes } from '~/types';
 
@@ -13,9 +15,16 @@ interface Props {
   title: string;
   description: string;
   tags: string[];
+  deadline: Dayjs;
 }
 
-export default function Task({ id, title, description, tags }: Props) {
+export default function Task({
+  id,
+  title,
+  description,
+  tags,
+  deadline,
+}: Props) {
   const [{ isDragging }, drag] = useDrag({
     type: ItemTypes.TASK,
     item: { id },
@@ -41,6 +50,11 @@ export default function Task({ id, title, description, tags }: Props) {
           <Typography className={styles.taskcontent}>{description}</Typography>
         </div>
       </CardContent>
+      <CardActions>
+        <Typography>
+          Deadline: {dayjs(deadline).format('HH:mm DD/MM/YYYY')}
+        </Typography>
+      </CardActions>
     </Card>
   );
 }
