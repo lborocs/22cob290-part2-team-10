@@ -49,7 +49,7 @@ export default function ProjectsList() {
   const { data: projects, error } = useSWR(
     [userId, '/api/projects/get-assigned-projects'],
     async ([, url]) => {
-      const { data } = await axios.get<GetProjectsResponse>(url, {});
+      const { data } = await axios.get<GetProjectsResponse>(url);
       return data;
     }
   );
