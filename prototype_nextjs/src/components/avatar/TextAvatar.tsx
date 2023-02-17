@@ -1,28 +1,25 @@
 import { forwardRef } from 'react';
-import Avatar from '@mui/material/Avatar';
-import clsx from 'clsx';
+import Avatar, { type AvatarProps } from '@mui/material/Avatar';
 import useSWR from 'swr';
 
 import { getTextAvatarFromStore } from '~/lib/textAvatar';
 import { getInitials } from '~/utils';
 
-import styles from '~/styles/TextAvatar.module.css';
-
-export interface TextAvatarProps
-  extends React.ComponentPropsWithoutRef<'span'> {
+export interface TextAvatarProps extends AvatarProps<'span'> {
   userId: string;
   name: string;
   size?: string;
 }
 
-// TODO?: https://mui.com/material-ui/react-avatar/#main-content
-// will defo want to if want to use AvatarGroup
-
 /**
- * This is for any user
+ * Displays a user's initials in a colored circle.
+ * The color is determined by the user's id - it is fetched from the database upon first load.
+ * @param userId The user's id
+ * @param name The user's name
+ * @param size The size of the avatar
  */
 export default forwardRef(function TextAvatar(
-  { userId, name, size = '40px', className, style, ...props }: TextAvatarProps,
+  { userId, name, size = '40px', sx, ...props }: TextAvatarProps,
   ref: React.ForwardedRef<HTMLSpanElement>
 ) {
   const { data: textAvatar } = useSWR(
@@ -31,32 +28,23 @@ export default forwardRef(function TextAvatar(
   );
 
   return (
-    <span
-      className={clsx(styles.textAvatar, className)}
-      style={{
-        width: size,
-        ...(textAvatar && {
-          '--avatar-bg': textAvatar['avatar-bg'],
-          '--avatar-fg': textAvatar['avatar-fg'],
-        }),
-        ...style,
-      }}
+    <Avatar
+      sx={[
+        {
+          width: size,
+          height: size,
+          bgcolor: textAvatar?.['avatar-bg'],
+          color: textAvatar?.['avatar-fg'],
+          fontSize: 'large',
+        },
+        // https://mui.com/system/getting-started/the-sx-prop/#passing-the-sx-prop
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
+      component="span"
       ref={ref}
       {...props}
     >
       {getInitials(name)}
-    </span>
+    </Avatar>
   );
 });
-
-/*
-          <Avatar
-            sx={(theme) => ({
-              bgcolor: values['avatar-bg'],
-              color: values['avatar-fg'],
-            })}
-            component="span"
-          >
-            {getInitials(name)}
-          </Avatar>
-*/

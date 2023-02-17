@@ -200,9 +200,6 @@ function Projects({ projects }: { projects: GetProjectsResponse | undefined }) {
       </List>
     );
 
-  // TODO: look into using react-window (virtualized list) for better performance
-  // https://mui.com/material-ui/react-list/#virtualized-list
-
   return (
     <List>
       {projects.map((project) => (

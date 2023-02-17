@@ -39,11 +39,11 @@ export default function AvatarEditor() {
       <SignedInUserAvatar
         size="120px"
         className={styles.textAvatar}
-        style={{
-          fontSize: '3rem',
-        }}
         onClick={handleOpen}
         role="button"
+        sx={{
+          fontSize: '3rem',
+        }}
       />
 
       <TabContext value={tab}>
