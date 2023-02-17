@@ -15,17 +15,13 @@ import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { MenuItem } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
+import Autocomplete from '@mui/material/Autocomplete';
 
 // TODO: project page (Projects page from before)
 const overviewPage: AppPage<
@@ -35,7 +31,9 @@ const overviewPage: AppPage<
     return <ErrorPage statusCode={404} title="Project not found" />;
   }
 
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    newLeader: null,
+  });
   const pageTitle = `${project?.name ?? 'Project'} - Make-It-All`;
   const [title, setTitle] = useState(project.name);
 
@@ -75,7 +73,7 @@ const overviewPage: AppPage<
 
   async function changeProjectLeader(e: { preventDefault: () => void }) {
     e.preventDefault();
-    const { newLeaderId } = formData;
+    const newLeaderId = formData.newLeader.id;
     const response = await fetch(`/api/projects/${project.id}/changeLeader`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -145,7 +143,8 @@ const overviewPage: AppPage<
             </p>
           </div>
         ))}
-
+        <br></br>
+        <h2>Edit project:</h2>
         <form onSubmit={updateProjectTitle}>
           <TextField
             label="Project Title"
@@ -162,19 +161,24 @@ const overviewPage: AppPage<
             <InputLabel id="emp_select_label">
               Assign Employee to project
             </InputLabel>
-            <Select
+            <Autocomplete
               required
-              id="emp_select"
-              onChange={(e) =>
-                setFormData({ ...formData, memberId: e.target.value })
-              }
-            >
-              {users.map((user) => (
-                <MenuItem key={user.id} value={user.id}>
-                  {user.name}
-                </MenuItem>
-              ))}
-            </Select>
+              options={users}
+              getOptionLabel={(user) => user.name}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Assign Employee to project"
+                  inputProps={{
+                    ...params.inputProps,
+                    autoComplete: 'new-password',
+                  }}
+                />
+              )}
+              onChange={(event, newValue) => {
+                setFormData({ ...formData, memberId: newValue?.id });
+              }}
+            />
           </div>
 
           <br></br>
@@ -184,25 +188,24 @@ const overviewPage: AppPage<
         </form>
 
         <form onSubmit={changeProjectLeader}>
-          <div>
-            <InputLabel id="leader_select_label">Select new leader</InputLabel>
-            <Select
-              required
-              id="leader_select"
-              onChange={(e: SelectChangeEvent<string>) =>
-                setFormData({ ...formData, newLeaderId: e.target.value })
-              }
-            >
-              {usersInProject.map((user) => (
-                <MenuItem key={user.id} value={user.id}>
-                  {user.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </div>
-
+          <Autocomplete
+            id="leader_select"
+            options={usersInProject}
+            getOptionLabel={(user) => user.name}
+            value={formData.newLeader}
+            onChange={(_, newValue) =>
+              setFormData({ ...formData, newLeader: newValue })
+            }
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Select new leader"
+                variant="standard"
+              />
+            )}
+          />
           <br />
-          <Button variant="contained" type="submit">
+          <Button variant="contained" type="submit" sx={{ mt: 2 }}>
             Change leader
           </Button>
         </form>

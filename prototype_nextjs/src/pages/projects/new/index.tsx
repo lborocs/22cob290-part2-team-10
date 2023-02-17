@@ -26,6 +26,7 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { MenuItem } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
+import Autocomplete from '@mui/material/Autocomplete';
 
 const addProjectPage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
@@ -50,7 +51,7 @@ const addProjectPage: AppPage<
 
       <body>
         <Typography variant="h4" component="h1">
-          New project
+          Add new project:
         </Typography>
         <form onSubmit={addProject}>
           <div>
@@ -70,27 +71,32 @@ const addProjectPage: AppPage<
           </div>
           <div>
             <InputLabel id="leader_select">Select project leader</InputLabel>
-            <Select
+            <Autocomplete
               required
               id="leader_select"
-              name="leader"
-              onChange={(e) =>
-                setFormData({ ...formData, leaderId: e.target.value })
+              options={users}
+              getOptionLabel={(user) => user.name}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Select project leader"
+                  name="leader"
+                  id="leader_select"
+                />
+              )}
+              onChange={(e, value) =>
+                setFormData({ ...formData, leaderId: value ? value.id : '' })
               }
-            >
-              {users.map((user) => (
-                <MenuItem key={user.id} value={user.id}>
-                  {user.name}
-                </MenuItem>
-              ))}
-            </Select>
+            />
           </div>
           <br></br>
           <Button variant="contained" type="submit">
             Add project
           </Button>
         </form>
+        <br></br>
 
+        <h2>Projects:</h2>
         <List>
           {data.map((item) => (
             <ListItem disablePadding>
