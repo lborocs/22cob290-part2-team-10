@@ -45,16 +45,11 @@ export default async function handler(
       email: true,
       name: true,
       isManager: true,
+      image: true,
     },
   });
 
   res.status(200).json({
-    user: {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      image: null,
-      isManager: user.isManager,
-    },
+    user,
   });
 }
