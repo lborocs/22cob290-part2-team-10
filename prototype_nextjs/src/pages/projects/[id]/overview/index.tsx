@@ -35,7 +35,7 @@ const overviewPage: AppPage<
   }
 
   const [formData, setFormData] = useState({});
-  const pageTitle = `${project.name} - Make-It-All`;
+  const pageTitle = `${project?.name ?? 'Project'} - Make-It-All`;
 
   async function addMemberToProject(e: { preventDefault: () => void }) {
     e.preventDefault();
@@ -66,6 +66,23 @@ const overviewPage: AppPage<
     } else {
       // Handle error
       console.log('Failed to remove member from project');
+    }
+  }
+
+  async function changeProjectLeader(e: { preventDefault: () => void }) {
+    e.preventDefault();
+    const { newLeaderId } = formData;
+    const response = await fetch(`/api/projects/${project.id}/changeLeader`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ newLeaderId }),
+    });
+    if (response.ok) {
+      // Reload the page to reflect the changes
+      window.location.reload();
+    } else {
+      // Handle error
+      console.log('Failed to change project leader');
     }
   }
 
@@ -117,6 +134,30 @@ const overviewPage: AppPage<
             Add employee
           </Button>
         </form>
+
+        <form onSubmit={changeProjectLeader}>
+          <div>
+            <InputLabel id="leader_select_label">Select new leader</InputLabel>
+            <Select
+              required
+              id="leader_select"
+              onChange={(e: SelectChangeEvent<string>) =>
+                setFormData({ ...formData, newLeaderId: e.target.value })
+              }
+            >
+              {usersInProject.map((user) => (
+                <MenuItem key={user.id} value={user.id}>
+                  {user.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </div>
+
+          <br />
+          <Button variant="contained" type="submit">
+            Change leader
+          </Button>
+        </form>
       </body>
     </main>
   );
@@ -143,10 +184,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const { id } = context.params!;
   const decodedId = hashids.decode(id as string);
-  console.log(decodedId);
+
   const projectId = decodedId[0] as number | undefined;
-  console.log(projectId);
-  console.log('id =', id);
+
   if (!projectId) {
     return { notFound: true };
   }
@@ -161,11 +201,16 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   });
 
-  const usersInProject = project.members;
+  const usersInProject = project.members.filter(
+    (member) => member.id !== project.leaderId
+  );
   const users = await prisma.user.findMany({
     where: {
       NOT: {
         id: project.leaderId,
+      },
+      NOT: {
+        id: { in: project.members.map((member) => member.id) },
       },
     },
   });
@@ -179,7 +224,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       session,
       user,
       project,
-      usersInProject,
+      usersInProject, // exclude leader from list of members
       users,
     },
   };
