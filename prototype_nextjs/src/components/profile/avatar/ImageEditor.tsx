@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { signIn } from 'next-auth/react';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Portal from '@mui/material/Portal';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
@@ -20,13 +21,22 @@ import type {
 import { getInitials } from '~/utils';
 
 export type ImageEditorProps = {
-  // TODO: actionsPortalRef
+  actionsPortalRef: React.RefObject<HTMLElement>;
+  handleClose: () => void;
 };
 
 /**
  * Component providing functionality for the user to change their avatar image.
  */
-export default function ImageEditor({}: ImageEditorProps) {
+export default function ImageEditor({
+  actionsPortalRef,
+  handleClose,
+}: ImageEditorProps) {
+  const formId = useId();
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   const { image: userImage, name } = useUserStore((state) => state.user);
   const setImage = useUserStore((state) => state.setImage);
 
@@ -117,6 +127,7 @@ export default function ImageEditor({}: ImageEditorProps) {
           <Box
             width={1}
             component="form"
+            id={formId}
             onSubmit={handleSubmit}
             onReset={handleReset}
           >
@@ -133,48 +144,62 @@ export default function ImageEditor({}: ImageEditorProps) {
               fullWidth
             />
 
-            {/* TODO: would like for this to be inside CardActions, could use portal */}
-            <Stack
-              direction="row"
-              paddingX="10%"
-              justifyContent="space-between"
-            >
-              <Button
-                type="button"
-                variant="contained"
-                onClick={() => {
-                  setPreviewImage(values.image);
-                }}
-                disableElevation
-              >
-                Preview
-              </Button>
-              <Button
-                type="submit"
-                variant="contained"
-                sx={(theme) => ({
-                  width: theme.spacing(18),
-                })}
-                disabled={
-                  isSubmitting ||
-                  !isValid ||
-                  values.image === initialValues.image
-                }
-                disableElevation
-              >
-                Save
-                {/* If no image & there was an image, remove */}
-                {!values.image && initialValues.image && ' (Remove)'}
-              </Button>
-              <Button
-                type="reset"
-                variant="contained"
-                disabled={isSubmitting}
-                disableElevation
-              >
-                Reset
-              </Button>
-            </Stack>
+            {mounted && (
+              <Portal container={actionsPortalRef.current}>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  size="small"
+                  onClick={handleClose}
+                  disabled={isSubmitting}
+                  disableElevation
+                >
+                  Close
+                </Button>
+                <Button
+                  type="button"
+                  variant="contained"
+                  size="small"
+                  onClick={() => {
+                    setPreviewImage(values.image);
+                  }}
+                  disableElevation
+                >
+                  Preview
+                </Button>
+
+                <Button
+                  type="reset"
+                  form={formId}
+                  variant="contained"
+                  size="small"
+                  disabled={isSubmitting}
+                  disableElevation
+                >
+                  Reset
+                </Button>
+
+                <Button
+                  type="submit"
+                  form={formId}
+                  variant="contained"
+                  color={
+                    !values.image && initialValues.image ? 'error' : 'contrast'
+                  }
+                  size="small"
+                  disabled={
+                    isSubmitting ||
+                    !isValid ||
+                    values.image === initialValues.image
+                  }
+                  disableElevation
+                >
+                  Save
+                  {/* If no image & there was an image, remove */}
+                  {!values.image && initialValues.image && ' (Remove)'}
+                </Button>
+              </Portal>
+            )}
           </Box>
         )}
       </Formik>

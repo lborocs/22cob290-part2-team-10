@@ -1,5 +1,4 @@
 import { useRef, useState } from 'react';
-import Button from '@mui/material/Button';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
@@ -33,7 +32,7 @@ export default function AvatarEditor() {
     setTab(newTab);
   };
 
-  // TODO: actionsPortalRef
+  const actionsPortalRef = useRef<HTMLElement>(null);
 
   return (
     <div>
@@ -93,25 +92,20 @@ export default function AvatarEditor() {
 
           <DialogContent dividers>
             <TabPanel value="text" sx={{ padding: 0 }}>
-              <TextAvatarEditor />
+              <TextAvatarEditor
+                actionsPortalRef={actionsPortalRef}
+                handleClose={handleClose}
+              />
             </TabPanel>
             <TabPanel value="image" sx={{ padding: 0 }}>
-              <ImageEditor />
+              <ImageEditor
+                actionsPortalRef={actionsPortalRef}
+                handleClose={handleClose}
+              />
             </TabPanel>
           </DialogContent>
 
-          <DialogActions>
-            {/* TODO: portal here */}
-            <Button
-              variant="outlined"
-              color="secondary"
-              size="small"
-              onClick={handleClose}
-              disableElevation
-            >
-              Close
-            </Button>
-          </DialogActions>
+          <DialogActions ref={actionsPortalRef} />
         </StyledDialog>
       </TabContext>
     </div>

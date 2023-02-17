@@ -1,7 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useId, useMemo, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
 import InputLabel from '@mui/material/InputLabel';
 import LoadingButton from '@mui/lab/LoadingButton';
+import Portal from '@mui/material/Portal';
 import Stack from '@mui/material/Stack';
 import { type FormikConfig, Formik } from 'formik';
 import toast from 'react-hot-toast';
@@ -19,13 +21,22 @@ import CircularColorInput from '~/components/CircularColorInput';
 import TextAvatarResetButton from '~/components/profile/avatar/TextAvatarResetButton';
 
 export type TextAvatarEditorProps = {
-  // TODO: actionsPortalRef
+  actionsPortalRef: React.RefObject<HTMLElement>;
+  handleClose: () => void;
 };
 
 /**
  * Component providing functionality for the user to change the colours of their text avatar.
  */
-export default function TextAvatarEditor({}: TextAvatarEditorProps) {
+export default function TextAvatarEditor({
+  actionsPortalRef,
+  handleClose,
+}: TextAvatarEditorProps) {
+  const formId = useId();
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   const name = useUserStore((state) => state.user.name);
   const userId = useUserStore((state) => state.user.id);
 
@@ -120,6 +131,7 @@ export default function TextAvatarEditor({}: TextAvatarEditorProps) {
           <Stack
             gap={1}
             component="form"
+            id={formId}
             onSubmit={handleSubmit}
             onReset={handleReset}
           >
@@ -159,38 +171,40 @@ export default function TextAvatarEditor({}: TextAvatarEditorProps) {
               />
             </Stack>
 
-            {/* TODO: would like inside CardActions, could use portal */}
-            <Stack direction="row" justifyContent="space-between">
-              {/* <Button
-                  variant="contained"
+            {mounted && (
+              <Portal container={actionsPortalRef.current}>
+                <Button
+                  variant="outlined"
                   color="secondary"
                   size="small"
-                  onClick={cancelAndClose}
+                  onClick={handleClose}
                   disabled={isSubmitting}
                   disableElevation
                 >
                   Close
-                </Button> */}
+                </Button>
 
-              <TextAvatarResetButton
-                // formId={formId}
-                initialTextAvatar={initialTextAvatar}
-                systemDefaultTextAvatar={systemDefault}
-                resetToSystemDefault={() => setValues(systemDefault)}
-                disabled={isSubmitting}
-              />
+                <TextAvatarResetButton
+                  formId={formId}
+                  initialTextAvatar={initialTextAvatar}
+                  systemDefaultTextAvatar={systemDefault}
+                  resetToSystemDefault={() => setValues(systemDefault)}
+                  disabled={isSubmitting}
+                />
 
-              <LoadingButton
-                type="submit"
-                variant="contained"
-                color="success"
-                size="small"
-                loading={isSubmitting}
-                disableElevation
-              >
-                Save
-              </LoadingButton>
-            </Stack>
+                <LoadingButton
+                  type="submit"
+                  form={formId}
+                  variant="contained"
+                  color="contrast"
+                  size="small"
+                  loading={isSubmitting}
+                  disableElevation
+                >
+                  Save
+                </LoadingButton>
+              </Portal>
+            )}
           </Stack>
         </Stack>
       )}
