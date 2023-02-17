@@ -5,7 +5,7 @@ import Box from '@mui/material/Box';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 
-import { type TextAvatar } from '~/lib/textAvatar';
+import type { TextAvatar } from '~/lib/textAvatar';
 import ActionedSplitButton, {
   type Option,
 } from '~/components/ActionedSplitButton';
@@ -25,7 +25,7 @@ const StyledTextAvatar = styled(
 }));
 
 export type TextAvatarResetButtonProps = {
-  formId: string;
+  formId?: string;
   defaultTextAvatar?: TextAvatar;
   systemDefaultTextAvatar: TextAvatar;
   resetToSystemDefault: () => void;

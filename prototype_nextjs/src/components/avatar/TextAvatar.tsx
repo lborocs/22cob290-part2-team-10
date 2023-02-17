@@ -1,11 +1,10 @@
-import { forwardRef, useState } from 'react';
+import { forwardRef } from 'react';
+import Avatar from '@mui/material/Avatar';
 import clsx from 'clsx';
 import useSWR from 'swr';
 
-import {
-  type TextAvatar as TextAvatarType,
-  getTextAvatarFromStore,
-} from '~/lib/textAvatar';
+import { getTextAvatarFromStore } from '~/lib/textAvatar';
+import { getInitials } from '~/utils';
 
 import styles from '~/styles/TextAvatar.module.css';
 
@@ -26,21 +25,10 @@ export default forwardRef(function TextAvatar(
   { userId, name, size = '40px', className, style, ...props }: TextAvatarProps,
   ref: React.ForwardedRef<HTMLSpanElement>
 ) {
-  // only show first 3 names
-  // split by whitespace: https://stackoverflow.com/a/10346754
-  const names = name.split(/[ ]+/, 3);
-  const initials = names.map((name) => name[0].toLocaleUpperCase());
-
-  const [textAvatar, setTextAvatar] = useState<TextAvatarType | null>(null);
-
-  // using SWR like useEffect(..., [])
-  useSWR(userId, async (userId) => {
-    const textAvatar = await getTextAvatarFromStore(userId);
-
-    if (textAvatar) {
-      setTextAvatar(textAvatar);
-    }
-  });
+  const { data: textAvatar } = useSWR(
+    ['textAvatar', userId],
+    async ([, userId]) => await getTextAvatarFromStore(userId)
+  );
 
   return (
     <span
@@ -56,7 +44,19 @@ export default forwardRef(function TextAvatar(
       ref={ref}
       {...props}
     >
-      {initials.join('')}
+      {getInitials(name)}
     </span>
   );
 });
+
+/*
+          <Avatar
+            sx={(theme) => ({
+              bgcolor: values['avatar-bg'],
+              color: values['avatar-fg'],
+            })}
+            component="span"
+          >
+            {getInitials(name)}
+          </Avatar>
+*/

@@ -1,5 +1,6 @@
 import { Avatar } from '@mui/material';
 
+import { getInitials } from '~/utils';
 import TextAvatar from '~/components/avatar/TextAvatar';
 
 export type UserAvatarProps = React.ComponentPropsWithRef<'span'> & {
@@ -17,9 +18,9 @@ export default function UserAvatar({
   ...props
 }: UserAvatarProps) {
   // TODO: remove this placeholder
-  if (image === null)
-    image =
-      'https://www.shutterstock.com/image-photo/barcelona-feb-23-lionel-messi-260nw-1900547713.jpg';
+  // if (image === null)
+  //   image =
+  //     'https://www.shutterstock.com/image-photo/barcelona-feb-23-lionel-messi-260nw-1900547713.jpg';
 
   return image ? (
     <Avatar
@@ -31,7 +32,9 @@ export default function UserAvatar({
       }}
       component="span"
       {...props}
-    />
+    >
+      {getInitials(name)}
+    </Avatar>
   ) : (
     <TextAvatar userId={userId} name={name} size={size} {...props} />
   );

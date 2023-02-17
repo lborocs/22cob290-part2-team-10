@@ -14,7 +14,6 @@ import Stack from '@mui/material/Stack';
 import prisma from '~/lib/prisma';
 import { getEmailFromToken } from '~/lib/inviteToken';
 import { SidebarType } from '~/components/Layout';
-import TextAvatarEditor from '~/components/profile/TextAvatarEditor';
 import AvatarEditor from '~/components/profile/AvatarEditor';
 import UserDetailsSection from '~/components/profile/UserDetailsSection';
 import ChangePasswordSection from '~/components/profile/ChangePasswordSection';
@@ -48,7 +47,6 @@ const ProfilePage: AppPage<
         component="section"
       >
         <Box display="flex" justifyContent="center">
-          <TextAvatarEditor />
           <AvatarEditor />
         </Box>
         <Box flexGrow={1}>

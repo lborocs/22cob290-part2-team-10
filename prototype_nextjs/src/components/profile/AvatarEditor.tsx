@@ -1,31 +1,30 @@
-import { useState } from 'react';
-import Box from '@mui/material/Box';
+import { useRef, useState } from 'react';
 import Button from '@mui/material/Button';
+import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+import IconButton from '@mui/material/IconButton';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import Stack from '@mui/material/Stack';
+import CloseIcon from '@mui/icons-material/Close';
 
-import StyledCloseButtonDialog from '~/components/StyledCloseButtonDialog';
+import useUserStore from '~/store/userStore';
+import { StyledDialog } from '~/components/StyledCloseButtonDialog';
 import SignedInUserAvatar from '~/components/avatar/SignedInUserAvatar';
+import TextAvatarEditor from '~/components/profile/avatar/TextAvatarEditor';
 import ImageEditor from '~/components/profile/avatar/ImageEditor';
 
 import styles from '~/styles/profile/TextAvatarEditor.module.css';
 
-// modal:
-// TODO: toggler between image url & text avatar
-// TODO: image url setter with API route
-
-// TODO: on text avatar editor, will need to invalidate swr cache for user (to re-fetch text avatar)
-
 export default function AvatarEditor() {
-  // TODO
+  const image = useUserStore((state) => state.user.image);
+
   const [showDialog, setShowDialog] = useState(false);
 
-  const [tab, setTab] = useState('1');
+  // default to image when user has image
+  const [tab, setTab] = useState<'text' | 'image'>(image ? 'image' : 'text');
 
   const handleOpen = () => setShowDialog(true);
   const handleClose = () => setShowDialog(false);
@@ -34,8 +33,10 @@ export default function AvatarEditor() {
     setTab(newTab);
   };
 
+  // TODO: actionsPortalRef
+
   return (
-    <article>
+    <div>
       <SignedInUserAvatar
         size="120px"
         className={styles.textAvatar}
@@ -47,57 +48,72 @@ export default function AvatarEditor() {
       />
 
       <TabContext value={tab}>
-        <StyledCloseButtonDialog
+        <StyledDialog
           open={showDialog}
           onClose={handleClose}
           maxWidth="xs"
           fullWidth
-          dialogTitle={
-            // icl this currently looks DOO DOO
-            <Stack direction="row" alignItems="center" gap={4}>
-              Avatar
-              <Box borderBottom={1} borderColor="divider" width="fit-content">
-                <TabList
-                  onChange={handleTabChange}
-                  aria-label="lab API tabs example"
-                >
-                  <Tab label="Text avatar" value="1" />
-                  <Tab label="Image" value="2" />
-                </TabList>
-              </Box>
-            </Stack>
-          }
         >
-          <DialogContent
-            sx={(theme) => ({
-              px: `${theme.spacing(1)} !important`, // idk what is causing this to have to be important
-              py: 0,
-            })}
-            dividers
+          <DialogTitle
+            sx={{
+              padding: '0 !important',
+              borderBottom: 1,
+              borderColor: 'divider',
+              position: 'relative',
+            }}
           >
-            <TabPanel value="1" sx={{ px: 2, py: 0.5 }}>
-              {/* TODO: new TextAvatarEditor */}
-              TextAvatarEditor
+            <TabList
+              onChange={handleTabChange}
+              aria-label="Avatar editor"
+              sx={(theme) => ({
+                height: theme.spacing(8),
+                '[role="tablist"]': {
+                  height: 1,
+                },
+              })}
+            >
+              <Tab label="Text avatar" value="text" />
+              <Tab label="Image" value="image" />
+            </TabList>
+
+            <IconButton
+              edge="end"
+              onClick={handleClose}
+              aria-label="close"
+              sx={(theme) => ({
+                position: 'absolute',
+                right: theme.spacing(2),
+                top: '50%',
+                transform: 'translateY(-50%)',
+              })}
+            >
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
+
+          <DialogContent dividers>
+            <TabPanel value="text" sx={{ padding: 0 }}>
+              <TextAvatarEditor />
             </TabPanel>
-            <TabPanel value="2" sx={{ px: 2, py: 0.5 }}>
+            <TabPanel value="image" sx={{ padding: 0 }}>
               <ImageEditor />
             </TabPanel>
           </DialogContent>
 
           <DialogActions>
+            {/* TODO: portal here */}
             <Button
-              variant="contained"
+              variant="outlined"
               color="secondary"
               size="small"
               onClick={handleClose}
-              // disabled={isSaving}
               disableElevation
             >
               Close
             </Button>
           </DialogActions>
-        </StyledCloseButtonDialog>
+        </StyledDialog>
       </TabContext>
-    </article>
+    </div>
   );
 }

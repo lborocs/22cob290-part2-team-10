@@ -42,3 +42,12 @@ export function copyToClipboard(content: string): Promise<void> {
 export function extractPathname(href: UrlObject | string): string {
   return typeof href === 'string' ? href : href.pathname!;
 }
+
+export function getInitials(name: string): string {
+  // only show first 3 names
+  // split by whitespace: https://stackoverflow.com/a/10346754
+  const names = name.split(/[ ]+/, 3);
+  const initials = names.map((name) => name[0].toLocaleUpperCase());
+
+  return initials.join('');
+}

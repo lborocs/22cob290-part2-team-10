@@ -44,23 +44,3 @@ export async function updateTextAvatarStore(
 
   return data.success;
 }
-
-// TODO: update these to not be global
-// this is unused tho
-export function getTextAvatarFromCss(): TextAvatar {
-  return {
-    'avatar-bg': document.documentElement.style.getPropertyValue('--avatar-bg'),
-    'avatar-fg': document.documentElement.style.getPropertyValue('--avatar-fg'),
-  };
-}
-
-/**
- * TODO: completely remove this
- */
-export function updateTextAvatarCss(textAvatar: TextAvatar) {
-  for (const key in textAvatar) {
-    const colour = textAvatar[key as keyof TextAvatar];
-
-    document.documentElement.style.setProperty(`--${key}`, colour);
-  }
-}
