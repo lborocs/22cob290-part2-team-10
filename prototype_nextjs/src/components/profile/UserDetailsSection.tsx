@@ -1,7 +1,7 @@
 import { signIn } from 'next-auth/react';
 import { styled } from '@mui/material/styles';
-import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Tooltip from '@mui/material/Tooltip';
@@ -207,15 +207,16 @@ export default function UserDetailsSection({
                 }}
               />
             </Stack>
-            <Button
+            <LoadingButton
               type="submit"
               variant="contained"
               color="success"
-              disabled={!dirty || !isValid || isSubmitting}
+              loading={isSubmitting}
+              disabled={!dirty || !isValid}
               className={styles.button}
             >
               Update profile
-            </Button>
+            </LoadingButton>
           </Stack>
         )}
       </Formik>

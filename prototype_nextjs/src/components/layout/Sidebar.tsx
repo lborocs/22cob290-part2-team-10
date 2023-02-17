@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import Box from '@mui/material/Box';
+import clsx from 'clsx';
 
 import styles from '~/styles/layout/Sidebar.module.css';
 import makeItAllLogo from '~/../public/assets/company-logo.png';
@@ -10,17 +11,19 @@ export type SidebarProps = {
   content: React.ReactNode;
 };
 
-// TODO?: make sidebar sticky? (have its scroll separate to the page)
-// TODO: make act like Drawer on mobile
 export default function Sidebar({ show, content }: SidebarProps) {
   return (
     <Box
-      className={`${styles.sidebar} ${show ? '' : styles.hidden}`}
+      className={clsx(styles.sidebar, !show && styles.hidden)}
       bgcolor="makeItAllGrey.main"
       color="black"
       component="aside"
       // override app theme for sidebar - at least until configured sidebar colours in dark mode
       data-mui-color-scheme="light"
+      position="fixed"
+      sx={{
+        inset: 0,
+      }}
     >
       <div className={styles.sidebarHeader}>
         <Link href="/home" aria-label="Navigate to the home page">

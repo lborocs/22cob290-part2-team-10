@@ -23,9 +23,6 @@ import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 import styles from '~/styles/Profile.module.css';
 
-// TODO: https://search.muz.li/ZjI5OThkOTQ4?utm_source=muz.li-insp&utm_medium=article&utm_campaign=%2Finspiration%2Fprofile-page%2F
-
-// TODO?: use dynamic imports for modals
 const ProfilePage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ inviter }) => {

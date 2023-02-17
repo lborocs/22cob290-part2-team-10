@@ -1,3 +1,7 @@
+import type {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from 'next';
 import Head from 'next/head';
 
 import Link from 'next/link';
@@ -9,8 +13,10 @@ import Typography from '@mui/material/Typography';
 import { withZodSchema } from 'formik-validator-zod';
 import type { z } from 'zod';
 import toast from 'react-hot-toast';
-
 import { Formik } from 'formik';
+import { unstable_getServerSession } from 'next-auth';
+
+import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 import SignUpSchema from '~/schemas/user/signup';
 
@@ -22,9 +28,7 @@ import TokenField from '~/components/TokenField';
 import type { SignupResponse } from '~/pages/api/user/signup';
 
 import styles from '~/styles/SignIn.module.css';
-
 import makeItAllLogo from '~/../public/assets/make_it_all.png';
-
 import darkBg from '~/../public/assets/signin/mesh-63.png';
 import darkBgMobile from '~/../public/assets/signin/mesh-63-mobile.png';
 
@@ -39,9 +43,9 @@ const bgImageLoader: ImageLoader = ({ src, width, quality }) => {
   return `/_next/image?url=${darkBg.src}&w=${width}&q=${quality}`;
 };
 
-// TODO: get inviteToken from query param (getServerSideProps)
-
-export default function SignupPage() {
+export default function SignupPage({
+  inviteToken,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   /*
   This code is a Next.js component that is responsible for creating a sign-up page. The component uses
   Material-UI and Formik libraries to create a form for users to input their information to sign up.
@@ -140,7 +144,7 @@ export default function SignupPage() {
             name: '',
             email: '',
             password: '',
-            inviteToken: '',
+            inviteToken,
           }}
           validate={withZodSchema(SignUpSchema)} // uses schema defined in SignupSchema in order to validate the input into the form
           onSubmit={(values, { setSubmitting }) => {
@@ -233,11 +237,14 @@ export default function SignupPage() {
               </div>
               <div>
                 <div className={styles.links}>
-                  <Link href="/..">
-                    <Typography fontWeight={500} color="contrast.main">
-                      Back to Login
-                    </Typography>
-                  </Link>
+                  <Typography
+                    fontWeight={500}
+                    color="contrast.main"
+                    component={Link}
+                    href="/"
+                  >
+                    Back to Login
+                  </Typography>
                   <LoadingButton
                     type="submit"
                     variant="contained"
@@ -245,7 +252,7 @@ export default function SignupPage() {
                     disabled={!isValid}
                     className={styles.signInBtn}
                   >
-                    Sign in
+                    Sign up
                   </LoadingButton>
                 </div>
               </div>
@@ -256,4 +263,31 @@ export default function SignupPage() {
     </Box>
   );
 }
+
 SignupPage.noAuth = true;
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
+
+  // if signed in, redirect to home page
+  if (session && session.user)
+    return {
+      redirect: {
+        destination: '/home',
+        permanent: false,
+      },
+    };
+
+  const inviteToken = context.query.invite as string | undefined;
+
+  return {
+    props: {
+      session,
+      inviteToken: inviteToken ?? '',
+    },
+  };
+}
