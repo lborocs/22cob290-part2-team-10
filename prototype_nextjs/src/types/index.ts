@@ -20,6 +20,7 @@ export type AppPage<Props = {}> = NextPage<Props> & {
 };
 
 export interface SessionUser extends User {
+  status: string;
   id: string;
   name: string;
   email: string;
