@@ -33,7 +33,7 @@ const addProjectPage: AppPage<
 > = ({ data, users }) => {
   const [formData, setFormData] = useState({});
 
-  async function addProject(e: { preventDefault: () => void }) {
+  async function addProject(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const response = await fetch('/api/projects/add-projects', {
       method: 'POST',
@@ -49,67 +49,61 @@ const addProjectPage: AppPage<
         <title>Add new project</title>
       </Head>
 
-      <body>
-        <Typography variant="h4" component="h1">
-          Add new project:
-        </Typography>
-        <form onSubmit={addProject}>
-          <div>
-            <InputLabel id="project_title_input">
-              Enter project title
-            </InputLabel>
-            <TextField
-              required
-              id="project_title_input"
-              label="Project title"
-              type="text"
-              name="name"
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
-            />
-          </div>
-          <div>
-            <InputLabel id="leader_select">Select project leader</InputLabel>
-            <Autocomplete
-              required
-              id="leader_select"
-              options={users}
-              getOptionLabel={(user) => user.name}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Select project leader"
-                  name="leader"
-                  id="leader_select"
-                />
-              )}
-              onChange={(e, value) =>
-                setFormData({ ...formData, leaderId: value ? value.id : '' })
-              }
-            />
-          </div>
-          <br></br>
-          <Button variant="contained" type="submit">
-            Add project
-          </Button>
-        </form>
+      <Typography variant="h4" component="h1">
+        Add new project:
+      </Typography>
+      <form onSubmit={addProject}>
+        <div>
+          <InputLabel id="project_title_input">Enter project title</InputLabel>
+          <TextField
+            required
+            id="project_title_input"
+            label="Project title"
+            type="text"
+            name="name"
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          />
+        </div>
+        <div>
+          <InputLabel id="leader_select">Select project leader</InputLabel>
+          <Autocomplete
+            required
+            id="leader_select"
+            options={users}
+            getOptionLabel={(user) => user.name}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Select project leader"
+                name="leader"
+                id="leader_select"
+              />
+            )}
+            onChange={(e, value) =>
+              setFormData({ ...formData, leaderId: value ? value.id : '' })
+            }
+          />
+        </div>
         <br></br>
+        <Button variant="contained" type="submit">
+          Add project
+        </Button>
+      </form>
+      <br></br>
 
-        <h2>Projects:</h2>
-        <List>
-          {data.map((item) => (
-            <ListItem disablePadding>
-              <ListItemButton
-                component="a"
-                href={'/projects/[' + item.id + ']/overview'}
-              >
-                <ListItemText primary={item.name + ' - ' + item.leader.name} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </body>
+      <h2>Projects:</h2>
+      <List>
+        {data.map((item) => (
+          <ListItem disablePadding>
+            <ListItemButton
+              component="a"
+              href={'/projects/[' + item.id + ']/overview'}
+            >
+              <ListItemText primary={item.name + ' - ' + item.leader.name} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
     </main>
   );
 };

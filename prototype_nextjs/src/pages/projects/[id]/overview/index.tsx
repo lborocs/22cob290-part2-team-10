@@ -71,7 +71,7 @@ const overviewPage: AppPage<
     }
   }
 
-  async function changeProjectLeader(e: { preventDefault: () => void }) {
+  async function changeProjectLeader(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const newLeaderId = formData.newLeader.id;
     const response = await fetch(`/api/projects/${project.id}/changeLeader`, {
@@ -88,7 +88,7 @@ const overviewPage: AppPage<
     }
   }
 
-  const updateProjectTitle = async (e) => {
+  const updateProjectTitle = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const response = await fetch(
       `/api/projects/${project.id}/updateProjectTitle`,
@@ -127,93 +127,91 @@ const overviewPage: AppPage<
         <title>{pageTitle}</title>
       </Head>
 
-      <body>
-        <h1>
-          {project.name}{' '}
-          <span style={{ color: 'red' }}>: {project.leader.name}</span>
-        </h1>
-        <h2>Team members:</h2>
-        {usersInProject.map((user) => (
-          <div key={user.id}>
-            <p>
-              -{user.name}{' '}
-              <button onClick={() => removeMemberFromProject(user.id)}>
-                Remove
-              </button>
-            </p>
-          </div>
-        ))}
-        <br></br>
-        <h2>Edit project:</h2>
-        <form onSubmit={updateProjectTitle}>
-          <TextField
-            label="Project Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-          <Button variant="contained" type="submit">
-            Update Title
-          </Button>
-        </form>
+      <h1>
+        {project.name}{' '}
+        <span style={{ color: 'red' }}>: {project.leader.name}</span>
+      </h1>
+      <h2>Team members:</h2>
+      {usersInProject.map((user) => (
+        <div key={user.id}>
+          <p>
+            -{user.name}{' '}
+            <button onClick={() => removeMemberFromProject(user.id)}>
+              Remove
+            </button>
+          </p>
+        </div>
+      ))}
+      <br></br>
+      <h2>Edit project:</h2>
+      <form onSubmit={updateProjectTitle}>
+        <TextField
+          label="Project Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <Button variant="contained" type="submit">
+          Update Title
+        </Button>
+      </form>
 
-        <form onSubmit={addMemberToProject}>
-          <div>
-            <InputLabel id="emp_select_label">
-              Assign Employee to project
-            </InputLabel>
-            <Autocomplete
-              required
-              options={users}
-              getOptionLabel={(user) => user.name}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Assign Employee to project"
-                  inputProps={{
-                    ...params.inputProps,
-                    autoComplete: 'new-password',
-                  }}
-                />
-              )}
-              onChange={(event, newValue) => {
-                setFormData({ ...formData, memberId: newValue?.id });
-              }}
-            />
-          </div>
-
-          <br></br>
-          <Button variant="contained" type="submit">
-            Add employee
-          </Button>
-        </form>
-
-        <form onSubmit={changeProjectLeader}>
+      <form onSubmit={addMemberToProject}>
+        <div>
+          <InputLabel id="emp_select_label">
+            Assign Employee to project
+          </InputLabel>
           <Autocomplete
-            id="leader_select"
-            options={usersInProject}
+            required
+            options={users}
             getOptionLabel={(user) => user.name}
-            value={formData.newLeader}
-            onChange={(_, newValue) =>
-              setFormData({ ...formData, newLeader: newValue })
-            }
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Select new leader"
-                variant="standard"
+                label="Assign Employee to project"
+                inputProps={{
+                  ...params.inputProps,
+                  autoComplete: 'new-password',
+                }}
               />
             )}
+            onChange={(event, newValue) => {
+              setFormData({ ...formData, memberId: newValue?.id });
+            }}
           />
-          <br />
-          <Button variant="contained" type="submit" sx={{ mt: 2 }}>
-            Change leader
-          </Button>
-        </form>
+        </div>
 
-        <Button variant="contained" color="secondary" onClick={deleteProject}>
-          Delete Project
+        <br></br>
+        <Button variant="contained" type="submit">
+          Add employee
         </Button>
-      </body>
+      </form>
+
+      <form onSubmit={changeProjectLeader}>
+        <Autocomplete
+          id="leader_select"
+          options={usersInProject}
+          getOptionLabel={(user) => user.name}
+          value={formData.newLeader}
+          onChange={(_, newValue) =>
+            setFormData({ ...formData, newLeader: newValue })
+          }
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Select new leader"
+              variant="standard"
+            />
+          )}
+        />
+        <br />
+        <Button variant="contained" type="submit" sx={{ mt: 2 }}>
+          Change leader
+        </Button>
+      </form>
+
+      <Button variant="contained" color="secondary" onClick={deleteProject}>
+        Delete Project
+      </Button>
     </main>
   );
 };
