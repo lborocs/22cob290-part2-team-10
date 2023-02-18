@@ -29,7 +29,6 @@ import prisma from '~/lib/prisma';
 import { SidebarType } from '~/components/Layout';
 import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import type { Prisma } from '@prisma/client';
 
 import styles from '~/styles/home.module.css';
 import DropTarget from '~/components/UserDropTarget';
@@ -93,18 +92,16 @@ const HomePage: AppPage<
     e.preventDefault();
 
     try {
-      await fetch('/api/user/task/create-user-task', {
+      await fetch('~/pages/api/user/create-user-task', {
         method: 'POST',
-        headers: { 'Content-Type': 'JSON' },
         body: JSON.stringify({
-          userid: user.id,
-          stage,
+          userId: user.id,
+          User: user,
           title: titleTask,
           description: descriptionTask,
+          tags: tagList,
           deadline: dayjs(deadlineTask).toDate(),
-          tags: {
-            create: tagList.map((tag) => ({ name: tag })),
-          },
+          stage,
         }),
       });
     } catch (error) {
