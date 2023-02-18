@@ -8,8 +8,11 @@ export default async function handler(
 ) {
   const data = JSON.parse(req.body);
 
+  console.log('a');
+
   const createUserTask = await prisma.userTask.create({
     data,
   });
+
   res.json(createUserTask);
 }

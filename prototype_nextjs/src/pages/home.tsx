@@ -20,7 +20,7 @@ import TextField, { TextFieldProps } from '@mui/material/TextField';
 import DialogActions from '@mui/material/DialogActions';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
@@ -44,7 +44,7 @@ const HomePage: AppPage<
   const tagList = tags.split(',');
 
   const [stage, setStage] = useState('');
-  const [tasks, setTasks] = useState<any[]>(userTodoList);
+  const [tasks, setTasks] = useState<any[]>(userTodoList[0].todoList);
 
   const [deadlineTask, setDeadline] = useState<Dayjs | null>(null);
 
@@ -92,7 +92,7 @@ const HomePage: AppPage<
     e.preventDefault();
 
     try {
-      await fetch('~/api/user/create-user-task', {
+      await fetch('~/pages/api/user/create-user-task', {
         method: 'POST',
         body: JSON.stringify({
           userId: user.id,
@@ -100,7 +100,7 @@ const HomePage: AppPage<
           title: titleTask,
           description: descriptionTask,
           tags: tagList,
-          deadline: deadlineTask,
+          deadline: dayjs(deadlineTask).toDate(),
           stage,
         }),
       });
@@ -302,17 +302,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     where: {
       id: user.id,
     },
-    select: {
-      todoList: {
-        select: {
-          id: true,
-          stage: true,
-          title: true,
-          description: true,
-          deadline: true,
-          tags: true,
-        },
-      },
+    include: {
+      todoList: true,
     },
   });
 
@@ -320,7 +311,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     props: {
       session,
       user,
-      userTodoList,
+      userTodoList: JSON.parse(JSON.stringify(userTodoList)),
     },
   };
 }

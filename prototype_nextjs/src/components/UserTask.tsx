@@ -42,7 +42,7 @@ export default function Task({
       <CardHeader
         className={styles.taskheader}
         titleTypographyProps={{ fontSize: 16, fontWeight: 'bold' }}
-        title={tags.join(' ')}
+        title={tags == null ? tags : tags.join(' ')}
       />
       <CardContent>
         <Typography className={styles.tasktitle}>{title}</Typography>
