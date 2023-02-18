@@ -27,7 +27,7 @@ const OverviewPage: AppPage<
   const [formData, setFormData] = useState({
     newLeader: null,
   });
-  const pageTitle = `${project?.name ?? 'Project'} - Make-It-All`;
+  const pageTitle = `${project?.name ?? 'Project'}`;
   const [title, setTitle] = useState(project.name);
 
   const router = useRouter();

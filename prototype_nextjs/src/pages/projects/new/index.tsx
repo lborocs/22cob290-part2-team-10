@@ -23,6 +23,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
 import Autocomplete from '@mui/material/Autocomplete';
+import hashids, { encodeString } from '~/lib/hashids';
 
 const AddProjectPage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
@@ -93,7 +94,7 @@ const AddProjectPage: AppPage<
           <ListItem disablePadding key={item.id}>
             <ListItemButton
               component="a"
-              href={'/projects/' + item.id + '/overview'}
+              href={'/projects/' + hashids.encode(item.id) + '/overview'}
             >
               <ListItemText primary={item.name + ' - ' + item.leader.name} />
             </ListItemButton>
