@@ -55,9 +55,7 @@ const DashboardPage: AppPage<
       <Head>
         <title>Dashboard | Make-It-All</title>
       </Head>
-      <div>
-        <Searchbar />
-      </div>
+      <div></div>
       <div>
         <ProjectTable projects={projects} />
         {isManager && (

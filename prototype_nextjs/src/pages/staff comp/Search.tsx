@@ -70,9 +70,7 @@ export default function SearchAppBar(props: { onSearch: (arg0: any) => void }) {
             noWrap
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
-          >
-            Staff Page
-          </Typography>
+          ></Typography>
 
           <form>
             <TextField

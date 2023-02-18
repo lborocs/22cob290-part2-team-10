@@ -12,6 +12,7 @@ import TableRow from '@mui/material/TableRow';
 
 import type { getServerSideProps } from '../dashboard';
 import hashids from '~/lib/hashids';
+import SearchAppBar from '../staff comp/Search';
 
 interface Column {
   id: keyof Data;
@@ -115,6 +116,17 @@ export default function ProjectTable({ projects }: ProjectTableProps) {
     setPage(newPage);
   };
 
+  const [filteredData, setFilteredData] = useState(rows);
+
+  const handlesearch = (searchTerm: string) => {
+    const filtered = rows.filter((project) => {
+      return project.projectName
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+    });
+    setFilteredData(filtered);
+  };
+
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -124,6 +136,7 @@ export default function ProjectTable({ projects }: ProjectTableProps) {
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+      <SearchAppBar onSearch={handlesearch} />
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -140,7 +153,7 @@ export default function ProjectTable({ projects }: ProjectTableProps) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows
+            {filteredData
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
                 return (
