@@ -81,9 +81,14 @@ export default function Layout({ sidebar, children }: LayoutProps) {
         paddingBottom={1}
         gap={3}
         sx={{
-          marginLeft: showSidebar ? '250px' : 0,
-          // needs to be synced with the transition in ~/styles/layout/Sidebar.module.css
-          transition: 'margin-left 0.3s',
+          ...(!noSidebar && {
+            // needs to be synced with ~/styles/layout/Sidebar.module.css
+            marginLeft: showSidebar ? '250px' : 0,
+            '@media (max-width: 768px)': {
+              marginLeft: showSidebar ? 0 : '250px',
+            },
+            transition: 'margin-left 0.3s',
+          }),
         }}
       >
         <NavigationBar noSidebar={noSidebar} toggleSidebar={toggleSidebar} />
