@@ -17,9 +17,10 @@ import prisma from '~/lib/prisma';
 import { NextLinkComposed } from '~/components/Link';
 import Searchbar from './dashboardcomp/Searchbar';
 import ProjectTable from './dashboardcomp/ProjectTable';
-import BasicCard, { type BasicCardProps } from './dashboardcomp/card';
+import BasicCard, { type BasicCardProps } from './dashboardcomp/GenericCard';
 import useUserStore from '~/store/userStore';
 import { Prisma } from '@prisma/client';
+import { Task } from '@mui/icons-material';
 
 /*
 "There should also be a manager’s dashboard so that the managers or team lead‐
@@ -31,22 +32,28 @@ const DashboardPage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ projects }) => {
   const isManager = useUserStore((store) => store.user.isManager);
+  // const [loading, tasks]
 
-  const data: BasicCardProps['data'] = [
-    {
-      title: 'Average Hours per Task',
-      description: '11',
-    },
-    // {
-    //   title: 'Number of tasks',
-    //   description: '10',
-    // },
-  ];
+  // const data: BasicCardProps['data'] = [
+  //   {
+  //     title: 'Average Hours per Task',
+  //     ,
+  //   },
+  //   // {
+  //   //   title: 'Number of tasks',
+  //   //   description: '10',
+  //   // },
+  // ];
 
+  //Gets sum of all tasks using card and returns sum of tasks
+  function getTasks() {
+    console.log('TASKS');
+  }
+  getTasks();
   return (
     <main>
       <Head>
-        <title>Dashboard - Make-It-All</title>
+        <title>Dashboard | Make-It-All</title>
       </Head>
       <div>
         <Searchbar />
@@ -67,11 +74,12 @@ const DashboardPage: AppPage<
           </Button>
         )}
       </div>
-      <div>
+      <Box className="flex flex-col">
         <br></br>
 
-        <BasicCard data={data} />
-      </div>
+        <BasicCard title={'My Tasks'} total={45} completed={23} />
+        <BasicCard title={'Manhours'} total={35} completed={20} />
+      </Box>
     </main>
   );
 };

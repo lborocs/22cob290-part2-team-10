@@ -17,7 +17,7 @@ import prisma from '~/lib/prisma';
 import { NextLinkComposed } from '~/components/Link';
 import Searchbar from './dashboardcomp/Searchbar';
 import ProjectTable from './dashboardcomp/Projec1tTable';
-import BasicCard, { type BasicCardProps } from './dashboardcomp/card';
+import BasicCard, { type BasicCardProps } from './dashboardcomp/GenericCard';
 import useUserStore from '~/store/userStore';
 import { Prisma } from '@prisma/client';
 import Stafftable from './staff comp/stafftable';

@@ -13,6 +13,7 @@ import TableRow from '@mui/material/TableRow';
 import type { getServerSideProps } from '../staff';
 import hashids from '~/lib/hashids';
 import AlertDialogSlide from './dialog';
+import SearchAppBar from './Search';
 
 interface Column {
   id: keyof Data;
@@ -33,7 +34,7 @@ const columns: readonly Column[] = [
     format: (value: number) => value.toLocaleString('en-US'),
   },
   {
-    id: 'status',
+    id: 'leftCompany',
     label: 'Employee status',
     minWidth: 170,
     align: 'right',
@@ -44,15 +45,15 @@ const columns: readonly Column[] = [
 interface Data {
   name: string;
   email: string;
-  status: string;
+  leftCompany: string;
 }
 
 function createData(
   name: Data['name'],
   email: Data['email'],
-  status: Data['status']
+  leftCompany: Data['leftCompany']
 ): Data {
-  return { name, email, status };
+  return { name, email, leftCompany };
 }
 
 type User = InferGetServerSidePropsType<
@@ -73,6 +74,15 @@ export default function Stafftable({ users }: stafftableProps) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  const [filteredData, setFilteredData] = useState(rows);
+
+  const handlesearch = (searchTerm: string) => {
+    const filtered = rows.filter((user) => {
+      return user.name.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+    setFilteredData(filtered);
+  };
+
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -86,6 +96,8 @@ export default function Stafftable({ users }: stafftableProps) {
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+      <SearchAppBar onSearch={handlesearch} />
+
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -102,7 +114,7 @@ export default function Stafftable({ users }: stafftableProps) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows
+            {filteredData
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
                 return (
