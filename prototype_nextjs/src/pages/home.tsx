@@ -29,7 +29,6 @@ import prisma from '~/lib/prisma';
 import { SidebarType } from '~/components/Layout';
 import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import type { Prisma } from '@prisma/client';
 
 import styles from '~/styles/home.module.css';
 import DropTarget from '~/components/UserDropTarget';
@@ -71,21 +70,7 @@ const HomePage: AppPage<
     ) {
       return;
     }
-
-    setTasks([
-      ...tasks,
-      {
-        id: tasks.length + 1,
-        title: titleTask,
-        description: descriptionTask,
-        tags: tagList,
-        deadline: deadlineTask,
-        stage,
-      },
-    ]);
-
     saveTask(e);
-
     handleClose();
   };
 
@@ -102,11 +87,24 @@ const HomePage: AppPage<
           title: titleTask,
           description: descriptionTask,
           deadline: dayjs(deadlineTask).toDate(),
-          tags: {
-            create: tagList.map((tag) => ({ name: tag })),
-          },
+          tags: undefined,
         }),
-      });
+      }).then((response) =>
+        response.json().then((data) => {
+          console.log(data);
+          setTasks([
+            ...tasks,
+            {
+              id: data.id,
+              title: data.title,
+              description: data.description,
+              tags: [],
+              deadline: data.deadline,
+              stage: data.stage,
+            },
+          ]);
+        })
+      );
     } catch (error) {
       console.error(error);
     }

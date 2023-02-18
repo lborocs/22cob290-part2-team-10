@@ -1,9 +1,12 @@
 import { useDrag } from 'react-dnd';
+import Router from 'next/router';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import CardActions from '@mui/material/CardActions';
 import Typography from '@mui/material/Typography';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
 import dayjs, { Dayjs } from 'dayjs';
 
 import { ItemTypes } from '~/types';
@@ -16,6 +19,8 @@ interface Props {
   description: string;
   tags: string[];
   deadline: Dayjs;
+  tasks: any[];
+  setTasks: React.Dispatch<React.SetStateAction<any[]>>;
 }
 
 export default function Task({
@@ -24,6 +29,8 @@ export default function Task({
   description,
   tags,
   deadline,
+  tasks,
+  setTasks,
 }: Props) {
   const [{ isDragging }, drag] = useDrag({
     type: ItemTypes.TASK,
@@ -32,6 +39,18 @@ export default function Task({
       isDragging: !!monitor.isDragging(),
     }),
   });
+
+  async function handleDel(id: number) {
+    try {
+      await fetch('/api/user/task/delete-task', {
+        method: 'DELETE',
+        body: JSON.stringify({ id }),
+      });
+    } catch (error) {
+      console.error(error);
+    }
+    setTasks(tasks.filter((task) => task.id !== id));
+  }
 
   return (
     <Card
@@ -42,7 +61,18 @@ export default function Task({
       <CardHeader
         className={styles.taskheader}
         titleTypographyProps={{ fontSize: 16, fontWeight: 'bold' }}
-        title={tags == null ? tags : tags.join(' ')}
+        title={
+          tags == null
+            ? tags
+            : /* Maybe get rid of this, not getting tags from db */ tags.join(
+                ' '
+              )
+        }
+        action={
+          <IconButton aria-label="delete" onClick={() => handleDel(id)}>
+            <DeleteIcon />
+          </IconButton>
+        }
       />
       <CardContent>
         <Typography className={styles.tasktitle}>{title}</Typography>

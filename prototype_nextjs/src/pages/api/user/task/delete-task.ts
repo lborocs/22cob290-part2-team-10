@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import prisma from '~/lib/prisma';
@@ -8,11 +9,11 @@ export default async function handler(
 ) {
   const data = JSON.parse(req.body);
 
-  console.log('a');
-
-  const createUserTask = await prisma.userTask.create({
-    data,
+  const deleteTask = await prisma.userTask.delete({
+    where: {
+      id: data.id,
+    },
   });
 
-  res.json(createUserTask);
+  res.json(deleteTask);
 }

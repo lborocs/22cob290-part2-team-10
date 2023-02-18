@@ -6,7 +6,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  console.log('a');
   const data = JSON.parse(req.body);
 
   const createUserTask = await prisma.userTask.create({
