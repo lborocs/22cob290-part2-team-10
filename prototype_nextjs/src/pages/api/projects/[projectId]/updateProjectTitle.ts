@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import prisma from '~/lib/prisma';
 
 export default async function handler(req, res) {
-  const projectId = parseInt(req.query.projectId, 10);
+  const projectId = parseInt(req.query.projectId);
   const { title } = req.body;
 
   // Update the project title

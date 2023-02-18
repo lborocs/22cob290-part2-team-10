@@ -18,17 +18,13 @@ import { useState } from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { MenuItem } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 import Autocomplete from '@mui/material/Autocomplete';
 
-const addProjectPage: AppPage<
+const AddProjectPage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ data, users }) => {
   const [formData, setFormData] = useState({});
@@ -46,7 +42,7 @@ const addProjectPage: AppPage<
   return (
     <main>
       <Head>
-        <title>Add new project</title>
+        <title>Add new project - Make-It-All</title>
       </Head>
 
       <Typography variant="h4" component="h1">
@@ -94,10 +90,10 @@ const addProjectPage: AppPage<
       <h2>Projects:</h2>
       <List>
         {data.map((item) => (
-          <ListItem disablePadding>
+          <ListItem disablePadding key={item.id}>
             <ListItemButton
               component="a"
-              href={'/projects/[' + item.id + ']/overview'}
+              href={'/projects/' + item.id + '/overview'}
             >
               <ListItemText primary={item.name + ' - ' + item.leader.name} />
             </ListItemButton>
@@ -108,7 +104,7 @@ const addProjectPage: AppPage<
   );
 };
 
-addProjectPage.layout = {
+AddProjectPage.layout = {
   sidebar: {
     type: SidebarType.PROJECTS,
   },
@@ -145,4 +141,4 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   };
 }
 
-export default addProjectPage;
+export default AddProjectPage;

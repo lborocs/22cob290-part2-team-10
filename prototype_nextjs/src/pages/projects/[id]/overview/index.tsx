@@ -17,20 +17,13 @@ import { useRouter } from 'next/router';
 
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { MenuItem } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 import Autocomplete from '@mui/material/Autocomplete';
 
 // TODO: project page (Projects page from before)
-const overviewPage: AppPage<
+const OverviewPage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ project, users, usersInProject }) => {
-  if (!project) {
-    return <ErrorPage statusCode={404} title="Project not found" />;
-  }
-
   const [formData, setFormData] = useState({
     newLeader: null,
   });
@@ -124,7 +117,7 @@ const overviewPage: AppPage<
   return (
     <main>
       <Head>
-        <title>{pageTitle}</title>
+        <title>{pageTitle} - Make-It-All</title>
       </Head>
 
       <h1>
@@ -208,6 +201,7 @@ const overviewPage: AppPage<
           Change leader
         </Button>
       </form>
+      <br></br>
 
       <Button variant="contained" color="secondary" onClick={deleteProject}>
         Delete Project
@@ -216,7 +210,7 @@ const overviewPage: AppPage<
   );
 };
 
-overviewPage.layout = {
+OverviewPage.layout = {
   sidebar: {
     type: SidebarType.PROJECTS,
   },
@@ -254,6 +248,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   });
 
+  if (!project) {
+    return { notFound: true };
+  }
+
   const usersInProject = project.members.filter(
     (member) => member.id !== project.leaderId
   );
@@ -268,10 +266,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   });
 
-  if (!project) {
-    return { notFound: true };
-  }
-
   return {
     props: {
       session,
@@ -283,4 +277,4 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   };
 }
 
-export default overviewPage;
+export default OverviewPage;
