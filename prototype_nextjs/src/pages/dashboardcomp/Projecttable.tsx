@@ -150,10 +150,15 @@ export default function ProjectTable({ projects }: ProjectTableProps) {
 
                       if (column.id === 'projectName') {
                         return (
-                          <TableCell
-                            key={column.id}
-                            align={column.align}
-                          ></TableCell>
+                          <TableCell key={column.id} align={column.align}>
+                            <Link
+                              href={`/projects/${hashids.encode(
+                                row.projectId
+                              )}`}
+                            >
+                              {value}
+                            </Link>
+                          </TableCell>
                         );
                       }
 

@@ -16,12 +16,13 @@ import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import prisma from '~/lib/prisma';
 import { NextLinkComposed } from '~/components/Link';
 import Searchbar from './dashboardcomp/Searchbar';
-import ProjectTable from './dashboardcomp/ProjectTable';
+import ProjectTable from './dashboardcomp/Projec1tTable';
 import BasicCard, { type BasicCardProps } from './dashboardcomp/card';
 import useUserStore from '~/store/userStore';
 import { Prisma } from '@prisma/client';
 import Stafftable from './staff comp/stafftable';
-import updatevalue from './api/user/staffupdate.ts';
+import updatevalue from './api/user/staffupdate';
+import axios from 'axios';
 
 /*
   "There should also be a manager’s dashboard so that the managers or team lead‐
@@ -39,9 +40,7 @@ const staff: AppPage<
       <Head>
         <title>Staff Page</title>
       </Head>
-      <div>
-        <Searchbar />
-      </div>
+      <div></div>
       <div>
         <Stafftable users={users} />
       </div>

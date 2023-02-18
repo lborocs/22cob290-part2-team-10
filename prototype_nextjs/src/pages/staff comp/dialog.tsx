@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -7,7 +6,9 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
-import updatevalue from './api/user/staffupdate.ts';
+import axios from 'axios';
+import React from 'react';
+import prisma from '~/lib/prisma';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -18,9 +19,16 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function AlertDialogSlide() {
+export default function AlertDialogSlide({ email }: { email: string }) {
   const [open, setOpen] = React.useState(false);
-
+  const f = async () => {
+    handleClose();
+    const response = axios.post('/api/user/staffupdate', {
+      email: email,
+      leftCompany: true,
+    });
+    location.reload();
+  };
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -42,12 +50,12 @@ export default function AlertDialogSlide() {
         <DialogTitle>{'Remove Access'}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Remove access from Employee no longer available
+            Remove access from Employee that is no longer available
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>No</Button>
-          <Button onClick={handleClose}>Yes</Button>
+          <Button onClick={f}>Yes</Button>
         </DialogActions>
       </Dialog>
     </div>

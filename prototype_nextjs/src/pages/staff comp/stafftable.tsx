@@ -114,7 +114,7 @@ export default function Stafftable({ users }: stafftableProps) {
                         return (
                           <TableCell key={column.id} align={column.align}>
                             {value}
-                            <AlertDialogSlide />
+                            <AlertDialogSlide email={row.email} />
                           </TableCell>
                         );
                       }
