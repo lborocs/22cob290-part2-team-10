@@ -5,26 +5,14 @@ import type {
 } from 'next';
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
-import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
 
 import { SidebarType } from '~/components/Layout';
 import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import prisma from '~/lib/prisma';
-import { NextLinkComposed } from '~/components/Link';
-import Searchbar from '../components/dashboardcomp/Searchbar';
-import ProjectTable from '../components/dashboardcomp/Projec1tTable';
-import BasicCard, {
-  type BasicCardProps,
-} from '../components/dashboardcomp/GenericCard';
+
 import useUserStore from '~/store/userStore';
-import { Prisma } from '@prisma/client';
 import Stafftable from '../components/staff comp/stafftable';
-import updatevalue from './api/user/staffupdate';
-import axios from 'axios';
 
 /*
   "There should also be a manager’s dashboard so that the managers or team lead‐
@@ -32,7 +20,7 @@ import axios from 'axios';
   - spec letter
   */
 
-const staff: AppPage<
+const Staff: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ users }) => {
   const isManager = useUserStore((store) => store.user.isManager);
@@ -40,9 +28,9 @@ const staff: AppPage<
   return (
     <main>
       <Head>
-        <title>Staff Page</title>
+        <title>Staff Page - Make-It-All</title>
       </Head>
-      <div></div>
+
       <div>
         <Stafftable users={users} />
       </div>
@@ -50,7 +38,7 @@ const staff: AppPage<
   );
 };
 
-staff.layout = {
+Staff.layout = {
   sidebar: {
     type: SidebarType.PROJECTS,
   },
@@ -88,4 +76,4 @@ export const getServerSideProps = (async (context) => {
   };
 }) satisfies GetServerSideProps;
 
-export default staff;
+export default Staff;

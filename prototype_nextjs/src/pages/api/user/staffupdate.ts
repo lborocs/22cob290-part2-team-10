@@ -31,5 +31,4 @@ export default async function updatevalue(
     },
   });
   res.status(200).json({ success: true });
-  return updateUser;
 }

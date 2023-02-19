@@ -36,7 +36,7 @@ const DashboardPage: AppPage<
   return (
     <main>
       <Head>
-        <title>Dashboard | Make-It-All</title>
+        <title>Dashboard - Make-It-All</title>
       </Head>
       <div></div>
       <div>

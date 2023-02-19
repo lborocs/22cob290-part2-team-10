@@ -8,7 +8,6 @@ import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import axios from 'axios';
 import React from 'react';
-import prisma from '~/lib/prisma';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {

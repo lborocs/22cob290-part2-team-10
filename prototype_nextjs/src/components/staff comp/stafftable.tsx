@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { InferGetServerSidePropsType } from 'next';
-import Link from 'next/link';
+
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -11,7 +11,7 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 
 import type { getServerSideProps } from '../../pages/staff';
-import hashids from '~/lib/hashids';
+
 import AlertDialogSlide from './dialog';
 import SearchAppBar from './Search';
 
