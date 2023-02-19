@@ -1,49 +1,33 @@
+import { type CSSProperties, Fragment } from 'react';
 import type {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from 'next';
 import Head from 'next/head';
+import Link from 'next/link';
 import { unstable_getServerSession } from 'next-auth/next';
+import { blue, grey } from '@mui/material/colors';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 
 import hashids, { decodeString } from '~/lib/hashids';
 import prisma from '~/lib/prisma';
-import ErrorPage from '~/components/ErrorPage';
 import { SidebarType } from '~/components/Layout';
 import ForumSidebar from '~/components/layout/sidebar/ForumSidebar';
 import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import { useRouter } from 'next/router';
-import { Grid, Typography } from '@mui/material';
-import { PostAddOutlined } from '@mui/icons-material';
-
-// TODO: AuthorPage
+import UserAvatar from '~/components/avatar/UserAvatar';
 
 const AuthorPage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ authorInfo, post, postHistory, postTopic }) => {
-  // TODO: show ErrorPage if author doesn't exist
-  const pageTitle = authorInfo[0].name + ' - Make-It-All';
+  const pageTitle = `${authorInfo.name} - Make-It-All`;
+
   /*  I would like to aplogise in advance for the amount of in document CSS,
-  external CSS was not working and time was low 
+  external CSS was not working and time was low
   it used to be all inline CSS so be thankful,
   thank you Ade, btw*/
-  const titleStyle = {
-    backgroundColor: '#ddf4ff',
-    borderStyle: 'solid',
-    fontSize: 'large',
-    borderRadius: '20px',
-    paddingInline: '15px',
-    margin: '0px',
-    paddingTop: '1.8px',
-    fontWeight: 'bold',
-  };
-  const postBorder = {
-    borderStyle: 'solid',
-    borderColor: '#d0d7de',
-    borderRadius: '8px',
-    backgroundColor: '#ffffff',
-  };
-  const topicStyle = {
+  const topicStyle: CSSProperties = {
     backgroundColor: '#ddf4ff',
     fontSize: 'small',
     borderRadius: '15px',
@@ -53,18 +37,19 @@ const AuthorPage: AppPage<
     paddingTop: '1.8px',
     maxHeight: '650px',
   };
-  const postTitleStyle = {
+  const postTitleStyle: CSSProperties = {
     paddingInline: '15px',
     paddingBlock: '8px',
     borderTopRightRadius: '8px',
     borderTopLeftRadius: '8px',
     color: '#0969da',
   };
-  const summaryTextStyle = {
+  const summaryTextStyle: CSSProperties = {
     paddingInline: '15px',
     fontWeight: 'normal',
+    // color: 'black',
   };
-  const postContentStyle = {
+  const postContentStyle: CSSProperties = {
     paddingInline: '15px',
     paddingBlock: '10px',
     color: '#0969da',
@@ -73,42 +58,97 @@ const AuthorPage: AppPage<
   return (
     <main className="d-flex flex-column">
       <Head>
-        <link rel="stylesheet" href="styles.css"></link>
-        {/* Doesn't show up, keeping regardless */}
         <title>{pageTitle}</title>
       </Head>
-      <span style={titleStyle}>{pageTitle}</span>
+
+      <UserAvatar
+        userId={authorInfo.id}
+        name={authorInfo.name}
+        image={authorInfo.image}
+        sx={{
+          marginRight: 2,
+        }}
+      />
+      <Typography
+        component="span"
+        sx={(theme) => ({
+          bgcolor: blue[100],
+          borderStyle: 'solid',
+          fontSize: 'large',
+          borderRadius: '20px',
+          paddingInline: '15px',
+          margin: '0px',
+          paddingTop: '1.8px',
+          fontWeight: 'bold',
+          [theme.getColorSchemeSelector('dark')]: {
+            bgcolor: blue['700'],
+          },
+        })}
+      >
+        {pageTitle}
+      </Typography>
+
       <p>Here are all the posts by this author</p>
-      {postHistory?.map((postHistory) => {
-        const relevantPost = post
-          .filter((_post) => _post.id == postHistory.postId)
-          ?.at(0);
-        return (
-          <span>
-            <div style={postBorder}>
-              <h1 style={topicStyle}>
-                Topics:{' '}
-                {relevantPost?.topics
-                  .map((topic) => topic.name)
-                  .reduce((acc, topic) => `${acc}, ${topic}`)}
-              </h1>
-              <h2 style={postTitleStyle}>{postHistory.title}</h2>
-              <h4 style={summaryTextStyle}>
-                <em
-                  style={{
-                    fontWeight: 'bold', //summary being in italics and bolded
-                  }}
+
+      <ul
+        style={{
+          listStyleType: 'none', // Remove bullets
+          padding: 0, // Remove padding
+          margin: 0, // Remove margins
+        }}
+      >
+        {postHistory?.map((postHistory) => {
+          const relevantPost = post
+            .filter((_post) => _post.id == postHistory.postId)
+            ?.at(0);
+          return (
+            <Fragment key={postHistory.id}>
+              <li>
+                <Box
+                  component="article"
+                  sx={(theme) => ({
+                    borderStyle: 'solid',
+                    borderColor: '#d0d7de',
+                    borderRadius: '8px',
+                    [theme.getColorSchemeSelector('dark')]: {
+                      bgcolor: grey['800'],
+                    },
+                  })}
                 >
-                  Summary:{' '}
-                </em>
-                {postHistory.summary}
-              </h4>
-              <h3 style={postContentStyle}>{postHistory.content}</h3>
-            </div>
-            <p></p>
-          </span>
-        );
-      })}
+                  <h1 style={topicStyle}>
+                    Topics:{' '}
+                    {relevantPost?.topics.map((topic) => topic.name).join(', ')}
+                  </h1>
+
+                  <h2 style={postTitleStyle}>
+                    <Link
+                      href={`/forum/posts/${hashids.encode(
+                        postHistory.postId
+                      )}`}
+                    >
+                      {postHistory.title}
+                    </Link>
+                  </h2>
+
+                  <h4 style={summaryTextStyle}>
+                    <em
+                      style={{
+                        fontWeight: 'bold', //summary being in italics and bolded
+                      }}
+                    >
+                      Summary:{' '}
+                    </em>
+                    {postHistory.summary}
+                  </h4>
+
+                  <h3 style={postContentStyle}>{postHistory.content}</h3>
+                </Box>
+              </li>
+              <br />
+            </Fragment>
+          );
+        })}
+      </ul>
     </main>
   );
 };
@@ -136,24 +176,20 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const { id } = context.params!;
 
-  // TODO: get author info from database
-  // & their posts
-
-  // Get the query parameter from the URL
-
   const authorId = decodeString(id as unknown as string);
-  const authorInfo = await prisma.user.findMany({
+  const authorInfo = await prisma.user.findUnique({
     where: {
-      id: {
-        in: authorId,
-      },
+      id: authorId,
     },
   });
+
+  if (!authorInfo) {
+    return { notFound: true };
+  }
+
   const post = await prisma.post.findMany({
     where: {
-      authorId: {
-        in: authorId,
-      },
+      authorId: authorInfo?.id,
     },
     select: {
       id: true,
@@ -182,8 +218,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   });
 
-  //TODO: get topic info and link to posts
-  const postTopic = await prisma.postTopic.findMany({});
+  const postTopic = await prisma.postTopic.findMany();
 
   return {
     props: {
@@ -198,4 +233,3 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 }
 
 export default AuthorPage;
-
