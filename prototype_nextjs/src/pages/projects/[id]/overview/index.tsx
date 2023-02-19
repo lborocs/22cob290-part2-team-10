@@ -66,7 +66,7 @@ const OverviewPage: AppPage<
 
   async function changeProjectLeader(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const newLeaderId = formData.newLeader.id;
+    const newLeaderId = formData.newLeader?.id;
     const response = await fetch(`/api/projects/${project.id}/changeLeader`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

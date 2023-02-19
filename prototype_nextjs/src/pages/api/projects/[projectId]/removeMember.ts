@@ -1,9 +1,17 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { PrismaClient } from '@prisma/client';
 import prisma from '~/lib/prisma';
 
-export default async function handler(req, res) {
-  const projectId = parseInt(req.query.projectId);
-  const { memberId } = req.body;
+interface RemoveMemberRequestBody {
+  memberId: number;
+}
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const projectId = parseInt(req.query.projectId as string);
+  const { memberId } = req.body as RemoveMemberRequestBody;
 
   // Find the project and the user to remove
   const project = await prisma.project.findUnique({
@@ -11,7 +19,7 @@ export default async function handler(req, res) {
     include: { members: true },
   });
   const user = await prisma.user.findUnique({
-    where: { id: memberId },
+    where: { id: memberId.toString() },
   });
 
   if (!project || !user) {
@@ -19,7 +27,7 @@ export default async function handler(req, res) {
   }
 
   // Check if the user is a member of the project
-  const isMember = project.members.some((m) => m.id === memberId);
+  const isMember = project.members.some((m) => m.id === memberId.toString());
   if (!isMember) {
     return res
       .status(400)
@@ -31,7 +39,7 @@ export default async function handler(req, res) {
     where: { id: projectId },
     data: {
       members: {
-        disconnect: { id: memberId },
+        disconnect: { id: memberId.toString() },
       },
     },
     include: { members: true },

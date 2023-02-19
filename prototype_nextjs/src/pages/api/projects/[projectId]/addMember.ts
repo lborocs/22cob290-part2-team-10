@@ -1,9 +1,18 @@
 import { PrismaClient } from '@prisma/client';
 import prisma from '~/lib/prisma';
 
-export default async function handler(req, res) {
-  const projectId = parseInt(req.query.projectId);
-  const { memberId } = req.body;
+import { NextApiRequest, NextApiResponse } from 'next';
+
+interface AddMemberRequestBody {
+  memberId: string;
+}
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const projectId = parseInt(req.query.projectId as string);
+  const { memberId } = req.body as AddMemberRequestBody;
 
   // Find the project and the user to add
   const project = await prisma.project.findUnique({

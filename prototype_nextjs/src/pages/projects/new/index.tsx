@@ -23,7 +23,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
 import Autocomplete from '@mui/material/Autocomplete';
-import hashids, { encodeString } from '~/lib/hashids';
+import hashids from '~/lib/hashids';
 
 const AddProjectPage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>

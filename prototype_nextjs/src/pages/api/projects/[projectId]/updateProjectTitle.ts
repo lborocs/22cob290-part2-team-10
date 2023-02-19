@@ -1,7 +1,19 @@
-import { PrismaClient } from '@prisma/client';
+import { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '~/lib/prisma';
 
-export default async function handler(req, res) {
+interface UpdateProjectTitleRequest extends NextApiRequest {
+  query: {
+    projectId: string;
+  };
+  body: {
+    title: string;
+  };
+}
+
+export default async function handler(
+  req: UpdateProjectTitleRequest,
+  res: NextApiResponse
+) {
   const projectId = parseInt(req.query.projectId);
   const { title } = req.body;
 

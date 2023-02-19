@@ -1,20 +1,20 @@
-import { PrismaClient, Prisma } from '@prisma/client';
+import { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '~/lib/prisma';
 
-export default async function handler(req, res) {
-  const { projectId } = req.query;
-
+interface DeleteProjectQuery {
+  [key: string]: string | string[];
+  projectId: string;
+}
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const { projectId } = req.query as DeleteProjectQuery;
   const id = parseInt(projectId);
 
-  const tasks = await prisma.projectTask.findMany({
+  await prisma.projectTask.deleteMany({
     where: { projectId: id },
   });
-
-  if (tasks.length > 0) {
-    await prisma.projectTask.deleteMany({
-      where: { projectId: id },
-    });
-  }
 
   await prisma.project.delete({ where: { id } });
 
