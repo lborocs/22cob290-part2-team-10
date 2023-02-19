@@ -1,4 +1,7 @@
-import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import type {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from 'next';
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 
@@ -10,17 +13,24 @@ import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 // TODO: project page (Projects page from before)
-const ProjectPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ }) => {
-  // TODO: error page if no project with provided ID exists
-  // TODO: error page if they can't access this project
+const ProjectPage: AppPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({ project }) => {
+  if (!project) {
+    return <ErrorPage statusCode={404} title="Project not found" />;
+  }
 
-  const pageTitle = '[INSERT PROJECT NAME HERE] - Make-It-All';
+  const pageTitle = `${project.name} - Make-It-All`;
 
   return (
     <main>
       <Head>
         <title>{pageTitle}</title>
       </Head>
+
+      <body>
+        <h1>{project.name}</h1>
+      </body>
     </main>
   );
 };
@@ -32,7 +42,11 @@ ProjectPage.layout = {
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await unstable_getServerSession(context.req, context.res, authOptions);
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
 
   if (!session || !session.user) {
     return { notFound: true };
@@ -42,15 +56,30 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const { id } = context.params!;
   const decodedId = hashids.decode(id as string);
-
+  console.log(decodedId);
   const projectId = decodedId[0] as number | undefined;
+  console.log(projectId);
+  console.log('id =', id);
+  if (!projectId) {
+    return { notFound: true };
+  }
 
   // TODO: use prisma to get info about project from database
+  const project = await prisma.project.findUnique({
+    where: {
+      id: projectId, // provide the required `id` argument here
+    },
+  });
+
+  if (!project) {
+    return { notFound: true };
+  }
 
   return {
     props: {
       session,
       user,
+      project,
     },
   };
 }
