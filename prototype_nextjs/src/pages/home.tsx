@@ -91,7 +91,6 @@ const HomePage: AppPage<
         }),
       }).then((response) =>
         response.json().then((data) => {
-          console.log(data);
           setTasks([
             ...tasks,
             {
