@@ -154,7 +154,6 @@ const OverviewPage: AppPage<
             Assign Employee to project
           </InputLabel>
           <Autocomplete
-            required
             options={users}
             getOptionLabel={(user) => user.name}
             renderInput={(params) => (
