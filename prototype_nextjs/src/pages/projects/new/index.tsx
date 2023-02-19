@@ -76,7 +76,6 @@ const AddProjectPage: AppPage<
         <div>
           <InputLabel id="leader_select">Select project leader</InputLabel>
           <Autocomplete
-            required
             id="leader_select"
             options={users}
             getOptionLabel={(user) => user.name}
