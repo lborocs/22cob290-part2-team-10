@@ -1,7 +1,12 @@
-import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import type {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 import { unstable_getServerSession } from 'next-auth/next';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import { blue } from '@mui/material/colors';
 
 import { encodeString } from '~/lib/hashids';
 import prisma from '~/lib/prisma';
@@ -9,16 +14,64 @@ import { SidebarType } from '~/components/Layout';
 import ForumSidebar from '~/components/layout/sidebar/ForumSidebar';
 import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
+import { NextLinkComposed } from '~/components/Link';
+import UserAvatar from '~/components/avatar/UserAvatar';
 
-// TODO: AuthorsPage
-const AuthorsPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ }) => {
-  // TODO: Link to each other page using `encodeString` for their ID
-
+const AuthorsPage: AppPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({ authorsOfPosts }) => {
   return (
     <main>
       <Head>
         <title>Authors - Make-It-All</title>
       </Head>
+
+      <Typography
+        component="span"
+        sx={(theme) => ({
+          bgcolor: blue[100],
+          borderStyle: 'solid',
+          fontSize: 'large',
+          borderRadius: '20px',
+          paddingInline: '15px',
+          margin: '0px',
+          paddingTop: '1.8px',
+          fontWeight: 'bold',
+          [theme.getColorSchemeSelector('dark')]: {
+            bgcolor: blue['700'],
+          },
+        })}
+      >
+        Authors - Make-It-All
+      </Typography>
+
+      {authorsOfPosts.map((author) => (
+        <Box
+          key={author.id}
+          sx={{
+            borderStyle: 'solid',
+            borderColor: 'solid white',
+            borderRadius: '8px',
+            paddingX: 1,
+            paddingY: 0.5,
+            display: 'block',
+            width: 'fit-content',
+            marginTop: 2,
+          }}
+          component={NextLinkComposed}
+          to={`/forum/authors/${encodeString(author.id)}`}
+        >
+          <UserAvatar
+            userId={author.id}
+            name={author.name}
+            image={author.image}
+            sx={{
+              marginRight: 1,
+            }}
+          />
+          {author.name}: click here to see all posts by this author
+        </Box>
+      ))}
     </main>
   );
 };
@@ -31,7 +84,11 @@ AuthorsPage.layout = {
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await unstable_getServerSession(context.req, context.res, authOptions);
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
 
   if (!session || !session.user) {
     return { notFound: true };
@@ -39,12 +96,22 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const user = session.user as SessionUser;
 
-  // TODO: get authors from database
+  const nested = await prisma.post.findMany({
+    select: { authorId: true },
+  });
+  const authorsOfPosts = await prisma.user.findMany({
+    where: {
+      id: {
+        in: nested.map((nested) => nested.authorId),
+      },
+    },
+  });
 
   return {
     props: {
       session,
       user,
+      authorsOfPosts,
     },
   };
 }

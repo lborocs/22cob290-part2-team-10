@@ -140,8 +140,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const { id } = context.params!;
   const decodedId = hashids.decode(id as string);
-
+  console.log(decodedId);
   const projectId = decodedId[0] as number | undefined;
+  console.log(projectId);
+  console.log('id =', id);
+  if (!projectId) {
+    return { notFound: true };
+  }
 
   if (!projectId) {
     return { notFound: true };

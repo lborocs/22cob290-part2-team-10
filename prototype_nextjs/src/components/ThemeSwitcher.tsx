@@ -1,5 +1,7 @@
 import { useEffect, useId, useState } from 'react';
-import { styled, useColorScheme } from '@mui/material/styles';
+import type { Theme } from '@mui/material';
+import { useColorScheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import Box, { type BoxProps } from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
@@ -12,25 +14,6 @@ import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness';
 import type { Entries } from 'type-fest';
-
-const ResponsiveStyledButton = styled(Button)(({ theme }) =>
-  theme.unstable_sx({
-    textTransform: 'none',
-    display: {
-      xs: 'none',
-      md: 'inline-flex',
-    },
-  })
-);
-
-const ResponsiveIconButton = styled(IconButton)(({ theme }) =>
-  theme.unstable_sx({
-    display: {
-      xs: 'inline-flex',
-      md: 'none',
-    },
-  })
-);
 
 type ModeType = NonNullable<ReturnType<typeof useColorScheme>['mode']>;
 
@@ -64,11 +47,16 @@ const modes: Modes = {
  * Want the button to look like an `Outlined Button` when the text is visible,
  *  and like an `IconButton` when the text isn't. Too much styling customization
  *  needed if just using 1 button so just used 2 lol.
+ *
+ * Well not anymore, using media query hook to change the button. Except when not mounted
+ *  or mode isn't set. Using 2 buttons there cos I believe the media query wouldn't have
+ *  evaluated if that is being displayed.
  */
 export default function ThemeSwitcher(props: BoxProps) {
   // it includes system, really nice :)
   const { mode, setMode } = useColorScheme();
 
+  const isAboveMd = useMediaQuery<Theme>((theme) => theme.breakpoints.up('md'));
   const buttonId = useId();
   const menuId = useId();
 
@@ -85,15 +73,29 @@ export default function ThemeSwitcher(props: BoxProps) {
   if (!mounted || !mode)
     return (
       <Box {...props} component={Skeleton}>
-        <ResponsiveStyledButton
+        <Button
           variant="outlined"
           startIcon={<SettingsBrightnessIcon />}
+          sx={{
+            textTransform: 'none',
+            display: {
+              xs: 'none',
+              md: 'inline-flex',
+            },
+          }}
         >
           Theme
-        </ResponsiveStyledButton>
-        <ResponsiveIconButton>
+        </Button>
+        <IconButton
+          sx={{
+            display: {
+              xs: 'inline-flex',
+              md: 'none',
+            },
+          }}
+        >
           <SettingsBrightnessIcon />
-        </ResponsiveIconButton>
+        </IconButton>
       </Box>
     );
 
@@ -113,31 +115,40 @@ export default function ThemeSwitcher(props: BoxProps) {
   return (
     <>
       <Box {...props}>
-        <ResponsiveStyledButton
-          onClick={handleClick}
-          variant="outlined"
-          color="contrast"
-          startIcon={modes[mode].buttonIcon}
-          id={buttonId}
-          aria-label="open theme switcher"
-          aria-controls={menuOpen ? menuId : undefined}
-          aria-haspopup="true"
-          aria-expanded={menuOpen ? true : undefined}
-        >
-          Theme
-        </ResponsiveStyledButton>
-        {/* TODO: sort out id & aria props :/ might have to use useMediaQuery(minWidth: theme.breakpoints.md) or some sort of useBreakpoint */}
-        <ResponsiveIconButton
-          onClick={handleClick}
-          color="contrast"
-          // id={buttonId}
-          // aria-label="open theme switcher"
-          // aria-controls={menuOpen ? menuId : undefined}
-          // aria-haspopup="true"
-          // aria-expanded={menuOpen ? true : undefined}
-        >
-          {modes[mode].buttonIcon}
-        </ResponsiveIconButton>
+        {isAboveMd ? (
+          <Button
+            onClick={handleClick}
+            variant="outlined"
+            color="contrast"
+            startIcon={modes[mode].buttonIcon}
+            id={buttonId}
+            aria-label="open theme switcher"
+            aria-controls={menuOpen ? menuId : undefined}
+            aria-haspopup="true"
+            aria-expanded={menuOpen ? true : undefined}
+            sx={{
+              textTransform: 'none',
+              display: 'inline-flex',
+            }}
+          >
+            Theme
+          </Button>
+        ) : (
+          <IconButton
+            onClick={handleClick}
+            color="contrast"
+            id={buttonId}
+            aria-label="open theme switcher"
+            aria-controls={menuOpen ? menuId : undefined}
+            aria-haspopup="true"
+            aria-expanded={menuOpen ? true : undefined}
+            sx={{
+              display: 'inline-flex',
+            }}
+          >
+            {modes[mode].buttonIcon}
+          </IconButton>
+        )}
       </Box>
 
       <Menu

@@ -23,7 +23,7 @@ export interface SessionUser extends User {
   id: string;
   name: string;
   email: string;
-  image: null;
+  image: string | null;
   isManager: boolean;
 }
 

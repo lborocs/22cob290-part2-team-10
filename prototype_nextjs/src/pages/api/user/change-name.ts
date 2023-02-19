@@ -20,7 +20,7 @@ export type ResponseSchema = {
  * @param res Response object with a JSON body containing the success status. See {@link ResponseSchema}.
  * @example
  * ```ts
- * const { data } = await axios.post('/api/projects/get-assigned-projects', {
+ * const { data } = await axios.post('/api/projects/change-name', {
  *   name: 'John Doe',
  * });
  * console.log(data); // { success: true }
