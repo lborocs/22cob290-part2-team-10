@@ -11,11 +11,12 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
+import type { Prisma } from '@prisma/client';
 
 import hashids from '~/lib/hashids';
 import prisma from '~/lib/prisma';
 import { SidebarType } from '~/components/Layout';
-import DropTarget from '~/components/ProjectDropTarget';
+import DropTarget from '~/components/project/ProjectDropTarget';
 import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
@@ -23,12 +24,17 @@ import styles from '~/styles/Projects.module.css';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-const ProjectPage: AppPage<
-  InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ project }) => {
+// TODO: link to Overview page for leader & managers
+
+type SsrProps = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+export type ProjectTask = SsrProps['tasks'][number];
+
+const ProjectPage: AppPage<SsrProps> = ({ project, tasks: initialTasks }) => {
   const pageTitle = `${project.name} - Make-It-All`;
 
-  const [tasks, setTasks] = useState(project.tasks);
+  const [tasks, setTasks] = useState(initialTasks);
+  // console.log('tasks =', tasks);
 
   return (
     <main>
@@ -57,11 +63,7 @@ const ProjectPage: AppPage<
                 title="To Do"
               />
               <DndProvider backend={HTML5Backend}>
-                <DropTarget
-                  tasks={project.tasks}
-                  setTasks={setTasks}
-                  stage="TODO"
-                />
+                <DropTarget tasks={tasks} setTasks={setTasks} stage="TODO" />
               </DndProvider>
             </Card>
           </Grid>
@@ -74,7 +76,7 @@ const ProjectPage: AppPage<
               />
               <DndProvider backend={HTML5Backend}>
                 <DropTarget
-                  tasks={project.tasks}
+                  tasks={tasks}
                   setTasks={setTasks}
                   stage="IN_PROGRESS"
                 />
@@ -90,7 +92,7 @@ const ProjectPage: AppPage<
               />
               <DndProvider backend={HTML5Backend}>
                 <DropTarget
-                  tasks={project.tasks}
+                  tasks={tasks}
                   setTasks={setTasks}
                   stage="CODE_REVIEW"
                 />
@@ -106,7 +108,7 @@ const ProjectPage: AppPage<
               />
               <DndProvider backend={HTML5Backend}>
                 <DropTarget
-                  tasks={project.tasks}
+                  tasks={tasks}
                   setTasks={setTasks}
                   stage="COMPLETED"
                 />
@@ -140,26 +142,15 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const { id } = context.params!;
   const decodedId = hashids.decode(id as string);
-  console.log(decodedId);
   const projectId = decodedId[0] as number | undefined;
-  console.log(projectId);
-  console.log('id =', id);
-  if (!projectId) {
-    return { notFound: true };
-  }
 
   if (!projectId) {
     return { notFound: true };
   }
 
   const project = await prisma.project.findUnique({
-    where: { id: projectId },
-    include: {
-      tasks: {
-        where: {
-          permitted: { some: { id: user.id } },
-        },
-      },
+    where: {
+      id: projectId,
     },
   });
 
@@ -167,11 +158,41 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     return { notFound: true };
   }
 
+  const canViewAllTasks = user.isManager || project.leaderId === user.id;
+
+  const whereInput: Prisma.ProjectTaskWhereInput = canViewAllTasks
+    ? {}
+    : {
+        OR: [
+          {
+            permitted: {
+              some: { id: user.id },
+            },
+          },
+          {
+            assigneeId: user.id,
+          },
+        ],
+      };
+
+  const tasks = await prisma.projectTask.findMany({
+    where: {
+      projectId,
+      ...whereInput,
+    },
+  });
+
+  const serialisableTasks = tasks.map((task) => ({
+    ...task,
+    deadline: task.deadline.toISOString(),
+  }));
+
   return {
     props: {
       session,
       user,
-      project: JSON.parse(JSON.stringify(project)),
+      project,
+      tasks: serialisableTasks,
     },
   };
 }

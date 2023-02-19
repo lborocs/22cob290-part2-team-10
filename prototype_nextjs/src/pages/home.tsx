@@ -16,26 +16,29 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
+import TextField, { type TextFieldProps } from '@mui/material/TextField';
 import DialogActions from '@mui/material/DialogActions';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import dayjs, { Dayjs } from 'dayjs';
+import { type Dayjs } from 'dayjs';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import prisma from '~/lib/prisma';
 import { SidebarType } from '~/components/Layout';
-import DropTarget from '~/components/UserDropTarget';
+import DropTarget from '~/components/home/UserDropTarget';
 import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
+import type { CreateUserTaskResponse } from '~/pages/api/user/task/create-user-task';
 
 import styles from '~/styles/home.module.css';
 
-const HomePage: AppPage<
-  InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ user, userTodoList }) => {
+type SsrProps = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+export type UserTask = Omit<SsrProps['todoList'][number], 'userId'>;
+
+const HomePage: AppPage<SsrProps> = ({ user, todoList }) => {
   const [open, setOpen] = useState(false);
   const [titleTask, setTitle] = useState('');
   const [descriptionTask, setDescription] = useState('');
@@ -43,9 +46,9 @@ const HomePage: AppPage<
   const tagList = tags.split(',');
 
   const [stage, setStage] = useState('');
-  const [tasks, setTasks] = useState<any[]>(userTodoList[0].todoList);
+  const [tasks, setTasks] = useState<UserTask[]>(todoList);
 
-  const [deadlineTask, setDeadline] = useState<Dayjs | null>(null);
+  const [deadline, setDeadline] = useState<Dayjs | null>(null);
 
   const handleClose = () => {
     setOpen(false);
@@ -64,7 +67,7 @@ const HomePage: AppPage<
     if (
       titleTask.length == 0 ||
       descriptionTask.length == 0 ||
-      deadlineTask == null
+      deadline == null
     ) {
       return;
     }
@@ -76,45 +79,42 @@ const HomePage: AppPage<
     e.preventDefault();
 
     try {
-      await fetch('/api/user/task/create-user-task', {
+      const data = (await fetch('/api/user/task/create-user-task', {
         method: 'POST',
-        headers: { 'Content-Type': 'JSON' },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           userid: user.id,
           stage,
           title: titleTask,
           description: descriptionTask,
-          deadline: dayjs(deadlineTask).toDate(),
-          tags:
-            {
-              connectOrCreate: tagList.map((tag) => ({
-                where: { name: tag },
-                create: { name: tag },
-              })),
-            } || undefined,
+          deadline: deadline!.toDate(),
+          tags: {
+            connectOrCreate: tagList.map((tag) => ({
+              where: { name: tag },
+              create: { name: tag },
+            })),
+          },
         }),
-      }).then((response) =>
-        response.json().then((data) => {
-          setTasks([
-            ...tasks,
-            {
-              id: data.id,
-              title: data.title,
-              description: data.description,
-              tags: data.tags,
-              deadline: data.deadline,
-              stage: data.stage,
-            },
-          ]);
-        })
-      );
+      }).then((response) => response.json())) as CreateUserTaskResponse;
+
+      setTasks((tasks) => [
+        ...tasks,
+        {
+          id: data.id,
+          title: data.title,
+          description: data.description,
+          tags: data.tags,
+          deadline: data.deadline,
+          stage: data.stage,
+        },
+      ]);
     } catch (error) {
       console.error(error);
     }
   };
 
   return (
-    <main>
+    <>
       <Head>
         <title>Home - Make-It-All</title>
       </Head>
@@ -157,7 +157,7 @@ const HomePage: AppPage<
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateTimePicker
               label="Pick Deadline"
-              value={deadlineTask}
+              value={deadline}
               onChange={(newValue: Dayjs | null) => {
                 setDeadline(newValue);
               }}
@@ -183,7 +183,7 @@ const HomePage: AppPage<
         </DialogActions>
       </Dialog>
 
-      <Container className={styles.content}>
+      <Container className={styles.content} component="main">
         <Box sx={{ fontWeight: 'bold' }}>
           <Typography variant="h4" component="div">
             HOME
@@ -279,7 +279,7 @@ const HomePage: AppPage<
           </Grid>
         </Grid>
       </Container>
-    </main>
+    </>
   );
 };
 
@@ -302,21 +302,27 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const user = session.user as SessionUser;
 
-  // TODO: get their todo list from prisma
-  const userTodoList = await prisma.user.findMany({
-    where: {
-      id: user.id,
-    },
-    include: {
-      todoList: true,
-    },
-  });
+  const todoList = await prisma.user
+    .findUniqueOrThrow({
+      where: {
+        id: user.id,
+      },
+      select: {
+        todoList: true,
+      },
+    })
+    .todoList();
+
+  const serializableTodoList = todoList.map((task) => ({
+    ...task,
+    deadline: task.deadline.toISOString(),
+  }));
 
   return {
     props: {
       session,
       user,
-      userTodoList: JSON.parse(JSON.stringify(userTodoList)),
+      todoList: serializableTodoList,
     },
   };
 }

@@ -1,4 +1,7 @@
-import type { GetServerSidePropsContext, InferGetServerSidePropsType } from 'next';
+import type {
+  GetServerSidePropsContext,
+  InferGetServerSidePropsType,
+} from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { unstable_getServerSession } from 'next-auth/next';
@@ -16,7 +19,9 @@ ers can keep track of the progression of the project they are responsible for."
 */
 
 // TODO: DashboardPage
-const DashboardPage: AppPage<InferGetServerSidePropsType<typeof getServerSideProps>> = ({ }) => {
+const DashboardPage: AppPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({}) => {
   // TODO: new project button if manager
 
   return (
@@ -37,7 +42,11 @@ DashboardPage.layout = {
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await unstable_getServerSession(context.req, context.res, authOptions);
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
 
   if (!session || !session.user) {
     return { notFound: true };

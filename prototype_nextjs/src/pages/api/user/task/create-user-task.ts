@@ -1,12 +1,19 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import type { UserTask } from '@prisma/client';
 
 import prisma from '~/lib/prisma';
 
+export type CreateUserTaskResponse = Omit<UserTask, 'deadline'> & {
+  tags: string[];
+} & {
+  deadline: string;
+};
+
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse<CreateUserTaskResponse>
 ) {
-  const data = JSON.parse(req.body);
+  const data = req.body;
 
   const createUserTask = await prisma.userTask.create({
     data: {
@@ -21,7 +28,14 @@ export default async function handler(
       deadline: data.deadline,
       tags: data.tags,
     },
+    include: {
+      tags: true,
+    },
   });
 
-  res.json(createUserTask);
+  res.json({
+    ...createUserTask,
+    deadline: createUserTask.deadline.toISOString(),
+    tags: createUserTask.tags.map((tag) => tag.name),
+  });
 }

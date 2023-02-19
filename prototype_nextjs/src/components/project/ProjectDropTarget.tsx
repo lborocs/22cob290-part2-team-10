@@ -1,14 +1,16 @@
 import Card from '@mui/material/Card';
+import { useDrop } from 'react-dnd';
+import dayjs from 'dayjs';
 
 import { ItemTypes } from '~/types';
-import Task from '~/components/ProjectTask';
+import Task from '~/components/project/ProjectTask';
+import type { ProjectTask } from '~/pages/projects/[id]';
 
 import styles from '~/styles/home.module.css';
-import { useDrop } from 'react-dnd';
 
 interface Props {
-  tasks: any[];
-  setTasks: React.Dispatch<React.SetStateAction<any[]>>;
+  tasks: ProjectTask[];
+  setTasks: React.Dispatch<React.SetStateAction<ProjectTask[]>>;
   stage: string;
 }
 
@@ -60,8 +62,7 @@ export default function DropTarget({ tasks, setTasks, stage }: Props) {
               id={card.id}
               title={card.title}
               description={card.description}
-              deadline={card.deadline}
-              tasks={tasks}
+              deadline={dayjs(card.deadline)}
               setTasks={setTasks}
             />
           ))}

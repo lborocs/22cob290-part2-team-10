@@ -5,20 +5,20 @@ import CardActions from '@mui/material/CardActions';
 import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
+import { type Dayjs } from 'dayjs';
+import { useDrag } from 'react-dnd';
 
 import { ItemTypes } from '~/types';
+import type { UserTask } from '~/pages/home';
 
 import styles from '~/styles/home.module.css';
-import dayjs, { Dayjs } from 'dayjs';
-import { useDrag } from 'react-dnd';
 
 interface Props {
   id: number;
   title: string;
   description: string;
   deadline: Dayjs;
-  tasks: any[];
-  setTasks: React.Dispatch<React.SetStateAction<any[]>>;
+  setTasks: React.Dispatch<React.SetStateAction<UserTask[]>>;
 }
 
 export default function Task({
@@ -26,7 +26,6 @@ export default function Task({
   title,
   description,
   deadline,
-  tasks,
   setTasks,
 }: Props) {
   const [{ isDragging }, drag] = useDrag({
@@ -39,14 +38,14 @@ export default function Task({
 
   async function handleDel(id: number) {
     try {
-      await fetch('/api/project/delete-project-task', {
+      await fetch('/api/user/task/delete-task', {
         method: 'DELETE',
         body: JSON.stringify({ id }),
       });
     } catch (error) {
       console.error(error);
     }
-    setTasks(tasks.filter((task) => task.id !== id));
+    setTasks((tasks) => tasks.filter((task) => task.id !== id));
   }
 
   return (
@@ -72,7 +71,7 @@ export default function Task({
       </CardContent>
       <CardActions>
         <Typography className={styles.deadline}>
-          Deadline: {dayjs(deadline).format('hh:mma DD/MM/YYYY')}
+          Deadline: {deadline.format('hh:mma DD/MM/YYYY')}
         </Typography>
       </CardActions>
     </Card>

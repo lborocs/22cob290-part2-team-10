@@ -2,13 +2,15 @@ import { useDrop } from 'react-dnd';
 import Card from '@mui/material/Card';
 
 import { ItemTypes } from '~/types';
+import type { UserTask } from '~/pages/home';
+import Task from '~/components/home/UserTask';
 
-import Task from '~/components/UserTask';
 import styles from '~/styles/home.module.css';
+import dayjs from 'dayjs';
 
 interface Props {
-  tasks: any[];
-  setTasks: React.Dispatch<React.SetStateAction<any[]>>;
+  tasks: UserTask[];
+  setTasks: React.Dispatch<React.SetStateAction<UserTask[]>>;
   stage: string;
 }
 
@@ -60,8 +62,7 @@ export default function DropTarget({ tasks, setTasks, stage }: Props) {
               id={card.id}
               title={card.title}
               description={card.description}
-              deadline={card.deadline}
-              tasks={tasks}
+              deadline={dayjs(card.deadline)}
               setTasks={setTasks}
             />
           ))}
