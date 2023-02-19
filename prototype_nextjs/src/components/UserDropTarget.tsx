@@ -5,6 +5,7 @@ import { ItemTypes } from '~/types';
 
 import Task from '~/components/UserTask';
 import styles from '~/styles/home.module.css';
+import Button from '@mui/material/Button';
 
 interface Props {
   tasks: any[];
@@ -35,10 +36,11 @@ export default function DropTarget({ tasks, setTasks, stage }: Props) {
 
   async function changeStage(id: number) {
     try {
-      await fetch('/api/user/task/change-state', {
+      console.log(id, stage);
+      await fetch('/api/user/task/change-stage', {
         method: 'PUT',
-        headers: { 'Content-Type': 'JSON' },
-        body: JSON.stringify({ stage, id }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, stage }),
       });
     } catch (error) {
       console.error(error);

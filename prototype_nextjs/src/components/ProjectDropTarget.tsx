@@ -19,7 +19,9 @@ interface Item {
 export default function DropTarget({ tasks, setTasks, stage }: Props) {
   const [{ isOver }, drop] = useDrop({
     accept: ItemTypes.TASK,
-    drop: (item: Item) => changeSection(item.id),
+    drop: (item: Item) => {
+      changeSection(item.id), changeStage(item.id);
+    },
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
     }),
@@ -30,6 +32,18 @@ export default function DropTarget({ tasks, setTasks, stage }: Props) {
     card[0].stage = stage;
     setTasks((tasks) => [...tasks]);
   };
+
+  async function changeStage(id: number) {
+    try {
+      await fetch('/api/projects/change-task-stage', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, stage }),
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <Card
@@ -48,6 +62,8 @@ export default function DropTarget({ tasks, setTasks, stage }: Props) {
               description={card.description}
               tags={card.tags}
               deadline={card.deadline}
+              tasks={tasks}
+              setTasks={setTasks}
             />
           ))}
       </div>
