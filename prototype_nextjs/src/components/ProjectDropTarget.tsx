@@ -60,7 +60,6 @@ export default function DropTarget({ tasks, setTasks, stage }: Props) {
               id={card.id}
               title={card.title}
               description={card.description}
-              tags={card.tags}
               deadline={card.deadline}
               tasks={tasks}
               setTasks={setTasks}

@@ -16,7 +16,6 @@ interface Props {
   id: number;
   title: string;
   description: string;
-  tags: string[];
   deadline: Dayjs;
   tasks: any[];
   setTasks: React.Dispatch<React.SetStateAction<any[]>>;
@@ -26,7 +25,6 @@ export default function Task({
   id,
   title,
   description,
-  tags,
   deadline,
   tasks,
   setTasks,
@@ -58,9 +56,9 @@ export default function Task({
       style={{ opacity: isDragging ? 0.5 : 1 }}
     >
       <CardHeader
-        className={styles.taskheader}
-        titleTypographyProps={{ fontSize: 16, fontWeight: 'bold' }}
-        title={tags == null ? tags : tags.join(' ')}
+        className={styles.tasktitle}
+        titleTypographyProps={{ fontSize: 20.8, fontWeight: 'bold' }}
+        title={title}
         action={
           <IconButton aria-label="delete" onClick={() => handleDel(id)}>
             <DeleteIcon />
@@ -68,7 +66,6 @@ export default function Task({
         }
       />
       <CardContent>
-        <Typography className={styles.tasktitle}>{title}</Typography>
         <div className={styles.taskscroll}>
           <Typography className={styles.taskcontent}>{description}</Typography>
         </div>

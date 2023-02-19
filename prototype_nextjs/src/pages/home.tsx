@@ -64,7 +64,6 @@ const HomePage: AppPage<
     if (
       titleTask.length == 0 ||
       descriptionTask.length == 0 ||
-      tags.length == 0 ||
       deadlineTask == null
     ) {
       return;
@@ -86,12 +85,13 @@ const HomePage: AppPage<
           title: titleTask,
           description: descriptionTask,
           deadline: dayjs(deadlineTask).toDate(),
-          tags: {
-            connectOrCreate: tagList.map((tag) => ({
-              where: { name: tag },
-              create: { name: tag },
-            })),
-          },
+          tags:
+            {
+              connectOrCreate: tagList.map((tag) => ({
+                where: { name: tag },
+                create: { name: tag },
+              })),
+            } || undefined,
         }),
       }).then((response) =>
         response.json().then((data) => {
@@ -151,6 +151,7 @@ const HomePage: AppPage<
             fullWidth
             variant="outlined"
             margin="normal"
+            placeholder="Separate by commas"
           />
 
           <LocalizationProvider dateAdapter={AdapterDayjs}>
