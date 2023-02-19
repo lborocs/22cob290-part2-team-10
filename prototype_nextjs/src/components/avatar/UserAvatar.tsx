@@ -26,6 +26,7 @@ export default function UserAvatar({
         {
           width: size,
           height: size,
+          display: 'inline-flex',
         },
         // https://mui.com/system/getting-started/the-sx-prop/#passing-the-sx-prop
         ...(Array.isArray(sx) ? sx : [sx]),

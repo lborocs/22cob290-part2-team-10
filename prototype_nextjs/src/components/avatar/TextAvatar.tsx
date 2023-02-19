@@ -36,6 +36,7 @@ export default forwardRef(function TextAvatar(
           bgcolor: textAvatar?.['avatar-bg'],
           color: textAvatar?.['avatar-fg'],
           fontSize: 'large',
+          display: 'inline-flex',
         },
         // https://mui.com/system/getting-started/the-sx-prop/#passing-the-sx-prop
         ...(Array.isArray(sx) ? sx : [sx]),

@@ -38,7 +38,7 @@ const AuthorsPage: AppPage<
           paddingTop: '1.8px',
           fontWeight: 'bold',
           [theme.getColorSchemeSelector('dark')]: {
-            bgcolor: blue['500'],
+            bgcolor: blue['700'],
           },
         })}
       >

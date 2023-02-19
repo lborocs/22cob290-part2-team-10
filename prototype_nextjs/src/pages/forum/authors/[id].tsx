@@ -20,7 +20,7 @@ import UserAvatar from '~/components/avatar/UserAvatar';
 
 const AuthorPage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ authorInfo, post, postHistory, postTopic }) => {
+> = ({ authorInfo, post, postHistory }) => {
   const pageTitle = `${authorInfo.name} - Make-It-All`;
 
   /*  I would like to aplogise in advance for the amount of in document CSS,
@@ -47,7 +47,6 @@ const AuthorPage: AppPage<
   const summaryTextStyle: CSSProperties = {
     paddingInline: '15px',
     fontWeight: 'normal',
-    // color: 'black',
   };
   const postContentStyle: CSSProperties = {
     paddingInline: '15px',
@@ -218,8 +217,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   });
 
-  const postTopic = await prisma.postTopic.findMany();
-
   return {
     props: {
       session,
@@ -227,7 +224,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       authorInfo,
       post,
       postHistory,
-      postTopic,
     },
   };
 }
