@@ -35,14 +35,10 @@ export default function DropTarget({ tasks, setTasks, stage }: Props) {
 
   async function changeStage(id: number) {
     try {
-      console.log(id, stage);
       await fetch('/api/user/task/change-state', {
         method: 'PUT',
-        headers: { 'Content-Type': 'json' },
-        body: JSON.stringify({
-          stage,
-          id,
-        }),
+        headers: { 'Content-Type': 'JSON' },
+        body: JSON.stringify({ stage, id }),
       });
     } catch (error) {
       console.error(error);

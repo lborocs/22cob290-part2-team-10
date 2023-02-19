@@ -8,7 +8,6 @@ import { unstable_getServerSession } from 'next-auth/next';
 
 import hashids from '~/lib/hashids';
 import prisma from '~/lib/prisma';
-import ErrorPage from '~/components/ErrorPage';
 import { SidebarType } from '~/components/Layout';
 import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
@@ -18,8 +17,6 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
-import CardActions from '@mui/material/CardActions';
-import Button from '@mui/material/Button';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
@@ -32,11 +29,10 @@ const ProjectPage: AppPage<
 > = ({ project }) => {
   // TODO: error page if no project with provided ID exists
   // TODO: error page if they can't access this project
-  if (!project) {
-    return <ErrorPage buttonUrl="" title="Project not found" />;
-  }
 
-  const pageTitle = project.name;
+  const pageTitle = `${project.name} - Make-It-All`;
+
+  const [tasks, setTasks] = useState(project.tasks);
 
   return (
     <main>
@@ -64,7 +60,13 @@ const ProjectPage: AppPage<
                 titleTypographyProps={{ fontSize: 20 }}
                 title="To Do"
               />
-              <DndProvider backend={HTML5Backend}></DndProvider>
+              <DndProvider backend={HTML5Backend}>
+                <DropTarget
+                  tasks={project.tasks}
+                  setTasks={setTasks}
+                  stage="TODO"
+                />
+              </DndProvider>
             </Card>
           </Grid>
 
@@ -74,7 +76,13 @@ const ProjectPage: AppPage<
                 titleTypographyProps={{ fontSize: 20 }}
                 title="In Progress"
               />
-              <DndProvider backend={HTML5Backend}></DndProvider>
+              <DndProvider backend={HTML5Backend}>
+                <DropTarget
+                  tasks={project.tasks}
+                  setTasks={setTasks}
+                  stage="IN_PROGRESS"
+                />
+              </DndProvider>
             </Card>
           </Grid>
 
@@ -84,7 +92,13 @@ const ProjectPage: AppPage<
                 titleTypographyProps={{ fontSize: 20 }}
                 title="Code Review"
               />
-              <DndProvider backend={HTML5Backend}></DndProvider>
+              <DndProvider backend={HTML5Backend}>
+                <DropTarget
+                  tasks={project.tasks}
+                  setTasks={setTasks}
+                  stage="CODE_REVIEW"
+                />
+              </DndProvider>
             </Card>
           </Grid>
 
@@ -94,7 +108,13 @@ const ProjectPage: AppPage<
                 titleTypographyProps={{ fontSize: 20 }}
                 title="Completed"
               />
-              <DndProvider backend={HTML5Backend}></DndProvider>
+              <DndProvider backend={HTML5Backend}>
+                <DropTarget
+                  tasks={project.tasks}
+                  setTasks={setTasks}
+                  stage="COMPLETED"
+                />
+              </DndProvider>
             </Card>
           </Grid>
         </Grid>
@@ -127,20 +147,30 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const projectId = decodedId[0] as number | undefined;
 
+  if (!projectId) {
+    return { notFound: true };
+  }
+
   const project = await prisma.project.findUnique({
-    where: {
-      id: projectId, // provide the required id argument here
-    },
-    select: {
-      tasks: {},
+    where: { id: projectId },
+    include: {
+      tasks: {
+        where: {
+          permitted: { some: { id: user.id } },
+        },
+      },
     },
   });
+
+  if (!project) {
+    return { notFound: true };
+  }
 
   return {
     props: {
       session,
       user,
-      project,
+      project: JSON.parse(JSON.stringify(project)),
     },
   };
 }

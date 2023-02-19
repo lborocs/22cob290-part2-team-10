@@ -3,7 +3,7 @@ import Card from '@mui/material/Card';
 
 import { ItemTypes } from '~/types';
 
-import Task from '~/components/UserTask';
+import Task from '~/components/ProjectTask';
 import styles from '~/styles/home.module.css';
 
 interface Props {
