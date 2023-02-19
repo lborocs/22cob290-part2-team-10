@@ -46,7 +46,7 @@ const columns: readonly Column[] = [
   },
   {
     id: 'deadline',
-    label: 'deadline',
+    label: ' Project Deadline',
     minWidth: 170,
     align: 'right',
     format: (value: number) => value.toLocaleString('en-US'),
