@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
@@ -30,11 +30,14 @@ type SsrProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 export type ProjectTask = SsrProps['tasks'][number];
 
-const ProjectPage: AppPage<SsrProps> = ({ project, tasks: initialTasks }) => {
+const ProjectPage: AppPage<SsrProps> = ({ project, tasks: _tasks }) => {
   const pageTitle = `${project.name} - Make-It-All`;
 
-  const [tasks, setTasks] = useState(initialTasks);
-  // console.log('tasks =', tasks);
+  const [tasks, setTasks] = useState(_tasks);
+
+  useEffect(() => {
+    setTasks(_tasks);
+  }, [_tasks]);
 
   return (
     <main>
