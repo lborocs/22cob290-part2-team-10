@@ -492,12 +492,13 @@ async function makeRandomPost(
 async function main() {
   console.log('Start seeding ...');
 
+  // https://www.prisma.io/docs/concepts/components/prisma-client/transactions#interactive-transactions
   await prisma.$transaction(
-    async () => {
+    async (tx) => {
       // users
 
       for (const u of await getUserData()) {
-        const user = await prisma.user.create({
+        const user = await tx.user.create({
           data: u,
         });
 
@@ -511,7 +512,7 @@ async function main() {
       // random users + random posts
       for (const i of range(5)) {
         const data = await makeRandomUser();
-        const user = await prisma.user.create({
+        const user = await tx.user.create({
           data,
           include: {
             _count: {
@@ -531,7 +532,7 @@ async function main() {
       // projects
 
       for (const p of projectData) {
-        const project = await prisma.project.create({
+        const project = await tx.project.create({
           data: p,
         });
 
@@ -543,7 +544,7 @@ async function main() {
       console.log();
 
       for (const t of taskData) {
-        const projectTask = await prisma.projectTask.create({
+        const projectTask = await tx.projectTask.create({
           data: t,
           include: {
             project: {
@@ -577,7 +578,7 @@ async function main() {
       // forum
 
       for (const p of postData) {
-        const post = await prisma.post.create({
+        const post = await tx.post.create({
           data: p,
           include: {
             author: {
