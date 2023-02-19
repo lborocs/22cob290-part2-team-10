@@ -5,8 +5,6 @@ import type {
 } from 'next';
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
-import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 
@@ -15,12 +13,9 @@ import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import prisma from '~/lib/prisma';
 import { NextLinkComposed } from '~/components/Link';
-import Searchbar from './dashboardcomp/Searchbar';
 import ProjectTable from './dashboardcomp/ProjectTable';
-import BasicCard, { type BasicCardProps } from './dashboardcomp/GenericCard';
 import useUserStore from '~/store/userStore';
 import { Prisma } from '@prisma/client';
-import { Task } from '@mui/icons-material';
 
 /*
 "There should also be a manager’s dashboard so that the managers or team lead‐
@@ -30,20 +25,8 @@ ers can keep track of the progression of the project they are responsible for."
 
 const DashboardPage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ projects }) => {
+> = ({ projects_ }) => {
   const isManager = useUserStore((store) => store.user.isManager);
-  // const [loading, tasks]
-
-  // const data: BasicCardProps['data'] = [
-  //   {
-  //     title: 'Average Hours per Task',
-  //     ,
-  //   },
-  //   // {
-  //   //   title: 'Number of tasks',
-  //   //   description: '10',
-  //   // },
-  // ];
 
   //Gets sum of all tasks using card and returns sum of tasks
   function getTasks() {
@@ -57,7 +40,7 @@ const DashboardPage: AppPage<
       </Head>
       <div></div>
       <div>
-        <ProjectTable projects={projects} />
+        <ProjectTable projects={projects_} />
         {isManager && (
           <Button
             variant="contained"
@@ -72,12 +55,6 @@ const DashboardPage: AppPage<
           </Button>
         )}
       </div>
-      <Box className="flex flex-col">
-        <br></br>
-
-        <BasicCard title={'My Tasks'} total={45} completed={23} />
-        <BasicCard title={'Manhours'} total={35} completed={20} />
-      </Box>
     </main>
   );
 };
@@ -108,6 +85,7 @@ export const getServerSideProps = (async (context) => {
       tasks: {
         select: {
           stage: true,
+          deadline: true,
         },
       },
     },
@@ -128,11 +106,32 @@ export const getServerSideProps = (async (context) => {
     });
   }
 
+  const projects_ = projects.map((data) => {
+    return {
+      id: data.id,
+      leader: data.leader,
+      leaderId: data.leaderId,
+      name: data.name,
+      members: data.members,
+      nooftasks: data.tasks.length,
+      completedtasks: data.tasks.reduce(
+        (n, task) => (task.stage === 'COMPLETED' ? n + 1 : n),
+        0
+      ),
+      deadline: data.tasks
+        .reduce((date, task) => {
+          const taskdate = new Date(task.deadline);
+          return date > taskdate ? date : taskdate;
+        }, new Date('30/12/9999'))
+        .toDateString(),
+    };
+  });
+
   return {
     props: {
       session,
       user,
-      projects,
+      projects_,
     },
   };
 }) satisfies GetServerSideProps;

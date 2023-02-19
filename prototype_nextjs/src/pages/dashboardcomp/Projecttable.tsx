@@ -24,14 +24,6 @@ interface Column {
 
 const columns: readonly Column[] = [
   { id: 'projectName', label: 'Project Name', minWidth: 170 },
-  //{ id: 'tasks', label: 'tasks', minWidth: 100 },
-  // {
-  //   id: 'deadline',
-  //   label: 'deadline',
-  //   minWidth: 170,
-  //   align: 'right',
-  //   format: (value: number) => value.toLocaleString('en-US'),
-  // },
   {
     id: 'projectLeader',
     label: 'Project Leader',
@@ -52,13 +44,13 @@ const columns: readonly Column[] = [
     align: 'right',
     format: (value: number) => value.toLocaleString('en-US'),
   },
-  // {
-  //   id: 'daysleft',
-  //   label: 'days left',
-  //   minWidth: 170,
-  //   align: 'right',
-  //   format: (value: number) => value.toFixed(2),
-  // },
+  {
+    id: 'deadline',
+    label: 'deadline',
+    minWidth: 170,
+    align: 'right',
+    format: (value: number) => value.toLocaleString('en-US'),
+  },
 ];
 
 interface Data {
@@ -68,6 +60,7 @@ interface Data {
   projectProgress: `${number} / ${number}`;
   // projectProgress: string;
   noOfTasks: number;
+  deadline: string;
 }
 
 function createData(
@@ -75,37 +68,37 @@ function createData(
   projectName: Data['projectName'],
   projectLeader: Data['projectLeader'],
   projectProgress: Data['projectProgress'],
-  noOfTasks: Data['noOfTasks']
+  noOfTasks: Data['noOfTasks'],
+  deadline: Data['deadline']
 ): Data {
-  return { projectId, projectName, projectLeader, projectProgress, noOfTasks };
+  return {
+    projectId,
+    projectName,
+    projectLeader,
+    projectProgress,
+    noOfTasks,
+    deadline,
+  };
 }
 
 type Project = InferGetServerSidePropsType<
   typeof getServerSideProps
->['projects'][number];
+>['projects_'][number];
 
 export type ProjectTableProps = {
   projects: Project[];
 };
 
-function getProjectProgress(project: Project): Data['projectProgress'] {
-  const total = project.tasks.length;
-
-  const completed = project.tasks.filter(
-    (task) => task.stage === 'COMPLETED'
-  ).length;
-
-  return `${completed} / ${total}`;
-}
-
 export default function ProjectTable({ projects }: ProjectTableProps) {
+  console.log(projects);
   const rows: Data[] = projects.map((project) =>
     createData(
       project.id,
       project.name,
       project.leader.name,
-      getProjectProgress(project),
-      project.tasks.length
+      `${project.completedtasks} / ${project.nooftasks}`,
+      project.nooftasks,
+      project.deadline == 'Invalid Date' ? 'N/A' : project.deadline
     )
   );
 
