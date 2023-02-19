@@ -32,12 +32,23 @@ const AddProjectPage: AppPage<
 
   async function addProject(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
     const response = await fetch('/api/projects/add-projects', {
       method: 'POST',
       body: JSON.stringify(formData),
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
-    window.location.reload();
-    return await response.json();
+
+    if (response.ok) {
+      const { message } = await response.json();
+
+      setFormData({ name: '', leaderId: '' });
+      window.location.reload();
+    } else {
+      alert('Failed to add project');
+    }
   }
 
   return (
@@ -58,6 +69,7 @@ const AddProjectPage: AppPage<
             label="Project title"
             type="text"
             name="name"
+            value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           />
         </div>
@@ -76,17 +88,18 @@ const AddProjectPage: AppPage<
                 id="leader_select"
               />
             )}
+            value={users.find((user) => user.id === formData.leaderId)}
             onChange={(e, value) =>
               setFormData({ ...formData, leaderId: value ? value.id : '' })
             }
           />
         </div>
-        <br></br>
+        <br />
         <Button variant="contained" type="submit">
           Add project
         </Button>
       </form>
-      <br></br>
+      <br />
 
       <h2>Projects:</h2>
       <List>
