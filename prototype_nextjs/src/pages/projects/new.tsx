@@ -10,7 +10,6 @@ import { SidebarType } from '~/components/Layout';
 import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
-import { PrismaClient } from '@prisma/client';
 import prisma from '~/lib/prisma';
 
 import { useState } from 'react';
@@ -45,7 +44,7 @@ const AddProjectPage: AppPage<
     });
 
     if (response.ok) {
-      const { message } = await response.json();
+      await response.json();
 
       setFormData({ name: '', leaderId: '' });
       window.location.reload();
@@ -109,9 +108,9 @@ const AddProjectPage: AppPage<
           <ListItem disablePadding key={item.id}>
             <ListItemButton
               component="a"
-              href={'/projects/' + hashids.encode(item.id) + '/overview'}
+              href={`/projects/${hashids.encode(item.id)}/overview`}
             >
-              <ListItemText primary={item.name + ' - ' + item.leader.name} />
+              <ListItemText primary={`${item.name} - ${item.leader.name}`} />
             </ListItemButton>
           </ListItem>
         ))}

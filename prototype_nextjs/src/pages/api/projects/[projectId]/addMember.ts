@@ -1,7 +1,6 @@
-import { PrismaClient } from '@prisma/client';
 import prisma from '~/lib/prisma';
 
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 interface AddMemberRequestBody {
   memberId: string;

@@ -7,7 +7,6 @@ import { unstable_getServerSession } from 'next-auth/next';
 
 import hashids from '~/lib/hashids';
 import prisma from '~/lib/prisma';
-import ErrorPage from '~/components/ErrorPage';
 import { SidebarType } from '~/components/Layout';
 import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
@@ -20,19 +19,18 @@ import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
 import Autocomplete from '@mui/material/Autocomplete';
 
-// TODO: project page (Projects page from before)
 const OverviewPage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ project, users, usersInProject }) => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<any>({
     newLeader: null,
   });
-  const pageTitle = `${project?.name ?? 'Project'}`;
+
   const [title, setTitle] = useState(project.name);
 
   const router = useRouter();
 
-  async function addMemberToProject(e: { preventDefault: () => void }) {
+  async function addMemberToProject(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const { memberId, leaderId } = formData;
     const response = await fetch(`/api/projects/${project.id}/addMember`, {
@@ -114,10 +112,12 @@ const OverviewPage: AppPage<
     }
   }
 
+  const pageTitle = `${project.name} - Make-It-All`;
+
   return (
     <main>
       <Head>
-        <title>{pageTitle} - Make-It-All</title>
+        <title>{pageTitle}</title>
       </Head>
 
       <h1>
@@ -135,7 +135,7 @@ const OverviewPage: AppPage<
           </p>
         </div>
       ))}
-      <br></br>
+      <br />
       <h2>Edit project:</h2>
       <form onSubmit={updateProjectTitle}>
         <TextField
@@ -172,7 +172,7 @@ const OverviewPage: AppPage<
           />
         </div>
 
-        <br></br>
+        <br />
         <Button variant="contained" type="submit">
           Add employee
         </Button>
@@ -200,7 +200,7 @@ const OverviewPage: AppPage<
           Change leader
         </Button>
       </form>
-      <br></br>
+      <br />
 
       <Button variant="contained" color="secondary" onClick={deleteProject}>
         Delete Project
