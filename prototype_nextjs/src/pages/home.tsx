@@ -18,22 +18,21 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import TextField, { TextFieldProps } from '@mui/material/TextField';
 import DialogActions from '@mui/material/DialogActions';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import dayjs, { Dayjs } from 'dayjs';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import prisma from '~/lib/prisma';
 import { SidebarType } from '~/components/Layout';
+import DropTarget from '~/components/UserDropTarget';
 import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
 import styles from '~/styles/home.module.css';
-import DropTarget from '~/components/UserDropTarget';
 
-// TODO: HomePage
 const HomePage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ user, userTodoList }) => {
@@ -87,7 +86,12 @@ const HomePage: AppPage<
           title: titleTask,
           description: descriptionTask,
           deadline: dayjs(deadlineTask).toDate(),
-          tags: undefined,
+          tags: {
+            connectOrCreate: tagList.map((tag) => ({
+              where: { name: tag },
+              create: { name: tag },
+            })),
+          },
         }),
       }).then((response) =>
         response.json().then((data) => {
@@ -97,7 +101,7 @@ const HomePage: AppPage<
               id: data.id,
               title: data.title,
               description: data.description,
-              tags: [],
+              tags: data.tags,
               deadline: data.deadline,
               stage: data.stage,
             },

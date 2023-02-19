@@ -1,10 +1,10 @@
-import { useDrop } from 'react-dnd';
 import Card from '@mui/material/Card';
 
 import { ItemTypes } from '~/types';
-
 import Task from '~/components/ProjectTask';
+
 import styles from '~/styles/home.module.css';
+import { useDrop } from 'react-dnd';
 
 interface Props {
   tasks: any[];
@@ -49,7 +49,7 @@ export default function DropTarget({ tasks, setTasks, stage }: Props) {
     <Card
       ref={drop}
       className={styles.cardcontent}
-      style={{ border: isOver ? '1px solid red' : '0px solid gray' }}
+      style={{ border: isOver ? '1px solid #e2ba39' : '0px solid gray' }}
     >
       <div className={styles.scroll}>
         {tasks

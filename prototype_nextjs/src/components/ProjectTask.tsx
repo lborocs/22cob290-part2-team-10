@@ -1,4 +1,3 @@
-import { useDrag } from 'react-dnd';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -6,11 +5,12 @@ import CardActions from '@mui/material/CardActions';
 import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
-import dayjs, { Dayjs } from 'dayjs';
 
 import { ItemTypes } from '~/types';
 
 import styles from '~/styles/home.module.css';
+import dayjs, { Dayjs } from 'dayjs';
+import { useDrag } from 'react-dnd';
 
 interface Props {
   id: number;
@@ -60,13 +60,7 @@ export default function Task({
       <CardHeader
         className={styles.taskheader}
         titleTypographyProps={{ fontSize: 16, fontWeight: 'bold' }}
-        title={
-          tags == null
-            ? tags
-            : /* Maybe get rid of this, not getting tags from db */ tags.join(
-                ' '
-              )
-        }
+        title={tags == null ? tags : tags.join(' ')}
         action={
           <IconButton aria-label="delete" onClick={() => handleDel(id)}>
             <DeleteIcon />
@@ -80,8 +74,8 @@ export default function Task({
         </div>
       </CardContent>
       <CardActions>
-        <Typography>
-          Deadline: {dayjs(deadline).format('HH:mm DD/MM/YYYY')}
+        <Typography className={styles.deadline}>
+          Deadline: {dayjs(deadline).format('hh:mma DD/MM/YYYY')}
         </Typography>
       </CardActions>
     </Card>

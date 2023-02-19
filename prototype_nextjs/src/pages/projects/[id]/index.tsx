@@ -5,31 +5,27 @@ import type {
 } from 'next';
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
-
-import hashids from '~/lib/hashids';
-import prisma from '~/lib/prisma';
-import { SidebarType } from '~/components/Layout';
-import type { AppPage, SessionUser } from '~/types';
-import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
+
+import hashids from '~/lib/hashids';
+import prisma from '~/lib/prisma';
+import { SidebarType } from '~/components/Layout';
+import DropTarget from '~/components/ProjectDropTarget';
+import type { AppPage, SessionUser } from '~/types';
+import { authOptions } from '~/pages/api/auth/[...nextauth]';
+
+import styles from '~/styles/Projects.module.css';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-import styles from '~/styles/Projects.module.css';
-import DropTarget from '~/components/ProjectDropTarget';
-
-// TODO: project page (Projects page from before)
 const ProjectPage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ project }) => {
-  // TODO: error page if no project with provided ID exists
-  // TODO: error page if they can't access this project
-
   const pageTitle = `${project.name} - Make-It-All`;
 
   const [tasks, setTasks] = useState(project.tasks);

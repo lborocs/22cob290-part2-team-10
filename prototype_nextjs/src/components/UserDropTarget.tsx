@@ -5,7 +5,6 @@ import { ItemTypes } from '~/types';
 
 import Task from '~/components/UserTask';
 import styles from '~/styles/home.module.css';
-import Button from '@mui/material/Button';
 
 interface Props {
   tasks: any[];
@@ -36,7 +35,6 @@ export default function DropTarget({ tasks, setTasks, stage }: Props) {
 
   async function changeStage(id: number) {
     try {
-      console.log(id, stage);
       await fetch('/api/user/task/change-stage', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -51,7 +49,7 @@ export default function DropTarget({ tasks, setTasks, stage }: Props) {
     <Card
       ref={drop}
       className={styles.cardcontent}
-      style={{ border: isOver ? '1px solid red' : '0px solid gray' }}
+      style={{ border: isOver ? '1px solid #e2ba39' : '0px solid gray' }}
     >
       <div className={styles.scroll}>
         {tasks
