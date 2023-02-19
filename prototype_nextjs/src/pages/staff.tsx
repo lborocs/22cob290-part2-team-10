@@ -15,12 +15,14 @@ import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import prisma from '~/lib/prisma';
 import { NextLinkComposed } from '~/components/Link';
-import Searchbar from './dashboardcomp/Searchbar';
-import ProjectTable from './dashboardcomp/Projec1tTable';
-import BasicCard, { type BasicCardProps } from './dashboardcomp/GenericCard';
+import Searchbar from '../components/dashboardcomp/Searchbar';
+import ProjectTable from '../components/dashboardcomp/Projec1tTable';
+import BasicCard, {
+  type BasicCardProps,
+} from '../components/dashboardcomp/GenericCard';
 import useUserStore from '~/store/userStore';
 import { Prisma } from '@prisma/client';
-import Stafftable from './staff comp/stafftable';
+import Stafftable from '../components/staff comp/stafftable';
 import updatevalue from './api/user/staffupdate';
 import axios from 'axios';
 

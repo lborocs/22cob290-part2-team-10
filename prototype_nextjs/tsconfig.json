@@ -28,7 +28,7 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx", "src/pages/dashboardcomp/Searchbar.tsx",
+    "**/*.tsx", "src/components/dashboardcomp/Searchbar.tsx",
   ],
   "exclude": [
     "node_modules",

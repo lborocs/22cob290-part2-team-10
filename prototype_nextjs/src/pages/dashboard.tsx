@@ -13,7 +13,7 @@ import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import prisma from '~/lib/prisma';
 import { NextLinkComposed } from '~/components/Link';
-import ProjectTable from './dashboardcomp/ProjectTable';
+import ProjectTable from '../components/dashboardcomp/ProjectTable';
 import useUserStore from '~/store/userStore';
 import { Prisma } from '@prisma/client';
 

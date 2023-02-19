@@ -10,10 +10,9 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 
-import type { getServerSideProps } from '../staff';
+import type { getServerSideProps } from '../../pages/dashboard';
 import hashids from '~/lib/hashids';
-import AlertDialogSlide from './dialog';
-import SearchAppBar from './Search';
+import SearchAppBar from '../staff comp/Search';
 
 interface Column {
   id: keyof Data;
@@ -24,18 +23,30 @@ interface Column {
 }
 
 const columns: readonly Column[] = [
-  { id: 'name', label: 'User Name', minWidth: 170 },
-
+  { id: 'projectName', label: 'Project Name', minWidth: 170 },
   {
-    id: 'email',
-    label: 'User email',
+    id: 'projectLeader',
+    label: 'Project Leader',
     minWidth: 170,
     align: 'right',
     format: (value: number) => value.toLocaleString('en-US'),
   },
   {
-    id: 'leftCompany',
-    label: 'Employee status',
+    id: 'projectProgress',
+    label: 'Project Progress',
+    minWidth: 170,
+    align: 'right',
+    format: (value: number) => value.toLocaleString('en-US'),
+  },
+  {
+    id: 'noOfTasks',
+    label: 'Number of Tasks',
+    align: 'right',
+    format: (value: number) => value.toLocaleString('en-US'),
+  },
+  {
+    id: 'deadline',
+    label: ' Project Deadline',
     minWidth: 170,
     align: 'right',
     format: (value: number) => value.toLocaleString('en-US'),
@@ -43,48 +54,70 @@ const columns: readonly Column[] = [
 ];
 
 interface Data {
-  name: string;
-  email: string;
-  leftCompany: string;
+  projectId: number;
+  projectName: string;
+  projectLeader: string;
+  projectProgress: `${number} / ${number}`;
+  // projectProgress: string;
+  noOfTasks: number;
+  deadline: string;
 }
 
 function createData(
-  name: Data['name'],
-  email: Data['email'],
-  leftCompany: Data['leftCompany']
+  projectId: Data['projectId'],
+  projectName: Data['projectName'],
+  projectLeader: Data['projectLeader'],
+  projectProgress: Data['projectProgress'],
+  noOfTasks: Data['noOfTasks'],
+  deadline: Data['deadline']
 ): Data {
-  return { name, email, leftCompany };
+  return {
+    projectId,
+    projectName,
+    projectLeader,
+    projectProgress,
+    noOfTasks,
+    deadline,
+  };
 }
 
-type User = InferGetServerSidePropsType<
+type Project = InferGetServerSidePropsType<
   typeof getServerSideProps
->['users'][number];
+>['projects_'][number];
 
-export type stafftableProps = {
-  users: User[];
+export type ProjectTableProps = {
+  projects: Project[];
 };
 
-export default function Stafftable({ users }: stafftableProps) {
-  console.log(users);
-  const rows: Data[] = users.map((user) =>
-    createData(user.name, user.email, user.leftCompany ? 'left' : 'not_left')
+export default function ProjectTable({ projects }: ProjectTableProps) {
+  console.log(projects);
+  const rows: Data[] = projects.map((project) =>
+    createData(
+      project.id,
+      project.name,
+      project.leader.name,
+      `${project.completedtasks} / ${project.nooftasks}`,
+      project.nooftasks,
+      project.deadline == 'Invalid Date' ? 'N/A' : project.deadline
+    )
   );
-  console.log('rows =', rows);
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
   const [filteredData, setFilteredData] = useState(rows);
 
   const handlesearch = (searchTerm: string) => {
-    const filtered = rows.filter((user) => {
-      return user.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const filtered = rows.filter((project) => {
+      return project.projectName
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
     });
     setFilteredData(filtered);
-  };
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (
@@ -97,7 +130,6 @@ export default function Stafftable({ users }: stafftableProps) {
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
       <SearchAppBar onSearch={handlesearch} />
-
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -118,15 +150,20 @@ export default function Stafftable({ users }: stafftableProps) {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
                 return (
-                  <TableRow hover role="checkbox" key={row.email}>
+                  <TableRow hover role="checkbox">
                     {columns.map((column) => {
                       const value = row[column.id];
 
-                      if (column.id === 'name') {
+                      if (column.id === 'projectName') {
                         return (
                           <TableCell key={column.id} align={column.align}>
-                            {value}
-                            <AlertDialogSlide email={row.email} />
+                            <Link
+                              href={`/projects/${hashids.encode(
+                                row.projectId
+                              )}`}
+                            >
+                              {value}
+                            </Link>
                           </TableCell>
                         );
                       }
