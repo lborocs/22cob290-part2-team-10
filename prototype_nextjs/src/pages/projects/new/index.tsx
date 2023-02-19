@@ -28,7 +28,10 @@ import hashids from '~/lib/hashids';
 const AddProjectPage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ data, users }) => {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState<{ name: string; leaderId: string }>({
+    name: '',
+    leaderId: '',
+  });
 
   async function addProject(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
