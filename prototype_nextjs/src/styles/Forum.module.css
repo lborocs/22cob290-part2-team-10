@@ -259,3 +259,9 @@
     height: 430px;
     padding-inline: 20px;
 }
+.preview > a {
+    color: #0969da;
+}
+.preview > a:hover {
+    text-decoration: underline;
+}

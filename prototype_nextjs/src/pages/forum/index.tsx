@@ -29,6 +29,7 @@ import {
   useTopicStore,
   Editor,
   useAllPostsStore,
+  useEditorStore,
 } from './ForumGlobals';
 
 import styles from '~/styles/Forum.module.css';
@@ -39,20 +40,12 @@ export type ForumPost = SsrProps['posts'][number];
 
 // TODO: top10voted?
 
-// FIXME: You aren't modifying users anywhere???
-const users: { name: string; id: string }[] = [];
-
 function PostWrack({ posts }: { posts: ForumPost[] }) {
   const setPage = usePageStore((state) => state.setPage);
 
   return (
     <Grid container spacing={3} className={styles.postWrack}>
       {posts.map((post) => {
-        // idk wtf you were trying to do here
-        // const editor = users
-        //   .filter((user) => user.id === post.history.at(-1)?.editorId)
-        //   .at(0)?.name;
-
         const editor = post.history.at(-1)?.editor?.name;
         const date = post.history.at(-1)?.date;
 
@@ -80,7 +73,7 @@ function PostWrack({ posts }: { posts: ForumPost[] }) {
                   {' "'}
                   {editor ?? '?'}
                   {'" '}
-                  on {date?.toDateString() ?? '?'}
+                  on {date ?? '?'}
                 </p>
                 <p className={styles.postSummary}>
                   <i>Summary:</i>&ensp;{post.history.at(-1)?.summary}
@@ -147,7 +140,6 @@ function PostPage() {
 }
 
 function WikiPage() {
-  const [state, setState] = useState<string>(styles.vote);
   const { page, setPage } = usePageStore();
 
   const id = Number(page.slice(5, -1));
@@ -160,13 +152,11 @@ function WikiPage() {
     [posts, id]
   );
 
-  // idk wtf you were trying to do here
-  // const editor = users
-  //   .filter((user) => user.id === post?.history.at(-1)?.editorId)
-  //   .at(0)?.name;
+  const [state, setState] = useState<string>(
+    `${styles.vote}${post?.upvotedByMe ? ` ${styles.activeVote}` : ''}`
+  );
 
   const editor = post?.history.at(-1)?.editor?.name;
-  console.log('post.history =', post?.history);
 
   const date = post?.history?.at(-1)?.date ?? new Date();
   const parser = useMemo(() => new Remarkable(), []);
@@ -188,11 +178,9 @@ function WikiPage() {
       <hr />
       <Box>
         <p className={styles.postLog}>
-          Last updated by
-          {' "'}
+          Last updated by {' "'}
           {editor}
-          {'" '}
-          on {date.toDateString()}; Now with {post.upvoters} vote(s)
+          {'" '} on {date}; Now with {post.upvoters} vote(s)
         </p>
         <Box
           dangerouslySetInnerHTML={{
@@ -236,23 +224,26 @@ function WikiPage() {
             <ThumbUpAltIcon
               className={state}
               onClick={async () => {
-                let choice = false;
-                if (state !== styles.vote) {
-                  // if already voted
-                  setState(styles.vote);
-                } else {
-                  setState(`${styles.vote} ${styles.activeVote}`);
-                  choice = true;
-                }
-
-                // TODO: update posts array
-                // using `setPosts`
-
+                const choice = state !== styles.vote;
+                setState(
+                  `${styles.vote}${choice ? '' : ` ${styles.activeVote}`}`
+                );
+                setPosts(
+                  posts.map((post_) => {
+                    if (post_.id === post.id) {
+                      return {
+                        ...post_,
+                        upvoters: post.upvoters + (choice ? -1 : 1),
+                        upvotedByMe: !choice,
+                      };
+                    }
+                    return post_;
+                  })
+                );
                 await axios.post('api/posts/updateVotes', {
                   postId: id,
                   add: choice,
                 });
-                setPage(page);
               }}
             />
           </Grid>
@@ -264,6 +255,8 @@ function WikiPage() {
 
 export function NewPostPage() {
   const { page, setPage } = usePageStore();
+  const { content, setContent } = useEditorStore();
+  const { posts } = useAllPostsStore();
 
   if (page !== 'newPost') {
     return <></>;
@@ -274,7 +267,24 @@ export function NewPostPage() {
       <Typography variant="h3" sx={{ marginBottom: '10px' }}>
         New post
       </Typography>
-      <form>
+      <form
+        onSubmit={async (event) => {
+          event.preventDefault();
+          const post = await axios.post('api/posts/addPost', {
+            title: event.target['0'].value,
+            topics: event.target['1'].value
+              .split(',')
+              .map((topic: string) => topic.trim())
+              .filter((topic: string) => topic !== ''),
+            content,
+            summary: event.target['2'].value,
+          });
+          console.log(post);
+          event.target.reset();
+          setContent('');
+          setPage('post');
+        }}
+      >
         <Box className={`${styles.textInput}`} sx={{ marginBottom: '5px' }}>
           <input
             type="text"
@@ -283,11 +293,19 @@ export function NewPostPage() {
             required
           />
         </Box>
-        <Box className={`${styles.textInput}`} sx={{ marginBottom: '10px' }}>
+        <Box className={`${styles.textInput}`} sx={{ marginBottom: '5px' }}>
           <input
             type="text"
-            placeholder="Post tags..."
+            placeholder="Post tags (comma separated)..."
             className={`${styles.innerSearch} ${styles.newPostField}`}
+          />
+        </Box>
+        <Box className={`${styles.textInput}`} sx={{ marginBottom: '8px' }}>
+          <input
+            type="text"
+            placeholder="Post summary..."
+            className={`${styles.innerSearch} ${styles.newPostField}`}
+            required
           />
         </Box>
         <Editor />
@@ -401,7 +419,24 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   });
 
   const postsWithInfo = posts.map((post) => ({
-    ...post,
+    _count: {
+      upvoters: post._count.upvoters,
+    },
+    id: post.id,
+    author: post.author,
+    topics: post.topics,
+    history: post.history.map((history) => {
+      return {
+        content: history.content,
+        editorId: history.editorId,
+        postId: history.postId,
+        id: history.id,
+        summary: history.summary,
+        title: history.title,
+        date: new Date(history.date).toDateString(),
+        editor: history.editor,
+      };
+    }),
     upvotedByMe: post.upvoters.length > 0,
     upvoters: post._count.upvoters,
   }));

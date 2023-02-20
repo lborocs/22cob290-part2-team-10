@@ -35,11 +35,13 @@ export default function ForumSidebar() {
             placeholder="Search topic..."
             className={`${styles.innerSearch} ${styles.topicSearch}`}
             onChange={(event) => {
-              setFilteredTopics(
-                Array.from(getTopics()).filter((topic) =>
-                  topic.toLowerCase().includes(event.target.value.toLowerCase())
-                )
+              const filteredTopics: string[] = [];
+              getTopics().forEach((topic) =>
+                topic.toLowerCase().startsWith(event.target.value.toLowerCase())
+                  ? filteredTopics.push(topic)
+                  : null
               );
+              setFilteredTopics(filteredTopics);
             }}
           />
         </Grid>
