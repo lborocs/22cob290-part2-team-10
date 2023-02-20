@@ -2,7 +2,7 @@ import type { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { getServerSession } from 'next-auth/next';
 import Typography from '@mui/material/Typography';
-import create from 'zustand';
+import { create } from 'zustand';
 
 import { SidebarType } from '~/components/Layout';
 import type { AppPage, SessionUser } from '~/types';
