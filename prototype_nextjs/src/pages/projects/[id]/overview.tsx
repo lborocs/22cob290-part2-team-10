@@ -3,7 +3,7 @@ import type {
   InferGetServerSidePropsType,
 } from 'next';
 import Head from 'next/head';
-import { unstable_getServerSession } from 'next-auth/next';
+import { getServerSession } from 'next-auth/next';
 
 import hashids from '~/lib/hashids';
 import prisma from '~/lib/prisma';
@@ -216,11 +216,7 @@ OverviewPage.layout = {
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
+  const session = await getServerSession(context.req, context.res, authOptions);
 
   if (!session || !session.user) {
     return { notFound: true };

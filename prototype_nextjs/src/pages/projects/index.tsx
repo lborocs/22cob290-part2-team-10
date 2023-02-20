@@ -3,7 +3,7 @@ import type {
   InferGetServerSidePropsType,
 } from 'next';
 import Head from 'next/head';
-import { unstable_getServerSession } from 'next-auth/next';
+import { getServerSession } from 'next-auth/next';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -116,11 +116,7 @@ ProjectsPage.layout = {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   //used to get the projects from the database and to get the current user session data
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
+  const session = await getServerSession(context.req, context.res, authOptions);
 
   if (!session || !session.user) {
     return { notFound: true };

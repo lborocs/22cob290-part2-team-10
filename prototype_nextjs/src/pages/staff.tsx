@@ -1,6 +1,6 @@
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { unstable_getServerSession } from 'next-auth/next';
+import { getServerSession } from 'next-auth/next';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
@@ -42,11 +42,7 @@ Staff.layout = {
 };
 
 export const getServerSideProps = (async (context) => {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
+  const session = await getServerSession(context.req, context.res, authOptions);
 
   if (!session || !session.user) {
     return { notFound: true };

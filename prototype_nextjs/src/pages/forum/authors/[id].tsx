@@ -5,7 +5,7 @@ import type {
 } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import { unstable_getServerSession } from 'next-auth/next';
+import { getServerSession } from 'next-auth/next';
 import { blue, grey } from '@mui/material/colors';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -162,11 +162,7 @@ AuthorPage.layout = {
 // hashids with string: https://stackoverflow.com/a/27137224
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
+  const session = await getServerSession(context.req, context.res, authOptions);
 
   if (!session || !session.user) {
     return { notFound: true };

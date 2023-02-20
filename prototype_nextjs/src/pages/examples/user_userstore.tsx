@@ -1,6 +1,6 @@
 import type { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
-import { unstable_getServerSession } from 'next-auth/next';
+import { getServerSession } from 'next-auth/next';
 import Typography from '@mui/material/Typography';
 
 import useUserStore from '~/store/userStore';
@@ -60,11 +60,7 @@ const ExamplePage: AppPage = () => {
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
+  const session = await getServerSession(context.req, context.res, authOptions);
 
   // not signed in, will be handled by _app
   // return `notFound: true` as a hacky way to have non-null page props for typescript
