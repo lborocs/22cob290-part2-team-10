@@ -1,10 +1,13 @@
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import Stack from '@mui/material/Stack';
 
 import NavigationBar from '~/components/layout/NavigationBar';
 import Sidebar from '~/components/layout/Sidebar';
-// TODO: make ProjectsList a dynamic import
-import ProjectsList from '~/components/layout/sidebar/ProjectsList';
+
+const DynamicProjectsList = dynamic(
+  () => import('~/components/layout/sidebar/ProjectsList')
+);
 
 // gives flexibility to have more shared sidebars (not just projects)
 export enum SidebarType {
@@ -53,7 +56,7 @@ export default function Layout({ sidebar, children }: LayoutProps) {
         return sidebar.content;
 
       case SidebarType.PROJECTS:
-        return <ProjectsList />;
+        return <DynamicProjectsList />;
 
       default:
         return (
@@ -77,6 +80,16 @@ export default function Layout({ sidebar, children }: LayoutProps) {
         paddingTop={1.5}
         paddingBottom={1}
         gap={3}
+        sx={{
+          ...(!noSidebar && {
+            // needs to be synced with ~/styles/layout/Sidebar.module.css
+            marginLeft: showSidebar ? '250px' : 0,
+            '@media (max-width: 768px)': {
+              marginLeft: showSidebar ? 0 : '250px',
+            },
+            transition: 'margin-left 0.3s',
+          }),
+        }}
       >
         <NavigationBar noSidebar={noSidebar} toggleSidebar={toggleSidebar} />
         {children}

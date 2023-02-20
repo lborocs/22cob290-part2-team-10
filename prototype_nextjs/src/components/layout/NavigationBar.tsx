@@ -9,10 +9,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import type { UrlObject } from 'url';
 
-import TextAvatar from '~/components/TextAvatar';
-import ThemeSwitcher from '~/components/ThemeSwitcher';
 import NavCollapse from '~/components/layout/nav/NavCollapse';
 import NavTabs from '~/components/layout/nav/NavTabs';
+import ThemeSwitcher from '~/components/ThemeSwitcher';
+import SignedInUserAvatar from '~/components/avatar/SignedInUserAvatar';
 import useUserStore from '~/store/userStore';
 
 export type PageData = {
@@ -85,7 +85,6 @@ export type NavigationBarProps = {
   toggleSidebar: () => void;
 };
 
-// TODO?: navbar sticky to top? if so then blur after scoll
 export default function NavigationBar({
   noSidebar,
   toggleSidebar,
@@ -146,13 +145,10 @@ export default function NavigationBar({
 
           <Box display={{ xs: 'none', lg: 'block' }}>
             <Link href="/profile">
-              <TextAvatar />
+              <SignedInUserAvatar />
             </Link>
           </Box>
 
-          {/* TODO: change nav button to be same size width as toggle sidebar button (when only icon)
-          might have to use custom svg (which will make animating transition easier)
-           */}
           <Button
             variant="contained"
             color="contrast"
@@ -166,10 +162,10 @@ export default function NavigationBar({
               paddingX: 1.5,
               height: `calc(1.5rem + ${theme.spacing(1.5)})`,
               minWidth: 0,
-              display: { xs: 'block', lg: 'none' },
+              width: 40,
+              display: { xs: 'flex', lg: 'none' },
             })}
           >
-            {/* TODO: animate transition */}
             {isCollapseOpen ? <MenuOpenIcon /> : <MenuIcon />}
           </Button>
         </NavBarBox>

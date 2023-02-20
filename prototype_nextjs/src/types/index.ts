@@ -23,7 +23,7 @@ export interface SessionUser extends User {
   id: string;
   name: string;
   email: string;
-  image: null;
+  image: string | null;
   isManager: boolean;
 }
 
@@ -42,3 +42,7 @@ export enum TaskStage {
   CODE_REVIEW = 'CODE_REVIEW',
   COMPLETED = 'COMPLETED',
 }
+
+export const ItemTypes = {
+  TASK: 'task',
+};

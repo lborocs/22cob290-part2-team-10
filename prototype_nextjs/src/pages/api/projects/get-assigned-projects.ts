@@ -19,9 +19,6 @@ export type ResponseSchema = Prisma.ProjectGetPayload<{
  * If the user is a manager, all projects are returned.
  * Otherwise, only projects the user has access to are returned.
  *
- * `Cache-Control: s-maxage=60, stale-while-revalidate=299`
- * (1 minute cache with 5 minutes stale-while-revalidate)
- *
  * @param req Request object. No body is required.
  * @param res Response object with a JSON body containing the projects. See {@link ResponseSchema}.
  * @example
@@ -65,8 +62,5 @@ export default async function handler(
     });
   }
 
-  res
-    .setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=299')
-    .status(200)
-    .json(projects);
+  res.status(200).json(projects);
 }

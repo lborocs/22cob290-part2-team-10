@@ -19,6 +19,7 @@ import Layout from '~/components/Layout';
 import LoadingPage from '~/components/LoadingPage';
 import useUserStore from '~/store/userStore';
 import type { AppPage } from '~/types';
+import ErrorBoundary from '~/components/ErrorBoundary';
 
 import '@fortawesome/fontawesome-svg-core/styles.css';
 // Roboto is MUI default font
@@ -162,22 +163,23 @@ export default function App({ Component, pageProps }: MyAppProps) {
       </Head>
       <CssVarsProvider theme={theme} defaultMode="system">
         <CssBaseline />
-
         <ThemedToaster />
 
-        {noAuth ? (
-          <Component {...pageProps} />
-        ) : (
-          <Auth>
-            {layout ? (
-              <Layout {...layout}>
+        <ErrorBoundary>
+          {noAuth ? (
+            <Component {...pageProps} />
+          ) : (
+            <Auth>
+              {layout ? (
+                <Layout {...layout}>
+                  <Component {...pageProps} />
+                </Layout>
+              ) : (
                 <Component {...pageProps} />
-              </Layout>
-            ) : (
-              <Component {...pageProps} />
-            )}
-          </Auth>
-        )}
+              )}
+            </Auth>
+          )}
+        </ErrorBoundary>
       </CssVarsProvider>
     </SessionProvider>
   );

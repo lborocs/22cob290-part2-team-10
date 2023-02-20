@@ -1,0 +1,70 @@
+.content {
+    width: 100%;
+    padding: 1rem;
+    min-height: 100vh;
+}
+
+.modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400;
+    background-color: #f7f7f7;
+    border: 1px solid #000;
+    box-shadow: 24;
+    padding: 4;
+}
+
+/*CARDS*/
+.card {
+    height: 75vh;
+}
+
+.cardheader {
+    background-color: #f7f7f7;
+}
+
+.cardcontent {
+    height: 60vh;
+}
+
+.scroll {
+    height: 100%;
+    overflow: auto;
+}
+
+.completed {
+    min-height: 400px;
+}
+
+/*TASKS*/
+.taskcard {
+    height: 260px;
+    overflow: auto;
+    border: 1px solid #e2ba39;
+    overflow-wrap: break-word;
+    margin-bottom: 0.5rem;
+}
+
+.tasktitle {
+    padding-bottom: 0.5rem;
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.taskcontent {
+    height: 80px;
+    font-size: 1rem;
+}
+
+.taskscroll {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.deadline {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-left: 0.5rem;
+}
