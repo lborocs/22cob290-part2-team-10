@@ -14,6 +14,12 @@ cp prisma/mysql.prisma prisma/schema.prisma &&\
 rm -r prisma/migrations &&\
 cp -r prisma/mysql_migrations prisma/migrations
 
+# Copy nginx config from project into VM
+sudo cp nginx/app.conf /etc/nginx/conf.d/app.conf
+
+# Restart nginx
+sudo service nginx restart
+
 # not sure if it will be needed after merge
 cp .env.docker .env &&\
 pnpm i &&\
@@ -22,7 +28,7 @@ pnpm prisma migrate deploy &&\ # make sure db is running first
 pnpm build
 
 # Seed database (for testing/presentation)
-pnpm prisma db seed
+# pnpm prisma db seed
 #######
 
 # Start app

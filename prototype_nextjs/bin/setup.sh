@@ -32,23 +32,4 @@ echo \
 sudo apt-get update &&\
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-# Clone project repo (will need to generate personal access token - https://github.com/settings/tokens - use it as your password)
-#cd ~
-#git clone https://github.com/lborocs/22cob290-part2-team-10.git
-# ^ Shouldn't need to clone, since this script is in the repo
-
-# Enter part 2 of project
-cd ~/22cob290-part2-team-10/prototype_nextjs
-
-# Use MySQL prisma schema & migrations
-cp prisma/mysql.prisma prisma/schema.prisma &&\
-rm -r prisma/migrations &&\
-cp -r prisma/mysql_migrations prisma/migrations
-
-# Copy nginx config from project into VM
-sudo cp nginx/app.conf /etc/nginx/conf.d/app.conf
-
-# Restart nginx
-sudo service nginx restart
-
 # Maybe more stuff to do with PM2
