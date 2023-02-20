@@ -8,7 +8,7 @@ import {
   TopicWrack,
   useTopicStore,
   getTopics,
-} from '~/pages/forum/ForumGlobals';
+} from '~/components/forum/ForumGlobals';
 import Link from '~/components/Link';
 
 export default function ForumSidebar() {
@@ -20,6 +20,15 @@ export default function ForumSidebar() {
         flexDirection: 'column',
       }}
     >
+      <Link
+        sx={{ marginInline: 'auto' }}
+        className={styles.redirect}
+        href="/forum/authors"
+      >
+        See authors
+      </Link>
+      <br />
+
       <Grid
         container
         className={`${styles.textInput} ${styles.topicSearchDiv}`}
@@ -54,14 +63,6 @@ export default function ForumSidebar() {
       <Box sx={{ paddingInline: '20px' }}>
         <TopicWrack topics={filteredTopics} />
       </Box>
-      <br />
-      <Link
-        sx={{ marginInline: 'auto' }}
-        className={styles.redirect}
-        href="/forum/authors"
-      >
-        Redirect to authors
-      </Link>
     </Box>
   );
 }

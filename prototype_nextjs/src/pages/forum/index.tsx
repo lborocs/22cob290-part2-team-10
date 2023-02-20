@@ -32,13 +32,46 @@ import {
   Editor,
   useAllPostsStore,
   useEditorStore,
-} from './ForumGlobals';
+} from '~/components/forum/ForumGlobals';
 
 import styles from '~/styles/Forum.module.css';
+import type { Prisma } from '@prisma/client';
 
 type SsrProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-const parsePost = (post) => ({
+export type ForumPost = SsrProps['posts'][number];
+
+const parsePost = (
+  post: Prisma.PostGetPayload<{
+    select: {
+      id: true;
+      authorId: true;
+      author: true;
+      topics: true;
+      // using to check if upvoted by this user
+      upvoters: {
+        select: {
+          id: true;
+        };
+      };
+      _count: {
+        select: {
+          // using to get the number of upvotes
+          upvoters: true;
+        };
+      };
+      history: {
+        include: {
+          editor: {
+            select: {
+              name: true;
+            };
+          };
+        };
+      };
+    };
+  }>
+) => ({
   _count: {
     upvoters: post._count.upvoters,
   },
@@ -60,10 +93,6 @@ const parsePost = (post) => ({
   upvotedByMe: post.upvoters.length > 0,
   upvoters: post._count.upvoters,
 });
-
-export type ForumPost = SsrProps['posts'][number];
-
-// TODO: top10voted?
 
 function PostWrack({ posts }: { posts: ForumPost[] }) {
   const setPage = usePageStore((state) => state.setPage);
@@ -143,14 +172,8 @@ function PostPage() {
       >
         <Grid xs="auto" item>
           <button className={styles.newPost} onClick={() => setPage('newPost')}>
-            <Grid container spacing={0.5}>
-              <Grid item xs="auto">
-                <AttachFileIcon fontSize="smaller" />
-              </Grid>
-              <Grid item xs="auto">
-                New post
-              </Grid>
-            </Grid>
+            <AttachFileIcon fontSize="small" />
+            <span>New post</span>
           </button>
         </Grid>
         <Grid
@@ -278,7 +301,6 @@ function WikiPage() {
                     if (post_.id === post.id) {
                       return {
                         ...post_,
-                        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
                         upvoters: post.upvoters + (choice ? -1 : 1),
                         upvotedByMe: !choice,
                       };
@@ -302,8 +324,9 @@ function WikiPage() {
 export function NewPostPage() {
   const { page, setPage } = usePageStore();
   const { content, setContent } = useEditorStore();
-  const { posts } = useAllPostsStore();
-  const { setFilteredTopics } = useTopicStore();
+  const { posts, setPosts } = useAllPostsStore();
+  const { filteredPosts, setFilteredPosts } = usePostStore();
+  const setFilteredTopics = useTopicStore((state) => state.setFilteredTopics);
 
   if (page !== 'newPost') {
     return <></>;
@@ -317,6 +340,7 @@ export function NewPostPage() {
       <form
         onSubmit={async (event) => {
           event.preventDefault();
+
           const formData = new FormData(event.currentTarget);
           const topics = (formData.get('tags') as string)
             .split(',')
@@ -332,8 +356,13 @@ export function NewPostPage() {
 
           topics.forEach((topic) => getTopics().add(topic));
           setFilteredTopics(Array.from(getTopics()));
-          posts.unshift(parsePost(post));
-          event.target.reset();
+
+          const p = parsePost(post);
+          setPosts([p, ...posts]);
+          // display new post even if filtering
+          setFilteredPosts([p, ...filteredPosts]);
+
+          (event.target as HTMLFormElement).reset();
           setContent('');
           setPage('post');
         }}

@@ -13,8 +13,6 @@ import clsx from 'clsx';
 import type { ForumPost } from '~/pages/forum';
 import styles from '~/styles/Forum.module.css';
 
-// TODO: move this out of /pages
-
 type postStore = {
   filteredPosts: ForumPost[];
   setFilteredPosts: (topics: ForumPost[]) => void;
