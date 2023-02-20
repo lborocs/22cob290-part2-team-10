@@ -538,10 +538,6 @@ from the
 | [clsx](https://github.com/lukeed/clsx)                                                | 1.2           | Utility library for constructing classnames                                                            |
 | ...                                                                                   |               |                                                                                                        |
 
-next-superjson-plugin
-https://github.com/blitz-js/next-superjson-plugin
-0.5.4
-
 <!-- https://stackoverflow.com/a/42424860 -->
 [pFormikZod]: https://github.com/lborocs/22cob290-part2-team-10/pull/1
 [iPrisma]: https://github.com/lborocs/22cob290-part2-team-10/pull/12
