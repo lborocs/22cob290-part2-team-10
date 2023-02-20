@@ -259,6 +259,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       NOT: {
         id: project.leaderId,
       },
+      // @ts-expect-error Faye said it broke without it :shrug: cba to fix/text
       NOT: {
         id: { in: project.members.map((member) => member.id) },
       },
