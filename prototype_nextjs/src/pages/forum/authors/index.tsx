@@ -53,12 +53,13 @@ const AuthorsPage: AppPage<
             borderRadius: '8px',
             paddingX: 1,
             paddingY: 0.5,
-            display: 'block',
             width: 'fit-content',
             marginTop: 2,
           }}
           component={NextLinkComposed}
           to={`/forum/authors/${encodeString(author.id)}`}
+          display="flex"
+          alignItems="center"
         >
           <UserAvatar
             userId={author.id}
@@ -68,7 +69,7 @@ const AuthorsPage: AppPage<
               marginRight: 1,
             }}
           />
-          {author.name}: click here to see all posts by this author
+          <b>{author.name}</b>: click here to see all posts by this author
         </Box>
       ))}
     </main>

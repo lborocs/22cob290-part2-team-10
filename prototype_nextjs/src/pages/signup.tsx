@@ -62,6 +62,7 @@ export default function SignupPage({
 
     return (await response.json()) as SignupResponse;
   }
+
   return (
     /*
     a Material-UI Box component is returned as the main container for the

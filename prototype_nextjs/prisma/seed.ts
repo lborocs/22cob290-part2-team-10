@@ -90,6 +90,8 @@ const getUserData = async (): Promise<Prisma.UserCreateInput[]> => [
     hashedPassword: await testPassword(),
     name: 'Alice Felicity Henry', // text avatar should be AFH
     inviteToken: managerInviteToken(),
+    image:
+      'https://www.citypng.com/public/uploads/preview/messi-with-trophy-fifa-world-cup-qatar-2022-hd-png-11671390277niwcwxtise.png',
   },
   {
     email: 'jane@make-it-all.co.uk',
@@ -103,6 +105,7 @@ const getUserData = async (): Promise<Prisma.UserCreateInput[]> => [
     hashedPassword: await testPassword(),
     name: 'John Smith',
     inviteToken: managerInviteToken(),
+    avatarBg: '#0000ff',
   },
 ];
 

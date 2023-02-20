@@ -71,13 +71,12 @@ const HomePage: AppPage<SsrProps> = ({ user, todoList }) => {
     ) {
       return;
     }
-    saveTask(e);
+    e.preventDefault();
+    saveTask(deadline);
     handleClose();
   };
 
-  const saveTask = async (e: React.SyntheticEvent) => {
-    e.preventDefault();
-
+  const saveTask = async (deadline: Dayjs) => {
     try {
       const data = (await fetch('/api/user/task/create-user-task', {
         method: 'POST',
@@ -87,7 +86,7 @@ const HomePage: AppPage<SsrProps> = ({ user, todoList }) => {
           stage,
           title: titleTask,
           description: descriptionTask,
-          deadline: deadline!.toDate(),
+          deadline: deadline.toDate(),
           tags: {
             connectOrCreate: tagList.map((tag) => ({
               where: { name: tag },
