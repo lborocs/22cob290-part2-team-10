@@ -52,12 +52,15 @@ export default function SignupPage({
   */
   async function createUser(formData: z.infer<typeof SignUpSchema>) {
     // function for sending user information to the server
-    const { data } = await axios.post<SignupResponse>(
-      '/api/user/signup',
-      formData
-    );
+    const response = await fetch('/api/user/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+      body: JSON.stringify(formData),
+    });
 
-    return data;
+    return (await response.json()) as SignupResponse;
   }
 
   return (
