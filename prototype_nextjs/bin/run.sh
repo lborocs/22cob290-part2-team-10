@@ -1,4 +1,6 @@
-# Start prop docker (app & database)
+# /bin/bash
+
+# Start prod docker (app & database)
 # sudo docker compose -p t10gp-prod -f docker-compose.prod.yaml --env-file .env.docker up -d
 # Maybe only use docker compose for mysql?
 sudo docker compose -p t10gp-db --env-file .env.docker up -d
@@ -7,7 +9,10 @@ sudo docker compose -p t10gp-db --env-file .env.docker up -d
 cd ~/22cob290-part2-team-10/prototype_nextjs
 
 ####### before this branch is merged with main
-git switch nginx-pm2
+# Use MySQL prisma schema & migrations
+cp prisma/mysql.prisma prisma/schema.prisma &&\
+rm -r prisma/migrations &&\
+cp -r prisma/mysql_migrations prisma/migrations
 
 # not sure if it will be needed after merge
 cp .env.docker .env &&\
@@ -19,3 +24,4 @@ pnpm build
 
 # Start app
 # pnpm start
+# pnpm start & # run in background
