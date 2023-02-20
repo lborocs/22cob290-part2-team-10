@@ -22,7 +22,7 @@ export default async function handler(
   const user = SignUpSchema.parse(req.body);
   const data: Prisma.UserCreateInput = {
     name: user.name,
-    email: user.email,
+    email: user.email.toLowerCase(),
     inviteToken: user.inviteToken,
     hashedPassword: await hashPassword(user.password),
   };

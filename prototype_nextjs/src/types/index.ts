@@ -42,3 +42,7 @@ export enum TaskStage {
   CODE_REVIEW = 'CODE_REVIEW',
   COMPLETED = 'COMPLETED',
 }
+
+export const ItemTypes = {
+  TASK: 'task',
+};
