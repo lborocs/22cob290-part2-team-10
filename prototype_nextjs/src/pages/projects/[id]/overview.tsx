@@ -19,6 +19,8 @@ import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
 import Autocomplete from '@mui/material/Autocomplete';
 
+import ErrorPage from '~/components/ErrorPage';
+
 const OverviewPage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ project, users, usersInProject }) => {
@@ -26,11 +28,20 @@ const OverviewPage: AppPage<
     newLeader: null,
   });
 
-  const [title, setTitle] = useState(project.name);
+  const [title, setTitle] = useState(project?.name ?? '');
 
   const router = useRouter();
 
-  async function addMemberToProject(e: React.FormEvent<HTMLFormElement>) {
+  if (!project)
+    return (
+      <ErrorPage
+        title="This project does not exist"
+        buttonUrl="/projects"
+        buttonContent="Projects"
+      />
+    );
+
+  const addMemberToProject = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { memberId, leaderId } = formData;
     const response = await fetch(`/api/projects/${project.id}/addMember`, {
@@ -45,9 +56,9 @@ const OverviewPage: AppPage<
       // Handle error
       console.log('Failed to add member to project');
     }
-  }
+  };
 
-  async function removeMemberFromProject(memberId: string) {
+  const removeMemberFromProject = async (memberId: string) => {
     const response = await fetch(`/api/projects/${project.id}/removeMember`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -60,9 +71,9 @@ const OverviewPage: AppPage<
       // Handle error
       console.log('Failed to remove member from project');
     }
-  }
+  };
 
-  async function changeProjectLeader(e: React.FormEvent<HTMLFormElement>) {
+  const changeProjectLeader = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const newLeaderId = formData.newLeader?.id;
     const response = await fetch(`/api/projects/${project.id}/changeLeader`, {
@@ -77,7 +88,7 @@ const OverviewPage: AppPage<
       // Handle error
       console.log('Failed to change project leader');
     }
-  }
+  };
 
   const updateProjectTitle = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -99,7 +110,7 @@ const OverviewPage: AppPage<
     }
   };
 
-  async function deleteProject() {
+  const deleteProject = async () => {
     const response = await fetch(`/api/projects/${project.id}/delete`, {
       method: 'DELETE',
     });
@@ -110,7 +121,7 @@ const OverviewPage: AppPage<
       // Handle error
       console.log('Failed to delete project');
     }
-  }
+  };
 
   const pageTitle = `${project.name} - Make-It-All`;
 
@@ -229,9 +240,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const projectId = decodedId[0] as number | undefined;
 
-  if (!projectId) {
-    return { notFound: true };
-  }
+  if (!projectId)
+    return {
+      props: {
+        session,
+        user,
+      },
+    };
 
   const project = await prisma.project.findUnique({
     where: {
@@ -243,9 +258,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   });
 
-  if (!project) {
-    return { notFound: true };
-  }
+  if (!project)
+    return {
+      props: {
+        session,
+        user,
+      },
+    };
 
   const usersInProject = project.members.filter(
     (member) => member.id !== project.leaderId

@@ -2,12 +2,15 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import { NextLinkComposed } from '~/components/Link';
+import {
+  NextLinkComposed,
+  type NextLinkComposedProps,
+} from '~/components/Link';
 
 export type ErrorPageProps = {
   title: string;
   buttonContent?: React.ReactNode;
-  buttonUrl: string;
+  buttonUrl: NextLinkComposedProps['to'];
 };
 
 /**

@@ -17,10 +17,20 @@ import ForumSidebar from '~/components/layout/sidebar/ForumSidebar';
 import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import UserAvatar from '~/components/avatar/UserAvatar';
+import ErrorPage from '~/components/ErrorPage';
 
 const AuthorPage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ authorInfo, post, postHistory }) => {
+> = ({ authorInfo, posts, postHistory }) => {
+  if (!authorInfo)
+    return (
+      <ErrorPage
+        title="Author not found"
+        buttonUrl="/forum/authors"
+        buttonContent="Authors"
+      />
+    );
+
   const pageTitle = `${authorInfo.name} - Make-It-All`;
 
   /*  I would like to aplogise in advance for the amount of in document CSS,
@@ -96,9 +106,9 @@ const AuthorPage: AppPage<
           margin: 0, // Remove margins
         }}
       >
-        {postHistory?.map((postHistory) => {
-          const relevantPost = post
-            .filter((_post) => _post.id == postHistory.postId)
+        {postHistory.map((postHistory) => {
+          const relevantPost = posts
+            .filter((post) => post.id == postHistory.postId)
             ?.at(0);
           return (
             <Fragment key={postHistory.id}>
@@ -178,11 +188,15 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   });
 
-  if (!authorInfo) {
-    return { notFound: true };
-  }
+  if (!authorInfo)
+    return {
+      props: {
+        session,
+        user,
+      },
+    };
 
-  const post = await prisma.post.findMany({
+  const posts = await prisma.post.findMany({
     where: {
       authorId: authorInfo?.id,
     },
@@ -198,7 +212,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const postHistory = await prisma.postHistory.findMany({
     where: {
       postId: {
-        in: post.map((post) => post.id),
+        in: posts.map((post) => post.id),
       },
     },
     select: {
@@ -218,7 +232,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       session,
       user,
       authorInfo,
-      post,
+      posts,
       postHistory,
     },
   };

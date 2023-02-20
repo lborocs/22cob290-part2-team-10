@@ -10,6 +10,7 @@ import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import prisma from '~/lib/prisma';
 
 import Stafftable from '~/components/staff comp/stafftable';
+import Custom404 from '~/pages/[...404]';
 
 /*
   "There should also be a manager’s dashboard so that the managers or team lead‐
@@ -20,6 +21,9 @@ import Stafftable from '~/components/staff comp/stafftable';
 const Staff: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ users }) => {
+  // if not a manager, show 404
+  if (!users) return <Custom404 />;
+
   return (
     <Container component="main" maxWidth="xl" fixed>
       <Head>
@@ -51,7 +55,13 @@ export const getServerSideProps = (async (context) => {
   const user = session.user as SessionUser;
 
   if (!user.isManager) {
-    return { notFound: true };
+    // return { notFound: true };
+    return {
+      props: {
+        session,
+        user,
+      },
+    };
   }
 
   const users = await prisma.user.findMany({
