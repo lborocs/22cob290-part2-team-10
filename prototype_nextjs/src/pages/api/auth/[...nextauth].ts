@@ -165,7 +165,10 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt',
 
     // Seconds - How long until an idle session expires and is no longer valid.
-    maxAge: 24 * 60 * 60, // 24 hrs (test)
+    maxAge:
+      process.env.NODE_ENV === 'development'
+        ? 24 * 60 * 60 // 24 hrs (dev)
+        : 24 * 60 * 60 * 7, // 7 days (prod)
   },
 
   debug: process.env.NODE_ENV === 'development',
