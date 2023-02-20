@@ -1,12 +1,12 @@
 # /bin/bash
 
+# Enter part 2 of project
+cd ~/22cob290-part2-team-10/prototype_nextjs
+
 # Start prod docker (app & database)
 # sudo docker compose -p t10gp-prod -f docker-compose.prod.yaml --env-file .env.docker up -d
 # Maybe only use docker compose for mysql?
 sudo docker compose -p t10gp-db --env-file .env.docker up -d
-
-# Enter part 2 of project
-cd ~/22cob290-part2-team-10/prototype_nextjs
 
 ####### before this branch is merged with main
 # Use MySQL prisma schema & migrations
@@ -20,6 +20,9 @@ pnpm i &&\
 pnpm prisma generate &&\
 pnpm prisma migrate deploy &&\ # make sure db is running first
 pnpm build
+
+# Seed database (for testing/presentation)
+pnpm prisma db seed
 #######
 
 # Start app
