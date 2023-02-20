@@ -1,12 +1,3 @@
-# Setup GCP VM
-
-## Setup deployment on VM
-
-https://www.fullstackbook.com/guides/how-to-deploy-nextjs-with-pm2/
-
-> If a dialog pops up titled "Daemons using outdated libraries", press <kbd>Enter</kbd>
-
-```bash
 sudo apt-get update && sudo apt-get -y upgrade
 
 # Install nginx
@@ -21,7 +12,7 @@ sudo apt-get install -y nodejs
 sudo npm i -g pnpm
 
 # Stuff to do with PM2
-... (idk yet)
+# ... (idk yet)
 
 # Clone project repo (will need to generate personal access token - https://github.com/settings/tokens - use it as your password)
 cd ~
@@ -72,11 +63,6 @@ sudo apt-get update &&\
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 # Start prop docker (app & database)
-sudo docker compose -p t10gp-prod -f docker-compose.prod.yaml --env-file .env.docker up -d
+# sudo docker compose -p t10gp-prod -f docker-compose.prod.yaml --env-file .env.docker up -d
 # Maybe only use docker compose for mysql?
 sudo docker compose -p t10gp-db --env-file .env.docker up -d
-
-```
-
-## Open in browser
-http://34.142.66.186/
