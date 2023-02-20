@@ -97,7 +97,7 @@
 
 .postWrack {
     overflow-y: auto;
-    max-height: 630px;
+    /* max-height: 630px; */
     padding-bottom: 10px;
 }
 .postWrack::-webkit-scrollbar {

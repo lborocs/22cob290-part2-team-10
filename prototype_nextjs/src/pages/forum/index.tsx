@@ -5,11 +5,8 @@ import type {
 } from 'next';
 import Head from 'next/head';
 import { getServerSession } from 'next-auth/next';
-import { SidebarType } from '~/components/Layout';
-import ForumSidebar from '~/components/layout/sidebar/ForumSidebar';
-import type { AppPage, SessionUser } from '~/types';
-import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import SearchIcon from '@mui/icons-material/Search';
@@ -18,6 +15,10 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import { Remarkable } from 'remarkable';
 
+import { SidebarType } from '~/components/Layout';
+import ForumSidebar from '~/components/layout/sidebar/ForumSidebar';
+import type { AppPage, SessionUser } from '~/types';
+import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import prisma from '~/lib/prisma';
 import {
   getFilteredPosts,
@@ -44,7 +45,17 @@ function PostWrack({ posts }: { posts: ForumPost[] }) {
   const setPage = usePageStore((state) => state.setPage);
 
   return (
-    <Grid container spacing={3} className={styles.postWrack}>
+    <Grid
+      container
+      spacing={3}
+      className={styles.postWrack}
+      sx={{
+        maxHeight: {
+          xs: 630,
+          md: 1000,
+        },
+      }}
+    >
       {posts.map((post) => {
         const editor = post.history.at(-1)?.editor?.name;
         const date = post.history.at(-1)?.date;
@@ -178,9 +189,11 @@ function WikiPage() {
       <hr />
       <Box>
         <p className={styles.postLog}>
-          Last updated by {' "'}
-          {editor}
-          {'" '} on {date}; Now with {post.upvoters} vote(s)
+          <>
+            Last updated by {' "'}
+            {editor}
+            {'" '} on {date}; Now with {post.upvoters} vote(s)
+          </>
         </p>
         <Box
           dangerouslySetInnerHTML={{
@@ -270,17 +283,24 @@ export function NewPostPage() {
       <form
         onSubmit={async (event) => {
           event.preventDefault();
-          const post = await axios.post('api/posts/addPost', {
-            title: event.target['0'].value,
-            topics: event.target['1'].value
+          const formData = new FormData(event.currentTarget);
+
+          const { data: post } = await axios.post('api/posts/addPost', {
+            // title: event.target['0'].value,
+            title: formData.get('title') as string,
+            // topics: event.target['1'].value
+            topics: (formData.get('tags') as string)
               .split(',')
               .map((topic: string) => topic.trim())
               .filter((topic: string) => topic !== ''),
             content,
-            summary: event.target['2'].value,
+            // summary: event.target['2'].value,
+            summary: formData.get('summary') as string,
           });
+
           console.log(post);
-          event.target.reset();
+
+          event.currentTarget.reset();
           setContent('');
           setPage('post');
         }}
@@ -288,6 +308,7 @@ export function NewPostPage() {
         <Box className={`${styles.textInput}`} sx={{ marginBottom: '5px' }}>
           <input
             type="text"
+            name="title"
             placeholder="Post title..."
             className={`${styles.innerSearch} ${styles.newPostField}`}
             required
@@ -296,6 +317,7 @@ export function NewPostPage() {
         <Box className={`${styles.textInput}`} sx={{ marginBottom: '5px' }}>
           <input
             type="text"
+            name="tags"
             placeholder="Post tags (comma separated)..."
             className={`${styles.innerSearch} ${styles.newPostField}`}
           />
@@ -303,6 +325,7 @@ export function NewPostPage() {
         <Box className={`${styles.textInput}`} sx={{ marginBottom: '8px' }}>
           <input
             type="text"
+            name="summary"
             placeholder="Post summary..."
             className={`${styles.innerSearch} ${styles.newPostField}`}
             required
@@ -358,14 +381,14 @@ const ForumPage: AppPage<
   }, [topics, setFilteredTopics]);
 
   return (
-    <main className={styles.main}>
+    <Container maxWidth="xl" component="main">
       <Head>
         <title>Forum - Make-It-All</title>
       </Head>
       <PostPage />
       <WikiPage />
       <NewPostPage />
-    </main>
+    </Container>
   );
 };
 
