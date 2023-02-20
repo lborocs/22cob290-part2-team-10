@@ -55,9 +55,10 @@ function createData(
   return { name, email, leftCompany };
 }
 
-type User = InferGetServerSidePropsType<
-  typeof getServerSideProps
->['users'][number];
+type User = Exclude<
+  InferGetServerSidePropsType<typeof getServerSideProps>['users'],
+  undefined
+>[number];
 
 export type stafftableProps = {
   users: User[];
