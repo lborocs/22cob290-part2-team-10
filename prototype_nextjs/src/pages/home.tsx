@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import type {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
@@ -13,11 +13,10 @@ import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardActions from '@mui/material/CardActions';
 import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import TextField, { type TextFieldProps } from '@mui/material/TextField';
 import DialogActions from '@mui/material/DialogActions';
+import Divider from '@mui/material/Divider';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
@@ -27,10 +26,11 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import prisma from '~/lib/prisma';
 import { SidebarType } from '~/components/Layout';
-import DropTarget from '~/components/home/UserDropTarget';
 import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import type { CreateUserTaskResponse } from '~/pages/api/user/task/create-user-task';
+import DropTarget from '~/components/home/UserDropTarget';
+import StyledCloseButtonDialog from '~/components/StyledCloseButtonDialog';
 
 import styles from '~/styles/home.module.css';
 
@@ -114,14 +114,17 @@ const HomePage: AppPage<SsrProps> = ({ user, todoList }) => {
   };
 
   return (
-    <>
+    <Container className={styles.content} component="main">
       <Head>
         <title>Home - Make-It-All</title>
       </Head>
 
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Add Task</DialogTitle>
-        <DialogContent>
+      <StyledCloseButtonDialog
+        open={open}
+        onClose={handleClose}
+        dialogTitle="Add Task"
+      >
+        <DialogContent dividers>
           <TextField
             autoFocus
             label="Title"
@@ -181,105 +184,120 @@ const HomePage: AppPage<SsrProps> = ({ user, todoList }) => {
             Submit
           </Button>
         </DialogActions>
-      </Dialog>
+      </StyledCloseButtonDialog>
 
-      <Container className={styles.content} component="main">
-        <Box sx={{ fontWeight: 'bold' }}>
-          <Typography variant="h4" component="div">
-            HOME
-          </Typography>
-        </Box>
+      <Box sx={{ fontWeight: 'bold' }}>
+        <Typography variant="h4" component="div">
+          HOME
+        </Typography>
+      </Box>
 
-        <Grid
-          container
-          direction="row"
-          justifyContent="center"
-          alignItems="flex-start"
-          spacing={3}
-        >
-          <Grid item md={3} xs={12}>
-            <Card className={styles.card}>
-              <CardHeader
-                titleTypographyProps={{ fontSize: 20 }}
-                title="To Do"
-              />
-              <DndProvider backend={HTML5Backend}>
-                <DropTarget tasks={tasks} setTasks={setTasks} stage="TODO" />
-              </DndProvider>
-              <CardActions className="d-grid">
-                <Button variant="contained" onClick={() => handleOpen('TODO')}>
-                  Add Task
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-
-          <Grid item md={3} xs={12}>
-            <Card className={styles.card}>
-              <CardHeader
-                titleTypographyProps={{ fontSize: 20 }}
-                title="In Progress"
-              />
-              <DndProvider backend={HTML5Backend}>
-                <DropTarget
-                  tasks={tasks}
-                  setTasks={setTasks}
-                  stage="IN_PROGRESS"
-                />
-              </DndProvider>
-              <CardActions className="d-grid">
-                <Button
-                  variant="contained"
-                  onClick={() => handleOpen('IN_PROGRESS')}
-                >
-                  Add Task
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-
-          <Grid item md={3} xs={12}>
-            <Card className={styles.card}>
-              <CardHeader
-                titleTypographyProps={{ fontSize: 20 }}
-                title="Code Review"
-              />
-              <DndProvider backend={HTML5Backend}>
-                <DropTarget
-                  tasks={tasks}
-                  setTasks={setTasks}
-                  stage="CODE_REVIEW"
-                />
-              </DndProvider>
-              <CardActions className="d-grid">
-                <Button
-                  variant="contained"
-                  onClick={() => handleOpen('CODE_REVIEW')}
-                >
-                  Add Task
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-
-          <Grid item md={3} xs={12}>
-            <Card className={styles.completed}>
-              <CardHeader
-                titleTypographyProps={{ fontSize: 20 }}
-                title="Completed"
-              />
-              <DndProvider backend={HTML5Backend}>
-                <DropTarget
-                  tasks={tasks}
-                  setTasks={setTasks}
-                  stage="COMPLETED"
-                />
-              </DndProvider>
-            </Card>
-          </Grid>
+      <Grid
+        container
+        direction="row"
+        justifyContent="center"
+        alignItems="flex-start"
+        spacing={3}
+      >
+        <Grid item md={3} xs={12}>
+          <Card className={styles.card}>
+            <CardHeader titleTypographyProps={{ fontSize: 20 }} title="To Do" />
+            <Divider
+              orientation="horizontal"
+              sx={{
+                marginBottom: 1,
+              }}
+            />
+            <DndProvider backend={HTML5Backend}>
+              <DropTarget tasks={tasks} setTasks={setTasks} stage="TODO" />
+            </DndProvider>
+            <CardActions className="d-grid">
+              <Button variant="contained" onClick={() => handleOpen('TODO')}>
+                Add Task
+              </Button>
+            </CardActions>
+          </Card>
         </Grid>
-      </Container>
-    </>
+
+        <Grid item md={3} xs={12}>
+          <Card className={styles.card}>
+            <CardHeader
+              titleTypographyProps={{ fontSize: 20 }}
+              title="In Progress"
+            />
+            <Divider
+              orientation="horizontal"
+              sx={{
+                marginBottom: 1,
+              }}
+            />
+            <DndProvider backend={HTML5Backend}>
+              <DropTarget
+                tasks={tasks}
+                setTasks={setTasks}
+                stage="IN_PROGRESS"
+              />
+            </DndProvider>
+            <CardActions className="d-grid">
+              <Button
+                variant="contained"
+                onClick={() => handleOpen('IN_PROGRESS')}
+              >
+                Add Task
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
+
+        <Grid item md={3} xs={12}>
+          <Card className={styles.card}>
+            <CardHeader
+              titleTypographyProps={{ fontSize: 20 }}
+              title="Code Review"
+            />
+            <Divider
+              orientation="horizontal"
+              sx={{
+                marginBottom: 1,
+              }}
+            />
+            <DndProvider backend={HTML5Backend}>
+              <DropTarget
+                tasks={tasks}
+                setTasks={setTasks}
+                stage="CODE_REVIEW"
+              />
+            </DndProvider>
+            <CardActions className="d-grid">
+              <Button
+                variant="contained"
+                onClick={() => handleOpen('CODE_REVIEW')}
+              >
+                Add Task
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
+
+        <Grid item md={3} xs={12}>
+          <Card className={styles.completed}>
+            <CardHeader
+              titleTypographyProps={{ fontSize: 20 }}
+              title="Completed"
+            />
+            <Divider
+              orientation="horizontal"
+              sx={{
+                marginBottom: 1,
+              }}
+            />
+            <DndProvider backend={HTML5Backend}>
+              <DropTarget tasks={tasks} setTasks={setTasks} stage="COMPLETED" />
+            </DndProvider>
+          </Card>
+        </Grid>
+      </Grid>
+    </Container>
   );
 };
 
