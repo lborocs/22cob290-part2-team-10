@@ -13,6 +13,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import axios from 'axios';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { Remarkable } from 'remarkable';
 
 import { SidebarType } from '~/components/Layout';
@@ -36,6 +37,29 @@ import {
 import styles from '~/styles/Forum.module.css';
 
 type SsrProps = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+const parsePost = (post) => ({
+  _count: {
+    upvoters: post._count.upvoters,
+  },
+  id: post.id,
+  author: post.author,
+  topics: post.topics,
+  history: post.history.map((history) => {
+    return {
+      content: history.content,
+      editorId: history.editorId,
+      postId: history.postId,
+      id: history.id,
+      summary: history.summary,
+      title: history.title,
+      date: new Date(history.date).toDateString(),
+      editor: history.editor,
+    };
+  }),
+  upvotedByMe: post.upvoters.length > 0,
+  upvoters: post._count.upvoters,
+});
 
 export type ForumPost = SsrProps['posts'][number];
 
@@ -119,7 +143,14 @@ function PostPage() {
       >
         <Grid xs="auto" item>
           <button className={styles.newPost} onClick={() => setPage('newPost')}>
-            New post
+            <Grid container spacing={0.5}>
+              <Grid item xs="auto">
+                <AttachFileIcon fontSize="smaller" />
+              </Grid>
+              <Grid item xs="auto">
+                New post
+              </Grid>
+            </Grid>
           </button>
         </Grid>
         <Grid
@@ -199,6 +230,7 @@ function WikiPage() {
           dangerouslySetInnerHTML={{
             __html: parser.render(post.history.at(-1)!.content),
           }}
+          className={styles.wikiContent}
         />
       </Box>
       <Typography variant="h5">Topics</Typography>
@@ -246,6 +278,7 @@ function WikiPage() {
                     if (post_.id === post.id) {
                       return {
                         ...post_,
+                        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
                         upvoters: post.upvoters + (choice ? -1 : 1),
                         upvotedByMe: !choice,
                       };
@@ -255,7 +288,7 @@ function WikiPage() {
                 );
                 await axios.post('api/posts/updateVotes', {
                   postId: id,
-                  add: choice,
+                  remove: choice,
                 });
               }}
             />
@@ -270,6 +303,7 @@ export function NewPostPage() {
   const { page, setPage } = usePageStore();
   const { content, setContent } = useEditorStore();
   const { posts } = useAllPostsStore();
+  const { setFilteredTopics } = useTopicStore();
 
   if (page !== 'newPost') {
     return <></>;
@@ -284,23 +318,22 @@ export function NewPostPage() {
         onSubmit={async (event) => {
           event.preventDefault();
           const formData = new FormData(event.currentTarget);
+          const topics = (formData.get('tags') as string)
+            .split(',')
+            .map((topic: string) => topic.trim())
+            .filter((topic: string) => topic !== '');
 
           const { data: post } = await axios.post('api/posts/addPost', {
-            // title: event.target['0'].value,
             title: formData.get('title') as string,
-            // topics: event.target['1'].value
-            topics: (formData.get('tags') as string)
-              .split(',')
-              .map((topic: string) => topic.trim())
-              .filter((topic: string) => topic !== ''),
+            topics,
             content,
-            // summary: event.target['2'].value,
             summary: formData.get('summary') as string,
           });
 
-          console.log(post);
-
-          event.currentTarget.reset();
+          topics.forEach((topic) => getTopics().add(topic));
+          setFilteredTopics(Array.from(getTopics()));
+          posts.unshift(parsePost(post));
+          event.target.reset();
           setContent('');
           setPage('post');
         }}
@@ -441,29 +474,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     },
   });
 
-  const postsWithInfo = posts.map((post) => ({
-    _count: {
-      upvoters: post._count.upvoters,
-    },
-    id: post.id,
-    author: post.author,
-    topics: post.topics,
-    history: post.history.map((history) => {
-      return {
-        content: history.content,
-        editorId: history.editorId,
-        postId: history.postId,
-        id: history.id,
-        summary: history.summary,
-        title: history.title,
-        date: new Date(history.date).toDateString(),
-        editor: history.editor,
-      };
-    }),
-    upvotedByMe: post.upvoters.length > 0,
-    upvoters: post._count.upvoters,
-  }));
-
+  const postsWithInfo = posts.reverse().map(parsePost);
   const topics = await prisma.postTopic.findMany();
 
   return {

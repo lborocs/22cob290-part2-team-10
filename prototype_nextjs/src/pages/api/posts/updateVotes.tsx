@@ -19,7 +19,7 @@ export default async function handler(
   }
 
   const userId = (session.user as SessionUser).id;
-  const { postId, add } = req.body;
+  const { postId, remove } = req.body;
 
   await prisma.post.update({
     where: {
@@ -27,7 +27,7 @@ export default async function handler(
     },
     data: {
       upvoters: {
-        [add ? 'connect' : 'disconnect']: {
+        [remove ? 'disconnect' : 'connect']: {
           id: userId,
         },
       },

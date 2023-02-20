@@ -24,6 +24,25 @@
 
 /* ---------------------------------------------------------------------------------------- */
 
+.redirect {
+    padding-block: 5px;
+    padding-inline: 10px;
+    background: #f6f8fa;
+    cursor: pointer;
+    border-style: solid;
+    border-color: #d0d7de;
+    border-radius: 10px;
+    color: #0969da;
+    text-decoration: none;
+    font-weight: bold;
+}
+.redirect:hover {
+    background-color: #0969da;
+    color: #f6f8fa;
+}
+
+/* ---------------------------------------------------------------------------------------- */
+
 .topicSearchDiv {
     margin-inline: auto;
     margin-top: 12px;
@@ -79,7 +98,8 @@
 /* ---------------------------------------------------------------------------------------- */
 
 .newPost {
-    padding-inline: 20px;
+    padding-left: 13px;
+    padding-right: 20px;
     padding-block: 9px;
     border-radius: 7px;
     border-style: solid;
@@ -88,6 +108,7 @@
     border-color: #2a9147;
     color: #ffffff;
     cursor: pointer;
+    font-weight: bold;
 }
 .newPost:hover {
     background-color: #2c974b;
@@ -190,6 +211,13 @@
     color: #0969da;
 }
 
+.wikiContent a {
+    color: #0969da;
+}
+.wikiContent a:hover {
+    text-decoration: underline;
+}
+
 /* ---------------------------------------------------------------------------------------- */
 
 .newPostPage {
@@ -245,7 +273,7 @@
 
 .makePost {
     padding-inline: 20px;
-    padding-block: 9px;
+    padding-block: 10px;
     border-radius: 7px;
     border-style: solid;
     border-width: 1px;
@@ -253,15 +281,16 @@
     border-color: #2a9147;
     color: #ffffff;
     cursor: pointer;
+    font-weight: bold;
 }
 
 .preview {
     height: 430px;
-    padding-inline: 20px;
+    padding-inline: 10px;
 }
-.preview > a {
+.preview a {
     color: #0969da;
 }
-.preview > a:hover {
+.preview a:hover {
     text-decoration: underline;
 }

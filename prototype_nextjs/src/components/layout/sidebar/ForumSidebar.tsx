@@ -9,6 +9,7 @@ import {
   useTopicStore,
   getTopics,
 } from '~/pages/forum/ForumGlobals';
+import Link from '~/components/Link';
 
 export default function ForumSidebar() {
   const { filteredTopics, setFilteredTopics } = useTopicStore();
@@ -53,6 +54,14 @@ export default function ForumSidebar() {
       <Box sx={{ paddingInline: '20px' }}>
         <TopicWrack topics={filteredTopics} />
       </Box>
+      <br />
+      <Link
+        sx={{ marginInline: 'auto' }}
+        className={styles.redirect}
+        href="/forum/authors"
+      >
+        Redirect to authors
+      </Link>
     </Box>
   );
 }
