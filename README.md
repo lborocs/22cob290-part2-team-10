@@ -311,26 +311,26 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 > Not sure about the forum pages that aren't yet templated
 >
 > Will want a page/option to list posts made by a certain user.
-> Maybe on a post, make the author's name clickable and it'll take u to /forum/authors/[authorId]
+> Maybe on a post, make the author's name clickable, and it'll take u to /forum/authors/[authorId]
 >
 > > Atm there's a link to `/forum/authors` in the forum sidebar
 
 | Page URL/Route                         | Owner   | Status      | Completed             | Notes                                                                                                                                                              |
 |----------------------------------------|---------|-------------|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `/`                                    | Dara    | Complete    | <ul><li>[x] </li><ul> | Automatically redirects to `/home` if signed in.                                                                                                                   |
-| `/home`                                | Michael | Templated   | <ul><li>[ ] </li><ul> |                                                                                                                                                                    |
+| `/home`                                | Michael | Complete    | <ul><li>[x] </li><ul> |                                                                                                                                                                    |
 | `/projects`                            | Lu      | Complete    | <ul><li>[x] </li><ul> | Display all projects                                                                                                                                               |
-| `/projects/[id]`                       | Michael | Templated   | <ul><li>[ ] </li><ul> | A specific project, use `components/Task` and `components/KanbanBoard`                                                                                             |
-| `/projects/[id]/overview`              | Faye    | In progress | <ul><li>[ ] </li><ul> | Manager's overview of a project. "keep track of the progression of the project they are responsible for"                                                           |
-| `/projects/new`                        | Faye    | In progress | <ul><li>[ ] </li><ul> | Creating a new project (accessed from manager dashboard)                                                                                                           |
+| `/projects/[id]`                       | Michael | Complete    | <ul><li>[x] </li><ul> | A specific project, use `components/Task` and `components/KanbanBoard`                                                                                             |
+| `/projects/[id]/overview`              | Faye    | In progress | <ul><li>[x] </li><ul> | Manager's overview of a project. "keep track of the progression of the project they are responsible for"                                                           |
+| `/projects/new`                        | Faye    | In progress | <ul><li>[x] </li><ul> | Creating a new project (accessed from manager dashboard)                                                                                                           |
 | `/forum`                               | Ade     | In progress | <ul><li>[ ] </li><ul> | Displays all forum topics (TODO: forum redesign)                                                                                                                   |
 | `/forum?topics=[topic1],[topic2],...`? | ^       | -           |                       | (Same page as ^, but with modified functionality when topics are specified) Posts with the specified topics (dynamic page with updating url without changing page) |
 | `/forum/posts/[id]`                    | Ade     | Templated   | <ul><li>[ ] </li><ul> | Display a specific post                                                                                                                                            |
 | `/forum/posts/[id]/edit`               | Ade     |             | <ul><li>[ ] </li><ul> | Dara thinks having a new page to edit a post may make it easier to implement                                                                                       |
 | `/forum/authors/`                      | Sean    | Complete    | <ul><li>[x] </li><ul> | List authors                                                                                                                                                       |
 | `/forum/authors/[id]`                  | Sean    | Complete    | <ul><li>[x] </li><ul> | Display posts by a specific author                                                                                                                                 |
-| `/dashboard`                           | David   | In progress | <ul><li>[ ] </li><ul> | Projects progress                                                                                                                                                  |
-| `/staff`                               | David   | In progress | <ul><li>[ ] </li><ul> |                                                                                                                                                                    |
+| `/dashboard`                           | David   | Complete    | <ul><li>[x] </li><ul> | Projects progress                                                                                                                                                  |
+| `/staff`                               | David   | Complete    | <ul><li>[x] </li><ul> |                                                                                                                                                                    |
 | `/profile`                             | Dara    | Complete    | <ul><li>[x] </li><ul> |                                                                                                                                                                    |
 | `/signup`                              | Lu      | Complete    | <ul><li>[x] </li><ul> |                                                                                                                                                                    |
 
