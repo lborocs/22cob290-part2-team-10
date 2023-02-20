@@ -115,10 +115,8 @@ export const getServerSideProps = (async (context) => {
       name: data.name,
       members: data.members,
       nooftasks: data.tasks.length,
-      completedtasks: data.tasks.reduce(
-        (n, task) => (task.stage === 'COMPLETED' ? n + 1 : n),
-        0
-      ),
+      completedtasks: data.tasks.filter((task) => task.stage === 'COMPLETED')
+        .length,
       deadline: data.tasks
         .reduce((date, task) => {
           const taskdate = new Date(task.deadline);
