@@ -1,15 +1,17 @@
-import { Box, Grid, Typography } from '@mui/material';
-import styles from '~/styles/Forum.module.css';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 import SearchIcon from '@mui/icons-material/Search';
+
+import styles from '~/styles/Forum.module.css';
 import {
   TopicWrack,
-  getTopicStore,
+  useTopicStore,
   getTopics,
 } from '~/pages/forum/ForumGlobals';
 
-// TODO: ForumSidebar
 export default function ForumSidebar() {
-  const { filteredTopics, setFilteredTopics } = getTopicStore();
+  const { filteredTopics, setFilteredTopics } = useTopicStore();
   return (
     <Box
       sx={{
@@ -29,15 +31,13 @@ export default function ForumSidebar() {
         </Grid>
         <Grid item xs="auto">
           <input
-            type="text"
+            type="search"
             placeholder="Search topic..."
             className={`${styles.innerSearch} ${styles.topicSearch}`}
             onChange={(event) => {
               setFilteredTopics(
                 Array.from(getTopics()).filter((topic) =>
-                  topic
-                    .toLowerCase()
-                    .startsWith(event.target.value.toLowerCase())
+                  topic.toLowerCase().includes(event.target.value.toLowerCase())
                 )
               );
             }}

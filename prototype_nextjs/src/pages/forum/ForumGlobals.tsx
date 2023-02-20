@@ -1,8 +1,6 @@
-/* eslint-disable react-hooks/rules-of-hooks */
+import { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import { create } from 'zustand';
-import type { ResponseSchema } from '../api/posts/getPosts';
-import styles from '~/styles/Forum.module.css';
 import Box from '@mui/material/Box';
 import TerminalRoundedIcon from '@mui/icons-material/TerminalRounded';
 import Typography from '@mui/material/Typography';
@@ -10,11 +8,16 @@ import RemoveRedEyeRoundedIcon from '@mui/icons-material/RemoveRedEyeRounded';
 import CodeMirror from '@uiw/react-codemirror';
 import { langs } from '@uiw/codemirror-extensions-langs';
 import { Remarkable } from 'remarkable';
-import { useState } from 'react';
+import clsx from 'clsx';
+
+import type { ForumPost } from '~/pages/forum';
+import styles from '~/styles/Forum.module.css';
+
+// TODO: move this out of /pages
 
 type postStore = {
-  filteredPosts: ResponseSchema;
-  setFilteredPosts: (topics: ResponseSchema) => void;
+  filteredPosts: ForumPost[];
+  setFilteredPosts: (topics: ForumPost[]) => void;
 };
 type titleStore = {
   filter: string;
@@ -32,38 +35,38 @@ type editorStore = {
   content: string;
   setContent: (content: string) => void;
 };
-type _postStore = {
-  posts: ResponseSchema;
-  setPosts: (posts: ResponseSchema) => void;
+type AllPostsStore = {
+  posts: ForumPost[];
+  setPosts: (posts: ForumPost[]) => void;
 };
 
 const activeTopics = new Set<string>();
 const topics = new Set<string>();
-const use_PostStore = create<_postStore>((set) => ({
+export const useAllPostsStore = create<AllPostsStore>((set) => ({
   posts: [],
   setPosts: (posts) => set(() => ({ posts })),
 }));
-const useTopicStore = create<topicStore>((set) => ({
+export const useTopicStore = create<topicStore>((set) => ({
   filteredTopics: [],
   setFilteredTopics: (filteredTopics) => set(() => ({ filteredTopics })),
 }));
-const usePostStore = create<postStore>((set) => ({
+export const usePostStore = create<postStore>((set) => ({
   filteredPosts: [],
   setFilteredPosts: (filteredPosts) => set(() => ({ filteredPosts })),
 }));
-const useTitleStore = create<titleStore>((set) => ({
+export const useTitleStore = create<titleStore>((set) => ({
   filter: '',
   setFilter: (filter) => set(() => ({ filter })),
 }));
-const usePageStore = create<pageStore>((set) => ({
+export const usePageStore = create<pageStore>((set) => ({
   page: 'post',
   setPage: (page) => set(() => ({ page })),
 }));
-const useContentStore = create<pageStore>((set) => ({
+export const useContentStore = create<pageStore>((set) => ({
   page: 'code',
   setPage: (page) => set(() => ({ page })),
 }));
-const useEditorStore = create<editorStore>((set) => ({
+export const useEditorStore = create<editorStore>((set) => ({
   content: '',
   setContent: (content) => set(() => ({ content })),
 }));
@@ -150,31 +153,33 @@ export function Editor() {
 
 export function TopicWrack({ topics }: { topics: string[] }) {
   const { filteredTopics, setFilteredTopics } = useTopicStore();
-  const { setFilteredPosts } = getPostStore();
+  const setFilteredPosts = usePostStore((state) => state.setFilteredPosts);
   const activeTopics = getActiveTopics();
-  const { filter } = getTitleStore();
-  const { page, setPage } = getPageStore();
+  const filter = useTitleStore((state) => state.filter);
+  const { page, setPage } = usePageStore();
+
+  const posts = useAllPostsStore((state) => state.posts);
+
   return (
     <Grid className={styles.topicWrack} container spacing={0.4}>
       {topics.map((topic) => {
         return (
-          // eslint-disable-next-line react/jsx-key
-          <Grid item xs="auto">
+          <Grid item xs="auto" key={topic}>
             <p
-              className={`
-                ${styles.topic} ${
-                activeTopics.has(topic) ? styles.activeTopic : ''
-              }
-              `}
+              className={clsx(
+                styles.topic,
+                activeTopics.has(topic) && styles.activeTopic
+              )}
               onClick={(event) => {
-                const topic: string = event.target.outerText;
+                const topic: string = event.currentTarget.outerText;
+                console.log('topic clicked =', topic);
                 if (activeTopics.has(topic)) {
                   activeTopics.delete(topic);
                 } else {
                   activeTopics.add(topic);
                 }
                 setFilteredTopics(filteredTopics);
-                setFilteredPosts(getFilteredPosts(filter));
+                setFilteredPosts(getFilteredPosts(posts, filter));
                 if (page != 'post') {
                   setPage('post');
                 }
@@ -189,10 +194,10 @@ export function TopicWrack({ topics }: { topics: string[] }) {
   );
 }
 
-export function getFilteredPosts(titleFilter: string) {
-  const { posts } = get_PostStore();
+export function getFilteredPosts(posts: ForumPost[], titleFilter: string) {
   const activeTopics_ = Array.from(activeTopics);
-  const filteredPosts: ResponseSchema = posts.filter((post) => {
+
+  const filteredPosts = posts.filter((post) => {
     const topics = post.topics.map((topic) => topic.name);
     return (
       post.history
@@ -209,26 +214,6 @@ export function getActiveTopics() {
   return activeTopics;
 }
 
-export function getPostStore() {
-  return usePostStore();
-}
-
-export function getTitleStore() {
-  return useTitleStore();
-}
-
-export function getPageStore() {
-  return usePageStore();
-}
-
-export function getTopicStore() {
-  return useTopicStore();
-}
-
 export function getTopics() {
   return topics;
-}
-
-export function get_PostStore() {
-  return use_PostStore();
 }

@@ -511,6 +511,7 @@ from the
 | [Next.Js](https://nextjs.org/)                                                        | 13.1          | Full stack framework                                                                                   |
 | [NextAuth.js](https://next-auth.js.org/)                                              | 4.17          | Authentication                                                                                         |
 | [sharp](https://nextjs.org/docs/messages/sharp-missing-in-production)                 | 0.31          | Next.Js Image Optimization (not used explicitly by us)                                                 |
+| [next-superjson-plugin](https://github.com/blitz-js/next-superjson-plugin)            | 0.5           | SuperJSON plugin for Next.Js pages, so we dont have to manually serialie & deserialize dates           |
 | [MUI Material UI](https://mui.com/)                                                   | 5.11          | Component Library ([#40][iMui])                                                                        |
 | [MUI Material UI Lab](https://mui.com/material-ui/about-the-lab/)                     | 5.0           | MUI Components not yet added to core (e.g. `LoadingButton`)                                            |
 | [MUI Material Icons](https://mui.com/material-ui/getting-started/installation/#icons) | 5.11          | MUI Icons                                                                                              |
@@ -536,6 +537,10 @@ from the
 | [type-fest](https://github.com/sindresorhus/type-fest)                                | 3.5           | Utility TypeScript types                                                                               |
 | [clsx](https://github.com/lukeed/clsx)                                                | 1.2           | Utility library for constructing classnames                                                            |
 | ...                                                                                   |               |                                                                                                        |
+
+next-superjson-plugin
+https://github.com/blitz-js/next-superjson-plugin
+0.5.4
 
 <!-- https://stackoverflow.com/a/42424860 -->
 [pFormikZod]: https://github.com/lborocs/22cob290-part2-team-10/pull/1

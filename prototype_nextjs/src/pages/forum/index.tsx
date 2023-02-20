@@ -1,50 +1,63 @@
-/* eslint-disable react/jsx-key */
+import { useEffect, useMemo, useState } from 'react';
 import type {
   GetServerSidePropsContext,
   InferGetServerSidePropsType,
 } from 'next';
 import Head from 'next/head';
-import { unstable_getServerSession } from 'next-auth/next';
+import { getServerSession } from 'next-auth/next';
 import { SidebarType } from '~/components/Layout';
 import ForumSidebar from '~/components/layout/sidebar/ForumSidebar';
 import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
-import { Grid, Typography } from '@mui/material';
-import styles from '~/styles/Forum.module.css';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 import SearchIcon from '@mui/icons-material/Search';
-import {
-  getFilteredPosts,
-  getPageStore,
-  getPostStore,
-  getTitleStore,
-  TopicWrack,
-  getTopics,
-  getTopicStore,
-  Editor,
-  get_PostStore,
-} from './ForumGlobals';
 import axios from 'axios';
-import useSWR from 'swr';
-import type { ResponseSchema } from '../api/posts/getPosts';
-import { Box } from '@mui/system';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import { Remarkable } from 'remarkable';
-import { useState } from 'react';
 
+import prisma from '~/lib/prisma';
+import {
+  getFilteredPosts,
+  usePageStore,
+  usePostStore,
+  useTitleStore,
+  TopicWrack,
+  getTopics,
+  useTopicStore,
+  Editor,
+  useAllPostsStore,
+} from './ForumGlobals';
+
+import styles from '~/styles/Forum.module.css';
+
+type SsrProps = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+export type ForumPost = SsrProps['posts'][number];
+
+// TODO: top10voted?
+
+// FIXME: You aren't modifying users anywhere???
 const users: { name: string; id: string }[] = [];
 
-function PostWrack({ posts }: { posts: ResponseSchema }) {
-  const { setPage } = getPageStore();
+function PostWrack({ posts }: { posts: ForumPost[] }) {
+  const setPage = usePageStore((state) => state.setPage);
+
   return (
     <Grid container spacing={3} className={styles.postWrack}>
       {posts.map((post) => {
-        const editor = users
-          .filter((user) => user.id == post.history.at(-1)?.editorId)
-          .at(0)?.name;
-        const date = new Date(post.history.at(-1)!.date);
+        // idk wtf you were trying to do here
+        // const editor = users
+        //   .filter((user) => user.id === post.history.at(-1)?.editorId)
+        //   .at(0)?.name;
+
+        const editor = post.history.at(-1)?.editor?.name;
+        const date = post.history.at(-1)?.date;
+
         return (
-          <Grid item xs={12}>
+          <Grid item xs={12} key={post.id}>
             <Box className={styles.post}>
               <Grid container className={styles.postHeader}>
                 <Grid item xs="auto">
@@ -65,9 +78,9 @@ function PostWrack({ posts }: { posts: ResponseSchema }) {
                 <p className={styles.postLog}>
                   Last updated by
                   {' "'}
-                  {editor}
+                  {editor ?? '?'}
                   {'" '}
-                  on {date.toDateString()}
+                  on {date?.toDateString() ?? '?'}
                 </p>
                 <p className={styles.postSummary}>
                   <i>Summary:</i>&ensp;{post.history.at(-1)?.summary}
@@ -82,11 +95,13 @@ function PostWrack({ posts }: { posts: ResponseSchema }) {
 }
 
 function PostPage() {
-  const { filteredPosts, setFilteredPosts } = getPostStore();
-  const { page, setPage } = getPageStore();
-  const { filter, setFilter } = getTitleStore();
+  const { filteredPosts, setFilteredPosts } = usePostStore();
+  const { page, setPage } = usePageStore();
+  const { filter, setFilter } = useTitleStore();
 
-  if (page != 'post') {
+  const posts = useAllPostsStore((state) => state.posts);
+
+  if (page !== 'post') {
     return <></>;
   }
 
@@ -114,13 +129,13 @@ function PostPage() {
           </Grid>
           <Grid item xs="auto">
             <input
-              type="text"
+              type="search"
               placeholder="Search post by title..."
-              value={filter ? filter : ''}
+              value={filter || ''}
               className={`${styles.innerSearch} ${styles.topicSearch}`}
               onChange={(event) => {
                 setFilter(event.target.value);
-                setFilteredPosts(getFilteredPosts(event.target.value));
+                setFilteredPosts(getFilteredPosts(posts, event.target.value));
               }}
             />
           </Grid>
@@ -133,24 +148,43 @@ function PostPage() {
 
 function WikiPage() {
   const [state, setState] = useState<string>(styles.vote);
-  const { page, setPage } = getPageStore();
+  const { page, setPage } = usePageStore();
 
-  if (!page.startsWith('wiki')) {
+  const id = Number(page.slice(5, -1));
+
+  const posts = useAllPostsStore((state) => state.posts);
+  const setPosts = useAllPostsStore((state) => state.setPosts);
+
+  const post = useMemo(
+    () => posts.filter((post) => post.id === id).at(0),
+    [posts, id]
+  );
+
+  // idk wtf you were trying to do here
+  // const editor = users
+  //   .filter((user) => user.id === post?.history.at(-1)?.editorId)
+  //   .at(0)?.name;
+
+  const editor = post?.history.at(-1)?.editor?.name;
+  console.log('post.history =', post?.history);
+
+  const date = post?.history?.at(-1)?.date ?? new Date();
+  const parser = useMemo(() => new Remarkable(), []);
+
+  useEffect(() => {
+    // set 'initial' style state if the post is upvoted by the signed in user
+    setState(
+      post?.upvotedByMe ? `${styles.vote} ${styles.activeVote}` : styles.vote
+    );
+  }, [post?.upvotedByMe]);
+
+  if (!page.startsWith('wiki') || !post) {
     return <></>;
   }
 
-  const id = Number(page.slice(5, -1));
-  const { posts } = get_PostStore();
-  const post = posts.filter((post) => post.id == id).at(0);
-  const editor = users
-    .filter((user) => user.id == post?.history.at(-1)?.editorId)
-    .at(0)?.name;
-  const date = new Date(post!.history.at(-1)!.date);
-  const parser = new Remarkable();
-
   return (
     <Box>
-      <Typography variant="h4">{post?.history.at(-1)?.title}</Typography>
+      <Typography variant="h4">{post.history.at(-1)?.title}</Typography>
       <hr />
       <Box>
         <p className={styles.postLog}>
@@ -158,17 +192,17 @@ function WikiPage() {
           {' "'}
           {editor}
           {'" '}
-          on {date.toDateString()}; Now with {post?.upvoters.length} vote(s)
+          on {date.toDateString()}; Now with {post.upvoters} vote(s)
         </p>
         <Box
           dangerouslySetInnerHTML={{
-            __html: parser.render(post!.history.at(-1)!.content),
+            __html: parser.render(post.history.at(-1)!.content),
           }}
         />
       </Box>
       <Typography variant="h5">Topics</Typography>
       <hr />
-      <TopicWrack topics={post!.topics.map((topic) => topic.name)} />
+      <TopicWrack topics={post.topics.map((topic) => topic.name)} />
       <br />
       <Grid
         container
@@ -203,13 +237,16 @@ function WikiPage() {
               className={state}
               onClick={async () => {
                 let choice = false;
-                if (state != styles.vote) {
+                if (state !== styles.vote) {
                   // if already voted
                   setState(styles.vote);
                 } else {
                   setState(`${styles.vote} ${styles.activeVote}`);
                   choice = true;
                 }
+
+                // TODO: update posts array
+                // using `setPosts`
 
                 await axios.post('api/posts/updateVotes', {
                   postId: id,
@@ -226,9 +263,9 @@ function WikiPage() {
 }
 
 export function NewPostPage() {
-  const { page, setPage } = getPageStore();
+  const { page, setPage } = usePageStore();
 
-  if (page != 'newPost') {
+  if (page !== 'newPost') {
     return <></>;
   }
 
@@ -283,31 +320,24 @@ export function NewPostPage() {
   );
 }
 
-// TODO: ForumPage
 const ForumPage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
-  // eslint-disable-next-line no-empty-pattern
-> = ({}) => {
-  // TODO: top10voted?
-  // TODO: option to list the posts only by this user (can be a different page)
-  const { data: posts_ } = useSWR('/api/posts/getPosts', async (url) => {
-    const { data } = await axios.get<ResponseSchema>(url);
-    return data;
-  });
-  const { posts, setPosts } = get_PostStore();
-  const { setFilteredTopics } = getTopicStore();
+> = ({ posts: _posts, topics }) => {
+  const setPosts = useAllPostsStore((state) => state.setPosts);
+  const setFilteredPosts = usePostStore((state) => state.setFilteredPosts);
+  const setFilteredTopics = useTopicStore((state) => state.setFilteredTopics);
 
-  if (posts.length == 0) {
-    setPosts(posts_!);
-    if (posts) {
-      const topics_ = new Set<string>();
-      posts.forEach((post) =>
-        post.topics.map((topic) => topics_.add(topic.name))
-      );
-      topics_.forEach((topic) => getTopics().add(topic));
-      setFilteredTopics(Array.from(getTopics()));
-    }
-  }
+  useEffect(() => {
+    setPosts(_posts);
+    setFilteredPosts(_posts);
+  }, [_posts, setPosts, setFilteredPosts, setFilteredTopics]);
+
+  useEffect(() => {
+    const topicsSet = getTopics();
+
+    topics.forEach((topic) => topicsSet.add(topic));
+    setFilteredTopics(topics);
+  }, [topics, setFilteredTopics]);
 
   return (
     <main className={styles.main}>
@@ -329,23 +359,61 @@ ForumPage.layout = {
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
+  const session = await getServerSession(context.req, context.res, authOptions);
+
   if (!session || !session.user) {
     return { notFound: true };
   }
 
-  // TODO: use prisma to get forum posts from database
+  const user = session.user as SessionUser;
 
-  // TODO: convert each post's date from `Date` to number because Date isn't serializable
-  // can use `lib/posts#serializablePost`
+  const posts = await prisma.post.findMany({
+    select: {
+      id: true,
+      authorId: true,
+      author: true,
+      topics: true,
+      // using to check if upvoted by this user
+      upvoters: {
+        where: {
+          id: user.id,
+        },
+        select: {
+          id: true,
+        },
+      },
+      _count: {
+        select: {
+          // using to get the number of upvotes
+          upvoters: true,
+        },
+      },
+      history: {
+        include: {
+          editor: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const postsWithInfo = posts.map((post) => ({
+    ...post,
+    upvotedByMe: post.upvoters.length > 0,
+    upvoters: post._count.upvoters,
+  }));
+
+  const topics = await prisma.postTopic.findMany();
 
   return {
     props: {
       session,
+      user,
+      posts: postsWithInfo,
+      topics: topics.map((topic) => topic.name),
     },
   };
 }
