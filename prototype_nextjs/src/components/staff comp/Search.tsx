@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 
 import SearchIcon from '@mui/icons-material/Search';
 import { TextField } from '@mui/material';
@@ -18,13 +17,19 @@ export default function SearchAppBar(props: { onSearch: (arg0: any) => void }) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
-        <Toolbar>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
-          ></Typography>
+        <Toolbar
+          sx={{
+            paddingY: 1.5,
+          }}
+        >
+          {/* for spacing */}
+          <Box
+            flexGrow={1}
+            display={{
+              xs: 'none',
+              sm: 'block',
+            }}
+          />
 
           <form>
             <TextField
