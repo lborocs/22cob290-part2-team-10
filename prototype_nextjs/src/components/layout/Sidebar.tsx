@@ -19,6 +19,7 @@ export default function Sidebar({ show, content }: SidebarProps) {
       color="black"
       component="aside"
       // override app theme for sidebar - at least until configured sidebar colours in dark mode
+      // TODO: configure sidebar colours in dark mode
       data-mui-color-scheme="light"
       position="fixed"
       sx={{
