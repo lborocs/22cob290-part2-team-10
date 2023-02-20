@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Image, { type ImageLoader } from 'next/image';
 import { useRouter } from 'next/router';
-import { unstable_getServerSession } from 'next-auth/next';
+import { getServerSession } from 'next-auth/next';
 import { signIn } from 'next-auth/react';
 import Box from '@mui/material/Box';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -296,11 +296,7 @@ const SignInPage: AppPage = () => {
 SignInPage.noAuth = true;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
+  const session = await getServerSession(context.req, context.res, authOptions);
 
   // if signed in, redirect to home page or callbackUrl
   if (session && session.user) {

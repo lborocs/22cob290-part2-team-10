@@ -14,7 +14,7 @@ import { withZodSchema } from 'formik-validator-zod';
 import type { z } from 'zod';
 import toast from 'react-hot-toast';
 import { Formik } from 'formik';
-import { unstable_getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth';
 
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 
@@ -267,11 +267,7 @@ export default function SignupPage({
 SignupPage.noAuth = true;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
+  const session = await getServerSession(context.req, context.res, authOptions);
 
   // if signed in, redirect to home page
   if (session && session.user)

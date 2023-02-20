@@ -1,6 +1,6 @@
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import Head from 'next/head';
-import { unstable_getServerSession } from 'next-auth/next';
+import { getServerSession } from 'next-auth/next';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
@@ -10,6 +10,7 @@ import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import prisma from '~/lib/prisma';
 
 import Stafftable from '~/components/staff comp/stafftable';
+import Custom404 from '~/pages/[...404]';
 
 /*
   "There should also be a manager’s dashboard so that the managers or team lead‐
@@ -20,6 +21,9 @@ import Stafftable from '~/components/staff comp/stafftable';
 const Staff: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ users }) => {
+  // if not a manager, show 404
+  if (!users) return <Custom404 />;
+
   return (
     <Container component="main" maxWidth="xl" fixed>
       <Head>
@@ -42,11 +46,7 @@ Staff.layout = {
 };
 
 export const getServerSideProps = (async (context) => {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
+  const session = await getServerSession(context.req, context.res, authOptions);
 
   if (!session || !session.user) {
     return { notFound: true };
@@ -55,7 +55,13 @@ export const getServerSideProps = (async (context) => {
   const user = session.user as SessionUser;
 
   if (!user.isManager) {
-    return { notFound: true };
+    // return { notFound: true };
+    return {
+      props: {
+        session,
+        user,
+      },
+    };
   }
 
   const users = await prisma.user.findMany({
