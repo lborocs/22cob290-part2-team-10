@@ -225,6 +225,10 @@ function WikiPage() {
 
   const date = post?.history?.at(-1)?.date ?? new Date();
   const parser = useMemo(() => new Remarkable(), []);
+  const htmlContent = useMemo(
+    () => parser.render(post?.history.at(-1)?.content ?? ''),
+    [parser, post?.history]
+  );
 
   useEffect(() => {
     // set 'initial' style state if the post is upvoted by the signed in user
@@ -251,7 +255,8 @@ function WikiPage() {
         </p>
         <Box
           dangerouslySetInnerHTML={{
-            __html: parser.render(post.history.at(-1)!.content),
+            // __html: parser.render(post.history.at(-1)!.content),
+            __html: htmlContent,
           }}
           className={styles.wikiContent}
         />

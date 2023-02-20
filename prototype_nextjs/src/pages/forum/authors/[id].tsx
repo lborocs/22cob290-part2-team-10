@@ -13,7 +13,6 @@ import Typography from '@mui/material/Typography';
 import hashids, { decodeString } from '~/lib/hashids';
 import prisma from '~/lib/prisma';
 import { SidebarType } from '~/components/Layout';
-import ForumSidebar from '~/components/layout/sidebar/ForumSidebar';
 import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import UserAvatar from '~/components/avatar/UserAvatar';
@@ -164,8 +163,7 @@ const AuthorPage: AppPage<
 
 AuthorPage.layout = {
   sidebar: {
-    type: SidebarType.CUSTOM,
-    content: <ForumSidebar />,
+    type: SidebarType.PROJECTS,
   },
 };
 

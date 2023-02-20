@@ -321,8 +321,8 @@ Use dynamic routes instead of URL params, with similar functionality to a REST A
 | `/home`                                | Michael | Complete    | <ul><li>[x] </li><ul> |                                                                                                                                                                    |
 | `/projects`                            | Lu      | Complete    | <ul><li>[x] </li><ul> | Display all projects                                                                                                                                               |
 | `/projects/[id]`                       | Michael | Complete    | <ul><li>[x] </li><ul> | A specific project, use `components/Task` and `components/KanbanBoard`                                                                                             |
-| `/projects/[id]/overview`              | Faye    | Complete | <ul><li>[x] </li><ul> | Manager's overview of a project. Can assign project members, update project leader/title                                                           |
-| `/projects/new`                        | Faye    | Complete | <ul><li>[x] </li><ul> | Creating a new project (accessed from manager dashboard)                                                                                                           |
+| `/projects/[id]/overview`              | Faye    | Complete    | <ul><li>[x] </li><ul> | Manager's overview of a project. Can assign project members, update project leader/title                                                                           |
+| `/projects/new`                        | Faye    | Complete    | <ul><li>[x] </li><ul> | Creating a new project (accessed from manager dashboard)                                                                                                           |
 | `/forum`                               | Ade     | In progress | <ul><li>[ ] </li><ul> | Displays all forum topics (TODO: forum redesign)                                                                                                                   |
 | `/forum?topics=[topic1],[topic2],...`? | ^       | -           |                       | (Same page as ^, but with modified functionality when topics are specified) Posts with the specified topics (dynamic page with updating url without changing page) |
 | `/forum/posts/[id]`                    | Ade     | Templated   | <ul><li>[ ] </li><ul> | Display a specific post                                                                                                                                            |
@@ -523,7 +523,6 @@ from the
 | [Prisma](https://www.prisma.io/)                                                      | 4.8           | Database ORM ([#12][iPrisma])                                                                          |
 | [ts-node](https://typestrong.org/ts-node/)                                            | 10.9          | Run code to [seed Prisma database](https://www.prisma.io/docs/guides/database/seed-database)           |
 | [node.bcrypt.js](https://github.com/kelektiv/node.bcrypt.js)                          | 5.1           | Hashing user passwords                                                                                 |
-| [react-markdown](https://github.com/remarkjs/react-markdown)?                         | -             | Render markdown content in forum posts                                                                 |
 | [Zod](https://zod.dev/)                                                               | 3.20          | Object schema validation ([#1][pFormikZod])                                                            |
 | [Formik](https://formik.org/)                                                         | 2.2           | Form validation ([#1][pFormikZod])                                                                     |
 | [formik-validator-zod](https://github.com/Glazy/formik-validator-zod)                 | 1.0           | Zod adapter for Formik ([Formik uses Yup](https://formik.org/docs/guides/validation#validationschema)) |
@@ -536,6 +535,7 @@ from the
 | [usehooks-ts](https://usehooks-ts.com/)                                               | 2.9           | Utility React hooks                                                                                    |
 | [type-fest](https://github.com/sindresorhus/type-fest)                                | 3.5           | Utility TypeScript types                                                                               |
 | [clsx](https://github.com/lukeed/clsx)                                                | 1.2           | Utility library for constructing classnames                                                            |
+| [remarkable](https://github.com/jonschlinkert/remarkable)                             | 2.0           | Rendering markdown content                                                                             |
 | ...                                                                                   |               |                                                                                                        |
 
 <!-- https://stackoverflow.com/a/42424860 -->

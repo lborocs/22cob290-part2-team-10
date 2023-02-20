@@ -13,6 +13,7 @@ import Link from '~/components/Link';
 
 export default function ForumSidebar() {
   const { filteredTopics, setFilteredTopics } = useTopicStore();
+
   return (
     <Box
       sx={{
@@ -25,7 +26,7 @@ export default function ForumSidebar() {
         className={styles.redirect}
         href="/forum/authors"
       >
-        See authors
+        See all authors
       </Link>
       <br />
 

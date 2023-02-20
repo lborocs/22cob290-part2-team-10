@@ -11,7 +11,6 @@ import { blue } from '@mui/material/colors';
 import { encodeString } from '~/lib/hashids';
 import prisma from '~/lib/prisma';
 import { SidebarType } from '~/components/Layout';
-import ForumSidebar from '~/components/layout/sidebar/ForumSidebar';
 import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import { NextLinkComposed } from '~/components/Link';
@@ -78,8 +77,7 @@ const AuthorsPage: AppPage<
 
 AuthorsPage.layout = {
   sidebar: {
-    type: SidebarType.CUSTOM,
-    content: <ForumSidebar />,
+    type: SidebarType.PROJECTS,
   },
 };
 
