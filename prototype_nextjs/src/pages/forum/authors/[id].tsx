@@ -69,32 +69,36 @@ const AuthorPage: AppPage<
         <title>{pageTitle}</title>
       </Head>
 
-      <UserAvatar
-        userId={authorInfo.id}
-        name={authorInfo.name}
-        image={authorInfo.image}
-        sx={{
-          marginRight: 2,
-        }}
-      />
-      <Typography
-        component="span"
-        sx={(theme) => ({
-          bgcolor: blue[100],
-          borderStyle: 'solid',
-          fontSize: 'large',
-          borderRadius: '20px',
-          paddingInline: '15px',
-          margin: '0px',
-          paddingTop: '1.8px',
-          fontWeight: 'bold',
-          [theme.getColorSchemeSelector('dark')]: {
-            bgcolor: blue['700'],
-          },
-        })}
-      >
-        {pageTitle}
-      </Typography>
+      <Box display="flex" alignItems="center">
+        <UserAvatar
+          userId={authorInfo.id}
+          name={authorInfo.name}
+          image={authorInfo.image}
+          size="60px"
+          sx={{
+            marginRight: 2,
+            fontSize: '1.8rem',
+          }}
+        />
+        <Typography
+          component="span"
+          sx={(theme) => ({
+            bgcolor: blue[100],
+            borderStyle: 'solid',
+            fontSize: 'large',
+            borderRadius: '20px',
+            paddingInline: '15px',
+            margin: '0px',
+            paddingTop: '1.8px',
+            fontWeight: 'bold',
+            [theme.getColorSchemeSelector('dark')]: {
+              bgcolor: blue['700'],
+            },
+          })}
+        >
+          {pageTitle}
+        </Typography>
+      </Box>
 
       <p>Here are all the posts by this author</p>
 
