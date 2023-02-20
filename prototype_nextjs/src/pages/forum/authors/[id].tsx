@@ -129,13 +129,13 @@ const AuthorPage: AppPage<
                   </h1>
 
                   <h2 style={postTitleStyle}>
-                    <Link
+                    {/* <Link
                       href={`/forum/posts/${hashids.encode(
                         postHistory.postId
                       )}`}
-                    >
-                      {postHistory.title}
-                    </Link>
+                    > */}
+                    {postHistory.title}
+                    {/* </Link> */}
                   </h2>
 
                   <h4 style={summaryTextStyle}>
