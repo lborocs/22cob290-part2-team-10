@@ -20,11 +20,12 @@ sudo cp nginx/app.conf /etc/nginx/conf.d/app.conf
 # Restart nginx
 sudo service nginx restart
 
-# not sure if it will be needed after merge
+# Not sure if will need these with PM2
 cp .env.docker .env &&\
+mv .env.development .env.development.bak &&\
 pnpm i &&\
 pnpm prisma generate &&\
-pnpm prisma migrate deploy &&\ # make sure db is running first
+pnpm prisma migrate deploy &&\
 pnpm build
 
 # Seed database (for testing/presentation)

@@ -11,12 +11,8 @@ sudo apt-get update && sudo apt-get -y upgrade
 
 # Clone project repo (will need to generate personal access token - https://github.com/settings/tokens - use it as your password)
 cd ~ &&\
-git clone https://github.com/lborocs/22cob290-part2-team-10.git &&\
-cd ~/22cob290-part2-team-10/prototype_nextjs &&\
-####### before this branch is merged with main
-git switch nginx-pm2
-
-
+git clone -b prod https://github.com/lborocs/22cob290-part2-team-10.git &&\
+cd ~/22cob290-part2-team-10/prototype_nextjs
 
 . bin/setup.sh
 . bin/run.sh
