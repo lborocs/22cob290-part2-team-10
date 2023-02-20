@@ -10,10 +10,10 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 
-import type { getServerSideProps } from '../../pages/staff';
+import type { getServerSideProps } from '~/pages/staff';
 
-import AlertDialogSlide from './dialog';
-import SearchAppBar from './Search';
+import AlertDialogSlide from '~/components/staff comp/dialog';
+import SearchAppBar from '~/components/staff comp/Search';
 
 interface Column {
   id: keyof Data;
@@ -24,8 +24,7 @@ interface Column {
 }
 
 const columns: readonly Column[] = [
-  { id: 'name', label: 'User Name', minWidth: 170 },
-
+  { id: 'name', label: 'Name', minWidth: 170 },
   {
     id: 'email',
     label: 'User email',
@@ -65,11 +64,9 @@ export type stafftableProps = {
 };
 
 export default function Stafftable({ users }: stafftableProps) {
-  console.log(users);
   const rows: Data[] = users.map((user) =>
     createData(user.name, user.email, user.leftCompany ? 'left' : 'not_left')
   );
-  console.log('rows =', rows);
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);

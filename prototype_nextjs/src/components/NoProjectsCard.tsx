@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import type { getServerSideProps } from '~/pages/projects';
 import type { SessionUser } from '~/types';
 
-export default function NoProjectsCard() {
+export default function NoProjectsCard({ children }: React.PropsWithChildren) {
   return (
     <Paper
       sx={(theme) => ({
@@ -34,7 +34,7 @@ export default function NoProjectsCard() {
         textAlign="center"
         color="contrast.main"
       >
-        You do not have any projects assigned...
+        {children || 'You do not have any projects assigned...'}
       </Typography>
     </Paper>
   );

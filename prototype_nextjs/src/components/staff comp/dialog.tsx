@@ -5,11 +5,11 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
-import { TransitionProps } from '@mui/material/transitions';
+import type { TransitionProps } from '@mui/material/transitions';
 import axios from 'axios';
 import React from 'react';
 
-const Transition = React.forwardRef(function Transition(
+const SlideUp = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<any, any>;
   },
@@ -22,10 +22,12 @@ export default function AlertDialogSlide({ email }: { email: string }) {
   const [open, setOpen] = React.useState(false);
   const f = async () => {
     handleClose();
-    const response = axios.post('/api/user/staffupdate', {
-      email: email,
+
+    await axios.post('/api/user/staffupdate', {
+      email,
       leftCompany: true,
     });
+
     location.reload();
   };
   const handleClickOpen = () => {
@@ -38,10 +40,10 @@ export default function AlertDialogSlide({ email }: { email: string }) {
 
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen}></Button>
+      <Button variant="outlined" onClick={handleClickOpen} />
       <Dialog
         open={open}
-        TransitionComponent={Transition}
+        TransitionComponent={SlideUp}
         keepMounted
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"

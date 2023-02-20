@@ -10,9 +10,9 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 
-import type { getServerSideProps } from '../../pages/dashboard';
+import type { getServerSideProps } from '~/pages/dashboard';
 import hashids from '~/lib/hashids';
-import SearchAppBar from '../staff comp/Search';
+import SearchAppBar from '~/components/staff comp/Search';
 
 interface Column {
   id: keyof Data;
@@ -83,14 +83,13 @@ function createData(
 
 type Project = InferGetServerSidePropsType<
   typeof getServerSideProps
->['projects_'][number];
+>['projects'][number];
 
 export type ProjectTableProps = {
   projects: Project[];
 };
 
 export default function ProjectTable({ projects }: ProjectTableProps) {
-  console.log(projects);
   const rows: Data[] = projects.map((project) =>
     createData(
       project.id,
@@ -150,7 +149,7 @@ export default function ProjectTable({ projects }: ProjectTableProps) {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => {
                 return (
-                  <TableRow hover role="checkbox">
+                  <TableRow key={row.projectId} hover role="checkbox">
                     {columns.map((column) => {
                       const value = row[column.id];
 

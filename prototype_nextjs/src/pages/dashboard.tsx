@@ -1,12 +1,11 @@
-import type {
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-  GetServerSideProps,
-} from 'next';
+import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
 import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
 import AddIcon from '@mui/icons-material/Add';
+import type { Prisma } from '@prisma/client';
 
 import { SidebarType } from '~/components/Layout';
 import type { AppPage, SessionUser } from '~/types';
@@ -15,7 +14,7 @@ import prisma from '~/lib/prisma';
 import { NextLinkComposed } from '~/components/Link';
 import ProjectTable from '../components/dashboardcomp/ProjectTable';
 import useUserStore from '~/store/userStore';
-import { Prisma } from '@prisma/client';
+import NoProjectsCard from '~/components/NoProjectsCard';
 
 /*
 "There should also be a manager’s dashboard so that the managers or team lead‐
@@ -25,37 +24,43 @@ ers can keep track of the progression of the project they are responsible for."
 
 const DashboardPage: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
-> = ({ projects_ }) => {
+> = ({ projects }) => {
   const isManager = useUserStore((store) => store.user.isManager);
 
-  //Gets sum of all tasks using card and returns sum of tasks
-  function getTasks() {
-    console.log('TASKS');
-  }
-  getTasks();
   return (
-    <main>
+    <Container component="main" maxWidth="xl" fixed>
       <Head>
         <title>Dashboard - Make-It-All</title>
       </Head>
-      <div></div>
-      <div>
-        <ProjectTable projects={projects_} />
-        {isManager && (
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            sx={{
-              marginTop: 5,
-            }}
-            component={NextLinkComposed}
-            to="/projects/new"
-          >
-            Add Project
-          </Button>
-        )}
-      </div>
-    </main>
+      <Typography variant="h4" component="h1" gutterBottom>
+        {isManager ? 'All ' : 'Your led '}
+        projects
+      </Typography>
+
+      {projects.length === 0 ? (
+        <NoProjectsCard>
+          {isManager
+            ? 'There are no projects'
+            : 'You are not leading any projects...'}
+        </NoProjectsCard>
+      ) : (
+        <ProjectTable projects={projects} />
+      )}
+
+      {isManager && (
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          sx={{
+            marginTop: 5,
+          }}
+          component={NextLinkComposed}
+          to="/projects/new"
+        >
+          Add Project
+        </Button>
+      )}
+    </Container>
   );
 };
 
@@ -106,7 +111,7 @@ export const getServerSideProps = (async (context) => {
     });
   }
 
-  const projects_ = projects.map((data) => {
+  const _projects = projects.map((data) => {
     return {
       id: data.id,
       leader: data.leader,
@@ -131,7 +136,7 @@ export const getServerSideProps = (async (context) => {
     props: {
       session,
       user,
-      projects_,
+      projects: _projects,
     },
   };
 }) satisfies GetServerSideProps;

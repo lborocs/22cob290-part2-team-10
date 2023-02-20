@@ -1,18 +1,15 @@
-import type {
-  GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-  GetServerSideProps,
-} from 'next';
+import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { unstable_getServerSession } from 'next-auth/next';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
 
 import { SidebarType } from '~/components/Layout';
 import type { AppPage, SessionUser } from '~/types';
 import { authOptions } from '~/pages/api/auth/[...nextauth]';
 import prisma from '~/lib/prisma';
 
-import useUserStore from '~/store/userStore';
-import Stafftable from '../components/staff comp/stafftable';
+import Stafftable from '~/components/staff comp/stafftable';
 
 /*
   "There should also be a manager’s dashboard so that the managers or team lead‐
@@ -23,18 +20,18 @@ import Stafftable from '../components/staff comp/stafftable';
 const Staff: AppPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ users }) => {
-  const isManager = useUserStore((store) => store.user.isManager);
-
   return (
-    <main>
+    <Container component="main" maxWidth="xl" fixed>
       <Head>
         <title>Staff Page - Make-It-All</title>
       </Head>
 
-      <div>
-        <Stafftable users={users} />
-      </div>
-    </main>
+      <Typography variant="h4" component="h1" gutterBottom>
+        Staff
+      </Typography>
+
+      <Stafftable users={users} />
+    </Container>
   );
 };
 
@@ -57,6 +54,10 @@ export const getServerSideProps = (async (context) => {
 
   const user = session.user as SessionUser;
 
+  if (!user.isManager) {
+    return { notFound: true };
+  }
+
   const users = await prisma.user.findMany({
     select: {
       email: true,
@@ -64,8 +65,6 @@ export const getServerSideProps = (async (context) => {
       leftCompany: true,
     },
   });
-
-  console.log(users);
 
   return {
     props: {
