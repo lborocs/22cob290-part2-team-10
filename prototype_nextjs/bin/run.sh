@@ -10,7 +10,6 @@ cd ~/22cob290-part2-team-10/prototype_nextjs
 git switch nginx-pm2
 
 # not sure if it will be needed after merge
-git checkout .. && git pull &&\
 cp .env.docker .env &&\
 pnpm i &&\
 pnpm prisma generate &&\
