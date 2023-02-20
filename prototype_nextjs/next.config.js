@@ -8,6 +8,9 @@ const nextConfig = {
   swcMinify: true,
   // comment out output when building locally with pnpm, see https://github.com/vercel/next.js/issues/40760
   output: analyze ? undefined : 'standalone',
+  experimental: {
+    swcPlugins: [['next-superjson-plugin', {}]],
+  },
 };
 
 if (process.env.NODE_ENV === 'production') {

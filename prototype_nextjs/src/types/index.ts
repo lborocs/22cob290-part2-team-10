@@ -1,6 +1,5 @@
 import type { NextPage } from 'next';
 import type { User } from 'next-auth';
-import type { Prisma } from '@prisma/client';
 
 import type { PageLayout } from '~/components/Layout';
 
