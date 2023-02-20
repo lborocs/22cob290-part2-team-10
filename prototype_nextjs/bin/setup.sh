@@ -1,3 +1,5 @@
+# /bin/bash
+
 sudo apt-get update && sudo apt-get -y upgrade
 
 # Install nginx
@@ -15,23 +17,12 @@ sudo npm i -g pnpm
 # ... (idk yet)
 
 # Clone project repo (will need to generate personal access token - https://github.com/settings/tokens - use it as your password)
-cd ~
-git clone https://github.com/lborocs/22cob290-part2-team-10.git
+#cd ~
+#git clone https://github.com/lborocs/22cob290-part2-team-10.git
+# ^ Shouldn't need to clone, since this script is in the repo
 
 # Enter part 2 of project
-cd 22cob290-part2-team-10/prototype_nextjs
-
-####### before this branch is merged with main
-git switch nginx-pm2
-
-# not sure if it will be needed after merge
-git checkout .. && git pull &&\
-cp .env.docker .env &&\
-pnpm i &&\
-pnpm prisma generate &&\
-pnpm prisma migrate deploy &&\ # make sure db is running first
-pnpm build
-#######
+cd ~/22cob290-part2-team-10/prototype_nextjs
 
 # Use MySQL prisma schema & migrations
 cp prisma/mysql.prisma prisma/schema.prisma &&\
@@ -61,8 +52,3 @@ echo \
   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null &&\
 sudo apt-get update &&\
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
-# Start prop docker (app & database)
-# sudo docker compose -p t10gp-prod -f docker-compose.prod.yaml --env-file .env.docker up -d
-# Maybe only use docker compose for mysql?
-sudo docker compose -p t10gp-db --env-file .env.docker up -d
