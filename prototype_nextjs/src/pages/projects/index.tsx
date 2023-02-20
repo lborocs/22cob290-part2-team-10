@@ -33,7 +33,7 @@ const ProjectsPage: AppPage<
     const totalNumOfTasks = project.tasks.length;
 
     const inCompletedTasks = project.tasks.filter(
-      (task) => task.stage !== 'COMPLETED'
+      (task) => task.stage === 'COMPLETED'
     ).length;
 
     return { value: inCompletedTasks, max: totalNumOfTasks };
