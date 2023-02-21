@@ -9,9 +9,10 @@ import CodeMirror from '@uiw/react-codemirror';
 import { langs } from '@uiw/codemirror-extensions-langs';
 import { Remarkable } from 'remarkable';
 import clsx from 'clsx';
-
 import type { ForumPost } from '~/pages/forum';
 import styles from '~/styles/Forum.module.css';
+import Link from 'next/link';
+import type { Prisma } from '@prisma/client';
 
 type postStore = {
   filteredPosts: ForumPost[];
@@ -33,17 +34,9 @@ type editorStore = {
   content: string;
   setContent: (content: string) => void;
 };
-type AllPostsStore = {
-  posts: ForumPost[];
-  setPosts: (posts: ForumPost[]) => void;
-};
 
-const activeTopics = new Set<string>();
-const topics = new Set<string>();
-export const useAllPostsStore = create<AllPostsStore>((set) => ({
-  posts: [],
-  setPosts: (posts) => set(() => ({ posts })),
-}));
+export const activeTopics = new Set<string>();
+
 export const useTopicStore = create<topicStore>((set) => ({
   filteredTopics: [],
   setFilteredTopics: (filteredTopics) => set(() => ({ filteredTopics })),
@@ -150,41 +143,28 @@ export function Editor() {
 }
 
 export function TopicWrack({ topics }: { topics: string[] }) {
-  const { filteredTopics, setFilteredTopics } = useTopicStore();
-  const setFilteredPosts = usePostStore((state) => state.setFilteredPosts);
-  const activeTopics = getActiveTopics();
-  const filter = useTitleStore((state) => state.filter);
-  const { page, setPage } = usePageStore();
-
-  const posts = useAllPostsStore((state) => state.posts);
-
   return (
     <Grid className={styles.topicWrack} container spacing={0.4}>
       {topics.map((topic) => {
         return (
           <Grid item xs="auto" key={topic}>
-            <p
+            <Link
               className={clsx(
                 styles.topic,
                 activeTopics.has(topic) && styles.activeTopic
               )}
+              href="/forum"
               onClick={(event) => {
                 const topic: string = event.currentTarget.outerText;
-                console.log('topic clicked =', topic);
                 if (activeTopics.has(topic)) {
                   activeTopics.delete(topic);
                 } else {
                   activeTopics.add(topic);
                 }
-                setFilteredTopics(filteredTopics);
-                setFilteredPosts(getFilteredPosts(posts, filter));
-                if (page != 'post') {
-                  setPage('post');
-                }
               }}
             >
               {topic}
-            </p>
+            </Link>
           </Grid>
         );
       })}
@@ -208,10 +188,55 @@ export function getFilteredPosts(posts: ForumPost[], titleFilter: string) {
   return filteredPosts;
 }
 
-export function getActiveTopics() {
-  return activeTopics;
-}
-
-export function getTopics() {
-  return topics;
-}
+export const parsePost = (
+  post: Prisma.PostGetPayload<{
+    select: {
+      id: true;
+      authorId: true;
+      author: true;
+      topics: true;
+      // using to check if upvoted by this user
+      upvoters: {
+        select: {
+          id: true;
+        };
+      };
+      _count: {
+        select: {
+          // using to get the number of upvotes
+          upvoters: true;
+        };
+      };
+      history: {
+        include: {
+          editor: {
+            select: {
+              name: true;
+            };
+          };
+        };
+      };
+    };
+  }>
+) => ({
+  _count: {
+    upvoters: post._count.upvoters,
+  },
+  id: post.id,
+  author: post.author,
+  topics: post.topics,
+  history: post.history.map((history) => {
+    return {
+      content: history.content,
+      editorId: history.editorId,
+      postId: history.postId,
+      id: history.id,
+      summary: history.summary,
+      title: history.title,
+      date: new Date(history.date).toDateString(),
+      editor: history.editor,
+    };
+  }),
+  upvotedByMe: post.upvoters.length > 0,
+  upvoters: post._count.upvoters,
+});

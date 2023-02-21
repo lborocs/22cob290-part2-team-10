@@ -2,17 +2,20 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import SearchIcon from '@mui/icons-material/Search';
-
 import styles from '~/styles/Forum.module.css';
-import {
-  TopicWrack,
-  useTopicStore,
-  getTopics,
-} from '~/components/forum/ForumGlobals';
+import { TopicWrack, useTopicStore } from '~/components/forum/ForumGlobals';
 import Link from '~/components/Link';
+import axios from 'axios';
+import type { PostTopic } from '@prisma/client';
+import useSWR from 'swr';
 
 export default function ForumSidebar() {
   const { filteredTopics, setFilteredTopics } = useTopicStore();
+  const { data: topics } = useSWR('/api/posts/getTopics', async (url) => {
+    const data: PostTopic[] = (await axios.get(url, {})).data;
+    return data;
+  });
+
   return (
     <Box
       sx={{
@@ -46,9 +49,11 @@ export default function ForumSidebar() {
             className={`${styles.innerSearch} ${styles.topicSearch}`}
             onChange={(event) => {
               const filteredTopics: string[] = [];
-              getTopics().forEach((topic) =>
-                topic.toLowerCase().startsWith(event.target.value.toLowerCase())
-                  ? filteredTopics.push(topic)
+              topics?.forEach((topic) =>
+                topic.name
+                  .toLowerCase()
+                  .startsWith(event.target.value.toLowerCase())
+                  ? filteredTopics.push(topic.name)
                   : null
               );
               setFilteredTopics(filteredTopics);

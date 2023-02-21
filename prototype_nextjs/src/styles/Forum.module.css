@@ -82,6 +82,7 @@
     color: #0969da;
     margin: 0px;
     padding-top: 1.8px;
+    padding-bottom: 2px;
 }
 .topic:hover,
 .activeTopic {
@@ -151,11 +152,12 @@
     padding-inline: 15px;
     padding-block: 10px;
 }
-.postBody > h6 {
+.postBody a {
     color: #0969da;
     cursor: pointer;
+    text-decoration: none;
 }
-.postBody > h6:hover {
+.postBody a:hover {
     text-decoration: underline;
 }
 
