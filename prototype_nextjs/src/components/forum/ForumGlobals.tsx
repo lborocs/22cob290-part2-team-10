@@ -90,9 +90,16 @@ function EditorContent({ page }: { page: string }) {
 
 export function Editor() {
   const active = `${styles.editorButton} ${styles.activeEditorButton}`;
-  const [state1, setState1] = useState<string>(active);
-  const [state2, setState2] = useState<string>(styles.editorButton);
   const { page, setPage } = useContentStore();
+  const [state1, setState1] = useState<string>(
+    page != 'code' ? styles.editorButton : active
+  );
+  const [state2, setState2] = useState<string>(
+    page != 'code'
+      ? `${active} ${styles.activePreviewButton}`
+      : styles.editorButton
+  );
+
   return (
     <Box className={styles.editor}>
       <Grid container className={styles.editorHeader}>
